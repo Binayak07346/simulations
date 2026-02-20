@@ -24,12 +24,19 @@
         .top-bar {
             display: flex;
             align-items: center;
+            justify-content: space-between;
             padding: 12px 24px;
             background: rgba(15, 23, 42, 0.95);
             border-bottom: 1px solid rgba(148, 163, 184, 0.15);
             height: 52px;
             position: relative;
             z-index: 100;
+        }
+        
+        .top-bar-left {
+            display: flex;
+            align-items: center;
+            gap: 12px;
         }
         
         .top-bar-title {
@@ -43,7 +50,6 @@
             position: relative;
             display: inline-flex;
             align-items: center;
-            margin-left: 12px;
         }
         
         .info-icon {
@@ -105,6 +111,42 @@
             font-size: 14px;
         }
         
+        .top-bar-right {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .top-bar-button {
+            padding: 6px 14px;
+            border-radius: 999px;
+            border: 1px solid rgba(148, 163, 184, 0.4);
+            background: rgba(15, 23, 42, 0.9);
+            color: #e2e8f0;
+            font-size: 12px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.15s ease;
+        }
+        
+        .top-bar-button:hover {
+            background: rgba(30, 64, 175, 0.6);
+            border-color: rgba(129, 140, 248, 0.8);
+            color: #f9fafb;
+        }
+        
+        .top-bar-button.primary {
+            background: #22c55e;
+            border-color: #16a34a;
+            color: #0f172a;
+        }
+        
+        .top-bar-button.primary:hover {
+            background: #16a34a;
+            border-color: #15803d;
+            color: #f9fafb;
+        }
+        
         .container {
             display: flex;
             height: calc(100vh - 52px);
@@ -119,12 +161,69 @@
         
         .panel {
             flex: 1;
+            min-width: 0;
             background: rgba(30, 41, 59, 0.6);
             border-radius: 12px;
             border: 1px solid rgba(148, 163, 184, 0.1);
             padding: 20px;
             display: flex;
             flex-direction: column;
+            position: relative;
+        }
+        
+        .panel.maximized {
+            flex: 1 1 100%;
+            min-width: 0;
+        }
+        
+        .panel.panel-hidden {
+            display: none;
+        }
+        
+        .panel-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid rgba(148, 163, 184, 0.1);
+            min-height: 32px;
+        }
+        
+        .panel-header .title-label {
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            color: #94a3b8;
+            font-weight: 600;
+            font-size: 14px;
+        }
+        
+        .panel-maximize-btn {
+            width: 28px;
+            height: 28px;
+            border: 1px solid rgba(148, 163, 184, 0.3);
+            border-radius: 6px;
+            background: rgba(30, 41, 59, 0.8);
+            color: #94a3b8;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+            transition: all 0.2s;
+            flex-shrink: 0;
+        }
+        
+        .panel-maximize-btn:hover {
+            background: rgba(59, 130, 246, 0.2);
+            border-color: rgba(59, 130, 246, 0.5);
+            color: #60a5fa;
+        }
+        
+        .panel-maximize-btn.restore {
+            font-size: 11px;
+            padding: 0 6px;
+            width: auto;
         }
         
         .panel-title {
@@ -442,31 +541,40 @@
 <body>
     <!-- Top Bar -->
     <div class="top-bar">
-        <span class="top-bar-title">Particle on a Circle</span>
-        <div class="info-icon-wrapper">
-            <div class="info-icon">i</div>
-            <div class="info-tooltip">
-                <div class="info-box">
-                    <strong>Energy Formula:</strong>
-                    <div class="formula">\[E_n = \frac{n^2\hbar^2}{2mR^2}\]</div>
-                    <strong>Wavefunction:</strong>
-                    <div class="formula">\[\psi_n(\phi) = \frac{1}{\sqrt{2\pi}} e^{in\phi}\]</div>
-                    <strong>Time Evolution:</strong>
-                    <div class="formula">\[\psi_n(\phi, t) = \frac{1}{\sqrt{2\pi}} e^{i(n\phi - E_n t/\hbar)}\]</div>
-                    <strong>Angular Momentum:</strong>
-                    <div class="formula">\[L_z = n\hbar\]</div>
-                    <p style="margin-top: 8px; color: #94a3b8;">States \(\pm n\) have the same energy but <em>opposite</em> angular momentum \(L_z = \pm n\hbar\) (doubly degenerate). The \(n=0\) state is non-degenerate with \(L_z = 0\).</p>
-                    <p style="margin-top: 6px; color: #94a3b8;">Using natural units: \(R = 1\), \(\hbar = 1\), \(2m = 1\). So \(E_n = n^2\) and spatial wavelength \(\lambda = 2\pi R / |n|\).</p>
+        <div class="top-bar-left">
+            <span class="top-bar-title">Particle on a Circle</span>
+            <div class="info-icon-wrapper">
+                <div class="info-icon">i</div>
+                <div class="info-tooltip">
+                    <div class="info-box">
+                        <strong>About this simulation</strong>
+                        <p style="margin-top: 6px; color: #94a3b8;">
+                            A quantum particle confined to a ring of radius \(R=1\), in natural units \(\hbar = 1\), \(2m = 1\).
+                            You can explore different angular-momentum eigenstates \(n\), their energies, and the time evolution of the wavefunction on the circle.
+                        </p>
+                        <strong>Key relations:</strong>
+                        <div class="formula">\[E_n = \frac{n^2\hbar^2}{2mR^2}, \quad \psi_n(\phi) = \frac{1}{\sqrt{2\pi}} e^{in\phi}, \quad L_z = n\hbar\]</div>
+                        <p style="margin-top: 6px; color: #94a3b8;">
+                            States with \(n\) and \(-n\) are energetically degenerate but carry opposite angular momentum.
+                        </p>
+                    </div>
                 </div>
             </div>
+        </div>
+        <div class="top-bar-right">
+            <button id="resetButton" class="top-bar-button">Reset</button>
+            <button id="startPauseButton" class="top-bar-button primary">Pause</button>
         </div>
     </div>
     
     <div class="container">
         <div class="main-content">
             <!-- Energy Level Panel -->
-            <div class="panel">
-                <div class="panel-title-energy" id="energyTitle"><span class="title-label">Energy Levels</span><span class="title-equation">\(\displaystyle E_n = \frac{n^2\hbar^2}{2mR^2}\)</span></div>
+            <div class="panel" id="panelEnergy" data-panel="energy">
+                <div class="panel-header">
+                    <span class="title-label" id="energyTitle">Energy Levels</span>
+                    <button type="button" class="panel-maximize-btn" id="maximizeEnergy" title="Maximize" aria-label="Maximize">⛶</button>
+                </div>
                 <div class="canvas-container">
                     <canvas id="energyCanvas"></canvas>
                 </div>
@@ -483,8 +591,11 @@
             </div>
             
             <!-- Wavefunction Panel -->
-            <div class="panel">
-                <div class="panel-title-wavefunction" id="wavefunctionTitle"><span class="title-label">Wavefunction</span><span class="title-equation">\(\displaystyle \psi_{1}(\phi) = \frac{1}{\sqrt{2\pi}}\, e^{i(1)\phi}\)</span></div>
+            <div class="panel" id="panelWavefunction" data-panel="wavefunction">
+                <div class="panel-header">
+                    <span class="title-label" id="wavefunctionTitle">Wavefunction</span>
+                    <button type="button" class="panel-maximize-btn" id="maximizeWavefunction" title="Maximize" aria-label="Maximize">⛶</button>
+                </div>
                 <div class="canvas-container">
                     <canvas id="wavefunctionCanvas"></canvas>
                 </div>
@@ -591,6 +702,7 @@
         let timeSpeed = 1;
         let time = 0;
         let lastFrameTime = performance.now();
+        let isRunning = true;
         
         // DOM elements
         const nSlider = document.getElementById('nSlider');
@@ -606,61 +718,78 @@
         const angularMomentumDisplay = document.getElementById('angularMomentumValue');
         const wavefunctionTitle = document.getElementById('wavefunctionTitle');
         const energyTitle = document.getElementById('energyTitle');
+        const resetButton = document.getElementById('resetButton');
+        const startPauseButton = document.getElementById('startPauseButton');
+        const panelEnergy = document.getElementById('panelEnergy');
+        const panelWavefunction = document.getElementById('panelWavefunction');
+        const maximizeEnergyBtn = document.getElementById('maximizeEnergy');
+        const maximizeWavefunctionBtn = document.getElementById('maximizeWavefunction');
         
         // Slider range for dynamic energy diagram
         const SLIDER_MAX = 15;
         
-        // Resize canvases
+        // Resize canvases (skip hidden panels so they keep size when restored)
         function resizeCanvases() {
             const energyContainer = energyCanvas.parentElement;
             const waveContainer = wavefunctionCanvas.parentElement;
             
-            energyCanvas.width = energyContainer.clientWidth;
-            energyCanvas.height = energyContainer.clientHeight;
-            
-            wavefunctionCanvas.width = waveContainer.clientWidth;
-            wavefunctionCanvas.height = waveContainer.clientHeight;
+            if (energyContainer.clientWidth > 0 && energyContainer.clientHeight > 0) {
+                energyCanvas.width = energyContainer.clientWidth;
+                energyCanvas.height = energyContainer.clientHeight;
+            }
+            if (waveContainer.clientWidth > 0 && waveContainer.clientHeight > 0) {
+                wavefunctionCanvas.width = waveContainer.clientWidth;
+                wavefunctionCanvas.height = waveContainer.clientHeight;
+            }
         }
         
-        // Update the wavefunction panel title with LaTeX
-        function updateWavefunctionTitle() {
-            let equationStr;
-            if (animatePhase) {
-                if (n === 0) {
-                    equationStr = '\\(\\displaystyle \\psi_{0}(\\phi, t) = \\frac{1}{\\sqrt{2\\pi}}\\)';
-                } else {
-                    const nStr = n < 0 ? `(${n})` : `${n}`;
-                    const enStr = `${n * n}`;
-                    equationStr = `\\(\\displaystyle \\psi_{${n}}(\\phi, t) = \\frac{1}{\\sqrt{2\\pi}}\\, e^{i(${nStr}\\phi - ${enStr}\\,t)}\\)`;
-                }
+        // Maximize/restore plot panels (controls stay visible to the side)
+        function setPanelMaximized(panel, maximized) {
+            const other = panel === panelEnergy ? panelWavefunction : panelEnergy;
+            const btn = panel === panelEnergy ? maximizeEnergyBtn : maximizeWavefunctionBtn;
+            if (maximized) {
+                panel.classList.add('maximized');
+                other.classList.add('panel-hidden');
+                btn.textContent = 'Restore';
+                btn.classList.add('restore');
+                btn.title = 'Restore';
+                btn.setAttribute('aria-label', 'Restore');
             } else {
-                if (n === 0) {
-                    equationStr = '\\(\\displaystyle \\psi_{0}(\\phi) = \\frac{1}{\\sqrt{2\\pi}}\\)';
-                } else {
-                    const nStr = n < 0 ? `(${n})` : `${n}`;
-                    equationStr = `\\(\\displaystyle \\psi_{${n}}(\\phi) = \\frac{1}{\\sqrt{2\\pi}}\\, e^{i${nStr}\\phi}\\)`;
-                }
+                panel.classList.remove('maximized');
+                other.classList.remove('panel-hidden');
+                btn.textContent = '⛶';
+                btn.classList.remove('restore');
+                btn.title = 'Maximize';
+                btn.setAttribute('aria-label', 'Maximize');
             }
-            wavefunctionTitle.innerHTML = `<span class="title-label">Wavefunction</span><span class="title-equation">${equationStr}</span>`;
-            if (window.MathJax && window.MathJax.typesetPromise) {
-                MathJax.typesetPromise([wavefunctionTitle]);
-            }
+            resizeCanvases();
+        }
+        
+        function togglePanelMaximize(panel) {
+            const isMax = panel.classList.contains('maximized');
+            setPanelMaximized(panel, !isMax);
+        }
+        
+        // Update the wavefunction panel title (no equations, just a label)
+        function updateWavefunctionTitle() {
+            wavefunctionTitle.textContent = 'Wavefunction';
         }
         
         // Update stats display
         function updateStats() {
             const absN = Math.abs(n);
             const energyVal = absN * absN;
-            energyValueDisplay.textContent = `${energyVal} ℏ²/2mR²`;
+            // Natural units: R=1, ℏ=1, 2m=1 => E_n = n² ℏ²/(2m R²) = n² (numerical value)
+            energyValueDisplay.textContent = `${energyVal} ℏ²/2mR² ≈ ${energyVal.toFixed(2)}`;
 
             if (absN === 0) {
                 wavelengthValueDisplay.textContent = '∞ (uniform)';
-                angularMomentumDisplay.textContent = '0';
+                angularMomentumDisplay.textContent = '0ℏ';
             } else {
                 if (absN === 1) {
-                    wavelengthValueDisplay.textContent = `2π ≈ ${(2 * Math.PI * R).toFixed(2)}`;
+                    wavelengthValueDisplay.textContent = `2πR ≈ ${(2 * Math.PI * R).toFixed(2)}`;
                 } else {
-                    wavelengthValueDisplay.textContent = `2π/${absN} ≈ ${(2 * Math.PI * R / absN).toFixed(2)}`;
+                    wavelengthValueDisplay.textContent = `2πR/${absN} ≈ ${(2 * Math.PI * R / absN).toFixed(2)}`;
                 }
                 angularMomentumDisplay.textContent = `${n}ℏ`;
             }
@@ -673,16 +802,11 @@
                 degeneracyBadge.className = 'degeneracy-badge degenerate';
             }
             
-            // Update wavefunction panel title
+            // Update wavefunction panel title (no MathJax needed)
             updateWavefunctionTitle();
-            
-            // Re-render MathJax
-            if (window.MathJax && window.MathJax.typesetPromise) {
-                MathJax.typesetPromise();
-            }
         }
         
-        // Energy diagram with fixed E=0 / E=1 overlap
+        // Energy diagram with physically accurate spacing (E=0 very close to E=1)
         function drawEnergyLevels() {
             const w = energyCanvas.width;
             const h = energyCanvas.height;
@@ -706,53 +830,24 @@
             const maxEnergy = maxN * maxN; // 225
             const graphHeight = h - paddingTop - paddingBottom;
             
-            // Minimum pixel spacing between E=0 and E=1 levels
-            const minSpacingE0E1 = 25; // pixels
+            // Add an equal visual spacing between successive levels on top of the n² scaling,
+            // so low-lying levels (E=0,1,2,...) are clearly separated and labels fit cleanly.
+            const spacingPerLevel = maxEnergy / (maxN * 2); // uniform extra spacing term
+            const maxVisualEnergy = maxEnergy + spacingPerLevel * maxN;
+            const energyScale = graphHeight / maxVisualEnergy;
             
-            // With pure linear scaling, the spacing between E=0 and E=1 would be:
-            // (1 / maxEnergy) * graphHeight
-            const linearSpacing01 = (1 / maxEnergy) * graphHeight;
-            
-            // We need an offset if the linear spacing is too small
-            // We'll add a fixed pixel offset at the bottom for E=0 to E=1 gap
-            // and then linearly scale E=1 to E=maxEnergy in the remaining space
-            const needsOffset = linearSpacing01 < minSpacingE0E1;
-            const extraOffset = needsOffset ? (minSpacingE0E1 - linearSpacing01) : 0;
-            
-            // E=0 is at the very bottom
-            // E=1 is at extraOffset pixels above E=0
-            // E=1 to E=maxEnergy maps linearly to the remaining space
-            
-            function energyToY(energy) {
-                if (energy === 0) {
-                    return h - paddingBottom;
-                }
-                // For energy >= 1, we place E=1 at (h - paddingBottom - minSpacingE0E1) if offset needed
-                // and then scale linearly from E=1 to E=maxEnergy in the remaining space above
-                const e0Y = h - paddingBottom;
-                const e1Y = e0Y - (linearSpacing01 + extraOffset); // E=1 position
-                
-                if (energy <= 1) {
-                    // Interpolate between E=0 and E=1
-                    return e0Y - energy * (linearSpacing01 + extraOffset);
-                }
-                
-                // For energy > 1, linearly map from E=1 to E=maxEnergy
-                // E=1 -> e1Y, E=maxEnergy -> paddingTop
-                const remainingHeight = e1Y - paddingTop;
-                const remainingEnergyRange = maxEnergy - 1;
-                return e1Y - ((energy - 1) / remainingEnergyRange) * remainingHeight;
+            function energyToY(level) {
+                const energy = level * level;
+                const visualEnergy = energy + spacingPerLevel * level;
+                return h - paddingBottom - visualEnergy * energyScale;
             }
 
             // Draw energy levels for n = 0 to maxN
             for (let level = 0; level <= maxN; level++) {
                 const energy = level * level;
-                const y = energyToY(energy);
+                const y = energyToY(level);
 
                 const isCurrentLevel = Math.abs(n) === level;
-
-                // Skip drawing very closely spaced high levels (but always draw current)
-                if (level > 10 && level % 2 !== 0 && !isCurrentLevel) continue;
 
                 energyCtx.strokeStyle = isCurrentLevel ? '#f472b6' : '#475569';
                 energyCtx.lineWidth = isCurrentLevel ? 3 : 1;
@@ -765,12 +860,18 @@
                 energyCtx.font = isCurrentLevel ? 'bold 11px sans-serif' : '10px sans-serif';
                 energyCtx.textAlign = 'right';
                 const nLabel = level === 0 ? 'n=0' : `n=±${level}`;
-                energyCtx.fillText(nLabel, paddingLeft - 15, y + 4);
+                // Place all n-labels with the same vertical offset so n=0 aligns with its level
+                const nLabelOffset = -4;
+                energyCtx.fillText(nLabel, paddingLeft - 15, y + nLabelOffset);
 
                 energyCtx.fillStyle = isCurrentLevel ? '#f472b6' : '#64748b';
                 energyCtx.font = isCurrentLevel ? 'bold 10px sans-serif' : '9px sans-serif';
                 energyCtx.textAlign = 'left';
-                energyCtx.fillText(`E=${energy}`, w - paddingRight + 8, y + 4);
+                const eLabelOffset = -4;
+                // Energy state label E_n written parallel to the quantum number label
+                // Here we index states by |n|: E0, E1, E2, ...
+                const stateIndex = level;
+                energyCtx.fillText(`E${stateIndex}`, w - paddingRight + 8, y + eLabelOffset);
 
                 if (isCurrentLevel) {
                     energyCtx.shadowColor = '#f472b6';
@@ -1068,7 +1169,9 @@
             const deltaTime = (currentTime - lastFrameTime) / 1000;
             lastFrameTime = currentTime;
             
-            time += deltaTime;
+            if (isRunning) {
+                time += deltaTime;
+            }
             
             drawEnergyLevels();
             
@@ -1080,6 +1183,10 @@
             
             requestAnimationFrame(animate);
         }
+        
+        // Maximize button listeners
+        maximizeEnergyBtn.addEventListener('click', () => togglePanelMaximize(panelEnergy));
+        maximizeWavefunctionBtn.addEventListener('click', () => togglePanelMaximize(panelWavefunction));
         
         // Event listeners
         nSlider.addEventListener('input', (e) => {
@@ -1105,6 +1212,42 @@
         speedSlider.addEventListener('input', (e) => {
             timeSpeed = parseFloat(e.target.value);
             speedValueDisplay.textContent = timeSpeed.toFixed(1) + 'x';
+        });
+        
+        // Top bar controls
+        resetButton.addEventListener('click', () => {
+            // Reset simulation state to defaults
+            n = 1;
+            nSlider.value = 1;
+            nValueDisplay.textContent = '1';
+            
+            showOnRing = false;
+            toggleDisplayBtn.textContent = 'Show on Ring';
+            
+            showProbability = true;
+            showProbabilityCheckbox.checked = true;
+            
+            animatePhase = true;
+            animatePhaseCheckbox.checked = true;
+            
+            timeSpeed = 1;
+            speedSlider.value = 1;
+            speedValueDisplay.textContent = '1.0x';
+            
+            time = 0;
+            
+            isRunning = true;
+            startPauseButton.textContent = 'Pause';
+            
+            setPanelMaximized(panelEnergy, false);
+            setPanelMaximized(panelWavefunction, false);
+            
+            updateStats();
+        });
+        
+        startPauseButton.addEventListener('click', () => {
+            isRunning = !isRunning;
+            startPauseButton.textContent = isRunning ? 'Pause' : 'Start';
         });
         
         window.addEventListener('resize', resizeCanvases);
