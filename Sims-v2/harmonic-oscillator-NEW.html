@@ -1,0 +1,398 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Quantum Harmonic Oscillator — 1D</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:#0f172a;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;color:#e2e8f0;overflow:hidden}
+
+.main-layout{position:fixed;top:0;left:0;right:0;bottom:0;display:flex}
+
+.plots-area{flex:1;display:flex;flex-direction:column;padding:10px;gap:8px;overflow:hidden}
+.plot-container{flex:1;position:relative;background:rgba(15,23,42,0.5);border:1px solid rgba(148,163,184,0.08);border-radius:8px;overflow:hidden}
+.plot-container canvas{width:100%!important;height:100%!important}
+.plot-label{position:absolute;top:8px;left:12px;font-size:11px;font-weight:600;color:#64748b;text-transform:uppercase;letter-spacing:0.5px;pointer-events:none;z-index:2}
+
+.legend{position:absolute;bottom:8px;right:12px;display:flex;gap:12px;font-size:10px;pointer-events:none;z-index:2}
+.legend-item{display:flex;align-items:center;gap:4px}
+.legend-dot{width:8px;height:8px;border-radius:50%}
+
+.control-panel{width:260px;min-width:260px;background:rgba(15,23,42,0.95);border-left:1px solid rgba(148,163,184,0.1);padding:20px 16px;display:flex;flex-direction:column;gap:16px;overflow-y:auto;z-index:100;flex-shrink:0}
+.panel-title{font-size:16px;font-weight:700;color:#f1f5f9;letter-spacing:-0.3px;padding-bottom:8px;border-bottom:1px solid rgba(148,163,184,0.12)}
+.panel-title span{color:#60a5fa}
+
+.ctrl-group{display:flex;flex-direction:column;gap:10px}
+.ctrl-group-label{font-size:11px;font-weight:600;color:#475569;text-transform:uppercase;letter-spacing:0.8px}
+.ctrl-row{display:flex;flex-direction:column;gap:4px}
+.ctrl-row-inline{display:flex;align-items:center;gap:8px}
+.ctrl-label{font-size:12px;color:#94a3b8;display:flex;align-items:center;gap:4px}
+.ctrl-value{font-size:12px;color:#cbd5e1;font-weight:600;font-variant-numeric:tabular-nums;min-width:40px;text-align:right}
+.slider{width:100%;height:4px;-webkit-appearance:none;appearance:none;background:rgba(148,163,184,0.15);border-radius:2px;outline:none}
+.slider::-webkit-slider-thumb{-webkit-appearance:none;width:14px;height:14px;background:#3b82f6;border-radius:50%;cursor:pointer}
+.slider:disabled{opacity:0.35}
+.slider:disabled::-webkit-slider-thumb{background:#64748b;cursor:not-allowed}
+
+.switch-row{display:flex;align-items:center;gap:8px;padding:4px 0}
+.switch{position:relative;width:36px;height:20px;flex-shrink:0}
+.switch input{opacity:0;width:0;height:0}
+.switch-slider{position:absolute;cursor:pointer;top:0;left:0;right:0;bottom:0;background:rgba(148,163,184,0.2);border-radius:10px;transition:0.3s}
+.switch-slider:before{position:absolute;content:"";height:16px;width:16px;left:2px;bottom:2px;background:#64748b;border-radius:50%;transition:0.3s}
+.switch input:checked+.switch-slider{background:rgba(59,130,246,0.4)}
+.switch input:checked+.switch-slider:before{transform:translateX(16px);background:#3b82f6}
+
+.stat-box{background:rgba(59,130,246,0.08);border:1px solid rgba(59,130,246,0.15);border-radius:8px;padding:10px 12px;display:flex;flex-direction:column;gap:6px}
+.stat-row{display:flex;justify-content:space-between;align-items:center}
+.stat-label{font-size:11px;color:#64748b}
+.stat-val{font-size:13px;color:#e2e8f0;font-weight:600;font-variant-numeric:tabular-nums}
+
+.btn-group{display:flex;gap:6px}
+.btn{flex:1;padding:7px 12px;background:rgba(59,130,246,0.12);border:1px solid rgba(59,130,246,0.25);border-radius:6px;color:#93c5fd;cursor:pointer;font-size:12px;text-align:center;transition:all .2s}
+.btn:hover{background:rgba(59,130,246,0.2)}
+.btn.active{background:rgba(59,130,246,0.3);border-color:#3b82f6;color:#fff}
+.btn-sm{padding:5px 8px;font-size:11px}
+
+.sep{height:1px;background:rgba(148,163,184,0.08);margin:4px 0}
+
+.time-display{font-size:14px;color:#e2e8f0;font-weight:700;font-variant-numeric:tabular-nums;text-align:center;padding:4px 0}
+.playback-btns{display:flex;gap:6px}
+.playback-btns .btn{flex:1;display:flex;align-items:center;justify-content:center;gap:4px;padding:8px 10px;font-size:12px}
+.playback-btns .btn svg{width:14px;height:14px;fill:currentColor}
+</style>
+
+</head>
+<body>
+
+<div class="main-layout">
+  <div class="plots-area" id="contentArea">
+    <!-- 1D plots -->
+    <div class="plot-container" id="potentialBox">
+      <div class="plot-label">Harmonic Potential & Energy Levels</div>
+      <canvas id="potentialCanvas"></canvas>
+    </div>
+    <div class="plot-container" id="wavefnBox">
+      <div class="plot-label">Wavefunction ψ(x,t)</div>
+      <canvas id="wavefnCanvas"></canvas>
+      <div class="legend">
+        <div class="legend-item"><div class="legend-dot" style="background:#60a5fa"></div>Re(ψ)</div>
+        <div class="legend-item"><div class="legend-dot" style="background:#f472b6"></div>Im(ψ)</div>
+      </div>
+    </div>
+    <div class="plot-container" id="probBox">
+      <div class="plot-label">Probability Density |ψ|²</div>
+      <canvas id="probCanvas"></canvas>
+      <div class="legend">
+        <div class="legend-item"><div class="legend-dot" style="background:#34d399"></div>|ψ|²</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Control panel -->
+  <div class="control-panel">
+    <div class="panel-title">Quantum <span>Harmonic Oscillator</span></div>
+
+    <!-- 1D quantum number -->
+    <div class="ctrl-group" id="ctrl1D">
+      <div class="ctrl-group-label">Quantum State (1D)</div>
+      <div class="ctrl-row">
+        <div class="ctrl-row-inline">
+          <span class="ctrl-label">n</span>
+          <input type="range" class="slider" id="nSlider" min="0" max="10" value="3" step="1">
+          <span class="ctrl-value" id="nVal">3</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="sep"></div>
+
+    <div class="ctrl-group">
+      <div class="ctrl-group-label">Physics Parameters</div>
+      <div class="ctrl-row">
+        <div class="ctrl-row-inline">
+          <span class="ctrl-label">k (ℏ=m=1)</span>
+          <input type="range" class="slider" id="kSlider" min="0.1" max="10" value="1" step="0.1">
+          <span class="ctrl-value" id="kVal">1.0</span>
+        </div>
+      </div>
+      <div class="ctrl-row">
+        <div class="ctrl-row-inline">
+          <span class="ctrl-label">ω = √(k/m)</span>
+          <span class="ctrl-value" id="omegaVal" style="margin-left:auto">1.00</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="sep"></div>
+
+    <div class="ctrl-group">
+      <div class="ctrl-group-label">Animation</div>
+      <div class="switch-row">
+        <label class="switch">
+          <input type="checkbox" id="overrideOmega">
+          <span class="switch-slider"></span>
+        </label>
+        <span class="ctrl-label">Override ω for anim</span>
+      </div>
+      <div class="ctrl-row">
+        <div class="ctrl-row-inline">
+          <span class="ctrl-label">Anim Speed</span>
+          <input type="range" class="slider" id="speedSlider" min="0" max="5" value="1" step="0.1" disabled>
+          <span class="ctrl-value" id="speedVal">1.0</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="sep"></div>
+
+    <div class="ctrl-group">
+      <div class="ctrl-group-label">Playback</div>
+      <div class="time-display" id="timeDisplay">t = 0.000 s</div>
+      <div class="playback-btns">
+        <button class="btn active" id="btnPlay"><svg viewBox="0 0 24 24"><polygon points="5,3 19,12 5,21"/></svg>Play</button>
+        <button class="btn" id="btnPause"><svg viewBox="0 0 24 24"><rect x="6" y="4" width="4" height="16"/><rect x="14" y="4" width="4" height="16"/></svg>Pause</button>
+        <button class="btn" id="btnReset"><svg viewBox="0 0 24 24"><path d="M12 5V1L7 6l5 5V7c3.31 0 6 2.69 6 6s-2.69 6-6 6-6-2.69-6-6H4c0 4.42 3.58 8 8 8s8-3.58 8-8-3.58-8-8-8z"/></svg>Reset</button>
+      </div>
+    </div>
+
+    <div class="sep"></div>
+
+    <!-- 1D stats -->
+    <div class="stat-box" id="statBox1D">
+      <div class="stat-row"><span class="stat-label">Energy Eₙ</span><span class="stat-val" id="energyVal">3.5 ℏω</span></div>
+      <div class="stat-row"><span class="stat-label">Frequency ω</span><span class="stat-val" id="freqDisplay">1.00</span></div>
+      <div class="stat-row"><span class="stat-label">Spring const k</span><span class="stat-val" id="kDisplay">1.0</span></div>
+    </div>
+  </div>
+</div>
+
+<script>
+(function(){
+
+// ========== PHYSICS ==========
+
+function hermite(n, x) {
+  if (n === 0) return 1;
+  if (n === 1) return 2 * x;
+  let h0 = 1, h1 = 2 * x;
+  for (let i = 2; i <= n; i++) {
+    const h2 = 2 * x * h1 - 2 * (i - 1) * h0;
+    h0 = h1; h1 = h2;
+  }
+  return h1;
+}
+
+function logFactorial(n) {
+  let s = 0;
+  for (let i = 2; i <= n; i++) s += Math.log(i);
+  return s;
+}
+
+function psiN(n, x, mOmegaOverHbar) {
+  const alpha = Math.sqrt(mOmegaOverHbar);
+  const xi = alpha * x;
+  const logNorm = 0.25 * Math.log(mOmegaOverHbar / Math.PI) - 0.5 * (n * Math.log(2) + logFactorial(n));
+  return Math.exp(logNorm) * hermite(n, xi) * Math.exp(-xi * xi / 2);
+}
+
+function energy1D(n, w) { return (n + 0.5) * w; }
+
+function computeMaxPsi(n, w) {
+  const xtp = Math.sqrt((2 * n + 1) / w);
+  const xS = xtp + 3.0 / Math.sqrt(w);
+  let mx = 0;
+  for (let i = 0; i <= 1000; i++) {
+    const v = Math.abs(psiN(n, -xS + i / 500 * xS, w));
+    if (v > mx) mx = v;
+  }
+  return mx;
+}
+
+// ========== STATE ==========
+
+let qn = 3;
+let kSpring = 1.0, mass = 1.0, omega = 1.0;
+let animSpeed = 1.0, overrideOmega = false;
+let time = 0, isPlaying = true;
+const FIXED_X_RANGE = 10;
+
+function updateOmega() { omega = Math.sqrt(kSpring / mass); }
+
+// ========== DOM ==========
+
+const $ = id => document.getElementById(id);
+const nSlider=$('nSlider');
+const kSlider=$('kSlider'), speedSlider=$('speedSlider'), overrideCheck=$('overrideOmega');
+
+function updateDisplays() {
+  updateOmega();
+  $('omegaVal').textContent = omega.toFixed(2);
+  $('energyVal').textContent = (qn + 0.5).toFixed(1) + ' ℏω';
+  $('freqDisplay').textContent = omega.toFixed(2);
+  $('kDisplay').textContent = kSpring.toFixed(1);
+}
+
+function updateTimeDisplay() { $('timeDisplay').textContent = 't = ' + time.toFixed(3) + ' s'; }
+
+function updatePlaybackButtons() {
+  $('btnPlay').classList.toggle('active', isPlaying);
+  $('btnPause').classList.toggle('active', !isPlaying);
+}
+
+nSlider.oninput = () => { qn = +nSlider.value; $('nVal').textContent = qn; updateDisplays(); };
+kSlider.oninput = () => { kSpring = +kSlider.value; $('kVal').textContent = kSpring.toFixed(1); updateDisplays(); };
+speedSlider.oninput = () => { animSpeed = +speedSlider.value; $('speedVal').textContent = animSpeed.toFixed(1); };
+overrideCheck.onchange = () => { overrideOmega = overrideCheck.checked; speedSlider.disabled = !overrideOmega; };
+$('btnPlay').onclick = () => { isPlaying = true; updatePlaybackButtons(); };
+$('btnPause').onclick = () => { isPlaying = false; updatePlaybackButtons(); };
+$('btnReset').onclick = () => { time = 0; updateTimeDisplay(); };
+
+// ========== 2D CANVASES ==========
+
+const potCanvas=$('potentialCanvas'), wfCanvas=$('wavefnCanvas'), probCanvas=$('probCanvas');
+const potCtx=potCanvas.getContext('2d'), wfCtx=wfCanvas.getContext('2d'), probCtx=probCanvas.getContext('2d');
+
+function resizeCanvases() {
+  [potCanvas, wfCanvas, probCanvas].forEach(c => {
+    const r = c.parentElement.getBoundingClientRect();
+    if (r.width > 0 && r.height > 0) { c.width = r.width * devicePixelRatio; c.height = r.height * devicePixelRatio; }
+  });
+}
+
+window.addEventListener('resize', () => { resizeCanvases(); });
+setTimeout(resizeCanvases, 50);
+
+// ========== DRAWING HELPERS ==========
+
+function mapX(x, xmin, xmax, pxMin, pxMax) { return pxMin + (x - xmin) / (xmax - xmin) * (pxMax - pxMin); }
+function mapY(y, ymin, ymax, pxMin, pxMax) { return pxMax - (y - ymin) / (ymax - ymin) * (pxMax - pxMin); }
+
+function drawAxes(ctx, w, h, xmin, xmax, ymin, ymax, pad, yLabel) {
+  ctx.strokeStyle = 'rgba(148,163,184,0.15)'; ctx.lineWidth = 1;
+  if (ymin <= 0 && ymax >= 0) { const y0 = mapY(0, ymin, ymax, pad.top, h - pad.bottom); ctx.beginPath(); ctx.moveTo(pad.left, y0); ctx.lineTo(w - pad.right, y0); ctx.stroke(); }
+  if (xmin <= 0 && xmax >= 0) { const x0 = mapX(0, xmin, xmax, pad.left, w - pad.right); ctx.beginPath(); ctx.moveTo(x0, pad.top); ctx.lineTo(x0, h - pad.bottom); ctx.stroke(); }
+  ctx.fillStyle = '#475569'; ctx.font = `${10 * devicePixelRatio}px sans-serif`; ctx.textAlign = 'center';
+  for (let x = Math.ceil(xmin); x <= Math.floor(xmax); x++) { if (x === 0) continue; const px = mapX(x, xmin, xmax, pad.left, w - pad.right); const y0 = mapY(0, ymin, ymax, pad.top, h - pad.bottom); ctx.fillText(x, px, Math.min(y0 + 14 * devicePixelRatio, h - 2)); }
+  if (yLabel) { ctx.save(); ctx.fillStyle = '#64748b'; ctx.font = `bold ${11 * devicePixelRatio}px sans-serif`; ctx.textAlign = 'center'; ctx.translate(14 * devicePixelRatio, (pad.top + h - pad.bottom) / 2); ctx.rotate(-Math.PI / 2); ctx.fillText(yLabel, 0, 0); ctx.restore(); }
+  ctx.fillStyle = '#475569'; ctx.font = `${9 * devicePixelRatio}px sans-serif`; ctx.textAlign = 'right';
+  const yRange = ymax - ymin; let yStep = 1;
+  if (yRange > 20) yStep = 5; else if (yRange > 10) yStep = 2; else if (yRange > 4) yStep = 1; else if (yRange > 2) yStep = 0.5; else if (yRange > 0.5) yStep = 0.2; else yStep = 0.1;
+  for (let y = Math.ceil(ymin / yStep) * yStep; y <= ymax; y += yStep) { if (Math.abs(y) < yStep * 0.01) continue; const py = mapY(y, ymin, ymax, pad.top, h - pad.bottom); if (py > pad.top + 5 && py < h - pad.bottom - 5) ctx.fillText(y.toFixed(yStep < 1 ? 1 : 0), pad.left - 4 * devicePixelRatio, py + 3 * devicePixelRatio); }
+}
+
+function drawDottedLineWithArrows(ctx, x1, y, x2, color, lw, dpr) {
+  ctx.strokeStyle = color; ctx.lineWidth = lw; ctx.setLineDash([6*dpr, 4*dpr]); ctx.beginPath(); ctx.moveTo(x1, y); ctx.lineTo(x2, y); ctx.stroke(); ctx.setLineDash([]);
+  const a = 6 * dpr; ctx.fillStyle = color;
+  ctx.beginPath(); ctx.moveTo(x1, y); ctx.lineTo(x1+a, y-a*0.5); ctx.lineTo(x1+a, y+a*0.5); ctx.closePath(); ctx.fill();
+  ctx.beginPath(); ctx.moveTo(x2, y); ctx.lineTo(x2-a, y-a*0.5); ctx.lineTo(x2-a, y+a*0.5); ctx.closePath(); ctx.fill();
+}
+
+// ========== DRAW 1D PLOTS ==========
+
+function drawPotential(t) {
+  const w = potCanvas.width, h = potCanvas.height, dpr = devicePixelRatio;
+  if (w === 0 || h === 0) return;
+  potCtx.clearRect(0, 0, w, h); potCtx.fillStyle = '#0f172a'; potCtx.fillRect(0, 0, w, h);
+  const potEmax = Math.max(energy1D(12, omega), 8) * 1.15;
+  const potXRange = Math.max(FIXED_X_RANGE, Math.sqrt(2 * potEmax / kSpring) * 1.1);
+  const xmin = -potXRange, xmax = potXRange, ymin = -0.5, ymax = potEmax;
+  const pad = { top: 30*dpr, bottom: 20*dpr, left: 55*dpr, right: 20*dpr };
+  drawAxes(potCtx, w, h, xmin, xmax, ymin, ymax, pad, 'Energy (ℏω)');
+  potCtx.save(); potCtx.beginPath(); potCtx.rect(pad.left, pad.top, w-pad.left-pad.right, h-pad.top-pad.bottom); potCtx.clip();
+  potCtx.strokeStyle = '#a855f7'; potCtx.lineWidth = 2.5*dpr; potCtx.shadowColor = '#a855f7'; potCtx.shadowBlur = 6*dpr;
+  potCtx.beginPath();
+  for (let px = pad.left; px <= w-pad.right; px++) { const x = xmin+(px-pad.left)/(w-pad.left-pad.right)*(xmax-xmin); const V = 0.5*kSpring*x*x; const py = mapY(V, ymin, ymax, pad.top, h-pad.bottom); px===pad.left ? potCtx.moveTo(px,py) : potCtx.lineTo(px,py); }
+  potCtx.stroke(); potCtx.shadowBlur = 0;
+  potCtx.fillStyle = 'rgba(168,85,247,0.06)'; potCtx.beginPath();
+  const yBot = mapY(ymin, ymin, ymax, pad.top, h-pad.bottom); potCtx.moveTo(pad.left, yBot);
+  for (let px = pad.left; px <= w-pad.right; px++) { const x = xmin+(px-pad.left)/(w-pad.left-pad.right)*(xmax-xmin); potCtx.lineTo(px, mapY(0.5*kSpring*x*x, ymin, ymax, pad.top, h-pad.bottom)); }
+  potCtx.lineTo(w-pad.right, yBot); potCtx.closePath(); potCtx.fill();
+  for (let n = 0; n <= 10; n++) {
+    const En = energy1D(n, omega); if (En > ymax) break;
+    const ey = mapY(En, ymin, ymax, pad.top, h-pad.bottom), sel = n===qn;
+    const xtp = Math.sqrt(2*En/kSpring); const x1px = mapX(-xtp, xmin, xmax, pad.left, w-pad.right); const x2px = mapX(xtp, xmin, xmax, pad.left, w-pad.right);
+    if (sel) drawDottedLineWithArrows(potCtx, x1px, ey, x2px, '#60a5fa', 2.5*dpr, dpr);
+    else { potCtx.strokeStyle = 'rgba(148,163,184,0.25)'; potCtx.lineWidth = dpr; potCtx.setLineDash([]); potCtx.beginPath(); potCtx.moveTo(x1px,ey); potCtx.lineTo(x2px,ey); potCtx.stroke(); }
+    potCtx.fillStyle = sel?'#60a5fa':'#64748b'; potCtx.font = `${(sel?11:9)*dpr}px sans-serif`; potCtx.textAlign = 'right';
+    potCtx.fillText(`n=${n}`, Math.max(pad.left+25*dpr, x1px-4*dpr), ey-4*dpr);
+    if (sel) {
+      const oscFreq = overrideOmega ? animSpeed : En, phase = oscFreq*t;
+      potCtx.strokeStyle = 'rgba(96,165,250,0.5)'; potCtx.lineWidth = 1.5*dpr; potCtx.setLineDash([]);
+      const sc = (h-pad.top-pad.bottom)/(ymax-ymin)*0.06;
+      potCtx.beginPath();
+      for (let px = Math.max(pad.left, x1px-30*dpr); px <= Math.min(w-pad.right, x2px+30*dpr); px++) { const x = xmin+(px-pad.left)/(w-pad.left-pad.right)*(xmax-xmin); const re = psiN(n,x,omega)*Math.cos(-phase); const py = ey - re*sc; px===Math.max(pad.left,x1px-30*dpr)?potCtx.moveTo(px,py):potCtx.lineTo(px,py); }
+      potCtx.stroke();
+      potCtx.fillStyle = 'rgba(52,211,153,0.1)'; potCtx.beginPath();
+      for (let px = Math.max(pad.left, x1px-30*dpr); px <= Math.min(w-pad.right, x2px+30*dpr); px++) { const x = xmin+(px-pad.left)/(w-pad.left-pad.right)*(xmax-xmin); const p = psiN(n,x,omega); const py = ey - p*p*sc; px===Math.max(pad.left,x1px-30*dpr)?(potCtx.moveTo(px,ey),potCtx.lineTo(px,py)):potCtx.lineTo(px,py); }
+      potCtx.lineTo(Math.min(w-pad.right, x2px+30*dpr), ey); potCtx.closePath(); potCtx.fill();
+    }
+  }
+  potCtx.restore();
+}
+
+function drawWavefunction(t) {
+  const w = wfCanvas.width, h = wfCanvas.height, dpr = devicePixelRatio;
+  if (w === 0) return;
+  wfCtx.clearRect(0, 0, w, h); wfCtx.fillStyle = '#0f172a'; wfCtx.fillRect(0, 0, w, h);
+  const xmin = -FIXED_X_RANGE, xmax = FIXED_X_RANGE, maxAmp = computeMaxPsi(qn, omega), ym = maxAmp*1.2;
+  const pad = { top: 30*dpr, bottom: 20*dpr, left: 55*dpr, right: 20*dpr };
+  drawAxes(wfCtx, w, h, xmin, xmax, -ym, ym, pad, 'ψ(x,t)');
+  const oscFreq = overrideOmega ? animSpeed : energy1D(qn, omega), phase = oscFreq*t;
+  wfCtx.save(); wfCtx.beginPath(); wfCtx.rect(pad.left, pad.top, w-pad.left-pad.right, h-pad.top-pad.bottom); wfCtx.clip();
+  wfCtx.strokeStyle = '#60a5fa'; wfCtx.lineWidth = 2.5*dpr; wfCtx.beginPath();
+  for (let px = pad.left; px <= w-pad.right; px++) { const x = xmin+(px-pad.left)/(w-pad.left-pad.right)*(xmax-xmin); const py = mapY(psiN(qn,x,omega)*Math.cos(-phase), -ym, ym, pad.top, h-pad.bottom); px===pad.left?wfCtx.moveTo(px,py):wfCtx.lineTo(px,py); }
+  wfCtx.stroke();
+  wfCtx.strokeStyle = '#f472b6'; wfCtx.lineWidth = 2.5*dpr; wfCtx.beginPath();
+  for (let px = pad.left; px <= w-pad.right; px++) { const x = xmin+(px-pad.left)/(w-pad.left-pad.right)*(xmax-xmin); const py = mapY(psiN(qn,x,omega)*Math.sin(-phase), -ym, ym, pad.top, h-pad.bottom); px===pad.left?wfCtx.moveTo(px,py):wfCtx.lineTo(px,py); }
+  wfCtx.stroke(); wfCtx.restore();
+}
+
+function drawProbability(t) {
+  const w = probCanvas.width, h = probCanvas.height, dpr = devicePixelRatio;
+  if (w === 0) return;
+  probCtx.clearRect(0, 0, w, h); probCtx.fillStyle = '#0f172a'; probCtx.fillRect(0, 0, w, h);
+  const xmin = -FIXED_X_RANGE, xmax = FIXED_X_RANGE, maxAmp = computeMaxPsi(qn, omega), mp = maxAmp*maxAmp, ym = mp*1.2, ymn = -ym*0.05;
+  const pad = { top: 30*dpr, bottom: 20*dpr, left: 55*dpr, right: 20*dpr };
+  drawAxes(probCtx, w, h, xmin, xmax, ymn, ym, pad, '|ψ|²');
+  probCtx.save(); probCtx.beginPath(); probCtx.rect(pad.left, pad.top, w-pad.left-pad.right, h-pad.top-pad.bottom); probCtx.clip();
+  probCtx.fillStyle = 'rgba(52,211,153,0.12)'; probCtx.beginPath();
+  const y0 = mapY(0, ymn, ym, pad.top, h-pad.bottom); probCtx.moveTo(pad.left, y0);
+  for (let px = pad.left; px <= w-pad.right; px++) { const x = xmin+(px-pad.left)/(w-pad.left-pad.right)*(xmax-xmin); const p = psiN(qn,x,omega); probCtx.lineTo(px, mapY(p*p, ymn, ym, pad.top, h-pad.bottom)); }
+  probCtx.lineTo(w-pad.right, y0); probCtx.closePath(); probCtx.fill();
+  probCtx.strokeStyle = '#34d399'; probCtx.lineWidth = 2.5*dpr; probCtx.beginPath();
+  for (let px = pad.left; px <= w-pad.right; px++) { const x = xmin+(px-pad.left)/(w-pad.left-pad.right)*(xmax-xmin); const p = psiN(qn,x,omega); const py = mapY(p*p, ymn, ym, pad.top, h-pad.bottom); px===pad.left?probCtx.moveTo(px,py):probCtx.lineTo(px,py); }
+  probCtx.stroke(); probCtx.restore();
+}
+
+// ========== MAIN LOOP ==========
+
+let lastTime = 0;
+function animate(timestamp) {
+  const dt = Math.min((timestamp - lastTime) / 1000, 0.05);
+  lastTime = timestamp;
+  if (isPlaying) time += dt;
+  updateTimeDisplay();
+
+  drawPotential(time);
+  drawWavefunction(time);
+  drawProbability(time);
+
+  requestAnimationFrame(animate);
+}
+
+// ========== INIT ==========
+
+function init() {
+  resizeCanvases();
+  updateDisplays();
+  updatePlaybackButtons();
+  updateTimeDisplay();
+  requestAnimationFrame(animate);
+}
+
+if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init);
+else init();
+
+})();
+</script>
+</body>
+</html>
