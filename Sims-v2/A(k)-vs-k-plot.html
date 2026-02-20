@@ -340,7 +340,7 @@
     <!-- Top Title Bar -->
     <div class="title-bar">
         <div class="title-text">A(k) vs k — Gaussian Momentum Distribution</div>
-        <button class="info-btn" id="infoBtn" title="About this simulation">i</button>
+        <button class="info-btn" id="infoBtn" title="About this simulation" aria-label="About this simulation">i</button>
     </div>
 
     <!-- About Modal -->
@@ -354,12 +354,12 @@
             </p>
             <p>
                 Students can drag <strong>k₀</strong> to shift the peak (changing the particle's central momentum) and 
-                adjust <strong>σ</strong> to widen or narrow the distribution. Shaded regions under the curve show the 
-                fraction of momentum components within ±σ (68.27%) and ±2σ (95.45%) of the center, reinforcing that most 
-                of the wavepacket's momentum content clusters near k₀. A draggable probe line displays A(k) at any point.
+                adjust <strong>σ</strong> to widen or narrow the distribution. Shaded regions show the amplitude A(k) over 
+                ±σ and ±2σ ranges. The percentages 68.27% and 95.45% refer to the fraction of ∫|A(k)|² dk (probability in k-space) 
+                within those ranges; most of the wavepacket's momentum content clusters near k₀. A draggable probe line displays A(k) at any point.
             </p>
             <p>
-                Key annotations — peak location, FWHM, and the 1/e² width — update dynamically as parameters change.
+                Key annotations — peak location, FWHM, and the 1/e² width (where amplitude A(k) falls to 1/e² of its peak) — update dynamically as parameters change.
             </p>
             <div class="equation-block" id="katexEquation"></div>
             <p style="font-size:12px; color:#64748b; margin-bottom:0;">
@@ -380,11 +380,7 @@
         <!-- Formula Section -->
         <div class="panel-section">
             <h3>Live Formula</h3>
-            <div class="formula-display">
-                <span class="math">A</span>(<span class="math">k</span>) = 
-                <span style="color:#fbbf24">(2πσ²)</span><sup style="color:#fbbf24;font-size:10px">−1/4</sup>
-                · exp[ −(<span class="math">k</span> − <span class="param">k₀</span>)² / (4<span class="sigma-param">σ²</span>) ]
-            </div>
+            <div class="formula-display" id="liveFormulaEl" aria-hidden="true"></div>
             <div class="param-values">
                 <span class="param" style="color:#60a5fa;">k₀ = <span id="formulaK0Val">5.00</span></span>
                 <span class="sigma-param" style="color:#34d399;">σ = <span id="formulaSigmaVal">1.00</span></span>
@@ -396,20 +392,20 @@
             <h3>Parameters</h3>
             <div class="control-group">
                 <label>Central Momentum k₀ <span class="val" id="k0Val" style="color:#60a5fa">5.00</span></label>
-                <input type="range" class="slider k0-slider" id="k0Slider" min="-10" max="10" step="0.01" value="5">
+                <input type="range" class="slider k0-slider" id="k0Slider" min="-5" max="5" step="0.01" value="5">
             </div>
             <div class="control-group">
                 <label>Width σ <span class="val" id="sigmaVal" style="color:#34d399">1.00</span></label>
-                <input type="range" class="slider sigma-slider" id="sigmaSlider" min="0.2" max="4" step="0.01" value="1">
+                <input type="range" class="slider sigma-slider" id="sigmaSlider" min="0.25" max="4" step="0.01" value="1">
             </div>
             <div class="divider"></div>
             <div class="toggle-row">
                 <input type="checkbox" id="probeToggle" checked>
                 <label for="probeToggle" style="color:#f472b6;">Show Probe Line</label>
             </div>
-            <div class="control-group">
+            <div class="control-group" id="probeSliderGroup">
                 <label>Probe Position k <span class="val" id="probeVal" style="color:#f472b6">5.00</span></label>
-                <input type="range" class="slider probe-slider" id="probeSlider" min="-10" max="10" step="0.01" value="5">
+                <input type="range" class="slider probe-slider" id="probeSlider" min="-20" max="20" step="0.01" value="5">
             </div>
             <div class="divider"></div>
             <div class="toggle-row">
@@ -434,15 +430,15 @@
                 <span class="anno-value" id="annoFWHM">2.355</span>
             </div>
             <div class="anno-row">
-                <span class="anno-label"><span class="anno-dot" style="background:#a78bfa"></span>1/e² Width</span>
+                <span class="anno-label" title="Width where amplitude A(k) falls to 1/e² of its peak"><span class="anno-dot" style="background:#a78bfa"></span>1/e² Width</span>
                 <span class="anno-value" id="anno1e2">4.000</span>
             </div>
             <div class="anno-row">
-                <span class="anno-label"><span class="anno-dot" style="background:rgba(52,211,153,0.5)"></span>±σ Content</span>
+                <span class="anno-label"><span class="anno-dot" style="background:rgba(52,211,153,0.5)"></span>±σ region</span>
                 <span class="anno-value" id="annoPm1Sigma">68.27%</span>
             </div>
             <div class="anno-row">
-                <span class="anno-label"><span class="anno-dot" style="background:rgba(96,165,250,0.3)"></span>±2σ Content</span>
+                <span class="anno-label"><span class="anno-dot" style="background:rgba(96,165,250,0.3)"></span>±2σ region</span>
                 <span class="anno-value" id="annoPm2Sigma">95.45%</span>
             </div>
             <div class="anno-row">
@@ -456,11 +452,11 @@
             <h3>Legend</h3>
             <div class="legend-item">
                 <div class="legend-swatch" style="background: rgba(96,165,250,0.2); border: 1px solid rgba(96,165,250,0.4);"></div>
-                <span style="color:#94a3b8">±2σ region (95.45%)</span>
+                <span style="color:#94a3b8">±2σ region (95.45% of ∫|A(k)|² dk)</span>
             </div>
             <div class="legend-item">
                 <div class="legend-swatch" style="background: rgba(52,211,153,0.3); border: 1px solid rgba(52,211,153,0.5);"></div>
-                <span style="color:#94a3b8">±σ region (68.27%)</span>
+                <span style="color:#94a3b8">±σ region (68.27% of ∫|A(k)|² dk)</span>
             </div>
             <div class="legend-item">
                 <div class="legend-swatch" style="background: #f472b6;"></div>
@@ -475,16 +471,15 @@
     </div>
 
     <script>
-    // Render KaTeX equation in the modal
+    // Render KaTeX equations (modal and live formula panel) in standard LaTeX
+    const latexFormula = 'A(k) = \\left(2\\pi\\sigma^2\\right)^{-1/4} \\cdot \\exp\\!\\left[ -\\frac{(k - k_0)^2}{4\\sigma^2} \\right]';
     document.addEventListener('DOMContentLoaded', function() {
+        if (typeof katex === 'undefined') return;
+        const opts = { displayMode: true, throwOnError: false };
         const eqEl = document.getElementById('katexEquation');
-        if (eqEl && typeof katex !== 'undefined') {
-            katex.render(
-                'A(k) = \\left(2\\pi\\sigma^2\\right)^{-1/4} \\exp\\!\\left[ -\\frac{(k - k_0)^2}{4\\sigma^2} \\right]',
-                eqEl,
-                { displayMode: true, throwOnError: false }
-            );
-        }
+        if (eqEl) katex.render(latexFormula, eqEl, opts);
+        const liveEl = document.getElementById('liveFormulaEl');
+        if (liveEl) katex.render(latexFormula, liveEl, opts);
     });
 
     // Modal logic
@@ -496,6 +491,11 @@
     });
     document.getElementById('modalOverlay').addEventListener('click', function(e) {
         if (e.target === this) this.classList.remove('active');
+    });
+    document.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape' && document.getElementById('modalOverlay').classList.contains('active')) {
+            document.getElementById('modalOverlay').classList.remove('active');
+        }
     });
 
     (function() {
@@ -511,7 +511,6 @@
         let showAnnotations = true;
 
         // Animation state
-        let time = 0;
         let animPhase = 0;
 
         // DOM elements
@@ -551,7 +550,15 @@
             probeK = parseFloat(e.target.value);
             probeValEl.textContent = probeK.toFixed(2);
         });
-        probeToggle.addEventListener('change', e => { showProbe = e.target.checked; });
+        const probeSliderGroup = document.getElementById('probeSliderGroup');
+        function updateProbeSliderVisibility() {
+            if (probeSliderGroup) probeSliderGroup.style.display = showProbe ? '' : 'none';
+        }
+        probeToggle.addEventListener('change', e => {
+            showProbe = e.target.checked;
+            updateProbeSliderVisibility();
+        });
+        updateProbeSliderVisibility();
         shadingToggle.addEventListener('change', e => { showShading = e.target.checked; });
         annotationsToggle.addEventListener('change', e => {
             showAnnotations = e.target.checked;
@@ -565,7 +572,9 @@
             return norm * Math.exp(exponent);
         }
 
-        // Coordinate transforms
+        // Coordinate transforms — fixed axis ranges (no dynamic scaling)
+        const K_MIN = -20, K_MAX = 20;   // k span so curve is visible moving when k₀ ∈ [-5, 5]
+        const A_MAX = 1.40;              // A(k) upper limit for y-axis
         let plotLeft, plotRight, plotTop, plotBottom, plotWidth, plotHeight;
         let kMin, kMax, aMax;
 
@@ -758,9 +767,19 @@
         }
 
         function drawAnnotationMarkers() {
+            const peakA = gaussian(k0, k0, sigma);
+            const fwhmActual = 4 * sigma * Math.sqrt(Math.log(2));
+            const w1e2 = 2 * 2 * Math.sqrt(2) * sigma;
+
+            // Always update annotation panel values so they stay current when annotations are hidden
+            annoPeak.textContent = k0.toFixed(2);
+            annoFWHM.textContent = fwhmActual.toFixed(3);
+            anno1e2.textContent = w1e2.toFixed(3);
+            annoPm1Sigma.textContent = '68.27%';
+            annoPm2Sigma.textContent = '95.45%';
+
             if (!showAnnotations) return;
 
-            const peakA = gaussian(k0, k0, sigma);
             const peakX = kToX(k0);
             const peakY = aToY(peakA);
 
@@ -783,14 +802,13 @@
             ctx.lineWidth = 2;
             ctx.stroke();
 
-            // k₀ label
+            // k₀ label (left of peak to avoid overlap with probe tooltip)
             ctx.fillStyle = '#60a5fa';
             ctx.font = 'bold 12px -apple-system, sans-serif';
-            ctx.textAlign = 'center';
-            ctx.fillText('k₀=' + k0.toFixed(2), peakX, peakY - 14);
+            ctx.textAlign = 'right';
+            ctx.fillText('k₀ = ' + k0.toFixed(2), peakX - 10, peakY - 14);
 
             // FWHM
-            const fwhmActual = 4 * sigma * Math.sqrt(Math.log(2));
             const halfMaxA = peakA / 2;
             const kFwhmLeft = k0 - fwhmActual / 2;
             const kFwhmRight = k0 + fwhmActual / 2;
@@ -821,7 +839,6 @@
             ctx.fillText('FWHM', (xFwhmLeft + xFwhmRight) / 2, yHalf - 8);
 
             // 1/e² width
-            const w1e2 = 2 * 2 * Math.sqrt(2) * sigma;
             const a1e2 = peakA * Math.exp(-2);
             const y1e2 = aToY(a1e2);
             const k1e2Left = k0 - w1e2 / 2;
@@ -879,13 +896,6 @@
                 }
             });
             ctx.setLineDash([]);
-
-            // Update annotation values
-            annoPeak.textContent = k0.toFixed(2);
-            annoFWHM.textContent = fwhmActual.toFixed(3);
-            anno1e2.textContent = w1e2.toFixed(3);
-            annoPm1Sigma.textContent = '68.27%';
-            annoPm2Sigma.textContent = '95.45%';
         }
 
         function drawProbeLine() {
@@ -926,9 +936,13 @@
                 ctx.lineWidth = 1.5;
                 ctx.stroke();
 
-                // Value tooltip
+                // Value tooltip (clamp so box stays inside plot)
                 const tooltipX = probeX + 12;
-                const tooltipY = probeY - 10;
+                const tooltipBoxH = 22;
+                const tooltipBoxTopOffset = 14;
+                let tooltipY = probeY - 10;
+                if (tooltipY - tooltipBoxTopOffset < plotTop) tooltipY = plotTop + tooltipBoxTopOffset;
+                else if (tooltipY + tooltipBoxH - tooltipBoxTopOffset > plotBottom) tooltipY = plotBottom - (tooltipBoxH - tooltipBoxTopOffset);
                 const text = 'A(' + probeK.toFixed(2) + ') = ' + probeA.toFixed(4);
                 ctx.font = 'bold 11px -apple-system, sans-serif';
                 const tw = ctx.measureText(text).width;
@@ -939,7 +953,11 @@
                 ctx.strokeStyle = 'rgba(244, 114, 182, 0.5)';
                 ctx.lineWidth = 1;
                 ctx.beginPath();
-                ctx.roundRect(tx - 6, tooltipY - 14, tw + 12, 22, 4);
+                if (typeof ctx.roundRect === 'function') {
+                    ctx.roundRect(tx - 6, tooltipY - 14, tw + 12, 22, 4);
+                } else {
+                    ctx.rect(tx - 6, tooltipY - 14, tw + 12, 22);
+                }
                 ctx.fill();
                 ctx.stroke();
 
@@ -1017,13 +1035,9 @@
 
             if (plotWidth < 100 || plotHeight < 100) return;
 
-            // Dynamic range
-            const range = Math.max(6 * sigma, 4);
-            kMin = k0 - range - 2;
-            kMax = k0 + range + 2;
-
-            const peakA = gaussian(k0, k0, sigma);
-            aMax = peakA * 1.15;
+            kMin = K_MIN;
+            kMax = K_MAX;
+            aMax = A_MAX;
 
             // Draw elements in order
             drawGrid();
@@ -1045,9 +1059,9 @@
 
         let lastTime = 0;
         function animate(timestamp) {
+            if (lastTime === 0) lastTime = timestamp;
             const dt = (timestamp - lastTime) / 1000;
             lastTime = timestamp;
-            time += dt;
             animPhase += dt * 1.5;
 
             draw();
