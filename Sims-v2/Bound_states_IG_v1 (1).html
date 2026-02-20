@@ -1,0 +1,1465 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quantum Finite Square Well - Bound States Simulation</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: #0f172a;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            color: #e2e8f0;
+            overflow: hidden;
+            height: 100vh;
+        }
+
+        .title-bar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 50px;
+            background: rgba(17, 24, 39, 0.95);
+            backdrop-filter: blur(12px);
+            border-bottom: 1px solid rgba(148, 163, 184, 0.15);
+            display: flex;
+            align-items: center;
+            padding: 0 20px;
+            z-index: 1000;
+        }
+
+        .title-bar-inner {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .simulation-title {
+            font-size: 18px;
+            font-weight: 700;
+            color: #ffffff;
+            letter-spacing: 0.5px;
+        }
+
+        .info-btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 22px;
+            height: 22px;
+            border-radius: 50%;
+            border: 1px solid rgba(148, 163, 184, 0.4);
+            background: rgba(30, 41, 59, 0.6);
+            color: #94a3b8;
+            font-size: 12px;
+            font-weight: 700;
+            font-style: italic;
+            cursor: pointer;
+            transition: background 0.2s, color 0.2s, border-color 0.2s;
+        }
+
+        .info-btn:hover {
+            background: rgba(59, 130, 246, 0.2);
+            color: #60a5fa;
+            border-color: rgba(59, 130, 246, 0.4);
+        }
+
+        .info-btn[aria-label] {
+            cursor: pointer;
+        }
+
+        .about-popover {
+            position: absolute;
+            top: calc(100% + 8px);
+            right: 0;
+            left: auto;
+            width: min(320px, calc(100vw - 40px));
+            max-height: min(70vh, 400px);
+            overflow-y: auto;
+            background: rgba(17, 24, 39, 0.98);
+            border: 1px solid rgba(148, 163, 184, 0.2);
+            border-radius: 10px;
+            padding: 16px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.4);
+            z-index: 1001;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.15s, visibility 0.15s;
+            pointer-events: none;
+        }
+
+        .about-popover.is-visible {
+            opacity: 1;
+            visibility: visible;
+            pointer-events: auto;
+        }
+
+        .info-trigger {
+            position: relative;
+        }
+
+        .about-popover .section-title {
+            margin-bottom: 10px;
+        }
+
+        .main-container {
+            position: fixed;
+            top: 50px;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            display: flex;
+        }
+
+        .canvas-container {
+            flex: 1;
+            display: flex;
+            height: 100%;
+        }
+
+        .panel {
+            height: 100%;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .physical-panel {
+            width: 55%;
+            border-right: 1px solid rgba(148, 163, 184, 0.1);
+        }
+
+        .math-panel {
+            width: 45%;
+        }
+
+        .canvas-container.physical-maximized .math-panel {
+            display: none;
+        }
+
+        .canvas-container.physical-maximized .physical-panel {
+            width: 100%;
+            flex: 1;
+        }
+
+        .canvas-container.math-maximized .physical-panel {
+            display: none;
+        }
+
+        .canvas-container.math-maximized .math-panel {
+            width: 100%;
+            flex: 1;
+        }
+
+        .panel-header {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 12px 0 20px;
+            z-index: 10;
+            pointer-events: none;
+        }
+
+        .panel-header .panel-title {
+            position: static;
+        }
+
+        .panel-maximize-btn {
+            pointer-events: auto;
+            width: 28px;
+            height: 28px;
+            padding: 0;
+            border: none;
+            border-radius: 6px;
+            background: rgba(30, 41, 59, 0.7);
+            color: #94a3b8;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            transition: background 0.2s, color 0.2s;
+        }
+
+        .panel-maximize-btn:hover {
+            background: rgba(59, 130, 246, 0.25);
+            color: #60a5fa;
+        }
+
+        .panel-maximize-btn svg {
+            width: 14px;
+            height: 14px;
+            fill: currentColor;
+        }
+
+        .panel-title {
+            font-size: 13px;
+            font-weight: 600;
+            color: #94a3b8;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        canvas {
+            display: block;
+            width: 100%;
+            height: 100%;
+        }
+
+        .control-panel {
+            width: 280px;
+            min-width: 280px;
+            background: rgba(17, 24, 39, 0.95);
+            backdrop-filter: blur(12px);
+            border-left: 1px solid rgba(148, 163, 184, 0.15);
+            display: flex;
+            flex-direction: column;
+            overflow-y: auto;
+            padding: 15px;
+            gap: 15px;
+        }
+
+        .control-section {
+            background: rgba(30, 41, 59, 0.6);
+            border-radius: 10px;
+            padding: 15px;
+            border: 1px solid rgba(148, 163, 184, 0.1);
+        }
+
+        .section-title {
+            font-size: 12px;
+            font-weight: 600;
+            color: #94a3b8;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 12px;
+            padding-bottom: 8px;
+            border-bottom: 1px solid rgba(148, 163, 184, 0.15);
+        }
+
+        .control-group {
+            margin-bottom: 15px;
+        }
+
+        .control-group:last-child {
+            margin-bottom: 0;
+        }
+
+        .control-label {
+            font-size: 12px;
+            color: #94a3b8;
+            font-weight: 500;
+            margin-bottom: 8px;
+            display: block;
+        }
+
+        .slider-container {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .slider {
+            flex: 1;
+            height: 4px;
+            -webkit-appearance: none;
+            appearance: none;
+            background: rgba(148, 163, 184, 0.2);
+            border-radius: 2px;
+            outline: none;
+        }
+
+        .slider::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            width: 14px;
+            height: 14px;
+            background: #3b82f6;
+            border-radius: 50%;
+            cursor: pointer;
+            transition: transform 0.15s;
+        }
+
+        .slider::-webkit-slider-thumb:hover {
+            transform: scale(1.2);
+        }
+
+        .slider-value {
+            font-size: 12px;
+            color: #f1f5f9;
+            font-weight: 600;
+            min-width: 60px;
+            text-align: right;
+            font-variant-numeric: tabular-nums;
+        }
+
+        .parity-toggle {
+            display: flex;
+            background: rgba(30, 41, 59, 0.8);
+            border-radius: 6px;
+            overflow: hidden;
+            border: 1px solid rgba(148, 163, 184, 0.2);
+        }
+
+        .parity-btn {
+            flex: 1;
+            padding: 8px 12px;
+            font-size: 11px;
+            font-weight: 600;
+            border: none;
+            background: transparent;
+            color: #94a3b8;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .parity-btn.active {
+            background: #f97316;
+            color: white;
+        }
+
+        .parity-btn.active.odd {
+            background: #8b5cf6;
+        }
+
+        .reset-btn {
+            width: 100%;
+            padding: 10px 14px;
+            background: rgba(59, 130, 246, 0.2);
+            border: 1px solid rgba(59, 130, 246, 0.4);
+            border-radius: 6px;
+            color: #60a5fa;
+            font-size: 12px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .reset-btn:hover {
+            background: rgba(59, 130, 246, 0.3);
+        }
+
+        .info-row {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 8px;
+        }
+
+        .info-label {
+            color: #94a3b8;
+            font-size: 12px;
+        }
+
+        .info-value {
+            color: #f1f5f9;
+            font-weight: 600;
+            font-size: 12px;
+            font-variant-numeric: tabular-nums;
+        }
+
+        .energy-list {
+            margin-top: 10px;
+            max-height: 150px;
+            overflow-y: auto;
+        }
+
+        .energy-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 6px;
+            font-size: 11px;
+        }
+
+        .energy-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            flex-shrink: 0;
+        }
+
+        .energy-info {
+            display: flex;
+            justify-content: space-between;
+            flex: 1;
+        }
+
+        .legend-section {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 11px;
+        }
+
+        .legend-color {
+            width: 20px;
+            height: 3px;
+            border-radius: 2px;
+            flex-shrink: 0;
+        }
+
+        .about-content {
+            font-size: 11px;
+            color: #94a3b8;
+            line-height: 1.6;
+        }
+
+        .about-content p {
+            margin-bottom: 10px;
+        }
+
+        .about-content p:last-child {
+            margin-bottom: 0;
+        }
+
+        .about-highlight {
+            color: #60a5fa;
+            font-weight: 500;
+        }
+
+        .katex-display {
+            margin: 8px 0;
+            color: #e2e8f0;
+        }
+
+        @media (max-width: 1000px) {
+            .control-panel {
+                width: 240px;
+                min-width: 240px;
+            }
+        }
+
+        @media (max-width: 800px) {
+            .main-container {
+                flex-direction: column;
+            }
+
+            .canvas-container {
+                flex-direction: column;
+                height: 60%;
+            }
+
+            .physical-panel, .math-panel {
+                width: 100%;
+                height: 50%;
+            }
+
+            .canvas-container.physical-maximized .physical-panel,
+            .canvas-container.math-maximized .math-panel {
+                height: 100%;
+            }
+
+            .physical-panel {
+                border-right: none;
+                border-bottom: 1px solid rgba(148, 163, 184, 0.1);
+            }
+
+            .control-panel {
+                width: 100%;
+                height: 40%;
+                border-left: none;
+                border-top: 1px solid rgba(148, 163, 184, 0.15);
+                flex-direction: row;
+                flex-wrap: wrap;
+                overflow-y: auto;
+            }
+
+            .control-section {
+                flex: 1;
+                min-width: 200px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="title-bar">
+        <div class="title-bar-inner">
+            <div class="simulation-title">Quantum Finite Square Well - Bound States Simulation</div>
+            <div class="info-trigger" id="infoTrigger">
+                <button type="button" class="info-btn" id="infoBtn" aria-label="About this simulation" aria-expanded="false" aria-controls="aboutPopover">i</button>
+                <div class="about-popover" id="aboutPopover" tabindex="-1" role="dialog" aria-label="About the simulation">
+                    <div class="section-title">About the Simulation</div>
+                    <div class="about-content">
+                        <p>This simulation visualizes <span class="about-highlight">bound states in a finite quantum potential well</span>, demonstrating how discrete energy levels emerge from mathematical constraints.</p>
+                        <p>The dimensionless variables are defined as:</p>
+                        <div id="xiFormula"></div>
+                        <div id="etaFormula"></div>
+                        <div id="z0Formula"></div>
+                        <p>where <span class="about-highlight">k</span> is the wave vector inside the well, <span class="about-highlight">κ</span> is the decay constant outside, and <span class="about-highlight">a</span> is the half-width of the well. Bound states lie where the (ξ, η) curve meets the circle.</p>
+                        <p><span class="about-highlight">N</span> is the number of bound states for the <em>currently selected parity</em> (even or odd). Adjust V₀ to see states appear/disappear as the circle expands/contracts. Finite wells support only a <span class="about-highlight">finite number of bound states</span>.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="main-container">
+        <div class="canvas-container" id="canvasContainer">
+            <div class="panel physical-panel">
+                <div class="panel-header">
+                    <span class="panel-title">Physical Space</span>
+                    <button type="button" class="panel-maximize-btn" id="physicalMaximizeBtn" aria-label="Maximize Physical Space plot">
+                        <svg class="icon-maximize" viewBox="0 0 24 24" aria-hidden="true"><path d="M7 14H5v5h5v-2H7v-3zm-2-4h2V7h3V5H5v5zm12 7h-3v2h5v-5h-2v3zM14 5v2h3v3h2V5h-5z"/></svg>
+                        <svg class="icon-restore" viewBox="0 0 24 24" aria-hidden="true" style="display:none"><path d="M4 8h4V4h12v12h-4v4H4V8zm2 10h8v-8h4V6H6v12zm10-10v4h4v-4h-4z"/></svg>
+                    </button>
+                </div>
+                <canvas id="physicalCanvas"></canvas>
+            </div>
+
+            <div class="panel math-panel">
+                <div class="panel-header">
+                    <span class="panel-title">Mathematical Space</span>
+                    <button type="button" class="panel-maximize-btn" id="mathMaximizeBtn" aria-label="Maximize Mathematical Space plot">
+                        <svg class="icon-maximize" viewBox="0 0 24 24" aria-hidden="true"><path d="M7 14H5v5h5v-2H7v-3zm-2-4h2V7h3V5H5v5zm12 7h-3v2h5v-5h-2v3zM14 5v2h3v3h2V5h-5z"/></svg>
+                        <svg class="icon-restore" viewBox="0 0 24 24" aria-hidden="true" style="display:none"><path d="M4 8h4V4h12v12h-4v4H4V8zm2 10h8v-8h4V6H6v12zm10-10v4h4v-4h-4z"/></svg>
+                    </button>
+                </div>
+                <canvas id="mathCanvas"></canvas>
+            </div>
+        </div>
+
+        <div class="control-panel">
+            <div class="control-section">
+                <div class="section-title">Controls</div>
+                
+                <div class="control-group">
+                    <label class="control-label">V₀ (Well Depth)</label>
+                    <div class="slider-container">
+                        <input type="range" class="slider" id="v0Slider" min="1" max="200" value="10" step="0.5">
+                        <span class="slider-value" id="v0Value">10.0 eV</span>
+                    </div>
+                </div>
+
+                <div class="control-group">
+                    <label class="control-label">a (Half-width)</label>
+                    <div class="slider-container">
+                        <input type="range" class="slider" id="aSlider" min="0.1" max="2.0" value="0.5" step="0.05">
+                        <span class="slider-value" id="aValue">0.50 nm</span>
+                    </div>
+                </div>
+
+                <div class="control-group">
+                    <label class="control-label">Parity</label>
+                    <div class="parity-toggle">
+                        <button class="parity-btn active" id="evenBtn" type="button" aria-pressed="true" aria-label="Even parity (tan solutions)">Even (tan)</button>
+                        <button class="parity-btn" id="oddBtn" type="button" aria-pressed="false" aria-label="Odd parity (-cot solutions)">Odd (-cot)</button>
+                    </div>
+                </div>
+
+                <button class="reset-btn" id="resetBtn" type="button" aria-label="Reset to default well depth and half-width">Reset to Default</button>
+            </div>
+
+            <div class="control-section">
+                <div class="section-title">Bound States</div>
+                
+                <div class="info-row">
+                    <span class="info-label">Number of States N =</span>
+                    <span class="info-value" id="nStates">3</span>
+                </div>
+                <div class="energy-list" id="energyList"></div>
+            </div>
+
+            <div class="control-section">
+                <div class="section-title">Legend</div>
+                
+                <div class="legend-section">
+                    <div class="legend-item">
+                        <div class="legend-color" style="background: #64748b;"></div>
+                        <span>Potential V(x)</span>
+                    </div>
+                    <div class="legend-item">
+                        <div class="legend-color" style="background: #f97316;"></div>
+                        <span>Even ψ (tan solutions)</span>
+                    </div>
+                    <div class="legend-item">
+                        <div class="legend-color" style="background: #8b5cf6;"></div>
+                        <span>Odd ψ (-cot solutions)</span>
+                    </div>
+                    <div class="legend-item">
+                        <div class="legend-color" style="background: #3b82f6;"></div>
+                        <span>Energy Circle (z₀)</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Physical constants: ℏ²/(2m) in eV·nm².
+        // Pedagogical value 0.0381 chosen so typical a (nm) and V₀ (eV) yield several bound states.
+        // (SI free-electron value would be ~3.8e16 eV·nm², giving z₀ ≪ 1 and effectively no bound states.)
+        const HBAR2_2M = 0.0381;
+
+        // State variables
+        let V0 = 10; // eV
+        let a = 0.5; // nm
+        let showEven = true;
+        let boundStates = [];
+        let animationTime = 0;
+        let targetZ0 = 0;
+        let currentZ0 = 0;
+        let hoveredState = -1;
+
+        // Dynamic view parameters for mathematical space
+        let targetMaxXi = 4 * Math.PI;
+        let currentMaxXi = 4 * Math.PI;
+        let targetMaxEta = 5;
+        let currentMaxEta = 5;
+
+        // Canvas contexts
+        let physCtx, mathCtx;
+        let physCanvas, mathCanvas;
+
+        // Maximized panel: null (split), 'physical', or 'math'
+        let maximizedPanel = null;
+
+        // Colors for energy levels - extended palette for more states
+        const stateColors = [
+            '#f97316', // orange
+            '#3b82f6', // blue
+            '#10b981', // green
+            '#f472b6', // pink
+            '#fbbf24', // yellow
+            '#8b5cf6', // purple
+            '#06b6d4', // cyan
+            '#ef4444', // red
+            '#84cc16', // lime
+            '#ec4899', // magenta
+            '#14b8a6', // teal
+            '#f59e0b', // amber
+            '#6366f1', // indigo
+            '#22c55e', // emerald
+            '#e879f9', // fuchsia
+            '#fb923c'  // orange light
+        ];
+
+        let animationFrameId = null;
+
+        function init() {
+            physCanvas = document.getElementById('physicalCanvas');
+            mathCanvas = document.getElementById('mathCanvas');
+            if (!physCanvas || !mathCanvas) return;
+            physCtx = physCanvas.getContext('2d');
+            mathCtx = mathCanvas.getContext('2d');
+            if (!physCtx || !mathCtx) return;
+
+            resizeCanvases();
+            window.addEventListener('resize', resizeCanvases);
+
+            setupControls();
+            setupInfoPopover();
+            setupMaximizeButtons();
+            calculateBoundStates();
+            renderLatexFormulas();
+            animate();
+        }
+
+        function setupMaximizeButtons() {
+            const container = document.getElementById('canvasContainer');
+            const physicalBtn = document.getElementById('physicalMaximizeBtn');
+            const mathBtn = document.getElementById('mathMaximizeBtn');
+            if (!container || !physicalBtn || !mathBtn) return;
+
+            function updateMaximizeUI() {
+                container.classList.remove('physical-maximized', 'math-maximized');
+                if (maximizedPanel === 'physical') container.classList.add('physical-maximized');
+                else if (maximizedPanel === 'math') container.classList.add('math-maximized');
+
+                const physMax = physicalBtn.querySelector('.icon-maximize');
+                const physRestore = physicalBtn.querySelector('.icon-restore');
+                const mathMax = mathBtn.querySelector('.icon-maximize');
+                const mathRestore = mathBtn.querySelector('.icon-restore');
+                if (physMax && physRestore) {
+                    physMax.style.display = maximizedPanel === 'physical' ? 'none' : 'block';
+                    physRestore.style.display = maximizedPanel === 'physical' ? 'block' : 'none';
+                }
+                if (mathMax && mathRestore) {
+                    mathMax.style.display = maximizedPanel === 'math' ? 'none' : 'block';
+                    mathRestore.style.display = maximizedPanel === 'math' ? 'block' : 'none';
+                }
+                physicalBtn.setAttribute('aria-label', maximizedPanel === 'physical' ? 'Restore split view' : 'Maximize Physical Space plot');
+                mathBtn.setAttribute('aria-label', maximizedPanel === 'math' ? 'Restore split view' : 'Maximize Mathematical Space plot');
+                resizeCanvases();
+            }
+
+            physicalBtn.addEventListener('click', () => {
+                maximizedPanel = maximizedPanel === 'physical' ? null : 'physical';
+                updateMaximizeUI();
+            });
+            mathBtn.addEventListener('click', () => {
+                maximizedPanel = maximizedPanel === 'math' ? null : 'math';
+                updateMaximizeUI();
+            });
+        }
+
+        function setupInfoPopover() {
+            const trigger = document.getElementById('infoTrigger');
+            const popover = document.getElementById('aboutPopover');
+            const infoBtn = document.getElementById('infoBtn');
+            if (!trigger || !popover) return;
+            let hideTimeout = null;
+
+            function setExpanded(open) {
+                if (infoBtn) infoBtn.setAttribute('aria-expanded', open ? 'true' : 'false');
+            }
+
+            function show(focusPopover) {
+                if (hideTimeout) clearTimeout(hideTimeout);
+                hideTimeout = null;
+                popover.classList.add('is-visible');
+                setExpanded(true);
+                if (focusPopover) popover.focus();
+            }
+
+            function hide() {
+                popover.classList.remove('is-visible');
+                setExpanded(false);
+            }
+
+            function scheduleHide() {
+                if (hideTimeout) clearTimeout(hideTimeout);
+                hideTimeout = setTimeout(() => {
+                    hide();
+                    hideTimeout = null;
+                }, 150);
+            }
+
+            trigger.addEventListener('mouseenter', () => show(false));
+            trigger.addEventListener('mouseleave', scheduleHide);
+            popover.addEventListener('mouseenter', () => show(false));
+            popover.addEventListener('mouseleave', scheduleHide);
+
+            if (infoBtn) {
+                infoBtn.addEventListener('click', () => {
+                    const open = !popover.classList.contains('is-visible');
+                    if (hideTimeout) clearTimeout(hideTimeout);
+                    hideTimeout = null;
+                    if (open) show(true);
+                    else hide();
+                });
+                infoBtn.addEventListener('focus', () => { show(true); });
+            }
+            popover.addEventListener('focusout', (e) => {
+                if (!trigger.contains(e.relatedTarget) && !popover.contains(e.relatedTarget)) scheduleHide();
+            });
+            document.addEventListener('keydown', (e) => {
+                if (e.key === 'Escape' && popover.classList.contains('is-visible')) {
+                    hide();
+                    if (infoBtn) infoBtn.focus();
+                }
+            });
+        }
+
+        function renderLatexFormulas() {
+            if (typeof katex === 'undefined') return;
+            const xiEl = document.getElementById('xiFormula');
+            const etaEl = document.getElementById('etaFormula');
+            const z0El = document.getElementById('z0Formula');
+            if (xiEl) katex.render("\\xi = ka", xiEl, { displayMode: true, throwOnError: false });
+            if (etaEl) katex.render("\\eta = \\kappa a", etaEl, { displayMode: true, throwOnError: false });
+            if (z0El) katex.render("\\xi^2 + \\eta^2 = z_0^2", z0El, { displayMode: true, throwOnError: false });
+        }
+
+        function resizeCanvases() {
+            if (!physCanvas || !mathCanvas || !physCtx || !mathCtx) return;
+            const physPanel = physCanvas.parentElement;
+            const mathPanel = mathCanvas.parentElement;
+            if (!physPanel || !mathPanel) return;
+
+            physCanvas.width = physPanel.clientWidth * window.devicePixelRatio;
+            physCanvas.height = physPanel.clientHeight * window.devicePixelRatio;
+            mathCanvas.width = mathPanel.clientWidth * window.devicePixelRatio;
+            mathCanvas.height = mathPanel.clientHeight * window.devicePixelRatio;
+
+            // Setting canvas.width/height resets the context; reapply scale for device pixels
+            physCtx.setTransform(1, 0, 0, 1, 0, 0);
+            mathCtx.setTransform(1, 0, 0, 1, 0, 0);
+            physCtx.scale(window.devicePixelRatio, window.devicePixelRatio);
+            mathCtx.scale(window.devicePixelRatio, window.devicePixelRatio);
+        }
+
+        function setupControls() {
+            const v0Slider = document.getElementById('v0Slider');
+            const aSlider = document.getElementById('aSlider');
+            const evenBtn = document.getElementById('evenBtn');
+            const oddBtn = document.getElementById('oddBtn');
+            const resetBtn = document.getElementById('resetBtn');
+            const v0ValueEl = document.getElementById('v0Value');
+            const aValueEl = document.getElementById('aValue');
+            if (!v0Slider || !aSlider || !evenBtn || !oddBtn || !resetBtn) return;
+
+            v0Slider.addEventListener('input', (e) => {
+                V0 = parseFloat(e.target.value);
+                if (v0ValueEl) v0ValueEl.textContent = V0.toFixed(1) + ' eV';
+                calculateBoundStates();
+            });
+
+            aSlider.addEventListener('input', (e) => {
+                a = parseFloat(e.target.value);
+                if (aValueEl) aValueEl.textContent = a.toFixed(2) + ' nm';
+                calculateBoundStates();
+            });
+
+            evenBtn.addEventListener('click', () => {
+                showEven = true;
+                evenBtn.classList.add('active');
+                evenBtn.setAttribute('aria-pressed', 'true');
+                oddBtn.classList.remove('active');
+                oddBtn.classList.remove('odd');
+                oddBtn.setAttribute('aria-pressed', 'false');
+                calculateBoundStates();
+            });
+
+            oddBtn.addEventListener('click', () => {
+                showEven = false;
+                oddBtn.classList.add('active');
+                oddBtn.classList.add('odd');
+                oddBtn.setAttribute('aria-pressed', 'true');
+                evenBtn.classList.remove('active');
+                evenBtn.setAttribute('aria-pressed', 'false');
+                calculateBoundStates();
+            });
+
+            resetBtn.addEventListener('click', () => {
+                V0 = 10;
+                a = 0.5;
+                showEven = true;
+                v0Slider.value = 10;
+                aSlider.value = 0.5;
+                if (v0ValueEl) v0ValueEl.textContent = '10.0 eV';
+                if (aValueEl) aValueEl.textContent = '0.50 nm';
+                evenBtn.classList.add('active');
+                evenBtn.setAttribute('aria-pressed', 'true');
+                oddBtn.classList.remove('active');
+                oddBtn.classList.remove('odd');
+                oddBtn.setAttribute('aria-pressed', 'false');
+                calculateBoundStates();
+            });
+
+            // Mouse tracking for hover effects
+            if (mathCanvas) {
+                mathCanvas.addEventListener('mousemove', handleMathCanvasHover);
+                mathCanvas.addEventListener('mouseleave', () => { hoveredState = -1; });
+            }
+        }
+
+        function handleMathCanvasHover(e) {
+            if (!mathCanvas) return;
+            const rect = mathCanvas.getBoundingClientRect();
+            const dpr = window.devicePixelRatio || 1;
+            const w = mathCanvas.width / dpr;
+            const h = mathCanvas.height / dpr;
+            const scaleX = rect.width > 0 ? w / rect.width : 1;
+            const scaleY = rect.height > 0 ? h / rect.height : 1;
+            const x = (e.clientX - rect.left) * scaleX;
+            const y = (e.clientY - rect.top) * scaleY;
+
+            const margin = 60;
+            const plotW = w - margin * 2;
+            const plotH = h - margin * 2;
+
+            hoveredState = -1;
+            if (currentMaxXi <= 0 || currentMaxEta <= 0) return;
+            for (let i = 0; i < boundStates.length; i++) {
+                const state = boundStates[i];
+                const px = margin + (state.xi / currentMaxXi) * plotW;
+                const py = h - margin - (state.eta / currentMaxEta) * plotH;
+                const dist = Math.sqrt((x - px) ** 2 + (y - py) ** 2);
+                if (dist < 15) {
+                    hoveredState = i;
+                    break;
+                }
+            }
+        }
+
+        function calculateZ0() {
+            // z₀ = a√(2mV₀)/ℏ = a * √(V₀ / HBAR2_2M)
+            return a * Math.sqrt(V0 / HBAR2_2M);
+        }
+
+        function calculateDynamicViewBounds() {
+            const z0 = targetZ0;
+            const padding = 1.25;
+            
+            const minXi = 4 * Math.PI;
+            const minEta = 5;
+            
+            targetMaxXi = Math.max(minXi, z0 * padding);
+            targetMaxEta = Math.max(minEta, z0 * padding);
+            
+            targetMaxXi = Math.ceil(targetMaxXi / (Math.PI / 2)) * (Math.PI / 2);
+        }
+
+        function calculateBoundStates() {
+            targetZ0 = calculateZ0();
+            boundStates = [];
+
+            const z0 = targetZ0;
+            const maxBranches = Math.ceil(z0 / (Math.PI / 2)) + 2;
+
+            for (let n = 0; n < maxBranches; n++) {
+                let xiMin, xiMax;
+
+                if (showEven) {
+                    xiMin = n * Math.PI + 0.001;
+                    xiMax = (n + 0.5) * Math.PI - 0.001;
+                } else {
+                    if (n === 0) continue;
+                    xiMin = (n - 0.5) * Math.PI + 0.001;
+                    xiMax = n * Math.PI - 0.001;
+                }
+
+                if (xiMin >= z0) break;
+                xiMax = Math.min(xiMax, z0 - 0.001);
+
+                const xi = findIntersection(xiMin, xiMax, z0, showEven);
+                if (xi !== null && xi > 0 && xi < z0) {
+                    const eta = showEven ? xi * Math.tan(xi) : -xi / Math.tan(xi);
+                    if (eta > 0) {
+                        const k = xi / a;
+                        const kappa = eta / a;
+                        const E = HBAR2_2M * k * k;
+                        const penetrationDepth = 1 / kappa;
+
+                        boundStates.push({
+                            n: boundStates.length,
+                            xi: xi,
+                            eta: eta,
+                            k: k,
+                            kappa: kappa,
+                            E: E,
+                            penetrationDepth: penetrationDepth,
+                            parity: showEven ? 'even' : 'odd'
+                        });
+                    }
+                }
+            }
+
+            calculateDynamicViewBounds();
+            updateInfoPanel();
+        }
+
+        function findIntersection(xiMin, xiMax, z0, isEven) {
+            function f(xi) {
+                if (isEven) {
+                    const tanXi = Math.tan(xi);
+                    return xi * xi * (1 + tanXi * tanXi) - z0 * z0;
+                } else {
+                    const cotXi = 1 / Math.tan(xi);
+                    return xi * xi * (1 + cotXi * cotXi) - z0 * z0;
+                }
+            }
+
+            let lo = xiMin, hi = xiMax;
+            let fLo = f(lo), fHi = f(hi);
+
+            if (!Number.isFinite(fLo) || !Number.isFinite(fHi)) return null;
+            if (fLo * fHi > 0) return null;
+
+            for (let i = 0; i < 50; i++) {
+                const mid = (lo + hi) / 2;
+                const fMid = f(mid);
+
+                if (Math.abs(fMid) < 1e-10) return mid;
+
+                if (fLo * fMid < 0) {
+                    hi = mid;
+                    fHi = fMid;
+                } else {
+                    lo = mid;
+                    fLo = fMid;
+                }
+            }
+
+            return (lo + hi) / 2;
+        }
+
+        function updateInfoPanel() {
+            const nStatesEl = document.getElementById('nStates');
+            const energyList = document.getElementById('energyList');
+            if (nStatesEl) nStatesEl.textContent = boundStates.length;
+            if (!energyList) return;
+            energyList.innerHTML = '';
+
+            if (boundStates.length === 0) {
+                const msg = document.createElement('div');
+                msg.className = 'energy-item';
+                msg.style.color = '#94a3b8';
+                msg.style.fontSize = '11px';
+                msg.textContent = 'No bound states for this parity';
+                energyList.appendChild(msg);
+                return;
+            }
+
+            boundStates.forEach((state, i) => {
+                const item = document.createElement('div');
+                item.className = 'energy-item';
+                item.innerHTML = `
+                    <div class="energy-dot" style="background: ${stateColors[i % stateColors.length]}"></div>
+                    <div class="energy-info">
+                        <span>E${i} = ${state.E.toFixed(3)} eV</span>
+                        <span style="color: #64748b;">δ = ${state.penetrationDepth.toFixed(2)} nm</span>
+                    </div>
+                `;
+                energyList.appendChild(item);
+            });
+        }
+
+        function drawPhysicalSpace() {
+            const w = physCanvas.width / (window.devicePixelRatio || 1);
+            const h = physCanvas.height / (window.devicePixelRatio || 1);
+            if (w <= 0 || h <= 0) return;
+
+            physCtx.fillStyle = '#0f172a';
+            physCtx.fillRect(0, 0, w, h);
+
+            const margin = { left: 60, right: 40, top: 60, bottom: 60 };
+            const plotW = w - margin.left - margin.right;
+            const plotH = h - margin.top - margin.bottom;
+
+            const xRange = 6 * a;
+            const xMin = -3 * a;
+            const vMin = -V0 * 0.1;
+            const vMax = V0 * 1.2;
+            const vRange = vMax - vMin;
+
+            function toScreenX(x) {
+                return margin.left + ((x - xMin) / xRange) * plotW;
+            }
+
+            function toScreenY(v) {
+                return margin.top + plotH - ((v - vMin) / vRange) * plotH;
+            }
+
+            // Draw grid
+            physCtx.strokeStyle = 'rgba(148, 163, 184, 0.1)';
+            physCtx.lineWidth = 1;
+
+            for (let i = 0; i <= 6; i++) {
+                const x = xMin + i * a;
+                physCtx.beginPath();
+                physCtx.moveTo(toScreenX(x), margin.top);
+                physCtx.lineTo(toScreenX(x), h - margin.bottom);
+                physCtx.stroke();
+            }
+
+            // Draw axes
+            physCtx.strokeStyle = 'rgba(148, 163, 184, 0.4)';
+            physCtx.lineWidth = 1;
+
+            // X-axis at V=0
+            physCtx.beginPath();
+            physCtx.moveTo(margin.left, toScreenY(0));
+            physCtx.lineTo(w - margin.right, toScreenY(0));
+            physCtx.stroke();
+
+            // Y-axis at x=0
+            physCtx.beginPath();
+            physCtx.moveTo(toScreenX(0), margin.top);
+            physCtx.lineTo(toScreenX(0), h - margin.bottom);
+            physCtx.stroke();
+
+            // Draw potential well V(x)
+            physCtx.strokeStyle = '#64748b';
+            physCtx.lineWidth = 3;
+            physCtx.beginPath();
+
+            // Left barrier
+            physCtx.moveTo(margin.left, toScreenY(V0));
+            physCtx.lineTo(toScreenX(-a), toScreenY(V0));
+            physCtx.lineTo(toScreenX(-a), toScreenY(0));
+
+            // Well bottom
+            physCtx.lineTo(toScreenX(a), toScreenY(0));
+
+            // Right barrier
+            physCtx.lineTo(toScreenX(a), toScreenY(V0));
+            physCtx.lineTo(w - margin.right, toScreenY(V0));
+            physCtx.stroke();
+
+            // Fill well region
+            physCtx.fillStyle = 'rgba(59, 130, 246, 0.1)';
+            physCtx.fillRect(toScreenX(-a), toScreenY(V0), toScreenX(a) - toScreenX(-a), toScreenY(0) - toScreenY(V0));
+
+            // Draw well boundaries
+            physCtx.strokeStyle = 'rgba(148, 163, 184, 0.3)';
+            physCtx.setLineDash([5, 5]);
+            physCtx.beginPath();
+            physCtx.moveTo(toScreenX(-a), margin.top);
+            physCtx.lineTo(toScreenX(-a), h - margin.bottom);
+            physCtx.moveTo(toScreenX(a), margin.top);
+            physCtx.lineTo(toScreenX(a), h - margin.bottom);
+            physCtx.stroke();
+            physCtx.setLineDash([]);
+
+            // Draw energy levels and wavefunctions
+            boundStates.forEach((state, i) => {
+                const color = stateColors[i % stateColors.length];
+                const isHovered = hoveredState === i;
+                const lineWidth = isHovered ? 3 : 2;
+                const alpha = isHovered ? 1 : 0.8;
+
+                // Energy level line
+                physCtx.strokeStyle = color;
+                physCtx.lineWidth = isHovered ? 2 : 1;
+                physCtx.globalAlpha = alpha;
+
+                physCtx.beginPath();
+                physCtx.moveTo(toScreenX(-a), toScreenY(state.E));
+                physCtx.lineTo(toScreenX(a), toScreenY(state.E));
+                physCtx.stroke();
+
+                // Energy label
+                physCtx.fillStyle = color;
+                physCtx.font = '11px -apple-system, sans-serif';
+                physCtx.fillText(`E${i}`, toScreenX(a) + 5, toScreenY(state.E) + 4);
+
+                // Draw wavefunction - NO pulsing animation, static display
+                const waveScale = V0 * 0.12;
+                const k = state.k;
+                const kappa = state.kappa;
+                const isEven = state.parity === 'even';
+
+                // Compute the matching value at x = a for continuity
+                const psiAtBoundary = isEven ? Math.cos(k * a) : Math.sin(k * a);
+
+                physCtx.strokeStyle = color;
+                physCtx.lineWidth = lineWidth;
+                physCtx.beginPath();
+
+                // Use more points for smoother wavefunction, especially near boundaries
+                const numPoints = 600;
+                for (let j = 0; j <= numPoints; j++) {
+                    const x = xMin + (j / numPoints) * xRange;
+                    let psi;
+
+                    if (x >= -a && x <= a) {
+                        // Inside well
+                        psi = isEven ? Math.cos(k * x) : Math.sin(k * x);
+                    } else if (x > a) {
+                        // Right side - exponential decay, matched at boundary
+                        psi = psiAtBoundary * Math.exp(-kappa * (x - a));
+                    } else {
+                        // Left side - exponential decay, matched at boundary
+                        // For even: ψ(-x) = ψ(x), so same sign
+                        // For odd: ψ(-x) = -ψ(x), so opposite sign
+                        const distFromWall = -x - a; // distance from -a going left
+                        if (isEven) {
+                            psi = psiAtBoundary * Math.exp(-kappa * distFromWall);
+                        } else {
+                            psi = -psiAtBoundary * Math.exp(-kappa * distFromWall);
+                        }
+                    }
+
+                    const screenX = toScreenX(x);
+                    const screenY = toScreenY(state.E + psi * waveScale);
+
+                    if (j === 0) {
+                        physCtx.moveTo(screenX, screenY);
+                    } else {
+                        physCtx.lineTo(screenX, screenY);
+                    }
+                }
+                physCtx.stroke();
+
+                physCtx.globalAlpha = 1;
+            });
+
+            // Axis labels
+            physCtx.fillStyle = '#94a3b8';
+            physCtx.font = '12px -apple-system, sans-serif';
+            physCtx.fillText('x (nm)', w / 2, h - 20);
+            physCtx.save();
+            physCtx.translate(20, h / 2);
+            physCtx.rotate(-Math.PI / 2);
+            physCtx.fillText('V, E (eV)', 0, 0);
+            physCtx.restore();
+
+            // Scale markers
+            physCtx.fillStyle = '#64748b';
+            physCtx.font = '10px -apple-system, sans-serif';
+            physCtx.fillText(`-${a.toFixed(1)}`, toScreenX(-a) - 15, toScreenY(0) + 15);
+            physCtx.fillText(`${a.toFixed(1)}`, toScreenX(a) - 10, toScreenY(0) + 15);
+            physCtx.fillText(`V₀=${V0.toFixed(1)}`, margin.left - 50, toScreenY(V0) + 4);
+        }
+
+        function drawMathSpace() {
+            const w = mathCanvas.width / (window.devicePixelRatio || 1);
+            const h = mathCanvas.height / (window.devicePixelRatio || 1);
+            if (w <= 0 || h <= 0) return;
+
+            mathCtx.fillStyle = '#0f172a';
+            mathCtx.fillRect(0, 0, w, h);
+
+            const margin = 60;
+            const plotW = w - margin * 2;
+            const plotH = h - margin * 2;
+
+            // Smooth transitions for z0 and view bounds
+            const smoothFactor = 0.08;
+            currentZ0 += (targetZ0 - currentZ0) * smoothFactor;
+            currentMaxXi += (targetMaxXi - currentMaxXi) * smoothFactor;
+            currentMaxEta += (targetMaxEta - currentMaxEta) * smoothFactor;
+
+            const maxXi = currentMaxXi;
+            const maxEta = currentMaxEta;
+
+            function toScreenX(xi) {
+                return margin + (xi / maxXi) * plotW;
+            }
+
+            function toScreenY(eta) {
+                return h - margin - (eta / maxEta) * plotH;
+            }
+
+            // Draw grid with dynamic spacing
+            mathCtx.strokeStyle = 'rgba(148, 163, 184, 0.1)';
+            mathCtx.lineWidth = 1;
+
+            const gridSpacing = Math.PI / 2;
+            const numGridLines = Math.ceil(maxXi / gridSpacing);
+
+            for (let i = 0; i <= numGridLines; i++) {
+                const xi = i * gridSpacing;
+                if (xi <= maxXi) {
+                    mathCtx.beginPath();
+                    mathCtx.moveTo(toScreenX(xi), margin);
+                    mathCtx.lineTo(toScreenX(xi), h - margin);
+                    mathCtx.stroke();
+                }
+            }
+
+            // Horizontal grid lines
+            const etaGridSpacing = Math.max(1, Math.floor(maxEta / 8));
+            for (let eta = 0; eta <= maxEta; eta += etaGridSpacing) {
+                mathCtx.beginPath();
+                mathCtx.moveTo(margin, toScreenY(eta));
+                mathCtx.lineTo(w - margin, toScreenY(eta));
+                mathCtx.stroke();
+            }
+
+            // Draw axes
+            mathCtx.strokeStyle = 'rgba(148, 163, 184, 0.4)';
+            mathCtx.lineWidth = 1;
+            mathCtx.beginPath();
+            mathCtx.moveTo(margin, h - margin);
+            mathCtx.lineTo(w - margin, h - margin);
+            mathCtx.moveTo(margin, h - margin);
+            mathCtx.lineTo(margin, margin);
+            mathCtx.stroke();
+
+            // Draw asymptotes
+            mathCtx.strokeStyle = 'rgba(148, 163, 184, 0.2)';
+            mathCtx.setLineDash([3, 3]);
+
+            const maxAsymptotes = Math.ceil(maxXi / (Math.PI / 2)) + 1;
+
+            if (showEven) {
+                for (let n = 0; n < maxAsymptotes; n++) {
+                    const xi = (n + 0.5) * Math.PI;
+                    if (xi <= maxXi) {
+                        mathCtx.beginPath();
+                        mathCtx.moveTo(toScreenX(xi), h - margin);
+                        mathCtx.lineTo(toScreenX(xi), margin);
+                        mathCtx.stroke();
+                    }
+                }
+            } else {
+                for (let n = 1; n < maxAsymptotes; n++) {
+                    const xi = n * Math.PI;
+                    if (xi <= maxXi) {
+                        mathCtx.beginPath();
+                        mathCtx.moveTo(toScreenX(xi), h - margin);
+                        mathCtx.lineTo(toScreenX(xi), margin);
+                        mathCtx.stroke();
+                    }
+                }
+            }
+            mathCtx.setLineDash([]);
+
+            // Draw transcendental curves
+            const curveColor = showEven ? '#f97316' : '#8b5cf6';
+            mathCtx.strokeStyle = curveColor;
+            mathCtx.lineWidth = 2;
+
+            const numBranches = Math.ceil(maxXi / (Math.PI / 2)) + 2;
+            for (let branch = 0; branch < numBranches; branch++) {
+                let xiStart, xiEnd;
+
+                if (showEven) {
+                    xiStart = branch * Math.PI + 0.01;
+                    xiEnd = (branch + 0.5) * Math.PI - 0.01;
+                } else {
+                    if (branch === 0) continue;
+                    xiStart = (branch - 0.5) * Math.PI + 0.01;
+                    xiEnd = branch * Math.PI - 0.01;
+                }
+
+                if (xiStart > maxXi) break;
+                xiEnd = Math.min(xiEnd, maxXi);
+
+                mathCtx.beginPath();
+                let started = false;
+
+                for (let xi = xiStart; xi <= xiEnd; xi += 0.02) {
+                    let eta;
+                    if (showEven) {
+                        eta = xi * Math.tan(xi);
+                    } else {
+                        eta = -xi / Math.tan(xi);
+                    }
+
+                    if (eta >= 0 && eta <= maxEta && isFinite(eta)) {
+                        const sx = toScreenX(xi);
+                        const sy = toScreenY(eta);
+
+                        if (!started) {
+                            mathCtx.moveTo(toScreenX(xi), toScreenY(0));
+                            if (eta > 0) {
+                                mathCtx.lineTo(sx, sy);
+                            }
+                            started = true;
+                        } else {
+                            mathCtx.lineTo(sx, sy);
+                        }
+                    } else if (started && eta > maxEta) {
+                        mathCtx.lineTo(toScreenX(xi), toScreenY(maxEta));
+                        break;
+                    }
+                }
+                mathCtx.stroke();
+            }
+
+            // Draw energy circle with subtle glow animation (no pulsing size)
+            const circlePhase = animationTime * 0.3;
+            const circleGlow = 0.7 + 0.3 * Math.sin(circlePhase);
+
+            mathCtx.strokeStyle = `rgba(59, 130, 246, ${circleGlow})`;
+            mathCtx.lineWidth = 3;
+            mathCtx.beginPath();
+
+            for (let angle = 0; angle <= Math.PI / 2; angle += 0.01) {
+                const xi = currentZ0 * Math.cos(angle);
+                const eta = currentZ0 * Math.sin(angle);
+
+                if (xi <= maxXi && eta <= maxEta) {
+                    const sx = toScreenX(xi);
+                    const sy = toScreenY(eta);
+
+                    if (angle === 0) {
+                        mathCtx.moveTo(sx, sy);
+                    } else {
+                        mathCtx.lineTo(sx, sy);
+                    }
+                }
+            }
+            mathCtx.stroke();
+
+            // Draw intersection points (bound states)
+            boundStates.forEach((state, i) => {
+                const color = stateColors[i % stateColors.length];
+                const isHovered = hoveredState === i;
+                const radius = isHovered ? 10 : 7;
+                const glowRadius = radius + 5 + 3 * Math.sin(animationTime + i);
+
+                const sx = toScreenX(state.xi);
+                const sy = toScreenY(state.eta);
+
+                if (state.xi <= maxXi && state.eta <= maxEta) {
+                    // Glow effect
+                    const gradient = mathCtx.createRadialGradient(sx, sy, 0, sx, sy, glowRadius);
+                    gradient.addColorStop(0, color);
+                    gradient.addColorStop(1, 'transparent');
+                    mathCtx.fillStyle = gradient;
+                    mathCtx.beginPath();
+                    mathCtx.arc(sx, sy, glowRadius, 0, Math.PI * 2);
+                    mathCtx.fill();
+
+                    // Point
+                    mathCtx.fillStyle = color;
+                    mathCtx.beginPath();
+                    mathCtx.arc(sx, sy, radius, 0, Math.PI * 2);
+                    mathCtx.fill();
+
+                    // White center
+                    mathCtx.fillStyle = '#fff';
+                    mathCtx.beginPath();
+                    mathCtx.arc(sx, sy, radius * 0.4, 0, Math.PI * 2);
+                    mathCtx.fill();
+
+                    // State number label
+                    mathCtx.fillStyle = '#f1f5f9';
+                    mathCtx.font = 'bold 10px -apple-system, sans-serif';
+                    mathCtx.fillText(`${i}`, sx + radius + 3, sy + 4);
+
+                    // Detailed label on hover (state index, not quantum number n)
+                    if (isHovered) {
+                        mathCtx.fillStyle = '#f1f5f9';
+                        mathCtx.font = 'bold 12px -apple-system, sans-serif';
+                        mathCtx.fillText(`state ${i}, E=${state.E.toFixed(2)} eV`, sx + 15, sy - 10);
+                    }
+                }
+            });
+
+            // Axis labels
+            mathCtx.fillStyle = '#94a3b8';
+            mathCtx.font = '14px -apple-system, sans-serif';
+            mathCtx.fillText('ξ', w / 2, h - 20);
+            mathCtx.save();
+            mathCtx.translate(20, h / 2);
+            mathCtx.rotate(-Math.PI / 2);
+            mathCtx.fillText('η', 0, 0);
+            mathCtx.restore();
+
+            // Scale markers
+            mathCtx.fillStyle = '#64748b';
+            mathCtx.font = '10px -apple-system, sans-serif';
+            
+            const piMultiples = Math.floor(maxXi / Math.PI);
+            for (let n = 1; n <= piMultiples; n++) {
+                const xi = n * Math.PI;
+                if (xi <= maxXi * 0.95) {
+                    mathCtx.fillText(`${n}π`, toScreenX(xi) - 8, h - margin + 15);
+                }
+            }
+
+            const etaStep = Math.max(1, Math.ceil(maxEta / 6));
+            for (let eta = etaStep; eta <= maxEta * 0.9; eta += etaStep) {
+                mathCtx.fillText(eta.toFixed(0), margin - 25, toScreenY(eta) + 4);
+            }
+        }
+
+        function animate() {
+            animationTime = (animationTime + 0.016) % (2 * Math.PI);
+
+            drawPhysicalSpace();
+            drawMathSpace();
+
+            animationFrameId = requestAnimationFrame(animate);
+        }
+
+        // Initialize when DOM is ready
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', init);
+        } else {
+            init();
+        }
+    </script>
+</body>
+</html>
