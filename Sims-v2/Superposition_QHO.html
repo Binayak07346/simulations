@@ -1,0 +1,1155 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Quantum Superposition Simulator — QHO Eigenstates</title>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;700&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <script>
+        window.MathJax = {
+            tex: { inlineMath: [['$', '$'], ['\\(', '\\)']], displayMath: [['$$', '$$'], ['\\[', '\\]']] },
+            options: { skipHtmlTags: ['script', 'noscript', 'style', 'textarea'] },
+            startup: { pageReady: () => MathJax.startup.defaultPageReady() }
+        };
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js" async></script>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        body { 
+            background: #0b0f1a; 
+            font-family: 'DM Sans', sans-serif;
+            color: #e2e8f0;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+        
+        .title-bar {
+            background: linear-gradient(180deg, rgba(15, 20, 35, 0.98), rgba(11, 15, 26, 0.95));
+            border-bottom: 1px solid rgba(99, 102, 241, 0.25);
+            padding: 12px 24px;
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            flex-shrink: 0;
+        }
+        
+        .title-bar h1 {
+            font-size: 17px;
+            font-weight: 700;
+            color: #c4b5fd;
+            letter-spacing: 0.5px;
+        }
+        
+        .info-icon {
+            position: relative;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 22px;
+            height: 22px;
+            border-radius: 50%;
+            background: rgba(99, 102, 241, 0.15);
+            border: 1px solid rgba(99, 102, 241, 0.35);
+            color: #a5b4fc;
+            font-size: 12px;
+            font-weight: 700;
+            font-style: italic;
+            font-family: Georgia, serif;
+            cursor: help;
+            transition: all 0.2s;
+        }
+        
+        .info-icon:hover {
+            background: rgba(99, 102, 241, 0.35);
+            border-color: #818cf8;
+        }
+        
+        .info-tooltip {
+            position: fixed;
+            top: 52px;
+            left: 20px;
+            width: 480px;
+            background: #111827;
+            border: 2px solid rgba(99, 102, 241, 0.4);
+            border-radius: 12px;
+            padding: 22px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.7);
+            opacity: 0;
+            visibility: hidden;
+            transform: translateY(-8px);
+            transition: all 0.2s ease;
+            z-index: 2000;
+            pointer-events: none;
+        }
+        
+        .info-icon:hover .info-tooltip { opacity: 1; visibility: visible; transform: translateY(0); }
+        
+        .info-tooltip h3 {
+            font-size: 15px;
+            color: #a5b4fc;
+            margin-bottom: 12px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid rgba(99, 102, 241, 0.2);
+        }
+        
+        .info-tooltip p {
+            font-size: 13px;
+            color: #94a3b8;
+            line-height: 1.75;
+            margin-bottom: 10px;
+        }
+        
+        .info-tooltip p:last-of-type { margin-bottom: 0; }
+        
+        .info-tooltip .formula-block {
+            margin-top: 14px;
+            padding: 16px 18px;
+            background: rgba(99, 102, 241, 0.08);
+            border: 1px solid rgba(99, 102, 241, 0.15);
+            border-radius: 8px;
+            text-align: center;
+            line-height: 2.2;
+            color: #e2e8f0;
+            overflow-x: auto;
+        }
+        
+        .info-tooltip .formula-block .MathJax {
+            font-size: 110% !important;
+        }
+        
+        .info-tooltip .formula-divider {
+            height: 1px;
+            background: rgba(99, 102, 241, 0.15);
+            margin: 14px 0;
+        }
+        
+        .main-wrapper {
+            display: flex;
+            flex: 1;
+            overflow: hidden;
+        }
+        
+        .plots-area {
+            flex: 1;
+            padding: 12px;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            overflow: hidden;
+            position: relative;
+        }
+        
+        .plots-area.has-maximized .plot-container:not(.maximized) { display: none; }
+        .plots-area.has-maximized .plot-container.maximized { flex: 1; }
+        
+        .control-panel {
+            width: 280px;
+            background: rgba(17, 24, 39, 0.9);
+            border-left: 1px solid rgba(99, 102, 241, 0.15);
+            padding: 14px;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            overflow-y: auto;
+            flex-shrink: 0;
+        }
+        
+        .panel-section {
+            background: rgba(15, 23, 42, 0.6);
+            border-radius: 10px;
+            padding: 14px;
+            border: 1px solid rgba(99, 102, 241, 0.1);
+        }
+        
+        .panel-section-title {
+            font-size: 10px;
+            font-weight: 700;
+            color: #818cf8;
+            text-transform: uppercase;
+            letter-spacing: 1.2px;
+            margin-bottom: 12px;
+            padding-bottom: 8px;
+            border-bottom: 1px solid rgba(99, 102, 241, 0.15);
+        }
+        
+        .control-group {
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+            margin-bottom: 12px;
+        }
+        
+        .control-group:last-child { margin-bottom: 0; }
+        
+        .control-group label {
+            font-size: 11px;
+            color: #94a3b8;
+            font-weight: 500;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .slider {
+            width: 100%;
+            height: 5px;
+            -webkit-appearance: none;
+            appearance: none;
+            background: rgba(148, 163, 184, 0.15);
+            border-radius: 3px;
+            outline: none;
+        }
+        
+        .slider::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            width: 15px;
+            height: 15px;
+            background: #818cf8;
+            border-radius: 50%;
+            cursor: pointer;
+            transition: transform 0.1s;
+            box-shadow: 0 0 8px rgba(129, 140, 248, 0.4);
+        }
+        
+        .slider::-webkit-slider-thumb:hover { transform: scale(1.2); }
+        
+        .slider-c1::-webkit-slider-thumb { background: #60a5fa; box-shadow: 0 0 8px rgba(96, 165, 250, 0.4); }
+        .slider-c2::-webkit-slider-thumb { background: #34d399; box-shadow: 0 0 8px rgba(52, 211, 153, 0.4); }
+        
+        .value-display {
+            font-size: 11px;
+            font-weight: 700;
+            font-family: 'JetBrains Mono', monospace;
+            font-variant-numeric: tabular-nums;
+        }
+        
+        .value-c1 { color: #60a5fa; }
+        .value-c2 { color: #34d399; }
+        .value-default { color: #a5b4fc; }
+        
+        .norm-badge {
+            margin-top: 10px;
+            padding: 8px 12px;
+            background: rgba(34, 197, 94, 0.1);
+            border: 1px solid rgba(34, 197, 94, 0.25);
+            border-radius: 6px;
+            text-align: center;
+            font-size: 11px;
+            font-family: 'JetBrains Mono', monospace;
+            color: #4ade80;
+        }
+        
+        .equation-box {
+            margin-top: 12px;
+            padding: 10px 14px;
+            background: rgba(15, 23, 42, 0.8);
+            border: 1px solid rgba(99, 102, 241, 0.2);
+            border-radius: 8px;
+            text-align: center;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 12px;
+            color: #e2e8f0;
+            line-height: 1.6;
+        }
+        
+        .eq-c1 { color: #60a5fa; font-weight: 700; }
+        .eq-c2 { color: #34d399; font-weight: 700; }
+        .eq-psi1 { color: #60a5fa; }
+        .eq-psi2 { color: #34d399; }
+        
+        .toggle-group {
+            display: flex;
+            gap: 4px;
+        }
+        
+        .toggle-btn {
+            flex: 1;
+            padding: 7px 10px;
+            background: rgba(30, 41, 59, 0.6);
+            border: 1px solid rgba(148, 163, 184, 0.15);
+            border-radius: 6px;
+            color: #64748b;
+            font-size: 11px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-family: 'DM Sans', sans-serif;
+        }
+        
+        .toggle-btn.active {
+            background: rgba(99, 102, 241, 0.25);
+            border-color: rgba(99, 102, 241, 0.5);
+            color: #c4b5fd;
+        }
+        
+        .toggle-btn:hover:not(.active) {
+            background: rgba(59, 130, 246, 0.1);
+            border-color: rgba(99, 102, 241, 0.3);
+            color: #94a3b8;
+        }
+        
+        .action-btn {
+            width: 100%;
+            padding: 9px 16px;
+            border-radius: 8px;
+            font-size: 12px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-family: 'DM Sans', sans-serif;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+        }
+        
+        .play-btn {
+            background: linear-gradient(135deg, #7c3aed, #6366f1);
+            border: none;
+            color: white;
+            box-shadow: 0 2px 12px rgba(124, 58, 237, 0.3);
+        }
+        
+        .play-btn:hover { transform: translateY(-1px); box-shadow: 0 4px 18px rgba(124, 58, 237, 0.4); }
+        .play-btn:active { transform: translateY(0); }
+        
+        .reset-btn {
+            background: rgba(239, 68, 68, 0.1);
+            border: 1px solid rgba(239, 68, 68, 0.25);
+            color: #f87171;
+        }
+        
+        .reset-btn:hover { background: rgba(239, 68, 68, 0.2); }
+        
+        .plot-container {
+            background: rgba(17, 24, 39, 0.6);
+            border: 1px solid rgba(99, 102, 241, 0.1);
+            border-radius: 10px;
+            padding: 10px;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            min-height: 0;
+            transition: all 0.3s ease;
+        }
+        
+        .plot-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 6px;
+            flex-shrink: 0;
+        }
+        
+        .plot-title {
+            font-size: 12px;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .plot-title .color-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+        }
+        
+        .plot-header-right {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .plot-info {
+            font-size: 10px;
+            font-family: 'JetBrains Mono', monospace;
+            color: #64748b;
+        }
+        
+        .maximize-btn {
+            width: 24px;
+            height: 24px;
+            background: rgba(148, 163, 184, 0.08);
+            border: 1px solid rgba(148, 163, 184, 0.15);
+            border-radius: 5px;
+            color: #64748b;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s;
+            padding: 0;
+        }
+        
+        .maximize-btn:hover {
+            background: rgba(99, 102, 241, 0.2);
+            border-color: rgba(99, 102, 241, 0.4);
+            color: #a5b4fc;
+        }
+        
+        .maximize-btn svg { width: 14px; height: 14px; }
+        
+        .canvas-wrapper { flex: 1; min-height: 0; }
+        
+        canvas {
+            width: 100%;
+            height: 100%;
+            border-radius: 6px;
+            display: block;
+        }
+        
+        .status-section {
+            background: rgba(15, 23, 42, 0.7);
+            border-radius: 8px;
+            padding: 10px 12px;
+        }
+        
+        .status-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 4px 0;
+            border-bottom: 1px solid rgba(148, 163, 184, 0.06);
+        }
+        
+        .status-item:last-child { border-bottom: none; }
+        
+        .status-label { font-size: 10px; color: #64748b; }
+        
+        .status-value {
+            font-size: 10px;
+            color: #e2e8f0;
+            font-weight: 600;
+            font-family: 'JetBrains Mono', monospace;
+        }
+
+        .sigma-info {
+            font-size: 11px;
+            color: #a5b4fc;
+            font-style: normal;
+            font-weight: 500;
+            margin-top: 8px;
+            line-height: 1.5;
+        }
+    </style>
+</head>
+<body>
+    <div class="title-bar">
+        <h1>⚛ Quantum Superposition — Harmonic Oscillator</h1>
+        <div class="info-icon">
+            i
+            <div class="info-tooltip">
+                <h3>About This Simulation</h3>
+                <p>This simulator demonstrates quantum superposition using the first two <strong>orthogonal energy eigenstates</strong> of the Quantum Harmonic Oscillator (QHO). The ground state $\psi_1$ and first excited state $\psi_2$ are:</p>
+                <div class="formula-block">
+                    $$\psi_1(x) = \left(\pi\sigma^2\right)^{-1/4}\exp\!\left[-\frac{x^2}{2\sigma^2}\right]$$
+                    $$\psi_2(x) = \sqrt{2}\left(\pi\sigma^2\right)^{-1/4}\frac{x}{\sigma}\,\exp\!\left[-\frac{x^2}{2\sigma^2}\right]$$
+                </div>
+                <p>These states are <strong>strictly orthogonal by parity</strong> ($\psi_1$ is even, $\psi_2$ is odd), guaranteeing $\langle\psi_1|\psi_2\rangle = 0$. This ensures unitary time evolution and exact probability conservation.</p>
+                <div class="formula-divider"></div>
+                <p>The full time-dependent superposition with QHO energies $E_1 = \tfrac{1}{2}\hbar\omega$ and $E_2 = \tfrac{3}{2}\hbar\omega$ is (with real $c_1, c_2 \geq 0$):</p>
+                <div class="formula-block">
+                    $$\Psi(x,t) = c_1\,\psi_1(x)\,e^{-iE_1 t/\hbar} + c_2\,\psi_2(x)\,e^{-iE_2 t/\hbar}$$
+                </div>
+                <p>Because the eigenstates are orthonormal, normalization is the standard condition:</p>
+                <div class="formula-block">
+                    $$|c_1|^2 + |c_2|^2 = 1$$
+                </div>
+                <div class="formula-divider"></div>
+                <p>The probability density oscillates at the beat frequency $\omega_{21} = (E_2 - E_1)/\hbar = \omega$. Since both coefficients are real and positive in this simulation:</p>
+                <div class="formula-block">
+                    $$|\Psi(x,t)|^2 = c_1^2|\psi_1|^2 + c_2^2|\psi_2|^2 + 2\,c_1 c_2\,\psi_1(x)\psi_2(x)\cos(\omega_{21}t)$$
+                </div>
+                <p>The cross-term is <em>x-dependent</em> (positive for $x>0$, negative for $x<0$), causing the probability to slosh back and forth, mimicking classical oscillation. Total probability $\int|\Psi|^2 dx = 1$ is exactly conserved at all times. Natural units: $\hbar = m = 1$, so $\omega = 1/\sigma^2$.</p>
+            </div>
+        </div>
+    </div>
+    
+    <div class="main-wrapper">
+        <div class="plots-area" id="plotsArea">
+            <div class="plot-container" id="plot1">
+                <div class="plot-header">
+                    <div class="plot-title">
+                        <span class="color-dot" style="background: #60a5fa;"></span>
+                        Ground State c₁ψ₁ (even)
+                    </div>
+                    <div class="plot-header-right">
+                        <div class="plot-info" id="plot1Info"></div>
+                        <button class="maximize-btn" onclick="toggleMaximize('plot1')" title="Maximize">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3"/></svg>
+                        </button>
+                    </div>
+                </div>
+                <div class="canvas-wrapper"><canvas id="canvas1"></canvas></div>
+            </div>
+            
+            <div class="plot-container" id="plot2">
+                <div class="plot-header">
+                    <div class="plot-title">
+                        <span class="color-dot" style="background: #34d399;"></span>
+                        Excited State c₂ψ₂ (odd)
+                    </div>
+                    <div class="plot-header-right">
+                        <div class="plot-info" id="plot2Info"></div>
+                        <button class="maximize-btn" onclick="toggleMaximize('plot2')" title="Maximize">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3"/></svg>
+                        </button>
+                    </div>
+                </div>
+                <div class="canvas-wrapper"><canvas id="canvas2"></canvas></div>
+            </div>
+            
+            <div class="plot-container" id="plot3">
+                <div class="plot-header">
+                    <div class="plot-title">
+                        <span class="color-dot" style="background: #f472b6;"></span>
+                        Superposition Ψ = c₁ψ₁ + c₂ψ₂
+                    </div>
+                    <div class="plot-header-right">
+                        <div class="plot-info" id="superpositionInfo"></div>
+                        <button class="maximize-btn" onclick="toggleMaximize('plot3')" title="Maximize">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3"/></svg>
+                        </button>
+                    </div>
+                </div>
+                <div class="canvas-wrapper"><canvas id="canvas3"></canvas></div>
+            </div>
+        </div>
+        
+        <div class="control-panel">
+            <div class="panel-section">
+                <div class="panel-section-title">Coefficients (Linked)</div>
+                <div class="control-group">
+                    <label>c₁ <span class="value-display value-c1" id="c1Value">0.707</span></label>
+                    <input type="range" class="slider slider-c1" id="c1Slider" min="0" max="1000" value="707">
+                    <label style="margin-top:2px;">|c₁|² = <span class="value-display value-c1" id="c1Prob">0.500</span></label>
+                </div>
+                <div class="control-group">
+                    <label>c₂ <span class="value-display value-c2" id="c2Value">0.707</span></label>
+                    <input type="range" class="slider slider-c2" id="c2Slider" min="0" max="1000" value="707">
+                    <label style="margin-top:2px;">|c₂|² = <span class="value-display value-c2" id="c2Prob">0.500</span></label>
+                </div>
+                
+                <div class="norm-badge" id="normBadge">✓ |c₁|² + |c₂|² = 1.000</div>
+                
+                <div class="equation-box" id="equationBox">
+                    Ψ = <span class="eq-c1">0.707</span> · <span class="eq-psi1">ψ₁</span> + <span class="eq-c2">0.707</span> · <span class="eq-psi2">ψ₂</span>
+                </div>
+            </div>
+            
+            <div class="panel-section">
+                <div class="panel-section-title">Oscillator Parameters</div>
+                <div class="control-group">
+                    <label>σ (oscillator length) <span class="value-display value-default" id="sigmaValue">0.70</span></label>
+                    <input type="range" class="slider" id="sigmaSlider" min="30" max="150" value="70">
+                    <div class="sigma-info">Changes potential: ω = 1/σ² (ℏ=m=1)</div>
+                </div>
+            </div>
+            
+            <div class="panel-section">
+                <div class="panel-section-title">View Mode</div>
+                <div class="toggle-group">
+                    <button class="toggle-btn active" id="realBtn">Re(ψ)</button>
+                    <button class="toggle-btn" id="probBtn">|ψ|²</button>
+                </div>
+            </div>
+            
+            <div class="panel-section">
+                <div class="panel-section-title">Playback</div>
+                <button class="action-btn play-btn" id="playPauseBtn">
+                    <span id="playIcon">⏸</span> <span id="playText">Pause</span>
+                </button>
+                <div style="height:6px;"></div>
+                <div class="control-group">
+                    <label>Speed <span class="value-display value-default" id="speedValue">1.0×</span></label>
+                    <input type="range" class="slider" id="speedSlider" min="1" max="30" value="10">
+                </div>
+                <div style="height:4px;"></div>
+                <button class="action-btn reset-btn" id="resetBtn">↺ Reset All</button>
+            </div>
+            
+            <div class="panel-section status-section">
+                <div class="panel-section-title">Physics (ℏ=m=1)</div>
+                <div class="status-item">
+                    <span class="status-label">ω (oscillator freq)</span>
+                    <span class="status-value" id="omegaFreq">—</span>
+                </div>
+                <div class="status-item">
+                    <span class="status-label">Beat freq ω₂₁</span>
+                    <span class="status-value" id="beatFreq">—</span>
+                </div>
+                <div class="status-item">
+                    <span class="status-label">Beat period T</span>
+                    <span class="status-value" id="beatPeriod">—</span>
+                </div>
+                <div class="status-item">
+                    <span class="status-label">Time</span>
+                    <span class="status-value" id="timeValue">0.000</span>
+                </div>
+                <div class="status-item">
+                    <span class="status-label">⟨ψ₁|ψ₂⟩ (orthogonality)</span>
+                    <span class="status-value" id="overlapValue" style="color:#4ade80;">0.0000</span>
+                </div>
+                <div class="status-item">
+                    <span class="status-label">∫|Ψ|²dx (norm check)</span>
+                    <span class="status-value" id="normCheck">—</span>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        // ========== PHYSICS CONSTANTS ==========
+        const X_MIN = -5, X_MAX = 5;
+        const NUM_POINTS = 500;
+        const DX = (X_MAX - X_MIN) / NUM_POINTS;
+        
+        // QHO energy eigenvalues are computed dynamically from sigma:
+        //   ω = 1/(σ²)  (natural units: ℏ=1, m=1)
+        //   E_n = (n + 1/2)ω  →  E₁ = 0.5ω (ground, n=0), E₂ = 1.5ω (first excited, n=1)
+        //   Beat frequency ω₂₁ = E₂ − E₁ = ω
+        //
+        // Changing σ changes the Hamiltonian (different oscillator potential).
+        
+        // ========== STATE ==========
+        // c1, c2 satisfy |c1|² + |c2|² = 1 exactly (orthogonal eigenstates).
+        // Both coefficients are real and non-negative in this simulation.
+        let c1Raw = Math.SQRT1_2;
+        let c2Raw = Math.SQRT1_2;
+        let sigma = 0.7;             // Oscillator characteristic length scale
+        let showProbability = false;
+        let time = 0;
+        let lastTimestamp = null;
+        let isPlaying = true;
+        let speed = 1.0;
+        let maximizedPlot = null;
+        
+        // ========== CANVAS ==========
+        const canvas1 = document.getElementById('canvas1');
+        const canvas2 = document.getElementById('canvas2');
+        const canvas3 = document.getElementById('canvas3');
+        const ctx1 = canvas1.getContext('2d');
+        const ctx2 = canvas2.getContext('2d');
+        const ctx3 = canvas3.getContext('2d');
+        
+        // ========== PHYSICS FUNCTIONS ==========
+        
+        // QHO Ground State (n=0, even parity):
+        // ψ₁(x) = (πσ²)^(-1/4) exp(-x² / (2σ²))
+        function psi1Func(x, sig) {
+            const norm = Math.pow(Math.PI * sig * sig, -0.25);
+            return norm * Math.exp(-x * x / (2 * sig * sig));
+        }
+        
+        // QHO First Excited State (n=1, odd parity):
+        // ψ₂(x) = √2 (πσ²)^(-1/4) (x/σ) exp(-x² / (2σ²))
+        // Orthogonal to ψ₁ by parity: ⟨ψ₁|ψ₂⟩ = 0
+        function psi2Func(x, sig) {
+            const norm = Math.SQRT2 * Math.pow(Math.PI * sig * sig, -0.25);
+            return norm * (x / sig) * Math.exp(-x * x / (2 * sig * sig));
+        }
+        
+        // Normalization: since ⟨ψ₁|ψ₂⟩ = 0, we simply need |c₁|²+|c₂|² = 1.
+        // The linked sliders enforce c1Raw²+c2Raw² = 1, but we add a safety
+        // re-normalization for floating-point robustness.
+        function getNormalizedCoeffs() {
+            const rawNormSq = c1Raw * c1Raw + c2Raw * c2Raw;
+            if (rawNormSq < 1e-12) return { nc1: 0, nc2: 0 };
+            const invNorm = 1.0 / Math.sqrt(rawNormSq);
+            return {
+                nc1: c1Raw * invNorm,
+                nc2: c2Raw * invNorm
+            };
+        }
+        
+        // ========== DATA GENERATION ==========
+        //
+        // Full time-dependent superposition:
+        //   Ψ(x,t) = nc₁ ψ₁(x) e^(-iE₁t) + nc₂ ψ₂(x) e^(-iE₂t)
+        //
+        // where nc₁, nc₂ are real, non-negative, and satisfy |nc₁|²+|nc₂|² = 1.
+        //
+        // Re(Ψ) = nc₁ ψ₁(x) cos(E₁t) + nc₂ ψ₂(x) cos(E₂t)
+        // Im(Ψ) = -nc₁ ψ₁(x) sin(E₁t) - nc₂ ψ₂(x) sin(E₂t)
+        //
+        // |Ψ|² = Re(Ψ)² + Im(Ψ)²   (always ≥ 0, computed directly)
+        //
+        // Key physics of QHO superposition:
+        //   - |Ψ|² is guaranteed non-negative by construction
+        //   - Individual |nc_n ψ_n|² are time-independent (stationary states)
+        //   - The cross-term in |Ψ|² oscillates at beat frequency ω₂₁ = E₂ - E₁ = ω
+        //   - The probability "sloshes" left and right, mimicking classical oscillation
+        //   - Total probability is EXACTLY conserved: ∫|Ψ|²dx = 1 at all times
+        
+        function generateData() {
+            const data1 = [], data2 = [], data3 = [];
+            const { nc1, nc2 } = getNormalizedCoeffs();
+            
+            // Calculate dynamic energies based on current sigma (hbar=1, m=1)
+            const omega = 1.0 / (sigma * sigma);
+            const E1 = 0.5 * omega;
+            const E2 = 1.5 * omega;
+            
+            // Precompute trig values (same for all x)
+            const cosE1t = Math.cos(E1 * time);
+            const sinE1t = Math.sin(E1 * time);
+            const cosE2t = Math.cos(E2 * time);
+            const sinE2t = Math.sin(E2 * time);
+            
+            for (let i = 0; i < NUM_POINTS; i++) {
+                const x = X_MIN + i * DX;
+                
+                const env1 = psi1Func(x, sigma);  // ground state (even, always ≥ 0)
+                const env2 = psi2Func(x, sigma);  // excited state (odd, can be negative)
+                
+                if (showProbability) {
+                    // |ψ|² mode: individual components are TIME-INDEPENDENT
+                    data1.push(nc1 * nc1 * env1 * env1);
+                    data2.push(nc2 * nc2 * env2 * env2);
+                    
+                    // Superposition |Ψ|² computed from Re² + Im² (guaranteed ≥ 0)
+                    const rePsi = nc1 * env1 * cosE1t + nc2 * env2 * cosE2t;
+                    const imPsi = -(nc1 * env1 * sinE1t + nc2 * env2 * sinE2t);
+                    const probDensity = rePsi * rePsi + imPsi * imPsi;
+                    data3.push(probDensity);
+                } else {
+                    // Re(ψ) mode: each component oscillates at its own frequency
+                    data1.push(nc1 * env1 * cosE1t);
+                    data2.push(nc2 * env2 * cosE2t);
+                    
+                    // Superposition Re(Ψ) = nc₁ψ₁cos(E₁t) + nc₂ψ₂cos(E₂t)
+                    const realPsi = nc1 * env1 * cosE1t + nc2 * env2 * cosE2t;
+                    data3.push(realPsi);
+                }
+            }
+            
+            return { data1, data2, data3 };
+        }
+        
+        // ========== NUMERICAL NORM CHECK ==========
+        // Numerically integrate |Ψ|² using trapezoidal rule to verify normalization.
+        // For orthogonal QHO eigenstates this should be exactly 1.000 at all times.
+        function numericalNormCheck() {
+            const { nc1, nc2 } = getNormalizedCoeffs();
+            
+            // Calculate dynamic energies based on current sigma (hbar=1, m=1)
+            const omega = 1.0 / (sigma * sigma);
+            const E1 = 0.5 * omega;
+            const E2 = 1.5 * omega;
+            
+            const cosE1t = Math.cos(E1 * time);
+            const sinE1t = Math.sin(E1 * time);
+            const cosE2t = Math.cos(E2 * time);
+            const sinE2t = Math.sin(E2 * time);
+            
+            let integral = 0;
+            for (let i = 0; i < NUM_POINTS; i++) {
+                const x = X_MIN + i * DX;
+                const env1 = psi1Func(x, sigma);
+                const env2 = psi2Func(x, sigma);
+                const rePsi = nc1 * env1 * cosE1t + nc2 * env2 * cosE2t;
+                const imPsi = -(nc1 * env1 * sinE1t + nc2 * env2 * sinE2t);
+                const probDensity = rePsi * rePsi + imPsi * imPsi;
+                // [FIX Bug 7] Trapezoidal rule: half-weight at endpoints
+                const weight = (i === 0 || i === NUM_POINTS - 1) ? 0.5 : 1.0;
+                integral += probDensity * weight * DX;
+            }
+            return integral;
+        }
+        
+        // ========== NUMERICAL OVERLAP CHECK ==========
+        // [FIX Bug 6] Compute ⟨ψ₁|ψ₂⟩ numerically instead of hardcoding 0.
+        // This serves as a grid-resolution sanity check and is educational.
+        function numericalOverlapCheck() {
+            let integral = 0;
+            for (let i = 0; i < NUM_POINTS; i++) {
+                const x = X_MIN + i * DX;
+                const val = psi1Func(x, sigma) * psi2Func(x, sigma);
+                // Trapezoidal rule
+                const weight = (i === 0 || i === NUM_POINTS - 1) ? 0.5 : 1.0;
+                integral += val * weight * DX;
+            }
+            return integral;
+        }
+        
+        // ========== Y-RANGE ==========
+        // Ground state and first excited state use static scales so shape change with σ is visible.
+        // Superposition uses dynamic scaling.
+        const STATIC_Y_RE = 1.3;   // Re(ψ): fixed range ±1.3 (covers max amplitude for σ in [0.3, 1.5])
+        const STATIC_Y_PROB = 2;   // |ψ|²: fixed range [0, 2] (covers probability density for σ in [0.3, 1.5])
+        
+        function computeYRanges() {
+            const { nc1, nc2 } = getNormalizedCoeffs();
+            
+            if (showProbability) {
+                // Max |Ψ|² for superposition (plot 3) only
+                let maxProb = 0;
+                for (let i = 0; i < NUM_POINTS; i++) {
+                    const x = X_MIN + i * DX;
+                    const env1 = psi1Func(x, sigma);
+                    const env2 = psi2Func(x, sigma);
+                    const maxAmp = Math.abs(nc1) * Math.abs(env1) + Math.abs(nc2) * Math.abs(env2);
+                    const probMax = maxAmp * maxAmp;
+                    if (probMax > maxProb) maxProb = probMax;
+                }
+                const yMax3 = Math.max(0.5, Math.ceil(maxProb * 1.15 * 10) / 10);
+                return {
+                    range1: [0, STATIC_Y_PROB],
+                    range2: [0, STATIC_Y_PROB],
+                    range3: [0, yMax3]
+                };
+            } else {
+                // Max |Re(Ψ)| for superposition (plot 3) only
+                let maxAmp = 0;
+                for (let i = 0; i < NUM_POINTS; i++) {
+                    const x = X_MIN + i * DX;
+                    const env1 = psi1Func(x, sigma);
+                    const env2 = psi2Func(x, sigma);
+                    const maxPossible = Math.abs(nc1) * Math.abs(env1) + Math.abs(nc2) * Math.abs(env2);
+                    if (maxPossible > maxAmp) maxAmp = maxPossible;
+                }
+                const yMax3 = Math.max(0.5, Math.ceil(maxAmp * 1.15 * 10) / 10);
+                return {
+                    range1: [-STATIC_Y_RE, STATIC_Y_RE],
+                    range2: [-STATIC_Y_RE, STATIC_Y_RE],
+                    range3: [-yMax3, yMax3]
+                };
+            }
+        }
+        
+        // ========== RENDERING ==========
+        function toggleMaximize(plotId) {
+            const el = document.getElementById(plotId);
+            if (maximizedPlot === plotId) {
+                el.classList.remove('maximized');
+                plotsArea.classList.remove('has-maximized');
+                maximizedPlot = null;
+            } else {
+                if (maximizedPlot) document.getElementById(maximizedPlot).classList.remove('maximized');
+                el.classList.add('maximized');
+                plotsArea.classList.add('has-maximized');
+                maximizedPlot = plotId;
+            }
+            setTimeout(() => { resizeCanvases(); draw(); }, 50);
+        }
+        
+        function resizeCanvases() {
+            document.querySelectorAll('.canvas-wrapper').forEach((wrapper, i) => {
+                const cv = [canvas1, canvas2, canvas3][i];
+                const rect = wrapper.getBoundingClientRect();
+                cv.width = rect.width * window.devicePixelRatio;
+                cv.height = rect.height * window.devicePixelRatio;
+                cv.style.width = rect.width + 'px';
+                cv.style.height = rect.height + 'px';
+            });
+        }
+        
+        function drawPlot(ctx, canvas, data, color, yAxisLabel, yRange) {
+            const dpr = window.devicePixelRatio;
+            const w = canvas.width / dpr;
+            const h = canvas.height / dpr;
+            
+            ctx.save();
+            ctx.scale(dpr, dpr);
+            
+            const pL = 48, pR = 14, pT = 14, pB = 24;
+            const plotW = w - pL - pR;
+            const plotH = h - pT - pB;
+            const yScale = (yRange[1] - yRange[0]) || 1e-10;
+            
+            // Background
+            ctx.fillStyle = '#111827';
+            ctx.fillRect(0, 0, w, h);
+            
+            // Grid
+            const NUM_X_DIVS = 10;
+            const NUM_Y_DIVS = 5;
+            
+            ctx.strokeStyle = 'rgba(148, 163, 184, 0.07)';
+            ctx.lineWidth = 1;
+            for (let i = 0; i <= NUM_X_DIVS; i++) {
+                const x = pL + (plotW / NUM_X_DIVS) * i;
+                ctx.beginPath(); ctx.moveTo(x, pT); ctx.lineTo(x, h - pB); ctx.stroke();
+            }
+            for (let i = 0; i <= NUM_Y_DIVS; i++) {
+                const y = pT + (plotH / NUM_Y_DIVS) * i;
+                ctx.beginPath(); ctx.moveTo(pL, y); ctx.lineTo(w - pR, y); ctx.stroke();
+            }
+            
+            // Zero lines
+            ctx.strokeStyle = 'rgba(148, 163, 184, 0.2)';
+            ctx.lineWidth = 1;
+            
+            const zeroY = pT + plotH * (yRange[1] / yScale);
+            if (zeroY > pT && zeroY < h - pB) {
+                ctx.beginPath(); ctx.moveTo(pL, zeroY); ctx.lineTo(w - pR, zeroY); ctx.stroke();
+            }
+            
+            const zeroX = pL + plotW * ((0 - X_MIN) / (X_MAX - X_MIN));
+            ctx.beginPath(); ctx.moveTo(zeroX, pT); ctx.lineTo(zeroX, h - pB); ctx.stroke();
+            
+            // Fill under curve
+            const fillZeroY = Math.max(pT, Math.min(h - pB, zeroY));
+            ctx.globalAlpha = 0.15;
+            ctx.beginPath();
+            ctx.moveTo(pL, fillZeroY);
+            for (let i = 0; i < data.length; i++) {
+                const x = pL + (i / data.length) * plotW;
+                const ny = (data[i] - yRange[0]) / yScale;
+                ctx.lineTo(x, h - pB - ny * plotH);
+            }
+            ctx.lineTo(w - pR, fillZeroY);
+            ctx.closePath();
+            ctx.fillStyle = color;
+            ctx.fill();
+            ctx.globalAlpha = 1;
+            
+            // Main curve
+            ctx.strokeStyle = color;
+            ctx.lineWidth = 2;
+            ctx.beginPath();
+            for (let i = 0; i < data.length; i++) {
+                const x = pL + (i / data.length) * plotW;
+                const ny = (data[i] - yRange[0]) / yScale;
+                const y = h - pB - ny * plotH;
+                if (i === 0) ctx.moveTo(x, y); else ctx.lineTo(x, y);
+            }
+            ctx.stroke();
+            
+            // X-axis labels — [FIX Bug 2] parameterized for robustness
+            ctx.fillStyle = '#4b5563';
+            ctx.font = '9px "JetBrains Mono"';
+            ctx.textAlign = 'center';
+            for (let i = 0; i <= NUM_X_DIVS; i++) {
+                const x = pL + (plotW / NUM_X_DIVS) * i;
+                const xVal = X_MIN + (i / NUM_X_DIVS) * (X_MAX - X_MIN);
+                ctx.fillText(xVal.toFixed(0), x, h - 5);
+            }
+            
+            ctx.textAlign = 'right';
+            for (let i = 0; i <= NUM_Y_DIVS; i++) {
+                const y = pT + (plotH / NUM_Y_DIVS) * i;
+                const val = yRange[1] - yScale * (i / NUM_Y_DIVS);
+                ctx.fillText(val.toFixed(1), pL - 5, y + 3);
+            }
+            
+            // Y-axis title
+            ctx.save();
+            ctx.translate(10, h / 2);
+            ctx.rotate(-Math.PI / 2);
+            ctx.fillStyle = '#64748b';
+            ctx.font = '10px "DM Sans"';
+            ctx.textAlign = 'center';
+            ctx.fillText(yAxisLabel, 0, 0);
+            ctx.restore();
+            
+            ctx.restore();
+        }
+        
+        function draw() {
+            const { data1, data2, data3 } = generateData();
+            const ranges = computeYRanges();
+            
+            const yLabel1 = showProbability ? '|c₁ψ₁|²' : 'Re(c₁ψ₁)';
+            const yLabel2 = showProbability ? '|c₂ψ₂|²' : 'Re(c₂ψ₂)';
+            const yLabel3 = showProbability ? '|Ψ|²' : 'Re(Ψ)';
+            
+            drawPlot(ctx1, canvas1, data1, '#60a5fa', yLabel1, ranges.range1);
+            drawPlot(ctx2, canvas2, data2, '#34d399', yLabel2, ranges.range2);
+            drawPlot(ctx3, canvas3, data3, '#f472b6', yLabel3, ranges.range3);
+            
+            // Update info labels
+            const { nc1, nc2 } = getNormalizedCoeffs();
+            document.getElementById('plot1Info').textContent = `c₁ = ${nc1.toFixed(3)}`;
+            document.getElementById('plot2Info').textContent = `c₂ = ${nc2.toFixed(3)}`;
+            
+            if (showProbability) {
+                // [FIX Bug 5] Clarified label: this is the temporal phase factor only,
+                // the full cross-term is x-dependent: 2·c₁c₂·ψ₁(x)ψ₂(x)·cos(ω₂₁t)
+                const omega = 1.0 / (sigma * sigma);
+                const OMEGA_21 = omega;
+                const crossTermVal = Math.cos(OMEGA_21 * time);
+                document.getElementById('superpositionInfo').textContent =
+                    `cos(ω₂₁t) = ${crossTermVal >= 0 ? '+' : ''}${crossTermVal.toFixed(2)}`;
+            } else {
+                document.getElementById('superpositionInfo').textContent = '';
+            }
+        }
+        
+        // ========== ANIMATION ==========
+        function animate(timestamp) {
+            if (lastTimestamp === null) lastTimestamp = timestamp;
+            // [FIX Bug 10] Cap dt to prevent time-skip when tab is backgrounded
+            const dt = Math.min((timestamp - lastTimestamp) / 1000, 0.1);
+            lastTimestamp = timestamp;
+            
+            if (isPlaying) {
+                time += dt * speed;
+            }
+            
+            draw();
+            updateStatus();
+            requestAnimationFrame(animate);
+        }
+        
+        function updateStatus() {
+            // Calculate dynamic energies based on current sigma (hbar=1, m=1)
+            const omega = 1.0 / (sigma * sigma);
+            const E1 = 0.5 * omega;
+            const E2 = 1.5 * omega;
+            const OMEGA_21 = omega; // Since E2 - E1 = (1.5 - 0.5) * omega
+            
+            // [FIX Bug 9] Removed misleading "rad/s" — we're in natural units (ℏ=m=1)
+            document.getElementById('omegaFreq').textContent = omega.toFixed(2);
+            document.getElementById('beatFreq').textContent = OMEGA_21.toFixed(2);
+            document.getElementById('beatPeriod').textContent = (2 * Math.PI / OMEGA_21).toFixed(3);
+            document.getElementById('timeValue').textContent = time.toFixed(3);
+            
+            // [FIX Bug 6] Compute overlap numerically instead of hardcoding
+            const overlapVal = numericalOverlapCheck();
+            const overlapEl = document.getElementById('overlapValue');
+            overlapEl.textContent = overlapVal.toFixed(4);
+            overlapEl.style.color = Math.abs(overlapVal) < 0.01 ? '#4ade80' : '#f87171';
+            
+            // Numerical norm check
+            const normVal = numericalNormCheck();
+            const normEl = document.getElementById('normCheck');
+            normEl.textContent = normVal.toFixed(4);
+            normEl.style.color = Math.abs(normVal - 1.0) < 0.02 ? '#4ade80' : '#f87171';
+        }
+        
+        // ========== LINKED COEFFICIENT SLIDERS ==========
+        // The sliders enforce |c₁|² + |c₂|² = 1 directly (orthogonal eigenstates).
+        let c1Dragging = false, c2Dragging = false;
+        
+        function updateFromC1(newC1) {
+            c1Raw = Math.max(0, Math.min(1, newC1));
+            c2Raw = Math.sqrt(Math.max(0, 1 - c1Raw * c1Raw));
+            c1Slider.value = Math.round(c1Raw * 1000);
+            c2Slider.value = Math.round(c2Raw * 1000);
+            updateDisplays();
+        }
+        
+        function updateFromC2(newC2) {
+            c2Raw = Math.max(0, Math.min(1, newC2));
+            c1Raw = Math.sqrt(Math.max(0, 1 - c2Raw * c2Raw));
+            c1Slider.value = Math.round(c1Raw * 1000);
+            c2Slider.value = Math.round(c2Raw * 1000);
+            updateDisplays();
+        }
+        
+        function updateDisplays() {
+            const { nc1, nc2 } = getNormalizedCoeffs();
+            
+            document.getElementById('c1Value').textContent = nc1.toFixed(3);
+            document.getElementById('c2Value').textContent = nc2.toFixed(3);
+            document.getElementById('c1Prob').textContent = (nc1 * nc1).toFixed(3);
+            document.getElementById('c2Prob').textContent = (nc2 * nc2).toFixed(3);
+            document.getElementById('sigmaValue').textContent = sigma.toFixed(2);
+            document.getElementById('speedValue').textContent = speed.toFixed(1) + '×';
+            
+            // Show normalization: |c₁|² + |c₂|² = 1 (exact for orthogonal states)
+            const fullNorm = nc1 * nc1 + nc2 * nc2;
+            document.getElementById('normBadge').textContent = `✓ |c₁|² + |c₂|² = ${fullNorm.toFixed(3)}`;
+            
+            if (nc2 < 0.001) {
+                document.getElementById('equationBox').innerHTML =
+                    `Ψ = <span class="eq-psi1">ψ₁</span>`;
+            } else if (nc1 < 0.001) {
+                document.getElementById('equationBox').innerHTML =
+                    `Ψ = <span class="eq-psi2">ψ₂</span>`;
+            } else {
+                document.getElementById('equationBox').innerHTML =
+                    `Ψ = <span class="eq-c1">${nc1.toFixed(3)}</span> · <span class="eq-psi1">ψ₁</span> + <span class="eq-c2">${nc2.toFixed(3)}</span> · <span class="eq-psi2">ψ₂</span>`;
+            }
+        }
+        
+        function resetAll() {
+            time = 0;
+            lastTimestamp = null;
+            c1Raw = Math.SQRT1_2;
+            c2Raw = Math.SQRT1_2;
+            sigma = 0.7;
+            speed = 1.0;
+            isPlaying = true;
+            
+            c1Slider.value = 707;
+            c2Slider.value = 707;
+            sigmaSlider.value = 70;  // [FIX Bug 3] consistent with min=30
+            speedSlider.value = 10;
+            
+            showProbability = false;
+            document.getElementById('realBtn').classList.add('active');
+            document.getElementById('probBtn').classList.remove('active');
+            document.getElementById('playIcon').textContent = '⏸';
+            document.getElementById('playText').textContent = 'Pause';
+            document.getElementById('speedValue').textContent = '1.0×';
+            
+            updateDisplays();
+            draw();
+            updateStatus();
+        }
+        
+        // ========== EVENT LISTENERS ==========
+        const c1Slider = document.getElementById('c1Slider');
+        const c2Slider = document.getElementById('c2Slider');
+        const sigmaSlider = document.getElementById('sigmaSlider');
+        const speedSlider = document.getElementById('speedSlider');
+        const plotsArea = document.getElementById('plotsArea');
+        
+        c1Slider.addEventListener('input', (e) => {
+            if (c2Dragging) return;
+            c1Dragging = true;
+            updateFromC1(e.target.value / 1000);
+            c1Dragging = false;
+        });
+        
+        c2Slider.addEventListener('input', (e) => {
+            if (c1Dragging) return;
+            c2Dragging = true;
+            updateFromC2(e.target.value / 1000);
+            c2Dragging = false;
+        });
+        
+        sigmaSlider.addEventListener('input', (e) => {
+            sigma = e.target.value / 100;
+            updateDisplays();
+        });
+        
+        speedSlider.addEventListener('input', (e) => {
+            speed = e.target.value / 10;
+            document.getElementById('speedValue').textContent = speed.toFixed(1) + '×';
+        });
+        
+        document.getElementById('realBtn').addEventListener('click', () => {
+            showProbability = false;
+            document.getElementById('realBtn').classList.add('active');
+            document.getElementById('probBtn').classList.remove('active');
+        });
+        
+        document.getElementById('probBtn').addEventListener('click', () => {
+            showProbability = true;
+            document.getElementById('probBtn').classList.add('active');
+            document.getElementById('realBtn').classList.remove('active');
+        });
+        
+        document.getElementById('playPauseBtn').addEventListener('click', () => {
+            isPlaying = !isPlaying;
+            document.getElementById('playIcon').textContent = isPlaying ? '⏸' : '▶';
+            document.getElementById('playText').textContent = isPlaying ? 'Pause' : 'Play';
+        });
+        
+        document.getElementById('resetBtn').addEventListener('click', resetAll);
+        
+        window.addEventListener('resize', () => { resizeCanvases(); draw(); });
+        
+        // ========== INITIALIZE ==========
+        resizeCanvases();
+        updateDisplays();
+        requestAnimationFrame(animate);
+    </script>
+</body>
+</html>
