@@ -1,5 +1,9 @@
 # Physics & Code Review: Quantum Harmonic Oscillator Simulation
 
+# Physics bugs fixed:
+
+
+
 ## 1. Physics equations and concepts
 
 ### 1.1 Wavefunction and normalization — **Correct**
