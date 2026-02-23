@@ -1,5 +1,11 @@
 # Physics & Code Review: Infinite Potential Well Simulation
 
+# Issues fixed:
+Added measurement rate slider
+
+# Issues still persisting:
+The histogram bars are still not matching the area under the theoretical curve for a good number of measurements.
+
 ## 1. Physics equations and concepts
 
 ### 1.1 Wave function and probability density — **Correct**
