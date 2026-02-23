@@ -2,6 +2,11 @@
 _Exported on 18/02/2026 at 19:40:03 GMT+5:30 from Cursor (2.4.37)_
 
 ---
+# Bugs & Fixes:
+
+Implemented equal divisions for d and lamda sliders to make sure that the d/lambda ratio stays within the experimental limit to observe interference pattern.
+
+{Rendering issue}: Rendering the o/p on the screen due to both the slits simultaneously could cause overalp of o/p due to 2 slits at one point simultaneously. Fixed this issue.
 
 **User**
 
