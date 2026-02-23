@@ -2,6 +2,10 @@
 _Exported on 18/02/2026 at 19:42:04 GMT+5:30 from Cursor (2.4.37)_
 
 ---
+# Issues fixed:
+
+Improved rendering of the graphs in the plot window.
+Better stats visibility of the individual components.
 
 **User**
 
