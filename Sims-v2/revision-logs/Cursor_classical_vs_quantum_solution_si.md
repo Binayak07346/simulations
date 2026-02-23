@@ -3,6 +3,13 @@ _Exported on 18/02/2026 at 19:42:35 GMT+5:30 from Cursor (2.4.37)_
 
 ---
 
+# Issues fixed:
+
+Fixed the flickering animation during live slider change.
+Removed the slider units (made no sense for classical vs quantum comparison)
+Fixed 'w' issue (No significant change in oscillation was observed with change in 'w')
+Fixed the trauncating wavefunction peak
+
 **User**
 
  For the classical vs quantum solution simulation, start with checking all the physics equations, concepts, numerical methods, overall architecture and flow, then check the frontend animations and visuals implemented (if there are any mistakes in the visuals in terms of physics and rendering ). Finally review the entire code line by line thoroughly in detail. Mention the bugs found with suggested edits.
