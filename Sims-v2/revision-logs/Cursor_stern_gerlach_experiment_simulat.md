@@ -2,6 +2,11 @@
 _Exported on 18/02/2026 at 19:42:58 GMT+5:30 from Cursor (2.4.37)_
 
 ---
+# Physics bugs fixed:
+
+Reduced the maximum magnetic field from 10 T/m to 6 T/m to make sure that the particles do not overshoot beyond the output window for max 5 beams.
+Increased the size of the output window to clearly show a max of 5 accumulated beams.
+Removed the overlap between the splitted beams for minimum magnetic field.
 
 **User**
 
