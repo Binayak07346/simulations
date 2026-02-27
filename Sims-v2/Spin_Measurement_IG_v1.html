@@ -1,0 +1,1456 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Quantum Spin Measurement - Bloch Sphere</title>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        body { 
+            background: #0a0e1a; 
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            overflow: hidden;
+            color: #e2e8f0;
+        }
+        
+        .main-container {
+            display: flex;
+            width: 100vw;
+            height: 100vh;
+        }
+        
+        .canvas-area {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            position: relative;
+            min-width: 0;
+        }
+        
+        .title-bar {
+            height: 50px;
+            background: rgba(10, 14, 26, 0.95);
+            border-bottom: 1px solid rgba(148, 163, 184, 0.1);
+            display: flex;
+            align-items: center;
+            padding: 0 20px;
+            flex-shrink: 0;
+        }
+        
+        .title {
+            font-size: 18px;
+            font-weight: 600;
+            color: #60a5fa;
+        }
+        
+        #canvas-container {
+            flex: 1;
+            position: relative;
+        }
+        
+        canvas {
+            display: block;
+            width: 100%;
+            height: 100%;
+            cursor: grab;
+        }
+        
+        canvas:active {
+            cursor: grabbing;
+        }
+        
+        .drag-hint {
+            position: absolute;
+            bottom: 15px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 11px;
+            color: #64748b;
+            background: rgba(10, 14, 26, 0.8);
+            padding: 6px 12px;
+            border-radius: 4px;
+        }
+        
+        /* Right Panel */
+        .control-panel {
+            width: 360px;
+            min-width: 360px;
+            max-width: 360px;
+            height: 100vh;
+            background: rgba(15, 20, 35, 0.98);
+            border-left: 1px solid rgba(148, 163, 184, 0.1);
+            display: flex;
+            flex-direction: column;
+            overflow-x: hidden;
+            overflow-y: auto;
+            -webkit-overflow-scrolling: touch;
+        }
+        
+        /* Scrollbar styling */
+        .control-panel::-webkit-scrollbar {
+            width: 6px;
+        }
+        
+        .control-panel::-webkit-scrollbar-track {
+            background: rgba(0, 0, 0, 0.2);
+        }
+        
+        .control-panel::-webkit-scrollbar-thumb {
+            background: rgba(148, 163, 184, 0.3);
+            border-radius: 3px;
+        }
+        
+        .control-panel::-webkit-scrollbar-thumb:hover {
+            background: rgba(148, 163, 184, 0.5);
+        }
+        
+        .panel-section {
+            padding: 18px;
+            border-bottom: 1px solid rgba(148, 163, 184, 0.1);
+            overflow: visible;
+            flex-shrink: 0;
+        }
+        
+        .panel-section:last-child {
+            border-bottom: none;
+        }
+        
+        .panel-section h3 {
+            color: #60a5fa;
+            font-size: 11px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 12px;
+        }
+        
+        /* Measurement Buttons */
+        .measure-buttons {
+            display: flex;
+            gap: 8px;
+        }
+        
+        .btn {
+            flex: 1;
+            padding: 12px 10px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 12px;
+            font-weight: 600;
+            transition: all 0.2s;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        
+        .btn-z {
+            background: linear-gradient(135deg, #3b82f6, #1d4ed8);
+            color: white;
+        }
+        
+        .btn-x {
+            background: linear-gradient(135deg, #10b981, #059669);
+            color: white;
+        }
+        
+        .btn-y {
+            background: linear-gradient(135deg, #f59e0b, #d97706);
+            color: white;
+        }
+        
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+        }
+        
+        .btn:active {
+            transform: translateY(0);
+        }
+        
+        .btn-reset {
+            width: auto;
+            flex: 1;
+            margin-top: 0;
+            background: rgba(148, 163, 184, 0.15);
+            color: #94a3b8;
+            border: 1px solid rgba(148, 163, 184, 0.2);
+        }
+        
+        .btn-reset:hover {
+            background: rgba(148, 163, 184, 0.25);
+        }
+        
+        .btn-undo {
+            width: auto;
+            flex: 1;
+            margin-top: 0;
+            background: rgba(251, 191, 36, 0.15);
+            color: #fbbf24;
+            border: 1px solid rgba(251, 191, 36, 0.25);
+        }
+        
+        .btn-undo:hover {
+            background: rgba(251, 191, 36, 0.25);
+        }
+        
+        .btn-undo:disabled {
+            opacity: 0.35;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+        
+        .btn-undo:disabled:hover {
+            transform: none;
+            box-shadow: none;
+            background: rgba(251, 191, 36, 0.15);
+        }
+        
+        .bottom-buttons {
+            display: flex;
+            gap: 8px;
+            margin-top: 10px;
+        }
+        
+        /* Wavefunction Display */
+        .wf-equation {
+            font-size: 16px;
+            color: #f1f5f9;
+            text-align: center;
+            padding: 14px 8px;
+            background: rgba(0,0,0,0.3);
+            border-radius: 6px;
+            margin-bottom: 16px;
+            min-height: 52px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            max-width: 100%;
+            word-break: break-all;
+        }
+
+        /* Prevent MathJax from causing horizontal overflow */
+        .wf-equation mjx-container {
+            max-width: 100% !important;
+            overflow: hidden !important;
+        }
+
+        .wf-equation .MathJax {
+            max-width: 100% !important;
+            overflow: hidden !important;
+        }
+        
+        .prob-bars {
+            display: flex;
+            gap: 16px;
+        }
+        
+        .prob-bar {
+            flex: 1;
+            text-align: center;
+            min-width: 0;
+        }
+        
+        .prob-bar-label {
+            font-size: 13px;
+            font-weight: 600;
+            color: #cbd5e1;
+            margin-bottom: 8px;
+        }
+        
+        .prob-bar-container {
+            height: 80px;
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 6px;
+            position: relative;
+            overflow: hidden;
+            border: 1px solid rgba(148, 163, 184, 0.1);
+        }
+        
+        .prob-bar-fill {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            border-radius: 5px;
+            transition: height 0.3s ease;
+        }
+        
+        .prob-bar-fill.up {
+            background: linear-gradient(to top, #059669, #34d399);
+        }
+        
+        .prob-bar-fill.down {
+            background: linear-gradient(to top, #be185d, #f472b6);
+        }
+        
+        .prob-bar-value {
+            font-size: 18px;
+            font-weight: 700;
+            color: white;
+            text-shadow: 0 1px 3px rgba(0,0,0,0.6);
+            display: block;
+            margin-top: 8px;
+        }
+        
+        /* Custom State Input */
+        .input-group {
+            margin-bottom: 12px;
+        }
+        
+        .input-group label {
+            display: block;
+            color: #cbd5e1;
+            font-size: 13px;
+            font-weight: 500;
+            margin-bottom: 6px;
+        }
+        
+        .input-row {
+            display: flex;
+            gap: 8px;
+            align-items: center;
+        }
+        
+        .input-row input {
+            flex: 1;
+            min-width: 0;
+            padding: 10px;
+            background: rgba(0, 0, 0, 0.4);
+            border: 1px solid rgba(148, 163, 184, 0.3);
+            border-radius: 6px;
+            color: #f1f5f9;
+            font-size: 14px;
+            font-family: 'Courier New', monospace;
+            text-align: center;
+        }
+        
+        .input-row input:focus {
+            outline: none;
+            border-color: #60a5fa;
+            background: rgba(0, 0, 0, 0.5);
+        }
+        
+        .input-row span {
+            color: #94a3b8;
+            font-size: 16px;
+            font-weight: 600;
+            min-width: 16px;
+            text-align: center;
+            flex-shrink: 0;
+        }
+        
+        .preset-buttons {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+            margin-bottom: 12px;
+        }
+        
+        .preset-btn {
+            padding: 6px 10px;
+            background: rgba(96, 165, 250, 0.12);
+            border: 1px solid rgba(96, 165, 250, 0.25);
+            border-radius: 4px;
+            color: #60a5fa;
+            font-size: 11px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        
+        .preset-btn:hover {
+            background: rgba(96, 165, 250, 0.25);
+            border-color: #60a5fa;
+        }
+        
+        .apply-btn {
+            width: 100%;
+            padding: 10px;
+            background: linear-gradient(135deg, #60a5fa, #3b82f6);
+            border: none;
+            border-radius: 6px;
+            color: white;
+            font-size: 12px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        
+        .apply-btn:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(59, 130, 246, 0.4);
+        }
+        
+        .bloch-coords {
+            margin-top: 10px;
+            padding: 8px;
+            background: rgba(0, 0, 0, 0.2);
+            border-radius: 4px;
+            font-size: 11px;
+            color: #64748b;
+            text-align: center;
+        }
+        
+        .bloch-coords span {
+            color: #94a3b8;
+            font-weight: 500;
+        }
+        
+        /* Measurement History */
+        .history-list {
+            max-height: 180px;
+            overflow-y: auto;
+            overflow-x: hidden;
+        }
+        
+        .history-list::-webkit-scrollbar {
+            width: 4px;
+        }
+        
+        .history-list::-webkit-scrollbar-track {
+            background: rgba(0, 0, 0, 0.1);
+        }
+        
+        .history-list::-webkit-scrollbar-thumb {
+            background: rgba(148, 163, 184, 0.3);
+            border-radius: 2px;
+        }
+        
+        .history-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 8px;
+            background: rgba(0, 0, 0, 0.2);
+            border-radius: 6px;
+            margin-bottom: 6px;
+            font-size: 12px;
+        }
+        
+        .history-item:last-child {
+            margin-bottom: 0;
+        }
+        
+        .history-axis {
+            width: 24px;
+            height: 24px;
+            border-radius: 4px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 11px;
+            color: white;
+            flex-shrink: 0;
+        }
+        
+        .history-axis.z { background: #3b82f6; }
+        .history-axis.x { background: #10b981; }
+        .history-axis.y { background: #f59e0b; }
+        
+        .history-empty {
+            color: #64748b;
+            font-size: 12px;
+            text-align: center;
+            padding: 15px;
+        }
+        
+        /* Info Section */
+        .info-text {
+            color: #94a3b8;
+            font-size: 12px;
+            line-height: 1.6;
+        }
+        
+        .info-text .highlight {
+            color: #fbbf24;
+            font-weight: 500;
+        }
+
+        /* Bottom spacer to ensure last section is fully visible */
+        .panel-bottom-spacer {
+            height: 20px;
+            flex-shrink: 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="main-container">
+        <!-- Canvas Area -->
+        <div class="canvas-area">
+            <div class="title-bar">
+                <div class="title">⚛️ Quantum Spin Measurement - Bloch Sphere</div>
+            </div>
+            <div id="canvas-container">
+                <canvas id="mainCanvas"></canvas>
+                <div class="drag-hint">🖱️ Drag to rotate view</div>
+            </div>
+        </div>
+        
+        <!-- Right Control Panel -->
+        <div class="control-panel">
+            <!-- Measurement Controls -->
+            <div class="panel-section">
+                <h3>Measure Spin</h3>
+                <div class="measure-buttons">
+                    <button class="btn btn-z" id="measureZ">Z-Axis</button>
+                    <button class="btn btn-x" id="measureX">X-Axis</button>
+                    <button class="btn btn-y" id="measureY">Y-Axis</button>
+                </div>
+                <div class="bottom-buttons">
+                    <button class="btn btn-undo" id="undo" disabled>⟲ Undo Measurement</button>
+                    <button class="btn btn-reset" id="reset">Reset to |↑⟩</button>
+                </div>
+            </div>
+            
+            <!-- Wavefunction Display -->
+            <div class="panel-section">
+                <h3>Wavefunction</h3>
+                <div class="wf-equation" id="wfEquation"></div>
+                <div class="prob-bars">
+                    <div class="prob-bar">
+                        <div class="prob-bar-label">P(↑) Spin Up</div>
+                        <div class="prob-bar-container">
+                            <div class="prob-bar-fill up" id="probUp" style="height: 100%;">
+                            </div>
+                        </div>
+                        <span class="prob-bar-value" id="probUpValue">100%</span>
+                    </div>
+                    <div class="prob-bar">
+                        <div class="prob-bar-label">P(↓) Spin Down</div>
+                        <div class="prob-bar-container">
+                            <div class="prob-bar-fill down" id="probDown" style="height: 0%;">
+                            </div>
+                        </div>
+                        <span class="prob-bar-value" id="probDownValue">0%</span>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Custom State Input -->
+            <div class="panel-section">
+                <h3>Set Custom State</h3>
+                <div class="preset-buttons">
+                    <button class="preset-btn" data-state="up">|↑⟩</button>
+                    <button class="preset-btn" data-state="down">|↓⟩</button>
+                    <button class="preset-btn" data-state="plusx">|+x⟩</button>
+                    <button class="preset-btn" data-state="minusx">|-x⟩</button>
+                    <button class="preset-btn" data-state="plusy">|+y⟩</button>
+                    <button class="preset-btn" data-state="minusy">|-y⟩</button>
+                </div>
+                <div class="input-group">
+                    <label>α (amplitude for |↑⟩)</label>
+                    <div class="input-row">
+                        <input type="text" id="alphaReal" value="1" placeholder="Real">
+                        <span>+</span>
+                        <input type="text" id="alphaImag" value="0" placeholder="Imag">
+                        <span>i</span>
+                    </div>
+                </div>
+                <div class="input-group">
+                    <label>β (amplitude for |↓⟩)</label>
+                    <div class="input-row">
+                        <input type="text" id="betaReal" value="0" placeholder="Real">
+                        <span>+</span>
+                        <input type="text" id="betaImag" value="0" placeholder="Imag">
+                        <span>i</span>
+                    </div>
+                </div>
+                <button class="apply-btn" id="applyState">Apply Custom State</button>
+                <div class="bloch-coords">
+                    Bloch Coordinates: θ = <span id="thetaDisplay">0°</span>, φ = <span id="phiDisplay">0°</span>
+                </div>
+            </div>
+            
+            <!-- Measurement History -->
+            <div class="panel-section">
+                <h3>Measurement History</h3>
+                <div class="history-list" id="historyList">
+                    <div class="history-empty">No measurements yet</div>
+                </div>
+            </div>
+            
+            <!-- Info -->
+            <div class="panel-section">
+                <h3>About</h3>
+                <p class="info-text">
+                    The Bloch sphere visualizes a qubit's quantum state. The <span class="highlight">colored overlay</span> shows probability amplitude - brighter regions indicate higher measurement probability in that direction. Use <span class="highlight">Undo</span> to restore the pre-measurement state and re-measure to verify probabilities.
+                </p>
+            </div>
+
+            <!-- Bottom spacer -->
+            <div class="panel-bottom-spacer"></div>
+        </div>
+    </div>
+    
+    <script>
+        // MathJax configuration
+        window.MathJax = {
+            tex: {
+                inlineMath: [['$', '$'], ['\\(', '\\)']]
+            },
+            startup: {
+                ready: () => {
+                    MathJax.startup.defaultReady();
+                    initSimulation();
+                }
+            }
+        };
+        
+        function initSimulation() {
+            const canvas = document.getElementById('mainCanvas');
+            const ctx = canvas.getContext('2d');
+            
+            let width, height;
+            let time = 0;
+            let lastTimestamp = 0;
+            let measureCount = 0;
+            let history = [];
+            
+            // Quantum state on Bloch sphere
+            let theta = 0;
+            let phi = 0;
+            let targetTheta = 0;
+            let targetPhi = 0;
+            let startTheta = 0;
+            let startPhi = 0;
+            let animating = false;
+            let animProgress = 0;
+            
+            // Complex amplitudes
+            let alphaReal = 1, alphaImag = 0;
+            let betaReal = 0, betaImag = 0;
+            
+            // Measurement animation
+            let measuring = false;
+            let measureAxis = 'z';
+            let measureTime = 0;
+            let measureResult = null;
+            let pulseRings = [];
+            let pendingAmplitudeUpdate = false;
+            let lastLatex = '';
+            let measureTimeoutId = null;
+            let pulseTimeoutIds = [];
+            
+            // State history stack for undo
+            let stateStack = [];
+            const MAX_UNDO = 50;
+            
+            // Sphere parameters
+            let sphereRadius;
+            let centerX;
+            let centerY;
+            
+            // View rotation
+            let rotationY = 0.3;
+            let rotationX = 0.25;
+            
+            function updateUndoButton() {
+                const undoBtn = document.getElementById('undo');
+                undoBtn.disabled = stateStack.length === 0;
+            }
+            
+            function pushStateToStack() {
+                stateStack.push({
+                    theta: theta,
+                    phi: phi,
+                    alphaReal: alphaReal,
+                    alphaImag: alphaImag,
+                    betaReal: betaReal,
+                    betaImag: betaImag
+                });
+                if (stateStack.length > MAX_UNDO) {
+                    stateStack.shift();
+                }
+                updateUndoButton();
+            }
+            
+            function undoLastMeasurement() {
+                if (stateStack.length === 0 || measuring || animating) return;
+                
+                const prevState = stateStack.pop();
+                
+                // Animate back to previous state
+                startTheta = theta;
+                startPhi = phi;
+                targetTheta = prevState.theta;
+                targetPhi = prevState.phi;
+                animating = true;
+                animProgress = 0;
+                
+                // Update amplitudes to previous state
+                alphaReal = prevState.alphaReal;
+                alphaImag = prevState.alphaImag;
+                betaReal = prevState.betaReal;
+                betaImag = prevState.betaImag;
+                
+                document.getElementById('alphaReal').value = alphaReal.toFixed(3);
+                document.getElementById('alphaImag').value = alphaImag.toFixed(3);
+                document.getElementById('betaReal').value = betaReal.toFixed(3);
+                document.getElementById('betaImag').value = betaImag.toFixed(3);
+                
+                // Remove the last history entry
+                if (history.length > 0) {
+                    history.shift();
+                }
+                updateHistoryDisplay();
+                updateUndoButton();
+            }
+            
+            function resize() {
+                const container = document.getElementById('canvas-container');
+                const dpr = window.devicePixelRatio || 1;
+                width = container.clientWidth;
+                height = container.clientHeight;
+                canvas.width = width * dpr;
+                canvas.height = height * dpr;
+                canvas.style.width = width + 'px';
+                canvas.style.height = height + 'px';
+                ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+                
+                sphereRadius = Math.min(width, height) * 0.32;
+                centerX = width / 2;
+                centerY = height / 2;
+            }
+            
+            window.addEventListener('resize', resize);
+            resize();
+            
+            function project3D(x, y, z) {
+                let x1 = x * Math.cos(rotationY) - z * Math.sin(rotationY);
+                let z1 = x * Math.sin(rotationY) + z * Math.cos(rotationY);
+                let y1 = y * Math.cos(rotationX) - z1 * Math.sin(rotationX);
+                let z2 = y * Math.sin(rotationX) + z1 * Math.cos(rotationX);
+                
+                return {
+                    x: centerX + x1 * sphereRadius,
+                    y: centerY - y1 * sphereRadius,
+                    z: z2
+                };
+            }
+            
+            function drawSphere() {
+                ctx.strokeStyle = 'rgba(100, 116, 139, 0.2)';
+                ctx.lineWidth = 1;
+                
+                // Latitude lines
+                for (let lat = -60; lat <= 60; lat += 30) {
+                    ctx.beginPath();
+                    const latRad = lat * Math.PI / 180;
+                    const r = Math.cos(latRad);
+                    const y = Math.sin(latRad);
+                    
+                    for (let lon = 0; lon <= 360; lon += 5) {
+                        const lonRad = lon * Math.PI / 180;
+                        const x = r * Math.cos(lonRad);
+                        const z = r * Math.sin(lonRad);
+                        const p = project3D(x, y, z);
+                        
+                        if (lon === 0) ctx.moveTo(p.x, p.y);
+                        else ctx.lineTo(p.x, p.y);
+                    }
+                    ctx.stroke();
+                }
+                
+                // Longitude lines
+                for (let lon = 0; lon < 180; lon += 30) {
+                    ctx.beginPath();
+                    const lonRad = lon * Math.PI / 180;
+                    
+                    for (let lat = -90; lat <= 90; lat += 5) {
+                        const latRad = lat * Math.PI / 180;
+                        const r = Math.cos(latRad);
+                        const y = Math.sin(latRad);
+                        const x = r * Math.cos(lonRad);
+                        const z = r * Math.sin(lonRad);
+                        const p = project3D(x, y, z);
+                        
+                        if (lat === -90) ctx.moveTo(p.x, p.y);
+                        else ctx.lineTo(p.x, p.y);
+                    }
+                    ctx.stroke();
+                }
+                
+                // Equator
+                ctx.strokeStyle = 'rgba(100, 116, 139, 0.4)';
+                ctx.lineWidth = 2;
+                ctx.beginPath();
+                for (let lon = 0; lon <= 360; lon += 5) {
+                    const lonRad = lon * Math.PI / 180;
+                    const x = Math.cos(lonRad);
+                    const z = Math.sin(lonRad);
+                    const p = project3D(x, 0, z);
+                    
+                    if (lon === 0) ctx.moveTo(p.x, p.y);
+                    else ctx.lineTo(p.x, p.y);
+                }
+                ctx.stroke();
+            }
+            
+            function drawWavefunctionOnSphere() {
+                const resolution = 25;
+                
+                for (let latIdx = 0; latIdx < resolution; latIdx++) {
+                    const lat1 = (latIdx / resolution) * Math.PI - Math.PI / 2;
+                    const lat2 = ((latIdx + 1) / resolution) * Math.PI - Math.PI / 2;
+                    
+                    for (let lonIdx = 0; lonIdx < resolution * 2; lonIdx++) {
+                        const lon1 = (lonIdx / (resolution * 2)) * Math.PI * 2;
+                        const lon2 = ((lonIdx + 1) / (resolution * 2)) * Math.PI * 2;
+                        
+                        const latC = (lat1 + lat2) / 2;
+                        const lonC = (lon1 + lon2) / 2;
+                        
+                        const patchTheta = Math.PI / 2 - latC;
+                        const patchPhi = lonC;
+                        
+                        const cosHalfTheta = Math.cos(theta / 2);
+                        const sinHalfTheta = Math.sin(theta / 2);
+                        const cosHalfPatchTheta = Math.cos(patchTheta / 2);
+                        const sinHalfPatchTheta = Math.sin(patchTheta / 2);
+                        
+                        const dPhi = phi - patchPhi;
+                        const overlap = Math.pow(cosHalfTheta * cosHalfPatchTheta + 
+                                                 sinHalfTheta * sinHalfPatchTheta * Math.cos(dPhi), 2) +
+                                        Math.pow(sinHalfTheta * sinHalfPatchTheta * Math.sin(dPhi), 2);
+                        
+                        const y1 = Math.sin(lat1);
+                        const r1 = Math.cos(lat1);
+                        const y2 = Math.sin(lat2);
+                        const r2 = Math.cos(lat2);
+                        
+                        const corners = [
+                            project3D(r1 * Math.cos(lon1), y1, r1 * Math.sin(lon1)),
+                            project3D(r1 * Math.cos(lon2), y1, r1 * Math.sin(lon2)),
+                            project3D(r2 * Math.cos(lon2), y2, r2 * Math.sin(lon2)),
+                            project3D(r2 * Math.cos(lon1), y2, r2 * Math.sin(lon1))
+                        ];
+                        
+                        const avgZ = (corners[0].z + corners[1].z + corners[2].z + corners[3].z) / 4;
+                        if (avgZ < -0.1) continue;
+                        
+                        const intensity = Math.pow(overlap, 0.5);
+                        const alpha = 0.1 + intensity * 0.5;
+                        
+                        const r = Math.floor(100 + (1 - intensity) * 60);
+                        const g = Math.floor(150 * intensity + 50);
+                        const b = Math.floor(200 + intensity * 55);
+                        
+                        ctx.fillStyle = `rgba(${r}, ${g}, ${b}, ${alpha})`;
+                        ctx.beginPath();
+                        ctx.moveTo(corners[0].x, corners[0].y);
+                        ctx.lineTo(corners[1].x, corners[1].y);
+                        ctx.lineTo(corners[2].x, corners[2].y);
+                        ctx.lineTo(corners[3].x, corners[3].y);
+                        ctx.closePath();
+                        ctx.fill();
+                    }
+                }
+            }
+            
+            function drawArrowhead(ctx, fromX, fromY, toX, toY, color, size) {
+                const angle = Math.atan2(toY - fromY, toX - fromX);
+                const headLen = size || 14;
+                
+                ctx.fillStyle = color;
+                ctx.beginPath();
+                ctx.moveTo(toX, toY);
+                ctx.lineTo(
+                    toX - headLen * Math.cos(angle - Math.PI / 6),
+                    toY - headLen * Math.sin(angle - Math.PI / 6)
+                );
+                ctx.lineTo(
+                    toX - headLen * Math.cos(angle + Math.PI / 6),
+                    toY - headLen * Math.sin(angle + Math.PI / 6)
+                );
+                ctx.closePath();
+                ctx.fill();
+            }
+            
+            function drawAxisLabel(text, tipPoint, yOffset) {
+                const origin = project3D(0, 0, 0);
+                const dx = tipPoint.x - origin.x;
+                const dy = tipPoint.y - origin.y;
+                const len = Math.sqrt(dx * dx + dy * dy) || 1;
+                const ox = (dx / len) * 20;
+                const oy = (dy / len) * 20 + (yOffset || 0);
+                ctx.fillText(text, tipPoint.x + ox, tipPoint.y + oy);
+            }
+            
+            function drawAxes() {
+                const axisLength = 1.3;
+                
+                // Z axis (blue)
+                const zTop = project3D(0, axisLength, 0);
+                const zBottom = project3D(0, -axisLength, 0);
+                const zNearTop = project3D(0, axisLength * 0.92, 0);
+                
+                ctx.strokeStyle = '#3b82f6';
+                ctx.lineWidth = 3;
+                ctx.beginPath();
+                ctx.moveTo(zBottom.x, zBottom.y);
+                ctx.lineTo(zNearTop.x, zNearTop.y);
+                ctx.stroke();
+                
+                drawArrowhead(ctx, zNearTop.x, zNearTop.y, zTop.x, zTop.y, '#3b82f6', 16);
+                
+                ctx.fillStyle = '#f1f5f9';
+                ctx.font = 'bold 14px sans-serif';
+                drawAxisLabel('Z', zTop);
+                drawAxisLabel('|↑⟩', zTop, 16);
+                drawAxisLabel('|↓⟩', zBottom);
+                
+                // X axis (green)
+                const xPos = project3D(axisLength, 0, 0);
+                const xNeg = project3D(-axisLength, 0, 0);
+                const xNearPos = project3D(axisLength * 0.92, 0, 0);
+                
+                ctx.strokeStyle = '#10b981';
+                ctx.lineWidth = 3;
+                ctx.beginPath();
+                ctx.moveTo(xNeg.x, xNeg.y);
+                ctx.lineTo(xNearPos.x, xNearPos.y);
+                ctx.stroke();
+                
+                drawArrowhead(ctx, xNearPos.x, xNearPos.y, xPos.x, xPos.y, '#10b981', 16);
+                
+                ctx.fillStyle = '#f1f5f9';
+                drawAxisLabel('X', xPos);
+                
+                // Y axis (yellow)
+                const yPos = project3D(0, 0, axisLength);
+                const yNeg = project3D(0, 0, -axisLength);
+                const yNearPos = project3D(0, 0, axisLength * 0.92);
+                
+                ctx.strokeStyle = '#f59e0b';
+                ctx.lineWidth = 3;
+                ctx.beginPath();
+                ctx.moveTo(yNeg.x, yNeg.y);
+                ctx.lineTo(yNearPos.x, yNearPos.y);
+                ctx.stroke();
+                
+                drawArrowhead(ctx, yNearPos.x, yNearPos.y, yPos.x, yPos.y, '#f59e0b', 16);
+                
+                ctx.fillStyle = '#f1f5f9';
+                drawAxisLabel('Y', yPos);
+            }
+            
+            function drawStateVector() {
+                const x = Math.sin(theta) * Math.cos(phi);
+                const y = Math.cos(theta);
+                const z = Math.sin(theta) * Math.sin(phi);
+                
+                const tip = project3D(x, y, z);
+                const origin = project3D(0, 0, 0);
+                
+                // Vector
+                const gradient = ctx.createLinearGradient(origin.x, origin.y, tip.x, tip.y);
+                gradient.addColorStop(0, '#f472b6');
+                gradient.addColorStop(1, '#60a5fa');
+                
+                ctx.strokeStyle = gradient;
+                ctx.lineWidth = 4;
+                ctx.beginPath();
+                ctx.moveTo(origin.x, origin.y);
+                ctx.lineTo(tip.x, tip.y);
+                ctx.stroke();
+                
+                // Glowing tip
+                const glowSize = 18 + Math.sin(time * 3) * 3;
+                const glow = ctx.createRadialGradient(tip.x, tip.y, 0, tip.x, tip.y, glowSize);
+                glow.addColorStop(0, 'rgba(96, 165, 250, 1)');
+                glow.addColorStop(0.4, 'rgba(96, 165, 250, 0.6)');
+                glow.addColorStop(1, 'rgba(96, 165, 250, 0)');
+                
+                ctx.fillStyle = glow;
+                ctx.beginPath();
+                ctx.arc(tip.x, tip.y, glowSize, 0, Math.PI * 2);
+                ctx.fill();
+                
+                ctx.fillStyle = '#ffffff';
+                ctx.beginPath();
+                ctx.arc(tip.x, tip.y, 8, 0, Math.PI * 2);
+                ctx.fill();
+                
+                // Projection on equatorial plane
+                if (Math.abs(theta) > 0.1 && Math.abs(theta - Math.PI) > 0.1) {
+                    const projX = Math.sin(theta) * Math.cos(phi);
+                    const projZ = Math.sin(theta) * Math.sin(phi);
+                    const proj = project3D(projX, 0, projZ);
+                    
+                    ctx.strokeStyle = 'rgba(96, 165, 250, 0.3)';
+                    ctx.lineWidth = 1;
+                    ctx.setLineDash([5, 5]);
+                    ctx.beginPath();
+                    ctx.moveTo(tip.x, tip.y);
+                    ctx.lineTo(proj.x, proj.y);
+                    ctx.lineTo(origin.x, origin.y);
+                    ctx.stroke();
+                    ctx.setLineDash([]);
+                }
+            }
+            
+            function drawMeasurementEffect() {
+                if (!measuring) return;
+                
+                let axisColor;
+                let axisPoints;
+                
+                if (measureAxis === 'z') {
+                    axisColor = '#3b82f6';
+                    axisPoints = [project3D(0, 1.5, 0), project3D(0, -1.5, 0)];
+                } else if (measureAxis === 'x') {
+                    axisColor = '#10b981';
+                    axisPoints = [project3D(1.5, 0, 0), project3D(-1.5, 0, 0)];
+                } else {
+                    axisColor = '#f59e0b';
+                    axisPoints = [project3D(0, 0, 1.5), project3D(0, 0, -1.5)];
+                }
+                
+                ctx.strokeStyle = axisColor;
+                ctx.lineWidth = 6 + Math.sin(measureTime * 0.3) * 2;
+                ctx.globalAlpha = 0.5 + Math.sin(measureTime * 0.3) * 0.3;
+                ctx.beginPath();
+                ctx.moveTo(axisPoints[0].x, axisPoints[0].y);
+                ctx.lineTo(axisPoints[1].x, axisPoints[1].y);
+                ctx.stroke();
+                ctx.globalAlpha = 1;
+                
+                pulseRings.forEach((ring) => {
+                    const ringProgress = ring.life / ring.maxLife;
+                    const radius = ring.radius * (1 + ringProgress * 2);
+                    ctx.strokeStyle = ring.color;
+                    ctx.lineWidth = 3 * (1 - ringProgress);
+                    ctx.globalAlpha = 1 - ringProgress;
+                    ctx.beginPath();
+                    ctx.arc(centerX, centerY, radius, 0, Math.PI * 2);
+                    ctx.stroke();
+                    ctx.globalAlpha = 1;
+                });
+            }
+            
+            function updatePulseRings(dt) {
+                pulseRings = pulseRings.filter(ring => {
+                    ring.life += dt * 60;
+                    return ring.life < ring.maxLife;
+                });
+            }
+            
+            function addPulseRing(color) {
+                pulseRings.push({
+                    radius: sphereRadius * 0.5,
+                    life: 0,
+                    maxLife: 40,
+                    color: color
+                });
+            }
+            
+            function measure(axis) {
+                if (measuring || animating) return;
+                
+                // Save current state before measurement
+                pushStateToStack();
+                
+                measuring = true;
+                measureAxis = axis;
+                measureTime = 0;
+                measureCount++;
+                
+                const axisColors = { z: '#3b82f6', x: '#10b981', y: '#f59e0b' };
+                
+                pulseTimeoutIds = [];
+                for (let i = 0; i < 3; i++) {
+                    pulseTimeoutIds.push(
+                        setTimeout(() => addPulseRing(axisColors[axis]), i * 100)
+                    );
+                }
+                
+                measureTimeoutId = setTimeout(() => {
+                    let result;
+                    let newTheta, newPhi;
+                    
+                    if (axis === 'z') {
+                        const probUp = Math.pow(Math.cos(theta / 2), 2);
+                        result = Math.random() < probUp ? 'up' : 'down';
+                        newTheta = result === 'up' ? 0 : Math.PI;
+                        newPhi = 0;
+                    } else if (axis === 'x') {
+                        const probPlusX = 0.5 * (1 + Math.sin(theta) * Math.cos(phi));
+                        result = Math.random() < probPlusX ? 'up' : 'down';
+                        newTheta = Math.PI / 2;
+                        newPhi = result === 'up' ? 0 : Math.PI;
+                    } else {
+                        const probPlusY = 0.5 * (1 + Math.sin(theta) * Math.sin(phi));
+                        result = Math.random() < probPlusY ? 'up' : 'down';
+                        newTheta = Math.PI / 2;
+                        newPhi = result === 'up' ? Math.PI / 2 : -Math.PI / 2;
+                    }
+                    
+                    measureResult = result;
+                    startTheta = theta;
+                    startPhi = phi;
+                    targetTheta = newTheta;
+                    targetPhi = newPhi;
+                    animating = true;
+                    animProgress = 0;
+                    pendingAmplitudeUpdate = true;
+                    
+                    history.unshift({ axis, result });
+                    if (history.length > 10) history.pop();
+                    updateHistoryDisplay();
+                    
+                    measuring = false;
+                    measureTimeoutId = null;
+                }, 1000);
+            }
+            
+            function updateAmplitudesFromAngles(th, ph) {
+                alphaReal = Math.cos(th / 2);
+                alphaImag = 0;
+                betaReal = Math.sin(th / 2) * Math.cos(ph);
+                betaImag = Math.sin(th / 2) * Math.sin(ph);
+                
+                document.getElementById('alphaReal').value = alphaReal.toFixed(3);
+                document.getElementById('alphaImag').value = alphaImag.toFixed(3);
+                document.getElementById('betaReal').value = betaReal.toFixed(3);
+                document.getElementById('betaImag').value = betaImag.toFixed(3);
+            }
+            
+            function updateHistoryDisplay() {
+                const list = document.getElementById('historyList');
+                if (history.length === 0) {
+                    list.innerHTML = '<div class="history-empty">No measurements yet</div>';
+                    return;
+                }
+                list.innerHTML = history.map((h) => `
+                    <div class="history-item">
+                        <div class="history-axis ${h.axis}">${h.axis.toUpperCase()}</div>
+                        <span style="color: ${h.result === 'up' ? '#34d399' : '#f472b6'}">
+                            ${h.result === 'up' ? '↑ Spin Up' : '↓ Spin Down'}
+                        </span>
+                    </div>
+                `).join('');
+            }
+            
+            // Helper: format a real number as a symbolic fraction if possible
+            function formatCoeff(val) {
+                const absVal = Math.abs(val);
+                const sign = val < 0 ? '-' : '';
+                
+                // Check for 0
+                if (absVal < 0.001) return '0';
+                // Check for 1
+                if (Math.abs(absVal - 1) < 0.001) return sign + '1';
+                // Check for 1/sqrt(2)
+                if (Math.abs(absVal - 1/Math.sqrt(2)) < 0.005) return sign + '\\frac{1}{\\sqrt{2}}';
+                // Check for sqrt(3)/2
+                if (Math.abs(absVal - Math.sqrt(3)/2) < 0.005) return sign + '\\frac{\\sqrt{3}}{2}';
+                // Check for 1/2
+                if (Math.abs(absVal - 0.5) < 0.005) return sign + '\\frac{1}{2}';
+                // Check for 1/sqrt(3)
+                if (Math.abs(absVal - 1/Math.sqrt(3)) < 0.005) return sign + '\\frac{1}{\\sqrt{3}}';
+                // Check for sqrt(2/3)
+                if (Math.abs(absVal - Math.sqrt(2/3)) < 0.005) return sign + '\\sqrt{\\frac{2}{3}}';
+                // Fallback to decimal
+                return val.toFixed(3);
+            }
+            
+            function updateProbabilityDisplay() {
+                const probUp = Math.pow(Math.cos(theta / 2), 2);
+                const probDown = Math.pow(Math.sin(theta / 2), 2);
+                
+                document.getElementById('probUp').style.height = (probUp * 100) + '%';
+                document.getElementById('probUpValue').textContent = Math.round(probUp * 100) + '%';
+                document.getElementById('probDown').style.height = (probDown * 100) + '%';
+                document.getElementById('probDownValue').textContent = Math.round(probDown * 100) + '%';
+                
+                document.getElementById('thetaDisplay').textContent = (theta * 180 / Math.PI).toFixed(1) + '°';
+                document.getElementById('phiDisplay').textContent = (phi * 180 / Math.PI).toFixed(1) + '°';
+            }
+            
+            function updateWavefunctionEquation() {
+                const probUp = Math.pow(Math.cos(theta / 2), 2);
+                const probDown = Math.pow(Math.sin(theta / 2), 2);
+                
+                let latex;
+                if (probUp > 0.99) {
+                    latex = '|\\psi\\rangle = |{\\uparrow}\\rangle';
+                } else if (probDown > 0.99) {
+                    latex = '|\\psi\\rangle = |{\\downarrow}\\rangle';
+                } else {
+                    const alphaCoeff = Math.cos(theta / 2);
+                    const betaMag = Math.sin(theta / 2);
+                    
+                    let alphaStr = formatCoeff(alphaCoeff);
+                    let betaStr = formatCoeff(betaMag);
+                    
+                    let phaseStr = '';
+                    const phaseNorm = phi / Math.PI;
+                    if (Math.abs(phi) > 0.01) {
+                        if (Math.abs(phaseNorm - 0.5) < 0.05) {
+                            phaseStr = 'i\\,';
+                        } else if (Math.abs(phaseNorm + 0.5) < 0.05) {
+                            phaseStr = '-i\\,';
+                        } else if (Math.abs(phaseNorm - 1) < 0.05 || Math.abs(phaseNorm + 1) < 0.05) {
+                            if (betaMag > 0) betaStr = formatCoeff(-betaMag);
+                            phaseStr = '';
+                        } else {
+                            phaseStr = `e^{i${phaseNorm.toFixed(1)}\\pi}\\,`;
+                        }
+                    }
+                    
+                    let secondTerm = phaseStr + betaStr;
+                    let connector = ' + ';
+                    if (secondTerm.charAt(0) === '-') {
+                        connector = ' - ';
+                        secondTerm = secondTerm.substring(1);
+                    }
+                    
+                    latex = `|\\psi\\rangle = ${alphaStr}|{\\uparrow}\\rangle${connector}${secondTerm}|{\\downarrow}\\rangle`;
+                }
+                
+                if (latex !== lastLatex) {
+                    lastLatex = latex;
+                    const eqElement = document.getElementById('wfEquation');
+                    eqElement.innerHTML = `\\(${latex}\\)`;
+                    if (window.MathJax && MathJax.typesetPromise) {
+                        MathJax.typesetPromise([eqElement]);
+                    }
+                }
+            }
+            
+            function updateWavefunctionDisplay() {
+                updateProbabilityDisplay();
+                updateWavefunctionEquation();
+            }
+            
+            function applyCustomState() {
+                if (measuring || animating) return;
+                const aR = parseFloat(document.getElementById('alphaReal').value) || 0;
+                const aI = parseFloat(document.getElementById('alphaImag').value) || 0;
+                const bR = parseFloat(document.getElementById('betaReal').value) || 0;
+                const bI = parseFloat(document.getElementById('betaImag').value) || 0;
+                
+                const norm = Math.sqrt(aR*aR + aI*aI + bR*bR + bI*bI);
+                if (norm < 0.001 || !isFinite(norm)) {
+                    const btn = document.getElementById('applyState');
+                    btn.style.borderColor = '#ef4444';
+                    btn.style.border = '2px solid #ef4444';
+                    setTimeout(() => { btn.style.border = ''; }, 1000);
+                    return;
+                }
+                
+                // Save current state before applying custom state
+                pushStateToStack();
+                
+                alphaReal = aR / norm;
+                alphaImag = aI / norm;
+                betaReal = bR / norm;
+                betaImag = bI / norm;
+                
+                const alphaMag = Math.sqrt(alphaReal*alphaReal + alphaImag*alphaImag);
+                const betaMag = Math.sqrt(betaReal*betaReal + betaImag*betaImag);
+                
+                const newTheta = 2 * Math.acos(Math.min(1, alphaMag));
+                
+                let newPhi = 0;
+                if (betaMag > 0.001) {
+                    const alphaPhase = Math.atan2(alphaImag, alphaReal);
+                    const betaPhase = Math.atan2(betaImag, betaReal);
+                    newPhi = betaPhase - alphaPhase;
+                }
+                
+                startTheta = theta;
+                startPhi = phi;
+                targetTheta = newTheta;
+                targetPhi = newPhi;
+                animating = true;
+                animProgress = 0;
+                
+                document.getElementById('alphaReal').value = alphaReal.toFixed(3);
+                document.getElementById('alphaImag').value = alphaImag.toFixed(3);
+                document.getElementById('betaReal').value = betaReal.toFixed(3);
+                document.getElementById('betaImag').value = betaImag.toFixed(3);
+            }
+            
+            function setPresetState(state) {
+                const sqrt2 = 1 / Math.sqrt(2);
+                const presets = {
+                    'up': { aR: 1, aI: 0, bR: 0, bI: 0 },
+                    'down': { aR: 0, aI: 0, bR: 1, bI: 0 },
+                    'plusx': { aR: sqrt2, aI: 0, bR: sqrt2, bI: 0 },
+                    'minusx': { aR: sqrt2, aI: 0, bR: -sqrt2, bI: 0 },
+                    'plusy': { aR: sqrt2, aI: 0, bR: 0, bI: sqrt2 },
+                    'minusy': { aR: sqrt2, aI: 0, bR: 0, bI: -sqrt2 }
+                };
+                
+                const p = presets[state];
+                document.getElementById('alphaReal').value = p.aR.toFixed(3);
+                document.getElementById('alphaImag').value = p.aI.toFixed(3);
+                document.getElementById('betaReal').value = p.bR.toFixed(3);
+                document.getElementById('betaImag').value = p.bI.toFixed(3);
+                
+                applyCustomState();
+            }
+            
+            function reset() {
+                if (measureTimeoutId) { clearTimeout(measureTimeoutId); measureTimeoutId = null; }
+                pulseTimeoutIds.forEach(id => clearTimeout(id));
+                pulseTimeoutIds = [];
+                
+                theta = 0;
+                phi = 0;
+                targetTheta = 0;
+                targetPhi = 0;
+                startTheta = 0;
+                startPhi = 0;
+                animating = false;
+                measuring = false;
+                pendingAmplitudeUpdate = false;
+                measureCount = 0;
+                history = [];
+                pulseRings = [];
+                stateStack = [];
+                
+                alphaReal = 1; alphaImag = 0;
+                betaReal = 0; betaImag = 0;
+                
+                document.getElementById('alphaReal').value = '1';
+                document.getElementById('alphaImag').value = '0';
+                document.getElementById('betaReal').value = '0';
+                document.getElementById('betaImag').value = '0';
+                
+                updateHistoryDisplay();
+                updateWavefunctionDisplay();
+                updateUndoButton();
+            }
+            
+            function easeOutCubic(t) {
+                return 1 - Math.pow(1 - t, 3);
+            }
+            
+            function animate(timestamp) {
+                const dt = lastTimestamp ? (timestamp - lastTimestamp) / 1000 : 0.016;
+                lastTimestamp = timestamp;
+                
+                ctx.fillStyle = '#0a0e1a';
+                ctx.fillRect(0, 0, width, height);
+                
+                time += dt;
+                
+                if (animating) {
+                    animProgress += dt * 1.5;
+                    if (animProgress >= 1) {
+                        animProgress = 1;
+                        theta = targetTheta;
+                        phi = targetPhi;
+                        animating = false;
+                        if (pendingAmplitudeUpdate) {
+                            updateAmplitudesFromAngles(targetTheta, targetPhi);
+                            pendingAmplitudeUpdate = false;
+                        }
+                        updateWavefunctionEquation();
+                    } else {
+                        const ease = easeOutCubic(animProgress);
+                        theta = startTheta + (targetTheta - startTheta) * ease;
+                        let dPhi = targetPhi - startPhi;
+                        while (dPhi > Math.PI) dPhi -= 2 * Math.PI;
+                        while (dPhi < -Math.PI) dPhi += 2 * Math.PI;
+                        phi = startPhi + dPhi * ease;
+                    }
+                }
+                
+                if (measuring) {
+                    measureTime += dt * 60;
+                }
+                
+                updatePulseRings(dt);
+                
+                drawWavefunctionOnSphere();
+                drawSphere();
+                drawAxes();
+                drawMeasurementEffect();
+                drawStateVector();
+                
+                updateProbabilityDisplay();
+                
+                requestAnimationFrame(animate);
+            }
+            
+            // Event listeners
+            document.getElementById('measureZ').addEventListener('click', () => measure('z'));
+            document.getElementById('measureX').addEventListener('click', () => measure('x'));
+            document.getElementById('measureY').addEventListener('click', () => measure('y'));
+            document.getElementById('reset').addEventListener('click', reset);
+            document.getElementById('undo').addEventListener('click', undoLastMeasurement);
+            document.getElementById('applyState').addEventListener('click', applyCustomState);
+            
+            document.querySelectorAll('.preset-btn').forEach(btn => {
+                btn.addEventListener('click', () => setPresetState(btn.dataset.state));
+            });
+            
+            // Mouse drag rotation
+            let isDragging = false;
+            let lastMouseX, lastMouseY;
+            
+            canvas.addEventListener('mousedown', (e) => {
+                isDragging = true;
+                lastMouseX = e.clientX;
+                lastMouseY = e.clientY;
+            });
+            
+            canvas.addEventListener('mousemove', (e) => {
+                if (!isDragging) return;
+                
+                const deltaX = e.clientX - lastMouseX;
+                const deltaY = e.clientY - lastMouseY;
+                
+                rotationY = (rotationY + deltaX * 0.005) % (2 * Math.PI);
+                rotationX += deltaY * 0.005;
+                rotationX = Math.max(-Math.PI / 2, Math.min(Math.PI / 2, rotationX));
+                
+                lastMouseX = e.clientX;
+                lastMouseY = e.clientY;
+            });
+            
+            canvas.addEventListener('mouseup', () => isDragging = false);
+            canvas.addEventListener('mouseleave', () => isDragging = false);
+            
+            canvas.addEventListener('touchstart', (e) => {
+                e.preventDefault();
+                isDragging = true;
+                lastMouseX = e.touches[0].clientX;
+                lastMouseY = e.touches[0].clientY;
+            }, { passive: false });
+            
+            canvas.addEventListener('touchmove', (e) => {
+                if (!isDragging) return;
+                e.preventDefault();
+                const deltaX = e.touches[0].clientX - lastMouseX;
+                const deltaY = e.touches[0].clientY - lastMouseY;
+                rotationY = (rotationY + deltaX * 0.005) % (2 * Math.PI);
+                rotationX += deltaY * 0.005;
+                rotationX = Math.max(-Math.PI / 2, Math.min(Math.PI / 2, rotationX));
+                lastMouseX = e.touches[0].clientX;
+                lastMouseY = e.touches[0].clientY;
+            }, { passive: false });
+            
+            canvas.addEventListener('touchend', () => isDragging = false);
+            
+            // Initialize
+            updateWavefunctionDisplay();
+            updateUndoButton();
+            requestAnimationFrame(animate);
+        }
+        
+        // Fallback initialization if MathJax CDN fails to load
+        setTimeout(() => {
+            if (!window.MathJax?.typesetPromise) {
+                initSimulation();
+            }
+        }, 2000);
+    </script>
+</body>
+</html>
