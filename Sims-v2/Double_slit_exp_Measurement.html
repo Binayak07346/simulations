@@ -1,0 +1,2015 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Double Slit Experiment~Measurement</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+    <style>
+        :root {
+            --bg-color: #111827;
+            --panel-bg: #1f2937;
+            --accent-blue: #3b82f6;
+            --text-main: #f3f4f6;
+            --text-muted: #9ca3af;
+            --border-color: #374151;
+            --font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+        }
+
+        body { margin: 0; overflow: hidden; background-color: var(--bg-color); font-family: var(--font-family); }
+
+        /* --- TOP TITLE BAR --- */
+
+        .top-bar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 60px;
+            background: linear-gradient(135deg, var(--panel-bg) 0%, #111827 100%);
+            border-bottom: 2px solid var(--accent-blue);
+            display: flex;
+            align-items: center;
+            justify-content: flex-start;
+            padding-left: 30px;
+            padding-right: 20px;
+            box-sizing: border-box;
+            z-index: 200;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.4);
+        }
+        .top-bar h1 {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--text-main);
+            margin: 0;
+            letter-spacing: 0.05em;
+            white-space: nowrap;
+        }
+        .top-bar-accent {
+            width: 8px;
+            height: 8px;
+            background: var(--accent-blue);
+            border-radius: 50%;
+            margin-right: 15px;
+            box-shadow: 0 0 10px var(--accent-blue);
+            flex-shrink: 0;
+        }
+
+        .top-bar-actions {
+            margin-left: auto;
+            display: flex;
+            gap: 10px;
+            align-items: center;
+            flex-shrink: 0;
+        }
+        .btn-topbar {
+            padding: 8px 16px;
+            border: none;
+            border-radius: 6px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+            white-space: nowrap;
+        }
+        .btn-topbar-toggle {
+            background-color: #374151;
+            color: white;
+        }
+        .btn-topbar-toggle:hover { background-color: #4b5563; }
+        .btn-topbar-toggle.active {
+            background-color: #f59e0b;
+            box-shadow: 0 0 10px rgba(245, 158, 11, 0.4);
+        }
+        .btn-topbar-toggle.active:hover { background-color: #d97706; }
+        .btn-topbar-reset {
+            background-color: var(--accent-blue);
+            color: white;
+        }
+        .btn-topbar-reset:hover { background-color: #2563eb; }
+
+        /* Info Icon and Tooltip */
+        .info-container {
+            position: relative;
+            display: inline-flex;
+            align-items: center;
+            margin-left: 12px;
+        }
+        .info-icon {
+            width: 22px;
+            height: 22px;
+            border-radius: 50%;
+            background: var(--accent-blue);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+            font-weight: 700;
+            font-style: italic;
+            font-family: Georgia, serif;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            box-shadow: 0 0 8px rgba(59, 130, 246, 0.5);
+        }
+        .info-icon:hover {
+            background: #2563eb;
+            transform: scale(1.1);
+            box-shadow: 0 0 15px rgba(59, 130, 246, 0.8);
+        }
+        .info-tooltip {
+            position: absolute;
+            top: 40px;
+            left: 0;
+            width: 350px;
+            background: var(--panel-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+            opacity: 0;
+            visibility: hidden;
+            transform: translateY(-10px);
+            transition: all 0.3s ease;
+            z-index: 300;
+        }
+        .info-container:hover .info-tooltip {
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(0);
+        }
+        .info-tooltip::before {
+            content: '';
+            position: absolute;
+            top: -8px;
+            left: 8px;
+            width: 0;
+            height: 0;
+            border-left: 8px solid transparent;
+            border-right: 8px solid transparent;
+            border-bottom: 8px solid var(--border-color);
+        }
+        .info-tooltip::after {
+            content: '';
+            position: absolute;
+            top: -6px;
+            left: 9px;
+            width: 0;
+            height: 0;
+            border-left: 7px solid transparent;
+            border-right: 7px solid transparent;
+            border-bottom: 7px solid var(--panel-bg);
+        }
+        .info-tooltip-title {
+            font-size: 0.85rem;
+            font-weight: 700;
+            color: var(--accent-blue);
+            margin-bottom: 10px;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+        .info-tooltip p {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            line-height: 1.6;
+            margin: 0;
+        }
+        .info-tooltip .highlight {
+            color: var(--accent-blue);
+            font-weight: 600;
+        }
+
+        #canvas-container { position: fixed; top: 60px; left: 0; width: 100%; height: calc(100% - 60px); z-index: 1; }
+
+        /* --- SIDEBAR --- */
+        .sidebar {
+            position: fixed; 
+            top: 60px; 
+            right: 20px; 
+            width: 320px;
+            background-color: var(--panel-bg);
+            border-radius: 0 0 8px 8px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.5);
+            color: var(--text-main);
+            z-index: 100;
+            display: flex; flex-direction: column;
+            border: 1px solid var(--border-color);
+            border-top: 2px solid var(--accent-blue);
+            max-height: calc(100vh - 80px);
+            overflow-y: auto;
+        }
+
+        .header {
+            padding: 15px 20px;
+            border-bottom: 1px solid var(--border-color);
+        }
+        .header p { font-size: 0.85rem; color: var(--text-muted); margin: 0; }
+        .header-bar { height: 4px; width: 40%; background: var(--accent-blue); margin-top: 10px; border-radius: 2px; }
+
+        .content { padding: 20px; display: flex; flex-direction: column; gap: 20px; }
+
+        .section-title {
+            font-size: 0.75rem; font-weight: 700; color: var(--text-muted);
+            text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 10px;
+        }
+
+        /* CONTROLS */
+        .control-group { margin-bottom: 15px; }
+        .control-label { display: flex; justify-content: space-between; font-size: 0.9rem; margin-bottom: 8px; }
+        .control-value { color: var(--accent-blue); font-weight: 600; }
+        .control-range { font-size: 0.75rem; color: var(--text-muted); margin-top: 4px; display: flex; justify-content: space-between; }
+
+        /* SLIDERS */
+        input[type=range] { -webkit-appearance: none; width: 100%; background: transparent; cursor: pointer; }
+        input[type=range]::-webkit-slider-runnable-track { width: 100%; height: 6px; background: #374151; border-radius: 3px; }
+        input[type=range]::-webkit-slider-thumb {
+            -webkit-appearance: none; height: 18px; width: 18px; border-radius: 50%;
+            background: var(--accent-blue); border: 2px solid white; margin-top: -6px;
+        }
+
+        /* COMBINED CHART */
+        #combined-chart-container {
+            background: #111827; border-radius: 6px; padding: 15px 10px 5px 10px;
+            height: 200px; border: 1px solid var(--border-color);
+        }
+        
+        /* LEGEND */
+        .chart-legend {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-top: 10px;
+            padding: 8px;
+            background: rgba(17, 24, 39, 0.5);
+            border-radius: 4px;
+            flex-wrap: wrap;
+        }
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 0.75rem;
+            color: var(--text-muted);
+        }
+        .legend-color {
+            width: 16px;
+            height: 4px;
+            border-radius: 2px;
+        }
+        .legend-color.detected {
+            background: #3b82f6;
+        }
+        .legend-color.theoretical {
+            background: #10b981;
+        }
+        .legend-color.measured {
+            background: #f59e0b;
+        }
+
+        .chart-description {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            margin-top: 8px;
+            line-height: 1.4;
+            text-align: center;
+        }
+        .chart-description .highlight {
+            color: var(--accent-blue);
+            font-weight: 600;
+        }
+        .chart-description .highlight-green {
+            color: #10b981;
+            font-weight: 600;
+        }
+        .chart-description .highlight-orange {
+            color: #f59e0b;
+            font-weight: 600;
+        }
+
+        /* CONTROLS HINT */
+        .controls-hint {
+            position: fixed;
+            bottom: 20px;
+            left: 20px;
+            background: rgba(31, 41, 55, 0.9);
+            padding: 12px 16px;
+            border-radius: 8px;
+            color: var(--text-muted);
+            font-size: 0.8rem;
+            z-index: 100;
+            border: 1px solid var(--border-color);
+        }
+        .controls-hint strong {
+            color: var(--accent-blue);
+        }
+
+        /* NARRATION PANEL */
+        .narration-panel {
+            position: fixed;
+            top: 70px;
+            left: 20px;
+            width: 340px;
+            background: rgba(31, 41, 55, 0.95);
+            border: 1px solid var(--border-color);
+            border-radius: 10px;
+            z-index: 100;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.4);
+            overflow: hidden;
+        }
+        .narration-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 10px 14px;
+            background: rgba(59, 130, 246, 0.08);
+            border-bottom: 1px solid var(--border-color);
+        }
+        .narration-header-left {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .narration-header-left .icon {
+            width: 20px;
+            height: 20px;
+            background: var(--accent-blue);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 10px;
+            color: white;
+            flex-shrink: 0;
+        }
+        .narration-header-left span {
+            font-size: 0.75rem;
+            font-weight: 700;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+        .narration-controls {
+            display: flex;
+            gap: 4px;
+            align-items: center;
+        }
+        .narration-btn {
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            border: 1px solid var(--border-color);
+            background: var(--panel-bg);
+            color: var(--text-muted);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+            transition: all 0.2s;
+            padding: 0;
+        }
+        .narration-btn:hover {
+            border-color: var(--accent-blue);
+            color: var(--accent-blue);
+            background: rgba(59, 130, 246, 0.1);
+        }
+        .narration-btn.active {
+            background: var(--accent-blue);
+            border-color: var(--accent-blue);
+            color: white;
+        }
+        .narration-body {
+            padding: 12px 14px;
+            max-height: 120px;
+            overflow: hidden;
+        }
+        .narration-text {
+            font-size: 0.8rem;
+            color: var(--text-main);
+            line-height: 1.55;
+            margin: 0;
+        }
+        .narration-text .highlight {
+            color: var(--accent-blue);
+            font-weight: 600;
+        }
+        .narration-text .highlight-green {
+            color: #10b981;
+            font-weight: 600;
+        }
+        .narration-text .highlight-orange {
+            color: #f59e0b;
+            font-weight: 600;
+        }
+        .narration-progress {
+            height: 3px;
+            background: #374151;
+            position: relative;
+        }
+        .narration-progress-bar {
+            height: 100%;
+            background: var(--accent-blue);
+            width: 0%;
+            transition: width 0.3s linear;
+            border-radius: 0 2px 2px 0;
+        }
+        .narration-step-dots {
+            display: flex;
+            justify-content: center;
+            gap: 6px;
+            padding: 8px 14px 10px;
+        }
+        .step-dot {
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            background: #374151;
+            transition: all 0.3s;
+            cursor: pointer;
+        }
+        .step-dot.active {
+            background: var(--accent-blue);
+            box-shadow: 0 0 6px rgba(59, 130, 246, 0.5);
+        }
+        .step-dot.completed {
+            background: #6b7280;
+        }
+
+        /* DETECTOR STATUS BADGE */
+        .detector-status {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            padding: 6px 12px;
+            border-radius: 6px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            margin-top: 5px;
+            transition: all 0.3s;
+        }
+        .detector-status.off {
+            background: rgba(59, 130, 246, 0.1);
+            border: 1px solid rgba(59, 130, 246, 0.3);
+            color: #60a5fa;
+        }
+        .detector-status.on {
+            background: rgba(245, 158, 11, 0.1);
+            border: 1px solid rgba(245, 158, 11, 0.3);
+            color: #fbbf24;
+        }
+        .detector-status-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            animation: pulse-dot 1.5s ease-in-out infinite;
+        }
+        .detector-status.off .detector-status-dot {
+            background: #3b82f6;
+            box-shadow: 0 0 6px rgba(59, 130, 246, 0.5);
+        }
+        .detector-status.on .detector-status-dot {
+            background: #f59e0b;
+            box-shadow: 0 0 6px rgba(245, 158, 11, 0.5);
+        }
+        @keyframes pulse-dot {
+            0%, 100% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.5; transform: scale(0.8); }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- TOP TITLE BAR -->
+    <div class="top-bar">
+        <div class="top-bar-accent"></div>
+        <h1>Double Slit Experiment~Measurement</h1>
+        <div class="info-container">
+            <div class="info-icon">i</div>
+            <div class="info-tooltip">
+                <div class="info-tooltip-title">About the Simulation</div>
+                <p>
+                    The <span class="highlight">double-slit experiment</span> demonstrates wave-particle duality. When particles pass through two slits, they create an <span class="highlight">interference pattern</span> on the detection screen.
+                    <br><br>
+                    <span class="highlight">Unmeasured (green):</span> I &prop; |&psi;&#8321; + &psi;&#8322;|&sup2; &mdash; amplitudes add, then square. Interference fringes arise from constructive/destructive interference.
+                    <br><br>
+                    <span class="highlight">With Detectors (orange):</span> Placing a detector at the slits to determine which path the particle takes <span class="highlight">destroys phase coherence</span> (decoherence). The probability collapses to I &prop; P&#8321; + P&#8322; &mdash; no interference fringes remain.
+                    <br><br>
+                    This is <span class="highlight">Feynman&rsquo;s &ldquo;Watching the Electrons&rdquo;</span> (Vol III, &sect;1-5): the act of measurement itself changes the outcome.
+                </p>
+            </div>
+        </div>
+        <div class="top-bar-actions">
+            <button class="btn-topbar btn-topbar-toggle" id="classical-btn">Enable Detectors (Measure Path)</button>
+            <button class="btn-topbar btn-topbar-reset" id="reset-btn">Reset Simulation</button>
+        </div>
+    </div>
+
+    <div id="canvas-container">
+        <canvas id="main-canvas"></canvas>
+    </div>
+
+    <div class="controls-hint">
+        <strong>&#x1F5B1;&#xFE0F; Drag</strong> to rotate | <strong>Scroll</strong> to zoom | <strong>Right-click drag</strong> to pan
+    </div>
+
+    <!-- NARRATION PANEL -->
+    <div class="narration-panel" id="narration-panel">
+        <div class="narration-header">
+            <div class="narration-header-left">
+                <div class="icon">&#x1F50A;</div>
+                <span>Simulation Context</span>
+            </div>
+            <div class="narration-controls">
+                <button class="narration-btn" id="narr-reset" title="Previous step">&#x23EA;</button>
+                <button class="narration-btn" id="narr-play" title="Play">&#x25B6;</button>
+                <button class="narration-btn" id="narr-pause" title="Pause">&#x23F8;</button>
+            </div>
+        </div>
+        <div class="narration-progress">
+            <div class="narration-progress-bar" id="narr-progress-bar"></div>
+        </div>
+        <div class="narration-body">
+            <p class="narration-text" id="narration-text"></p>
+        </div>
+        <div class="narration-step-dots" id="narr-dots"></div>
+    </div>
+
+    <div class="sidebar">
+        <div class="header">
+            <p>Simulator Controls</p>
+            <div class="header-bar"></div>
+        </div>
+
+        <div class="content">
+            <!-- Distribution plot ABOVE controls -->
+            <div>
+                <div class="section-title">Detection Pattern vs Theoretical Intensity</div>
+                <div id="combined-chart-container">
+                    <canvas id="combined-chart-canvas"></canvas>
+                </div>
+                <div class="chart-legend">
+                    <div class="legend-item">
+                        <div class="legend-color detected" id="legend-detected-color"></div>
+                        <span id="legend-detected-text">Detected Hits (Blue)</span>
+                    </div>
+                    <div class="legend-item">
+                        <div class="legend-color theoretical" id="legend-theoretical-color"></div>
+                        <span id="legend-theoretical-text">Quantum |&psi;&#8321;+&psi;&#8322;|&sup2;</span>
+                    </div>
+                    <div class="legend-item" id="legend-p1-item" style="display: none;">
+                        <div class="legend-color" id="legend-p1-color"></div>
+                        <span id="legend-p1-text">P&#8321;&#8242; (slit 1)</span>
+                    </div>
+                    <div class="legend-item" id="legend-p2-item" style="display: none;">
+                        <div class="legend-color" id="legend-p2-color"></div>
+                        <span id="legend-p2-text">P&#8322;&#8242; (slit 2)</span>
+                    </div>
+                </div>
+                <p class="chart-description" id="chart-description">
+                    <span class="highlight-green">Unmeasured:</span> I &prop; |&psi;&#8321; + &psi;&#8322;|&sup2; = cos&sup2;(&pi;d sin&theta;/&lambda;) &times; sinc&sup2;(&pi;a sin&theta;/&lambda;)<br>
+                    Interference fringes visible &mdash; no &ldquo;which path&rdquo; information
+                </p>
+                <div class="detector-status off" id="detector-status">
+                    <div class="detector-status-dot"></div>
+                    <span id="detector-status-text">Detectors OFF &mdash; Quantum interference active</span>
+                </div>
+            </div>
+
+            <div>
+                <div class="section-title">Parameters</div>
+                <div class="control-group">
+                    <div class="control-label"><span>Slit Separation (d)</span><span class="control-value" id="slit-sep-value">800 nm</span></div>
+                    <input type="range" id="slit-sep" min="400" max="1600" step="10" value="800">
+                    <div class="control-range"><span>400 nm</span><span>1600 nm</span></div>
+                </div>
+                <div class="control-group">
+                    <div class="control-label"><span>Slit Width (a)</span><span class="control-value" id="slit-width-value">200 nm</span></div>
+                    <input type="range" id="slit-width" min="100" max="500" step="10" value="200">
+                    <div class="control-range"><span>100 nm</span><span>500 nm</span></div>
+                </div>
+                <div class="control-group" id="wavelength-group">
+                    <div class="control-label"><span>Wavelength (&lambda;)</span><span class="control-value" id="wavelength-value" style="color: #77dd44;">550 nm</span></div>
+                    <input type="range" id="wavelength" min="380" max="700" step="5" value="550">
+                    <div class="control-range"><span><span style="color:#8b00ff;">&#x25A0;</span> 380 nm</span><span>700 nm <span style="color:#ff0000;">&#x25A0;</span></span></div>
+                </div>
+                <div class="control-group">
+                    <div class="control-label"><span>Screen Distance (L)</span><span class="control-value" id="screen-dist-value">6000 nm</span></div>
+                    <input type="range" id="screen-dist" min="4000" max="8000" step="100" value="6000">
+                    <div class="control-range"><span>4000 nm</span><span>8000 nm</span></div>
+                </div>
+                <div class="control-group">
+                    <div class="control-label"><span>Animation Speed</span><span class="control-value" id="rate-value">15</span></div>
+                    <input type="range" id="rate" min="5" max="30" step="1" value="15">
+                    <div class="control-range"><span>5</span><span>30</span></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // --- CONFIG ---
+        const CONFIG = {
+            screenRes: { w: 512, h: 256 },
+            sceneWidth: 40,
+            screenHeight: 20,
+            numIncidentWaves: 8,
+            waveSegments: 150,
+            sourceZ: 18,
+            barrierZ: 0
+        };
+
+        // --- STATE ---
+        const UNIFORM_SCALE = 30 / 6000;
+
+        const NM_TO_SIM = {
+            sep:        UNIFORM_SCALE,
+            width:      UNIFORM_SCALE,
+            lambda:     UNIFORM_SCALE,
+            screenDist: UNIFORM_SCALE
+        };
+
+        let state = {
+            sep: 800 * NM_TO_SIM.sep,
+            slitWidth: 200 * NM_TO_SIM.width,
+            lambda: 550 * NM_TO_SIM.lambda,
+            screenDistance: 6000 * NM_TO_SIM.screenDist,
+            animationSpeed: 15,
+            hits: new Uint32Array(80),
+            detectedCount: 0,
+            detectorsOn: false
+        };
+
+        // --- GLOBALS ---
+        let scene, camera, renderer, screenTexture, screenContext, screenMesh;
+        let barrierGroup;
+        let combinedChart;
+        let incidentWaves = [];
+        let secondaryWavesS1 = [];
+        let secondaryWavesS2 = [];
+        let sourceMarker;
+        let slitLabels = [];
+        let controls;
+
+        // Detector 3D objects
+        let detectorGroup;
+        let detector1Mesh, detector2Mesh;
+        let detector1Glow, detector2Glow;
+        let detector1Flash = 0, detector2Flash = 0;
+
+        // --- WAVELENGTH TO COLOR ---
+        function getCurrentWavelengthNM() {
+            return parseFloat(document.getElementById('wavelength')?.value || 550);
+        }
+
+        function nmToRGB(nm) {
+            let r, g, b;
+            if (nm >= 380 && nm < 440) { r = -(nm-440)/(440-380); g = 0; b = 1; }
+            else if (nm >= 440 && nm < 490) { r = 0; g = (nm-440)/(490-440); b = 1; }
+            else if (nm >= 490 && nm < 510) { r = 0; g = 1; b = -(nm-510)/(510-490); }
+            else if (nm >= 510 && nm < 580) { r = (nm-510)/(580-510); g = 1; b = 0; }
+            else if (nm >= 580 && nm < 645) { r = 1; g = -(nm-645)/(645-580); b = 0; }
+            else if (nm >= 645 && nm <= 700) { r = 1; g = 0; b = 0; }
+            else { r = 0.4; g = 0.6; b = 1; }
+            const boost = 0.15;
+            r = Math.min(1, r + boost);
+            g = Math.min(1, g + boost);
+            b = Math.min(1, b + boost);
+            return { r, g, b };
+        }
+
+        function nmToThreeColor(nm) {
+            const c = nmToRGB(nm);
+            return new THREE.Color(c.r, c.g, c.b);
+        }
+
+        function nmToCSSRGBA(nm, alpha) {
+            const c = nmToRGB(nm);
+            return `rgba(${Math.round(c.r*255)},${Math.round(c.g*255)},${Math.round(c.b*255)},${alpha})`;
+        }
+
+        function nmToSecondaryColor(nm, shift) {
+            const c = nmToRGB(nm);
+            if (shift === 1) {
+                return new THREE.Color(
+                    Math.min(1, c.r * 0.7 + 0.3),
+                    c.g * 0.5,
+                    Math.min(1, c.b * 0.7 + 0.3)
+                );
+            } else {
+                return new THREE.Color(
+                    Math.min(1, c.r * 0.5 + 0.2),
+                    c.g * 0.4,
+                    Math.min(1, c.b * 0.7 + 0.4)
+                );
+            }
+        }
+
+        function updateAllWaveColors() {
+            const nm = getCurrentWavelengthNM();
+            const col = nmToThreeColor(nm);
+            const s1Col = nmToSecondaryColor(nm, 1);
+            const s2Col = nmToSecondaryColor(nm, 2);
+
+            incidentWaves.forEach(w => { w.mesh.material.color.copy(col); });
+            secondaryWavesS1.forEach(w => { w.mesh.material.color.copy(s1Col); });
+            secondaryWavesS2.forEach(w => { w.mesh.material.color.copy(s2Col); });
+            if (sourceMarker) {
+                sourceMarker.children.forEach(child => {
+                    if (child.isMesh && child.material) {
+                        child.material.color.copy(col);
+                    }
+                });
+            }
+        }
+
+        // --- INIT ---
+        function init() {
+            initThree();
+            initCombinedChart();
+            initUI();
+            initNarration();
+            animate();
+        }
+
+        function initThree() {
+            const canvas = document.getElementById('main-canvas');
+            scene = new THREE.Scene();
+            scene.fog = new THREE.Fog(0x111827, 60, 150);
+
+            camera = new THREE.PerspectiveCamera(50, window.innerWidth / (window.innerHeight - 60), 0.1, 500);
+            camera.position.set(50, 30, 25); 
+            camera.lookAt(0, 0, -5);
+
+            renderer = new THREE.WebGLRenderer({ canvas, antialias: true });
+            renderer.setSize(window.innerWidth, window.innerHeight - 60);
+            renderer.setPixelRatio(window.devicePixelRatio);
+
+            controls = new THREE.OrbitControls(camera, renderer.domElement);
+            controls.enableDamping = true;
+            controls.dampingFactor = 0.05;
+            controls.screenSpacePanning = true;
+            controls.minDistance = 20;
+            controls.maxDistance = 200;
+            controls.target.set(0, 0, -5);
+            controls.update();
+
+            scene.add(new THREE.AmbientLight(0x404060, 2));
+            const dirLight = new THREE.DirectionalLight(0xffffff, 1);
+            dirLight.position.set(20, 50, 20);
+            scene.add(dirLight);
+
+            const sCanvas = document.createElement('canvas');
+            sCanvas.width = CONFIG.screenRes.w;
+            sCanvas.height = CONFIG.screenRes.h;
+            screenContext = sCanvas.getContext('2d');
+            screenContext.fillStyle = '#1e293b';
+            screenContext.fillRect(0,0, CONFIG.screenRes.w, CONFIG.screenRes.h);
+            
+            screenTexture = new THREE.CanvasTexture(sCanvas);
+            
+            const screenGeo = new THREE.BoxGeometry(CONFIG.sceneWidth, CONFIG.screenHeight, 0.5);
+            const screenMat = new THREE.MeshStandardMaterial({ 
+                map: screenTexture, 
+                roughness: 0.1,
+                side: THREE.DoubleSide
+            });
+            screenMesh = new THREE.Mesh(screenGeo, screenMat);
+            screenMesh.position.z = -state.screenDistance;
+            scene.add(screenMesh);
+
+            createSourceMarker();
+            createBarrier();
+            createSlitLabels();
+            createDetectors();
+            createWavefronts();
+        }
+
+        // --- DETECTORS (3D objects at each slit) ---
+        function createDetectors() {
+            if (detectorGroup) scene.remove(detectorGroup);
+            detectorGroup = new THREE.Group();
+
+            // Detector 1 (at slit 1)
+            const det1Group = new THREE.Group();
+            // Core body
+            const core1Geo = new THREE.OctahedronGeometry(0.7, 0);
+            const core1Mat = new THREE.MeshStandardMaterial({
+                color: 0xf59e0b,
+                emissive: 0xf59e0b,
+                emissiveIntensity: 0.3,
+                metalness: 0.6,
+                roughness: 0.3
+            });
+            detector1Mesh = new THREE.Mesh(core1Geo, core1Mat);
+            det1Group.add(detector1Mesh);
+
+            // Glow sphere
+            const glow1Geo = new THREE.SphereGeometry(1.2, 16, 16);
+            const glow1Mat = new THREE.MeshBasicMaterial({
+                color: 0xf59e0b,
+                transparent: true,
+                opacity: 0.12
+            });
+            detector1Glow = new THREE.Mesh(glow1Geo, glow1Mat);
+            det1Group.add(detector1Glow);
+
+            // Ring
+            const ring1Geo = new THREE.TorusGeometry(1.0, 0.08, 8, 24);
+            const ring1Mat = new THREE.MeshBasicMaterial({ color: 0xf59e0b, transparent: true, opacity: 0.5 });
+            const ring1 = new THREE.Mesh(ring1Geo, ring1Mat);
+            ring1.rotation.x = Math.PI / 2;
+            det1Group.add(ring1);
+
+            // Label sprite
+            const label1Canvas = document.createElement('canvas');
+            label1Canvas.width = 128;
+            label1Canvas.height = 64;
+            let ctx1 = label1Canvas.getContext('2d');
+            ctx1.fillStyle = '#fbbf24';
+            ctx1.font = 'bold 36px Arial';
+            ctx1.textAlign = 'center';
+            ctx1.fillText('D\u2081', 64, 46);
+            const label1Tex = new THREE.CanvasTexture(label1Canvas);
+            const label1Sprite = new THREE.Sprite(new THREE.SpriteMaterial({ map: label1Tex, transparent: true }));
+            label1Sprite.scale.set(3, 1.5, 1);
+            label1Sprite.position.y = 2.5;
+            det1Group.add(label1Sprite);
+
+            det1Group.position.set(-state.sep / 2, 0, CONFIG.barrierZ - 2);
+            detectorGroup.add(det1Group);
+
+            // Detector 2 (at slit 2)
+            const det2Group = new THREE.Group();
+            const core2Geo = new THREE.OctahedronGeometry(0.7, 0);
+            const core2Mat = new THREE.MeshStandardMaterial({
+                color: 0xf59e0b,
+                emissive: 0xf59e0b,
+                emissiveIntensity: 0.3,
+                metalness: 0.6,
+                roughness: 0.3
+            });
+            detector2Mesh = new THREE.Mesh(core2Geo, core2Mat);
+            det2Group.add(detector2Mesh);
+
+            const glow2Geo = new THREE.SphereGeometry(1.2, 16, 16);
+            const glow2Mat = new THREE.MeshBasicMaterial({
+                color: 0xf59e0b,
+                transparent: true,
+                opacity: 0.12
+            });
+            detector2Glow = new THREE.Mesh(glow2Geo, glow2Mat);
+            det2Group.add(detector2Glow);
+
+            const ring2Geo = new THREE.TorusGeometry(1.0, 0.08, 8, 24);
+            const ring2Mat = new THREE.MeshBasicMaterial({ color: 0xf59e0b, transparent: true, opacity: 0.5 });
+            const ring2 = new THREE.Mesh(ring2Geo, ring2Mat);
+            ring2.rotation.x = Math.PI / 2;
+            det2Group.add(ring2);
+
+            const label2Canvas = document.createElement('canvas');
+            label2Canvas.width = 128;
+            label2Canvas.height = 64;
+            let ctx2 = label2Canvas.getContext('2d');
+            ctx2.fillStyle = '#fbbf24';
+            ctx2.font = 'bold 36px Arial';
+            ctx2.textAlign = 'center';
+            ctx2.fillText('D\u2082', 64, 46);
+            const label2Tex = new THREE.CanvasTexture(label2Canvas);
+            const label2Sprite = new THREE.Sprite(new THREE.SpriteMaterial({ map: label2Tex, transparent: true }));
+            label2Sprite.scale.set(3, 1.5, 1);
+            label2Sprite.position.y = 2.5;
+            det2Group.add(label2Sprite);
+
+            det2Group.position.set(state.sep / 2, 0, CONFIG.barrierZ - 2);
+            detectorGroup.add(det2Group);
+
+            // Only visible when detectors are on
+            detectorGroup.visible = state.detectorsOn;
+            scene.add(detectorGroup);
+        }
+
+        function updateDetectorPositions() {
+            if (!detectorGroup) return;
+            const children = detectorGroup.children;
+            if (children.length >= 2) {
+                children[0].position.x = -state.sep / 2;
+                children[1].position.x = state.sep / 2;
+            }
+        }
+
+        function updateDetectorFlash(dt) {
+            if (!detector1Mesh || !detector2Mesh) return;
+
+            if (detector1Flash > 0) {
+                detector1Flash = Math.max(0, detector1Flash - dt * 3);
+                detector1Mesh.material.emissiveIntensity = 0.3 + detector1Flash * 2.5;
+                detector1Glow.material.opacity = 0.12 + detector1Flash * 0.4;
+            } else {
+                detector1Mesh.material.emissiveIntensity = 0.3;
+                detector1Glow.material.opacity = 0.12;
+            }
+
+            if (detector2Flash > 0) {
+                detector2Flash = Math.max(0, detector2Flash - dt * 3);
+                detector2Mesh.material.emissiveIntensity = 0.3 + detector2Flash * 2.5;
+                detector2Glow.material.opacity = 0.12 + detector2Flash * 0.4;
+            } else {
+                detector2Mesh.material.emissiveIntensity = 0.3;
+                detector2Glow.material.opacity = 0.12;
+            }
+
+            // Gentle rotation for visual flair
+            if (state.detectorsOn && detectorGroup.visible) {
+                detector1Mesh.rotation.y += dt * 0.8;
+                detector2Mesh.rotation.y += dt * 0.8;
+            }
+        }
+
+        function createSourceMarker() {
+            if (sourceMarker) scene.remove(sourceMarker);
+            
+            const sourceGroup = new THREE.Group();
+            const waveColor = nmToThreeColor(getCurrentWavelengthNM());
+            
+            const barGeometry = new THREE.BoxGeometry(CONFIG.sceneWidth * 0.8, 1, 0.5);
+            const barMaterial = new THREE.MeshBasicMaterial({ 
+                color: waveColor,
+                transparent: true,
+                opacity: 0.9
+            });
+            const bar = new THREE.Mesh(barGeometry, barMaterial);
+            sourceGroup.add(bar);
+            
+            const glowGeometry = new THREE.BoxGeometry(CONFIG.sceneWidth * 0.85, 2, 1);
+            const glowMaterial = new THREE.MeshBasicMaterial({ 
+                color: waveColor,
+                transparent: true,
+                opacity: 0.3
+            });
+            const glow = new THREE.Mesh(glowGeometry, glowMaterial);
+            sourceGroup.add(glow);
+            
+            const labelCanvas = document.createElement('canvas');
+            labelCanvas.width = 256;
+            labelCanvas.height = 64;
+            const ctx = labelCanvas.getContext('2d');
+            const labelRGB = nmToRGB(getCurrentWavelengthNM());
+            ctx.fillStyle = `rgb(${Math.round(labelRGB.r*255)},${Math.round(labelRGB.g*255)},${Math.round(labelRGB.b*255)})`;
+            ctx.font = 'bold 32px Arial';
+            ctx.textAlign = 'center';
+            ctx.fillText('SOURCE', 128, 40);
+            
+            const labelTexture = new THREE.CanvasTexture(labelCanvas);
+            const labelMaterial = new THREE.SpriteMaterial({ map: labelTexture, transparent: true });
+            const labelSprite = new THREE.Sprite(labelMaterial);
+            labelSprite.scale.set(8, 2, 1);
+            labelSprite.position.y = 3;
+            sourceGroup.add(labelSprite);
+            
+            sourceGroup.position.set(0, 0, CONFIG.sourceZ);
+            scene.add(sourceGroup);
+            sourceMarker = sourceGroup;
+        }
+
+        function createSlitLabels() {
+            slitLabels.forEach(label => scene.remove(label));
+            slitLabels = [];
+            
+            const s1Canvas = document.createElement('canvas');
+            s1Canvas.width = 128;
+            s1Canvas.height = 64;
+            let ctx = s1Canvas.getContext('2d');
+            ctx.fillStyle = '#f472b6';
+            ctx.font = 'bold 48px Arial';
+            ctx.textAlign = 'center';
+            ctx.fillText('S1', 64, 50);
+            
+            const s1Texture = new THREE.CanvasTexture(s1Canvas);
+            const s1Material = new THREE.SpriteMaterial({ map: s1Texture, transparent: true });
+            const s1Sprite = new THREE.Sprite(s1Material);
+            s1Sprite.scale.set(5, 2.5, 1);
+            s1Sprite.position.set(-state.sep/2, 10, CONFIG.barrierZ);
+            scene.add(s1Sprite);
+            slitLabels.push(s1Sprite);
+            
+            const s2Canvas = document.createElement('canvas');
+            s2Canvas.width = 128;
+            s2Canvas.height = 64;
+            ctx = s2Canvas.getContext('2d');
+            ctx.fillStyle = '#a78bfa';
+            ctx.font = 'bold 48px Arial';
+            ctx.textAlign = 'center';
+            ctx.fillText('S2', 64, 50);
+            
+            const s2Texture = new THREE.CanvasTexture(s2Canvas);
+            const s2Material = new THREE.SpriteMaterial({ map: s2Texture, transparent: true });
+            const s2Sprite = new THREE.Sprite(s2Material);
+            s2Sprite.scale.set(5, 2.5, 1);
+            s2Sprite.position.set(state.sep/2, 10, CONFIG.barrierZ);
+            scene.add(s2Sprite);
+            slitLabels.push(s2Sprite);
+        }
+
+        function createBarrier() {
+            if(barrierGroup) scene.remove(barrierGroup);
+            barrierGroup = new THREE.Group();
+
+            const mat = new THREE.MeshStandardMaterial({ color: 0x4b5563, roughness: 0.4 });
+            const height = 15;
+            const depth = 1;
+
+            const centerW = Math.max(0.1, state.sep - state.slitWidth);
+            const sideW = (CONFIG.sceneWidth - centerW - (state.slitWidth * 2)) / 2;
+
+            const center = new THREE.Mesh(new THREE.BoxGeometry(centerW, height, depth), mat);
+            const left = new THREE.Mesh(new THREE.BoxGeometry(sideW, height, depth), mat);
+            left.position.x = -(centerW/2 + state.slitWidth + sideW/2);
+            const right = new THREE.Mesh(new THREE.BoxGeometry(sideW, height, depth), mat);
+            right.position.x = (centerW/2 + state.slitWidth + sideW/2);
+
+            barrierGroup.add(center, left, right);
+            barrierGroup.position.z = CONFIG.barrierZ;
+            scene.add(barrierGroup);
+            
+            if (slitLabels.length >= 2) {
+                slitLabels[0].position.x = -state.sep/2;
+                slitLabels[1].position.x = state.sep/2;
+            }
+
+            updateDetectorPositions();
+        }
+
+        function disposeWave(w) {
+            scene.remove(w.mesh);
+            w.mesh.geometry.dispose();
+            w.mesh.material.dispose();
+        }
+
+        function createWavefronts() {
+            incidentWaves.forEach(disposeWave);
+            incidentWaves = [];
+            secondaryWavesS1.forEach(disposeWave);
+            secondaryWavesS1 = [];
+            secondaryWavesS2.forEach(disposeWave);
+            secondaryWavesS2 = [];
+
+            for (let i = 0; i < CONFIG.numIncidentWaves; i++) {
+                const z = CONFIG.sourceZ - i * state.lambda * 1.1;
+                if (z > CONFIG.barrierZ) {
+                    createIncidentWave(z);
+                }
+            }
+            
+            if (sourceMarker) sourceMarker.visible = true;
+            slitLabels.forEach(l => l.visible = true);
+        }
+
+        function createIncidentWave(zPos) {
+            const points = [];
+            const width = CONFIG.sceneWidth * 0.7;
+            
+            for (let i = 0; i <= CONFIG.waveSegments; i++) {
+                const x = (i / CONFIG.waveSegments - 0.5) * width;
+                points.push(new THREE.Vector3(x, 0, zPos));
+            }
+            
+            const geometry = new THREE.BufferGeometry().setFromPoints(points);
+            const material = new THREE.LineBasicMaterial({ 
+                color: nmToThreeColor(getCurrentWavelengthNM()), 
+                transparent: true,
+                opacity: 0.8,
+                linewidth: 2
+            });
+            const line = new THREE.Line(geometry, material);
+            
+            scene.add(line);
+            incidentWaves.push({
+                mesh: line,
+                z: zPos,
+                hasSpawnedSecondary: false,
+                opacity: 0.8
+            });
+        }
+
+        function createSecondaryWaveS1(initialRadius) {
+            const slitX = -state.sep / 2;
+            const numPoints = 120;
+            const points = [];
+            
+            for (let i = 0; i <= numPoints; i++) {
+                const angle = (i / numPoints) * Math.PI - Math.PI/2;
+                const x = slitX + initialRadius * Math.sin(angle);
+                const z = CONFIG.barrierZ - initialRadius * Math.cos(angle);
+                points.push(new THREE.Vector3(x, 0, z));
+            }
+            
+            const geometry = new THREE.BufferGeometry().setFromPoints(points);
+            const material = new THREE.LineBasicMaterial({ 
+                color: nmToSecondaryColor(getCurrentWavelengthNM(), 1),
+                transparent: true,
+                opacity: 0.7
+            });
+            const arc = new THREE.Line(geometry, material);
+            
+            scene.add(arc);
+            secondaryWavesS1.push({
+                mesh: arc,
+                slitX: slitX,
+                radius: initialRadius,
+                opacity: 0.7
+            });
+        }
+
+        function createSecondaryWaveS2(initialRadius) {
+            const slitX = state.sep / 2;
+            const numPoints = 120;
+            const points = [];
+            
+            for (let i = 0; i <= numPoints; i++) {
+                const angle = (i / numPoints) * Math.PI - Math.PI/2;
+                const x = slitX + initialRadius * Math.sin(angle);
+                const z = CONFIG.barrierZ - initialRadius * Math.cos(angle);
+                points.push(new THREE.Vector3(x, 0, z));
+            }
+            
+            const geometry = new THREE.BufferGeometry().setFromPoints(points);
+            const material = new THREE.LineBasicMaterial({ 
+                color: nmToSecondaryColor(getCurrentWavelengthNM(), 2),
+                transparent: true,
+                opacity: 0.7
+            });
+            const arc = new THREE.Line(geometry, material);
+            
+            scene.add(arc);
+            secondaryWavesS2.push({
+                mesh: arc,
+                slitX: slitX,
+                radius: initialRadius,
+                opacity: 0.7
+            });
+        }
+
+        // --- PHYSICS LOOP ---
+        function updatePhysics(dt, time) {
+            updateWaveMode(dt, time);
+            updateDetectorFlash(dt);
+        }
+
+        function updateWaveMode(dt, time) {
+            const speed = state.animationSpeed;
+            const screenZ = -state.screenDistance;
+
+            const incidentToRemove = [];
+            incidentWaves.forEach((wave, index) => {
+                wave.z -= speed * dt;
+                
+                const positions = wave.mesh.geometry.attributes.position.array;
+                for (let i = 0; i < positions.length / 3; i++) {
+                    positions[i * 3 + 2] = wave.z;
+                }
+                wave.mesh.geometry.attributes.position.needsUpdate = true;
+                
+                if (wave.z <= CONFIG.barrierZ && !wave.hasSpawnedSecondary) {
+                    wave.hasSpawnedSecondary = true;
+                    createSecondaryWaveS1(0.5);
+                    createSecondaryWaveS2(0.5);
+                }
+                
+                if (wave.z < CONFIG.barrierZ) {
+                    wave.opacity -= dt * 3;
+                    wave.mesh.material.opacity = Math.max(0, wave.opacity);
+                    
+                    if (wave.opacity <= 0) {
+                        incidentToRemove.push(index);
+                    }
+                }
+            });
+
+            incidentToRemove.reverse().forEach(index => {
+                disposeWave(incidentWaves[index]);
+                incidentWaves.splice(index, 1);
+            });
+            
+            const wavesAboveBarrier = incidentWaves.filter(w => w.z > CONFIG.barrierZ);
+            const maxZ = wavesAboveBarrier.length > 0
+                ? Math.max(...wavesAboveBarrier.map(w => w.z))
+                : CONFIG.sourceZ - state.lambda * 1.1;
+            
+            if (maxZ < CONFIG.sourceZ - state.lambda * 0.85) {
+                createIncidentWave(CONFIG.sourceZ);
+            }
+
+            const distanceToScreen = Math.abs(screenZ - CONFIG.barrierZ);
+            const maxRadius = Math.max(35, distanceToScreen + 5);
+
+            const s1ToRemove = [];
+            secondaryWavesS1.forEach((wave, index) => {
+                wave.radius += speed * dt;
+                
+                const numPoints = 120;
+                const positions = wave.mesh.geometry.attributes.position.array;
+                const slitX = -state.sep / 2;
+                
+                for (let i = 0; i <= numPoints; i++) {
+                    const angle = (i / numPoints) * Math.PI - Math.PI/2;
+                    positions[i * 3] = slitX + wave.radius * Math.sin(angle);
+                    positions[i * 3 + 1] = 0;
+                    positions[i * 3 + 2] = CONFIG.barrierZ - wave.radius * Math.cos(angle);
+                }
+                wave.mesh.geometry.attributes.position.needsUpdate = true;
+                
+                wave.opacity = Math.max(0, 0.7 * (1 - wave.radius / maxRadius));
+                wave.mesh.material.opacity = wave.opacity;
+
+                if (wave.radius > distanceToScreen - 2 && !wave.recordedHit) {
+                    wave.recordedHit = true;
+                    recordInterferenceHits();
+                }
+
+                if (wave.radius > maxRadius) {
+                    s1ToRemove.push(index);
+                }
+            });
+
+            s1ToRemove.reverse().forEach(index => {
+                disposeWave(secondaryWavesS1[index]);
+                secondaryWavesS1.splice(index, 1);
+            });
+
+            const s2ToRemove = [];
+            secondaryWavesS2.forEach((wave, index) => {
+                wave.radius += speed * dt;
+                
+                const numPoints = 120;
+                const positions = wave.mesh.geometry.attributes.position.array;
+                const slitX = state.sep / 2;
+                
+                for (let i = 0; i <= numPoints; i++) {
+                    const angle = (i / numPoints) * Math.PI - Math.PI/2;
+                    positions[i * 3] = slitX + wave.radius * Math.sin(angle);
+                    positions[i * 3 + 1] = 0;
+                    positions[i * 3 + 2] = CONFIG.barrierZ - wave.radius * Math.cos(angle);
+                }
+                wave.mesh.geometry.attributes.position.needsUpdate = true;
+                
+                wave.opacity = Math.max(0, 0.7 * (1 - wave.radius / maxRadius));
+                wave.mesh.material.opacity = wave.opacity;
+
+                if (wave.radius > maxRadius) {
+                    s2ToRemove.push(index);
+                }
+            });
+
+            s2ToRemove.reverse().forEach(index => {
+                disposeWave(secondaryWavesS2[index]);
+                secondaryWavesS2.splice(index, 1);
+            });
+        }
+
+        function recordInterferenceHits() {
+            const L = state.screenDistance;
+            const numSamples = 150;
+            const d_half = state.sep / 2;
+            let slit1Count = 0, slit2Count = 0;
+
+            for (let i = 0; i < numSamples; i++) {
+                const x = (Math.random() - 0.5) * CONFIG.sceneWidth;
+                let probability;
+
+                if (state.detectorsOn) {
+                    // MEASURED: same Gaussian P₁' + P₂' as plot (centers ±d/2, sigma from Lλ/a)
+                    const sigma = getMeasuredGaussianSigma();
+                    const p1 = Math.exp(-Math.pow(x + d_half, 2) / (2 * sigma * sigma));
+                    const p2 = Math.exp(-Math.pow(x - d_half, 2) / (2 * sigma * sigma));
+                    // True max of p1+p2: at x=0 when peaks overlap, at x=±d/2 when separated
+                    const maxAtCenter = 2 * Math.exp(-(state.sep * state.sep) / (8 * sigma * sigma));
+                    const maxAtPeak = 1 + Math.exp(-(state.sep * state.sep) / (2 * sigma * sigma));
+                    const maxSum = Math.max(maxAtCenter, maxAtPeak);
+                    probability = Math.min(1, (p1 + p2) / maxSum);
+
+                    if (Math.random() < probability) {
+                        state.detectedCount++;
+
+                        const tx = ((x / CONFIG.sceneWidth) + 0.5) * CONFIG.screenRes.w;
+                        const ty = (0.5 + (Math.random() - 0.5) * 0.3) * CONFIG.screenRes.h;
+
+                        screenContext.globalCompositeOperation = 'lighter';
+                        screenContext.beginPath();
+                        screenContext.arc(tx, ty, 2, 0, Math.PI * 2);
+                        // Orange dots for measured particles
+                        screenContext.fillStyle = 'rgba(245, 158, 11, 0.3)';
+                        screenContext.fill();
+                        screenTexture.needsUpdate = true;
+
+                        const bin = Math.floor(((x / CONFIG.sceneWidth) + 0.5) * 80);
+                        if (bin >= 0 && bin < 80) state.hits[bin]++;
+
+                        // Flash the detector at the slit the particle passed through
+                        const p1_ratio = (p1 + p2) > 0 ? p1 / (p1 + p2) : 0.5;
+                        if (Math.random() < p1_ratio) {
+                            slit1Count++;
+                        } else {
+                            slit2Count++;
+                        }
+                    }
+                } else {
+                    // UNMEASURED: |ψ₁ + ψ₂|² — full quantum interference
+                    const theta = Math.atan(x / L);
+                    const sinTheta = Math.sin(theta);
+
+                    const phi = (Math.PI * state.sep * sinTheta) / state.lambda;
+                    const interference = Math.pow(Math.cos(phi), 2);
+
+                    const beta = (Math.PI * state.slitWidth * sinTheta) / state.lambda;
+                    let diffraction = 1.0;
+                    if (Math.abs(beta) > 0.001) {
+                        diffraction = Math.pow(Math.sin(beta) / beta, 2);
+                    }
+
+                    probability = interference * diffraction;
+
+                    if (Math.random() < probability) {
+                        state.detectedCount++;
+
+                        const tx = ((x / CONFIG.sceneWidth) + 0.5) * CONFIG.screenRes.w;
+                        const ty = (0.5 + (Math.random() - 0.5) * 0.3) * CONFIG.screenRes.h;
+
+                        screenContext.globalCompositeOperation = 'lighter';
+                        screenContext.beginPath();
+                        screenContext.arc(tx, ty, 2, 0, Math.PI * 2);
+                        // Wavelength-colored dots for unmeasured quantum particles
+                        screenContext.fillStyle = nmToCSSRGBA(getCurrentWavelengthNM(), 0.3);
+                        screenContext.fill();
+                        screenTexture.needsUpdate = true;
+
+                        const bin = Math.floor(((x / CONFIG.sceneWidth) + 0.5) * 80);
+                        if (bin >= 0 && bin < 80) state.hits[bin]++;
+                    }
+                }
+            }
+
+            // Flash detectors proportionally to hits through each slit
+            if (state.detectorsOn) {
+                if (slit1Count > 0) detector1Flash = Math.min(1.0, slit1Count / 25);
+                if (slit2Count > 0) detector2Flash = Math.min(1.0, slit2Count / 25);
+            }
+        }
+
+        // --- COMBINED CHART ---
+        function getNormalizedHits() {
+            const max = Math.max(...state.hits);
+            if (max === 0) return Array(state.hits.length).fill(0);
+            return Array.from(state.hits, v => v / max);
+        }
+
+        function initCombinedChart() {
+            const ctx = document.getElementById('combined-chart-canvas').getContext('2d');
+            
+            const theoreticalData = generateTheoreticalData();
+            
+            combinedChart = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: Array(80).fill(''),
+                    datasets: [
+                        {
+                            type: 'bar',
+                            label: 'Detected Pattern',
+                            data: getNormalizedHits(),
+                            backgroundColor: 'rgba(59, 130, 246, 0.7)',
+                            borderWidth: 0,
+                            barPercentage: 1.1,
+                            categoryPercentage: 1.0,
+                            yAxisID: 'y',
+                            order: 2
+                        },
+                        {
+                            type: 'line',
+                            label: 'Theoretical Curve',
+                            data: theoreticalData,
+                            borderColor: '#10b981',
+                            backgroundColor: 'rgba(16, 185, 129, 0.15)',
+                            borderWidth: 2.5,
+                            fill: true,
+                            tension: 0.4,
+                            pointRadius: 0,
+                            yAxisID: 'y',
+                            order: 1
+                        },
+                        {
+                            type: 'line',
+                            label: "P\u2081' (slit 1)",
+                            data: Array(80).fill(0),
+                            borderColor: 'rgba(245, 158, 11, 0.85)',
+                            borderWidth: 1.5,
+                            borderDash: [4, 2],
+                            fill: false,
+                            pointRadius: 0,
+                            yAxisID: 'y',
+                            order: 1,
+                            hidden: true
+                        },
+                        {
+                            type: 'line',
+                            label: "P\u2082' (slit 2)",
+                            data: Array(80).fill(0),
+                            borderColor: 'rgba(234, 88, 12, 0.85)',
+                            borderWidth: 1.5,
+                            borderDash: [4, 2],
+                            fill: false,
+                            pointRadius: 0,
+                            yAxisID: 'y',
+                            order: 1,
+                            hidden: true
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    interaction: {
+                        mode: 'index',
+                        intersect: false
+                    },
+                    plugins: { 
+                        legend: { display: false }, 
+                        tooltip: { enabled: false } 
+                    },
+                    scales: {
+                        x: { 
+                            display: true, 
+                            title: {
+                                display: true,
+                                text: 'Position (x)',
+                                color: '#9ca3af',
+                                font: { size: 11, weight: '600' }
+                            },
+                            ticks: { display: false },
+                            grid: { display: false }
+                        },
+                        y: { 
+                            type: 'linear',
+                            display: true,
+                            position: 'left',
+                            title: {
+                                display: true,
+                                text: 'Normalized Intensity (I/I\u2080)',
+                                color: '#9ca3af',
+                                font: { size: 10, weight: '600' }
+                            },
+                            min: 0,
+                            max: 1.1,
+                            grid: { color: 'rgba(255,255,255,0.05)' }, 
+                            ticks: { display: false }
+                        }
+                    },
+                    animation: false
+                }
+            });
+        }
+
+        // Quantum: |ψ₁ + ψ₂|² — interference pattern
+        function generateTheoreticalData() {
+            const numBins = 80;
+            const values = [];
+            const L = state.screenDistance;
+            
+            for (let i = 0; i < numBins; i++) {
+                const x = ((i / numBins) - 0.5) * CONFIG.sceneWidth;
+                
+                const theta = Math.atan(x / L);
+                const sinTheta = Math.sin(theta);
+                
+                const phi = (Math.PI * state.sep * sinTheta) / state.lambda;
+                const interference = Math.pow(Math.cos(phi), 2);
+                
+                const beta = (Math.PI * state.slitWidth * sinTheta) / state.lambda;
+                let diffraction = 1.0;
+                if (Math.abs(beta) > 0.001) {
+                    diffraction = Math.pow(Math.sin(beta) / beta, 2);
+                }
+                
+                values.push(interference * diffraction);
+            }
+            
+            const maxVal = Math.max(...values);
+            return values.map(v => v / maxVal);
+        }
+
+        // Gaussian width for measured case. Scale Lλ/a is the single-slit diffraction scale;
+        // the factor 0.025 is tuned for display so two peaks remain visible for typical d.
+        // Same scale for both slits; separation of peaks is state.sep.
+        function getMeasuredGaussianSigma() {
+            const L = state.screenDistance;
+            const a = state.slitWidth;
+            const lam = state.lambda;
+            return (L * lam / a) * 0.025;
+        }
+
+        // Measured: two Gaussians P₁' and P₂' (centers at ±d/2). Sum = P₁' + P₂'.
+        // Separation and overlap are decided by slit separation d; sigma fixed by λ, a, L.
+        function generateMeasuredGaussian1Data() {
+            const numBins = 80;
+            const d_half = state.sep / 2;
+            const sigma = getMeasuredGaussianSigma();
+            const values = [];
+            for (let i = 0; i < numBins; i++) {
+                const x = ((i / numBins) - 0.5) * CONFIG.sceneWidth;
+                const p1 = Math.exp(-Math.pow(x + d_half, 2) / (2 * sigma * sigma));
+                values.push(p1);
+            }
+            return values;
+        }
+
+        function generateMeasuredGaussian2Data() {
+            const numBins = 80;
+            const d_half = state.sep / 2;
+            const sigma = getMeasuredGaussianSigma();
+            const values = [];
+            for (let i = 0; i < numBins; i++) {
+                const x = ((i / numBins) - 0.5) * CONFIG.sceneWidth;
+                const p2 = Math.exp(-Math.pow(x - d_half, 2) / (2 * sigma * sigma));
+                values.push(p2);
+            }
+            return values;
+        }
+
+        // Measured: P₁' + P₂' (two Gaussians), normalized — no interference (decoherence)
+        function generateMeasuredData() {
+            const numBins = 80;
+            const g1 = generateMeasuredGaussian1Data();
+            const g2 = generateMeasuredGaussian2Data();
+            const values = g1.map((v, i) => v + g2[i]);
+            const maxVal = Math.max(...values);
+            return maxVal > 0 ? values.map(v => v / maxVal) : values;
+        }
+
+        // Normalize individual Gaussians to same scale as sum (max of sum = 1) for overlay
+        function getNormalizedMeasuredGaussian1Data() {
+            const g1 = generateMeasuredGaussian1Data();
+            const g2 = generateMeasuredGaussian2Data();
+            const sum = g1.map((v, i) => v + g2[i]);
+            const maxVal = Math.max(...sum);
+            return maxVal > 0 ? g1.map(v => v / maxVal) : g1;
+        }
+
+        function getNormalizedMeasuredGaussian2Data() {
+            const g1 = generateMeasuredGaussian1Data();
+            const g2 = generateMeasuredGaussian2Data();
+            const sum = g1.map((v, i) => v + g2[i]);
+            const maxVal = Math.max(...sum);
+            return maxVal > 0 ? g2.map(v => v / maxVal) : g2;
+        }
+
+        function updateChartForMode() {
+            if (state.detectorsOn) {
+                // Measured mode: blue detected hits (same as unmeasured); orange theoretical curves P₁' and P₂'
+                combinedChart.data.datasets[0].backgroundColor = 'rgba(59, 130, 246, 0.7)';
+                combinedChart.data.datasets[1].data = generateMeasuredData();
+                combinedChart.data.datasets[1].borderColor = '#f59e0b';
+                combinedChart.data.datasets[1].backgroundColor = 'rgba(245, 158, 11, 0.12)';
+
+                combinedChart.data.datasets[2].data = getNormalizedMeasuredGaussian1Data();
+                combinedChart.data.datasets[2].hidden = false;
+                combinedChart.data.datasets[3].data = getNormalizedMeasuredGaussian2Data();
+                combinedChart.data.datasets[3].hidden = false;
+
+                // Update legend — detected hits stay blue (like interference pattern)
+                document.getElementById('legend-detected-color').style.background = '#3b82f6';
+                document.getElementById('legend-detected-text').innerHTML = 'Detected Hits (Blue)';
+                document.getElementById('legend-theoretical-color').style.background = '#f59e0b';
+                document.getElementById('legend-theoretical-color').className = 'legend-color measured';
+                document.getElementById('legend-theoretical-text').innerHTML = 'Measured P&#8321;&#8242;+P&#8322;&#8242; (total)';
+                const legendP1 = document.getElementById('legend-p1-color');
+                const legendP2 = document.getElementById('legend-p2-color');
+                if (legendP1) legendP1.style.background = 'rgba(245, 158, 11, 0.85)';
+                if (legendP2) legendP2.style.background = 'rgba(234, 88, 12, 0.85)';
+                const legendP1Text = document.getElementById('legend-p1-text');
+                const legendP2Text = document.getElementById('legend-p2-text');
+                const legendP1Item = document.getElementById('legend-p1-item');
+                const legendP2Item = document.getElementById('legend-p2-item');
+                if (legendP1Text) legendP1Text.style.display = '';
+                if (legendP2Text) legendP2Text.style.display = '';
+                if (legendP1Item) legendP1Item.style.display = 'flex';
+                if (legendP2Item) legendP2Item.style.display = 'flex';
+
+                // Update chart description
+                document.getElementById('chart-description').innerHTML =
+                    '<span class="highlight-orange">Measured:</span> I &prop; P&#8321;&#8242; + P&#8322;&#8242; &mdash; two Gaussians (slit 1 &amp; 2). Separation/overlap set by slit separation d.<br>' +
+                    'No interference &mdash; each particle passed through a definite slit';
+
+                // Update detector status badge
+                const statusEl = document.getElementById('detector-status');
+                statusEl.className = 'detector-status on';
+                document.getElementById('detector-status-text').textContent = 'Detectors ON \u2014 Wavefunction collapsed (decoherence)';
+            } else {
+                // Quantum mode: blue bars, green theoretical line
+                combinedChart.data.datasets[0].backgroundColor = 'rgba(59, 130, 246, 0.7)';
+                combinedChart.data.datasets[1].data = generateTheoreticalData();
+                combinedChart.data.datasets[1].borderColor = '#10b981';
+                combinedChart.data.datasets[1].backgroundColor = 'rgba(16, 185, 129, 0.15)';
+
+                // Update legend
+                document.getElementById('legend-detected-color').style.background = '#3b82f6';
+                document.getElementById('legend-detected-text').innerHTML = 'Detected Hits (Blue)';
+                document.getElementById('legend-theoretical-color').style.background = '#10b981';
+                document.getElementById('legend-theoretical-color').className = 'legend-color theoretical';
+                document.getElementById('legend-theoretical-text').innerHTML = 'Quantum |&psi;&#8321;+&psi;&#8322;|&sup2;';
+
+                // Update chart description
+                document.getElementById('chart-description').innerHTML =
+                    '<span class="highlight-green">Unmeasured:</span> I &prop; |&psi;&#8321; + &psi;&#8322;|&sup2; = cos&sup2;(&pi;d sin&theta;/&lambda;) &times; sinc&sup2;(&pi;a sin&theta;/&lambda;)<br>' +
+                    'Interference fringes visible &mdash; no &ldquo;which path&rdquo; information';
+
+                // Hide P₁' and P₂' lines in quantum mode
+                combinedChart.data.datasets[2].hidden = true;
+                combinedChart.data.datasets[3].hidden = true;
+                const legendP1Text = document.getElementById('legend-p1-text');
+                const legendP2Text = document.getElementById('legend-p2-text');
+                const legendP1Item = document.getElementById('legend-p1-item');
+                const legendP2Item = document.getElementById('legend-p2-item');
+                if (legendP1Text) legendP1Text.style.display = 'none';
+                if (legendP2Text) legendP2Text.style.display = 'none';
+                if (legendP1Item) legendP1Item.style.display = 'none';
+                if (legendP2Item) legendP2Item.style.display = 'none';
+
+                // Update detector status badge
+                const statusEl = document.getElementById('detector-status');
+                statusEl.className = 'detector-status off';
+                document.getElementById('detector-status-text').textContent = 'Detectors OFF \u2014 Quantum interference active';
+            }
+
+            combinedChart.update('none');
+        }
+
+        function updateCombinedChart() {
+            combinedChart.data.datasets[0].data = getNormalizedHits();
+
+            if (state.detectorsOn) {
+                combinedChart.data.datasets[0].backgroundColor = 'rgba(59, 130, 246, 0.7)';
+                combinedChart.data.datasets[1].data = generateMeasuredData();
+                combinedChart.data.datasets[2].data = getNormalizedMeasuredGaussian1Data();
+                combinedChart.data.datasets[3].data = getNormalizedMeasuredGaussian2Data();
+            } else {
+                // Keep bars consistently blue in quantum mode
+                combinedChart.data.datasets[0].backgroundColor = 'rgba(59, 130, 246, 0.7)';
+                combinedChart.data.datasets[1].data = generateTheoreticalData();
+            }
+            
+            combinedChart.update('none');
+        }
+
+        // --- UI & LOGIC ---
+        function initUI() {
+            const detectorBtn = document.getElementById('classical-btn');
+
+            detectorBtn.onclick = () => {
+                state.detectorsOn = !state.detectorsOn;
+                
+                if (state.detectorsOn) {
+                    detectorBtn.classList.add('active');
+                    detectorBtn.textContent = 'Disable Detectors (No Measurement)';
+                    if (detectorGroup) detectorGroup.visible = true;
+                } else {
+                    detectorBtn.classList.remove('active');
+                    detectorBtn.textContent = 'Enable Detectors (Measure Path)';
+                    if (detectorGroup) detectorGroup.visible = false;
+                    detector1Flash = 0;
+                    detector2Flash = 0;
+                }
+
+                // Reset sim so particles start accumulating under new distribution
+                resetSim();
+                updateChartForMode();
+            };
+
+            function wavelengthToColor(nm) {
+                const c = nmToRGB(nm);
+                return `rgb(${Math.round(c.r*255)},${Math.round(c.g*255)},${Math.round(c.b*255)})`;
+            }
+
+            function updateSimParams() {
+                createBarrier();
+                createSlitLabels();
+                createDetectors();
+                resetSim();
+            }
+
+            document.getElementById('slit-sep').oninput = (e) => {
+                const val = parseFloat(e.target.value);
+                state.sep = val * NM_TO_SIM.sep;
+                document.getElementById('slit-sep-value').textContent = Math.round(val) + ' nm';
+                updateSimParams();
+            };
+            document.getElementById('slit-width').oninput = (e) => {
+                const val = parseFloat(e.target.value);
+                state.slitWidth = val * NM_TO_SIM.width;
+                document.getElementById('slit-width-value').textContent = Math.round(val) + ' nm';
+                updateSimParams();
+            };
+            document.getElementById('wavelength').oninput = (e) => {
+                const val = parseFloat(e.target.value);
+                state.lambda = val * NM_TO_SIM.lambda;
+                const valEl = document.getElementById('wavelength-value');
+                valEl.textContent = Math.round(val) + ' nm';
+                valEl.style.color = wavelengthToColor(val);
+                createSourceMarker();
+                updateSimParams();
+            };
+            document.getElementById('screen-dist').oninput = (e) => {
+                const val = parseFloat(e.target.value);
+                state.screenDistance = val * NM_TO_SIM.screenDist;
+                document.getElementById('screen-dist-value').textContent = Math.round(val) + ' nm';
+                if (screenMesh) screenMesh.position.z = -state.screenDistance;
+                resetSim();
+            };
+            document.getElementById('rate').oninput = (e) => {
+                state.animationSpeed = parseInt(e.target.value);
+                document.getElementById('rate-value').textContent = state.animationSpeed;
+            };
+            document.getElementById('reset-btn').onclick = resetSim;
+
+            window.addEventListener('resize', () => {
+                camera.aspect = window.innerWidth / (window.innerHeight - 60);
+                camera.updateProjectionMatrix();
+                renderer.setSize(window.innerWidth, window.innerHeight - 60);
+            });
+        }
+
+        function resetSim() {
+            state.detectedCount = 0;
+            state.hits.fill(0);
+            
+            screenContext.globalCompositeOperation = 'source-over';
+            screenContext.fillStyle = '#1e293b';
+            screenContext.fillRect(0, 0, CONFIG.screenRes.w, CONFIG.screenRes.h);
+            screenTexture.needsUpdate = true;
+            
+            createWavefronts();
+            
+            updateCombinedChart();
+        }
+
+        function animate(time) {
+            requestAnimationFrame(animate);
+            const dt = (typeof time === 'number' && typeof animate.lastTime === 'number')
+                ? Math.min((time - animate.lastTime) / 1000, 0.1)
+                : 0;
+            animate.lastTime = (typeof time === 'number') ? time : (animate.lastTime || 0);
+
+            controls.update();
+
+            updatePhysics(dt, time);
+            renderer.render(scene, camera);
+
+            if (typeof time === 'number' && (time - (animate.lastFps || 0)) > 250) {
+                combinedChart.data.datasets[0].data = getNormalizedHits();
+                combinedChart.update('none');
+                animate.lastFps = time;
+            }
+        }
+
+        // --- NARRATION / VOICEOVER ENGINE ---
+        const narrationSteps = [
+            {
+                text: `Welcome to the <span class="highlight">Double Slit Experiment~Measurement</span> \u2014 exploring how the act of observation fundamentally alters quantum behavior. Can simply \u201cwatching\u201d a particle change what it does?`,
+                speech: `Welcome to the Double Slit Experiment Measurement \u2014 exploring how the act of observation fundamentally alters quantum behavior. Can simply watching a particle change what it does?`,
+                duration: 10000
+            },
+            {
+                text: `Particles are emitted one at a time from the source toward a barrier with <span class="highlight">two narrow slits</span>. Right now, <span class="highlight-green">no detectors</span> are placed at the slits \u2014 we have no way of knowing which slit each particle passes through.`,
+                speech: `Particles are emitted one at a time from the source toward a barrier with two narrow slits. Right now, no detectors are placed at the slits \u2014 we have no way of knowing which slit each particle passes through.`,
+                duration: 10000
+            },
+            {
+                text: `Each slit acts as a new wave source. The circular wavefronts from both slits <span class="highlight">overlap and interfere</span> \u2014 constructively in some regions, destructively in others \u2014 as they propagate toward the detection screen.`,
+                speech: `Each slit acts as a new wave source. The circular wavefronts from both slits overlap and interfere \u2014 constructively in some regions, destructively in others \u2014 as they propagate toward the detection screen.`,
+                duration: 10000
+            },
+            {
+                text: `Watch the <span class="highlight">blue histogram</span> in the sidebar: as particles accumulate, bright and dark fringes emerge. This is <span class="highlight-green">quantum interference</span> \u2014 the probability follows I &prop; |\u03C8\u2081 + \u03C8\u2082|\u00B2, where amplitudes add before squaring.`,
+                speech: `Watch the blue histogram in the sidebar: as particles accumulate, bright and dark fringes emerge. This is quantum interference \u2014 the probability follows I proportional to the absolute square of psi 1 plus psi 2, where amplitudes add before squaring.`,
+                duration: 12000
+            },
+            {
+                text: `<span class="highlight-orange">Now click \u201cEnable Detectors\u201d</span> in the top bar. This places a measuring device at each slit to determine <em>which path</em> each particle takes. Watch carefully what happens to the pattern.`,
+                speech: `Now click Enable Detectors in the top bar. This places a measuring device at each slit to determine which path each particle takes. Watch carefully what happens to the pattern.`,
+                duration: 10000
+            },
+            {
+                text: `<span class="highlight-orange">The interference fringes vanish!</span> With detectors ON, we know which slit each particle traversed \u2014 but this <span class="highlight">destroys phase coherence</span>. The pattern collapses to I &prop; P\u2081 + P\u2082: just two overlapping single-slit distributions.`,
+                speech: `The interference fringes vanish! With detectors on, we know which slit each particle traversed \u2014 but this destroys phase coherence. The pattern collapses to I proportional to P 1 plus P 2: just two overlapping single-slit distributions.`,
+                duration: 12000
+            },
+            {
+                text: `This is <span class="highlight">Feynman\u2019s \u201cWatching the Electrons\u201d</span> (Vol III, \u00A71-5): measurement itself changes the outcome. Toggle detectors ON and OFF to see the dramatic transition between <span class="highlight-green">quantum interference</span> and <span class="highlight-orange">classical measurement</span>.`,
+                speech: `This is Feynman's Watching the Electrons from Volume 3, Section 1-5: measurement itself changes the outcome. Toggle detectors on and off to see the dramatic transition between quantum interference and classical measurement.`,
+                duration: 12000
+            },
+            {
+                text: `Explore further: adjust <span class="highlight">wavelength</span> to change fringe spacing, vary <span class="highlight">slit separation</span> to compress or expand the pattern, and compare how each parameter affects both the <span class="highlight-green">unmeasured</span> and <span class="highlight-orange">measured</span> distributions.`,
+                speech: `Explore further: adjust wavelength to change fringe spacing, vary slit separation to compress or expand the pattern, and compare how each parameter affects both the unmeasured and measured distributions.`,
+                duration: 11000
+            }
+        ];
+
+        let narration = {
+            currentStep: 0,
+            isPlaying: false,
+            timer: null,
+            utterance: null,
+            keepAliveInterval: null,
+            speechSupported: 'speechSynthesis' in window
+        };
+
+        function initNarration() {
+            const dotsContainer = document.getElementById('narr-dots');
+            narrationSteps.forEach((_, i) => {
+                const dot = document.createElement('div');
+                dot.className = 'step-dot' + (i === 0 ? ' active' : '');
+                dot.onclick = () => jumpToStep(i);
+                dotsContainer.appendChild(dot);
+            });
+
+            document.getElementById('narr-play').onclick = playNarration;
+            document.getElementById('narr-pause').onclick = pauseNarration;
+            document.getElementById('narr-reset').onclick = goBackOneStep;
+
+            showStep(0);
+        }
+
+        function showStep(index) {
+            narration.currentStep = index;
+            const step = narrationSteps[index];
+            document.getElementById('narration-text').innerHTML = step.text;
+
+            const dots = document.querySelectorAll('.step-dot');
+            dots.forEach((dot, i) => {
+                dot.className = 'step-dot';
+                if (i < index) dot.classList.add('completed');
+                if (i === index) dot.classList.add('active');
+            });
+
+            const progress = (index / (narrationSteps.length - 1)) * 100;
+            document.getElementById('narr-progress-bar').style.width = progress + '%';
+        }
+
+        function finishNarration() {
+            narration.isPlaying = false;
+            document.getElementById('narr-play').classList.remove('active');
+
+            if (narration.speechSupported) {
+                window.speechSynthesis.cancel();
+            }
+            if (narration.timer) {
+                clearTimeout(narration.timer);
+                narration.timer = null;
+            }
+            if (narration.keepAliveInterval) {
+                clearInterval(narration.keepAliveInterval);
+                narration.keepAliveInterval = null;
+            }
+
+            narration.timer = setTimeout(() => {
+                narration.currentStep = 0;
+                showStep(0);
+                document.getElementById('narr-progress-bar').style.width = '0%';
+                narration.timer = null;
+            }, 1200);
+        }
+
+        function speakStep(index) {
+            if (!narration.speechSupported) return;
+            
+            window.speechSynthesis.cancel();
+
+            const text = narrationSteps[index].speech;
+            const utterance = new SpeechSynthesisUtterance(text);
+            utterance.rate = 0.92;
+            utterance.pitch = 1.0;
+            utterance.volume = 1.0;
+
+            const voices = window.speechSynthesis.getVoices();
+            const samantha = voices.find(v => v.name.includes('Samantha'));
+            const fallback = voices.find(v => v.lang.startsWith('en') && (v.name.includes('Google') || v.name.includes('Natural') || v.name.includes('Daniel'))) || voices.find(v => v.lang.startsWith('en'));
+            utterance.voice = samantha || fallback || null;
+
+            utterance.onend = () => {
+                if (!narration.isPlaying) return;
+
+                const nextIndex = narration.currentStep + 1;
+                if (nextIndex >= narrationSteps.length) {
+                    finishNarration();
+                } else {
+                    narration.timer = setTimeout(() => {
+                        if (narration.isPlaying) {
+                            showStep(nextIndex);
+                            speakStep(nextIndex);
+                        }
+                    }, 800);
+                }
+            };
+
+            narration.utterance = utterance;
+            window.speechSynthesis.speak(utterance);
+
+            if (narration.keepAliveInterval) clearInterval(narration.keepAliveInterval);
+            narration.keepAliveInterval = setInterval(() => {
+                if (window.speechSynthesis.speaking) {
+                    window.speechSynthesis.pause();
+                    window.speechSynthesis.resume();
+                }
+            }, 10000);
+        }
+
+        function playNarration() {
+            if (narration.isPlaying) return;
+            narration.isPlaying = true;
+            document.getElementById('narr-play').classList.add('active');
+            document.getElementById('narr-pause').classList.remove('active');
+
+            if (narration.timer) {
+                clearTimeout(narration.timer);
+                narration.timer = null;
+            }
+
+            if (narration.speechSupported) {
+                if (window.speechSynthesis.getVoices().length === 0) {
+                    window.speechSynthesis.onvoiceschanged = () => {
+                        speakStep(narration.currentStep);
+                    };
+                } else {
+                    speakStep(narration.currentStep);
+                }
+            } else {
+                advanceByTimer();
+            }
+        }
+
+        function advanceByTimer() {
+            if (!narration.isPlaying) return;
+            const step = narrationSteps[narration.currentStep];
+            narration.timer = setTimeout(() => {
+                if (!narration.isPlaying) return;
+
+                const nextIndex = narration.currentStep + 1;
+                if (nextIndex >= narrationSteps.length) {
+                    finishNarration();
+                } else {
+                    showStep(nextIndex);
+                    advanceByTimer();
+                }
+            }, step.duration);
+        }
+
+        function pauseNarration() {
+            narration.isPlaying = false;
+            document.getElementById('narr-play').classList.remove('active');
+            document.getElementById('narr-pause').classList.add('active');
+
+            if (narration.speechSupported) {
+                window.speechSynthesis.cancel();
+            }
+            if (narration.timer) {
+                clearTimeout(narration.timer);
+                narration.timer = null;
+            }
+            if (narration.keepAliveInterval) {
+                clearInterval(narration.keepAliveInterval);
+                narration.keepAliveInterval = null;
+            }
+        }
+
+        function goBackOneStep() {
+            const wasPlaying = narration.isPlaying;
+            pauseNarration();
+            document.getElementById('narr-pause').classList.remove('active');
+
+            const prevStep = Math.max(0, narration.currentStep - 1);
+            narration.currentStep = prevStep;
+            showStep(prevStep);
+
+            if (wasPlaying) {
+                playNarration();
+            }
+        }
+
+        function jumpToStep(index) {
+            const wasPlaying = narration.isPlaying;
+            pauseNarration();
+            document.getElementById('narr-pause').classList.remove('active');
+            narration.currentStep = index;
+            showStep(index);
+            if (wasPlaying) {
+                playNarration();
+            }
+        }
+
+        window.onload = init;
+
+    </script>
+</body>
+</html>
