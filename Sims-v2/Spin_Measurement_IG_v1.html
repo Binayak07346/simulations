@@ -599,7 +599,10 @@
             }
         };
         
+        let initialized = false;
         function initSimulation() {
+            if (initialized) return;
+            initialized = true;
             const canvas = document.getElementById('mainCanvas');
             const ctx = canvas.getContext('2d');
             
@@ -1260,6 +1263,8 @@
                     const alphaPhase = Math.atan2(alphaImag, alphaReal);
                     const betaPhase = Math.atan2(betaImag, betaReal);
                     newPhi = betaPhase - alphaPhase;
+                    while (newPhi > Math.PI) newPhi -= 2 * Math.PI;
+                    while (newPhi < -Math.PI) newPhi += 2 * Math.PI;
                 }
                 
                 startTheta = theta;
@@ -1276,6 +1281,7 @@
             }
             
             function setPresetState(state) {
+                if (measuring || animating) return;
                 const sqrt2 = 1 / Math.sqrt(2);
                 const presets = {
                     'up': { aR: 1, aI: 0, bR: 0, bI: 0 },
