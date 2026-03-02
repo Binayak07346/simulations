@@ -2,6 +2,9 @@
 _Exported on 02/03/2026 at 13:42:41 GMT+5:30 from Cursor (2.5.25)_
 
 ---
+# Removed dynamic scaling of y axis.
+# Added additional bins across the PDF curve range.
+# Added guard against zero sigma value.
 
 **User**
 
