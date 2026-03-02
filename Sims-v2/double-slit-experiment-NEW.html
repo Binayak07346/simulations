@@ -445,9 +445,9 @@
                     <br><br>
                     <span class="highlight">Quantum (green):</span> |ψ₁ + ψ₂|² — amplitudes add, then square. The interference fringes arise from constructive/destructive interference.
                     <br><br>
-                    <span class="highlight">Classical (orange):</span> P₁ + P₂ — probabilities add directly. Each slit produces a single-slit diffraction pattern; with no interference between slits, we get a smooth envelope.
+                    <span class="highlight">Classical (orange):</span> P₁ + P₂ — probabilities add directly. Each slit produces a Gaussian hump (σ ∝ λL/a); with no interference between slits, we get two smooth overlapping bumps.
                     <br><br>
-                    Both patterns use the <span class="highlight">same single-slit diffraction</span> physics — the difference is whether amplitudes or probabilities combine (Feynman Lectures Vol III, Ch 1).
+                    The key difference: quantum adds <span class="highlight">amplitudes</span> (producing fringes), classical adds <span class="highlight">probabilities</span> (no fringes) — Feynman Lectures Vol III, Ch 1.
                 </p>
             </div>
         </div>
@@ -501,11 +501,11 @@
                     <canvas id="combined-chart-canvas"></canvas>
                 </div>
                 <div class="chart-legend">
-                    <div class="legend-item">
+                    <div class="legend-item" id="detected-legend">
                         <div class="legend-color detected"></div>
                         <span>Detected Pattern</span>
                     </div>
-                    <div class="legend-item">
+                    <div class="legend-item" id="quantum-legend">
                         <div class="legend-color theoretical"></div>
                         <span>Quantum |ψ₁+ψ₂|²</span>
                     </div>
@@ -516,7 +516,7 @@
                 </div>
                 <p class="chart-description">
                     <span class="highlight">Quantum:</span> I ∝ |ψ₁ + ψ₂|² = cos²(πd sinθ/λ) × sinc²(πa sinθ/λ)<br>
-                    <span class="highlight">Classical:</span> I ∝ P₁ + P₂ (no interference between slits)
+                    <span class="highlight">Classical:</span> I ∝ G(x+d/2, σ) + G(x−d/2, σ), σ = λL/(2Wa)
                 </p>
             </div>
 
@@ -694,7 +694,8 @@
         function initThree() {
             const canvas = document.getElementById('main-canvas');
             scene = new THREE.Scene();
-            scene.fog = new THREE.Fog(0x111827, 60, 150);
+            // Fog far > 150 so screen remains visible at max L (8000 nm → camera distance ~87)
+            scene.fog = new THREE.Fog(0x111827, 60, 220);
 
             camera = new THREE.PerspectiveCamera(50, window.innerWidth / (window.innerHeight - 60), 0.1, 500);
             camera.position.set(50, 30, 25); 
@@ -969,7 +970,8 @@
                 mesh: arc,
                 slitX: slitX,
                 radius: initialRadius,
-                opacity: 0.7
+                opacity: 0.7,
+                recordedHit: false
             });
         }
 
@@ -998,7 +1000,8 @@
                 mesh: arc,
                 slitX: slitX,
                 radius: initialRadius,
-                opacity: 0.7
+                opacity: 0.7,
+                recordedHit: false
             });
         }
 
@@ -1051,6 +1054,10 @@
                 createIncidentWave(CONFIG.sourceZ);
             }
 
+            // Waves must survive past the screen to trigger detection.
+            // At default L=30 this gives 35; at max L=40 it gives 45.
+            const maxRadius = state.screenDistance + 5;
+
             const s1ToRemove = [];
             secondaryWavesS1.forEach((wave, index) => {
                 wave.radius += speed * dt;
@@ -1067,7 +1074,6 @@
                 }
                 wave.mesh.geometry.attributes.position.needsUpdate = true;
                 
-                const maxRadius = 35;
                 wave.opacity = Math.max(0, 0.7 * (1 - wave.radius / maxRadius));
                 wave.mesh.material.opacity = wave.opacity;
 
@@ -1104,7 +1110,6 @@
                 }
                 wave.mesh.geometry.attributes.position.needsUpdate = true;
                 
-                const maxRadius = 35;
                 wave.opacity = Math.max(0, 0.7 * (1 - wave.radius / maxRadius));
                 wave.mesh.material.opacity = wave.opacity;
 
@@ -1123,73 +1128,61 @@
             const L = state.screenDistance;
             const numSamples = 150;
             const d_half = state.sep / 2;
-            
-            for (let i = 0; i < numSamples; i++) {
-                const x = (Math.random() - 0.5) * CONFIG.sceneWidth;
-                
-                // Quantum: Full double-slit interference pattern
-                // I = |ψ₁ + ψ₂|² = cos²(φ) × sinc²(β)
-                const theta = Math.atan(x / L);
-                const sinTheta = Math.sin(theta);
-                
-                // Interference term from path difference between slits
-                const phi = (Math.PI * state.sep * sinTheta) / state.lambda;
-                const interference = Math.pow(Math.cos(phi), 2);
-                
-                // Single-slit diffraction envelope
-                const beta = (Math.PI * state.slitWidth * sinTheta) / state.lambda;
-                let diffraction = 1.0;
-                if (Math.abs(beta) > 0.001) {
-                    diffraction = Math.pow(Math.sin(beta) / beta, 2);
-                }
-                
-                // Quantum: |ψ₁ + ψ₂|² ∝ cos²(φ) × sinc²(β)
-                // The full formula has a factor of 4, but for Monte Carlo rejection
-                // sampling we use the normalized shape (max = 1) as the probability.
-                const probability = interference * diffraction;
-                
-                if (Math.random() < probability) {
-                    state.detectedCount++;
-                    
-                    const tx = ((x / CONFIG.sceneWidth) + 0.5) * CONFIG.screenRes.w;
-                    const ty = (0.5 + (Math.random() - 0.5) * 0.3) * CONFIG.screenRes.h;
-                    
-                    screenContext.globalCompositeOperation = 'lighter';
-                    screenContext.beginPath();
-                    screenContext.arc(tx, ty, 2, 0, Math.PI * 2);
-                    screenContext.fillStyle = nmToCSSRGBA(getCurrentWavelengthNM(), 0.3);
-                    screenContext.fill();
-                    screenTexture.needsUpdate = true;
-                    
-                    const bin = Math.floor(((x / CONFIG.sceneWidth) + 0.5) * 80);
-                    if (bin >= 0 && bin < 80) state.hits[bin]++;
+
+            // Quantum mode: sample from |ψ₁ + ψ₂|² interference pattern
+            if (!state.showClassical) {
+                for (let i = 0; i < numSamples; i++) {
+                    const x = (Math.random() - 0.5) * CONFIG.sceneWidth;
+
+                    const theta = Math.atan(x / L);
+                    const sinTheta = Math.sin(theta);
+
+                    const phi = (Math.PI * state.sep * sinTheta) / state.lambda;
+                    const interference = Math.pow(Math.cos(phi), 2);
+
+                    const beta = (Math.PI * state.slitWidth * sinTheta) / state.lambda;
+                    let diffraction = 1.0;
+                    if (Math.abs(beta) > 0.001) {
+                        diffraction = Math.pow(Math.sin(beta) / beta, 2);
+                    }
+
+                    const probability = interference * diffraction;
+
+                    if (Math.random() < probability) {
+                        state.detectedCount++;
+
+                        const tx = ((x / CONFIG.sceneWidth) + 0.5) * CONFIG.screenRes.w;
+                        const ty = (0.5 + (Math.random() - 0.5) * 0.3) * CONFIG.screenRes.h;
+
+                        screenContext.globalCompositeOperation = 'lighter';
+                        screenContext.beginPath();
+                        screenContext.arc(tx, ty, 2, 0, Math.PI * 2);
+                        screenContext.fillStyle = nmToCSSRGBA(getCurrentWavelengthNM(), 0.3);
+                        screenContext.fill();
+                        screenTexture.needsUpdate = true;
+
+                        const bin = Math.floor(((x / CONFIG.sceneWidth) + 0.5) * 80);
+                        if (bin >= 0 && bin < 80) state.hits[bin]++;
+                    }
                 }
             }
 
-            // Record classical hits when classical mode is on
-            // Classical: P₁₂ = P₁ + P₂ (Feynman Vol III, Fig 1-1)
-            // Each slit produces its own single-slit diffraction pattern
-            // No interference between slits - probabilities add directly
+            // Classical mode: Gaussian humps P₁ + P₂ (Feynman Vol III, Fig 1-1)
+            // σ = λL/(2·W·a) — see generateClassicalData() for derivation.
             if (state.showClassical) {
+                const sigma = state.lambda * L / (2 * CONFIG.sceneWidth * state.slitWidth);
+                const twoSigSq = 2 * sigma * sigma;
+
                 for (let i = 0; i < numSamples; i++) {
                     const cx = (Math.random() - 0.5) * CONFIG.sceneWidth;
 
-                    // P₁: Single-slit diffraction from slit 1 at x = -d/2
-                    const theta1 = Math.atan((cx + d_half) / L);
-                    const beta1 = (Math.PI * state.slitWidth * Math.sin(theta1)) / state.lambda;
-                    const p1 = Math.abs(beta1) > 0.001 ? Math.pow(Math.sin(beta1) / beta1, 2) : 1.0;
-                    
-                    // P₂: Single-slit diffraction from slit 2 at x = +d/2
-                    const theta2 = Math.atan((cx - d_half) / L);
-                    const beta2 = (Math.PI * state.slitWidth * Math.sin(theta2)) / state.lambda;
-                    const p2 = Math.abs(beta2) > 0.001 ? Math.pow(Math.sin(beta2) / beta2, 2) : 1.0;
-                    
-                    // Classical probability: just add (no interference)
-                    // Normalize by 2.0 for consistent sampling rate
+                    const p1 = Math.exp(-(cx + d_half) * (cx + d_half) / twoSigSq);
+                    const p2 = Math.exp(-(cx - d_half) * (cx - d_half) / twoSigSq);
+
+                    // Normalize by 2.0 so peak acceptance ≤ 1
                     const classicalProb = (p1 + p2) / 2.0;
 
                     if (Math.random() < classicalProb) {
-                        // Draw orange dot on the classical overlay canvas
                         const tx = ((cx / CONFIG.sceneWidth) + 0.5) * CONFIG.screenRes.w;
                         const ty = (0.5 + (Math.random() - 0.5) * 0.3) * CONFIG.screenRes.h;
 
@@ -1212,6 +1205,12 @@
             const max = Math.max(...state.hits);
             if (max === 0) return Array(state.hits.length).fill(0);
             return Array.from(state.hits, v => v / max);
+        }
+
+        function getNormalizedClassicalHits() {
+            const max = Math.max(...state.classicalHits);
+            if (max === 0) return Array(state.classicalHits.length).fill(0);
+            return Array.from(state.classicalHits, v => v / max);
         }
 
         function initCombinedChart() {
@@ -1319,7 +1318,7 @@
             const L = state.screenDistance;
             
             for (let i = 0; i < numBins; i++) {
-                const x = ((i / numBins) - 0.5) * CONFIG.sceneWidth;
+                const x = (((i + 0.5) / numBins) - 0.5) * CONFIG.sceneWidth;
                 
                 const theta = Math.atan(x / L);
                 const sinTheta = Math.sin(theta);
@@ -1344,48 +1343,43 @@
         }
 
         // Classical pattern: P₁ + P₂ (Feynman Vol III, Fig 1-1)
-        // Each slit produces single-slit diffraction, no interference between slits
+        // Each slit produces a Gaussian hump centered at ±d/2.
+        // Width σ = λL/(2·W·a): the single-slit diffraction angle λ/a,
+        // projected onto the screen at distance L, normalized by screen width W
+        // so the humps remain visible and properly scaled at nanometer dimensions.
+        // Dependencies: σ ∝ λ (broader at longer λ), σ ∝ 1/a (narrower at wider slit),
+        //               σ ∝ L (broader at larger screen distance).
         function generateClassicalData() {
             const numBins = 80;
             const L = state.screenDistance;
             const d_half = state.sep / 2;
+            const sigma = state.lambda * L / (2 * CONFIG.sceneWidth * state.slitWidth);
+            const twoSigSq = 2 * sigma * sigma;
             
-            // Generate classical pattern: P₁ + P₂
             const classicalRaw = [];
             for (let i = 0; i < numBins; i++) {
-                const x = ((i / numBins) - 0.5) * CONFIG.sceneWidth;
+                const x = (((i + 0.5) / numBins) - 0.5) * CONFIG.sceneWidth;
                 
-                // P₁: diffraction from slit 1 at -d/2
-                const theta1 = Math.atan((x + d_half) / L);
-                const beta1 = (Math.PI * state.slitWidth * Math.sin(theta1)) / state.lambda;
-                const p1 = Math.abs(beta1) > 0.001 ? Math.pow(Math.sin(beta1) / beta1, 2) : 1.0;
-                
-                // P₂: diffraction from slit 2 at +d/2
-                const theta2 = Math.atan((x - d_half) / L);
-                const beta2 = (Math.PI * state.slitWidth * Math.sin(theta2)) / state.lambda;
-                const p2 = Math.abs(beta2) > 0.001 ? Math.pow(Math.sin(beta2) / beta2, 2) : 1.0;
+                const p1 = Math.exp(-(x + d_half) * (x + d_half) / twoSigSq);
+                const p2 = Math.exp(-(x - d_half) * (x - d_half) / twoSigSq);
                 
                 classicalRaw.push(p1 + p2);
             }
             
-            // Normalize classical to peak = 0.5 (half of quantum peak = 1.0)
-            // Correctly represents classical 2I₀ vs quantum 4I₀
+            // Normalize classical peak to 1.0 so it matches the detected bar histogram
             const maxClassical = Math.max(...classicalRaw);
-            return classicalRaw.map(v => 0.5 * (v / maxClassical));
+            return classicalRaw.map(v => maxClassical > 0 ? v / maxClassical : 0);
         }
 
         function updateCombinedChart() {
-            const theoreticalData = generateTheoreticalData();
-            
-            combinedChart.data.datasets[1].data = theoreticalData;
-            combinedChart.data.datasets[0].data = getNormalizedHits();
-
-            // Update bar color to match current wavelength
-            combinedChart.data.datasets[0].backgroundColor = nmToCSSRGBA(getCurrentWavelengthNM(), 0.7);
-
-            // Update classical envelope when visible
             if (state.showClassical) {
+                combinedChart.data.datasets[0].data = getNormalizedClassicalHits();
+                combinedChart.data.datasets[0].backgroundColor = 'rgba(245, 158, 11, 0.7)';
                 combinedChart.data.datasets[2].data = generateClassicalData();
+            } else {
+                combinedChart.data.datasets[0].data = getNormalizedHits();
+                combinedChart.data.datasets[0].backgroundColor = nmToCSSRGBA(getCurrentWavelengthNM(), 0.7);
+                combinedChart.data.datasets[1].data = generateTheoreticalData();
             }
             
             combinedChart.update('none');
@@ -1397,29 +1391,58 @@
 
             classicalBtn.onclick = () => {
                 state.showClassical = !state.showClassical;
-                
+
                 if (state.showClassical) {
+                    // --- Switch to classical mode ---
                     classicalBtn.classList.add('active');
                     classicalBtn.textContent = 'Hide Classical Pattern';
+
+                    // Clear quantum screen (blank dark), show classical overlay
+                    screenContext.globalCompositeOperation = 'source-over';
+                    screenContext.fillStyle = '#1e293b';
+                    screenContext.fillRect(0, 0, CONFIG.screenRes.w, CONFIG.screenRes.h);
+                    screenTexture.needsUpdate = true;
+                    state.hits.fill(0);
+
                     classicalOverlayMesh.visible = true;
-                    // Clear overlay for fresh accumulation
                     clearClassicalOverlay();
                     state.classicalHits.fill(0);
-                    // Show classical envelope on chart
-                    combinedChart.data.datasets[2].hidden = false;
+
+                    // Chart: hide quantum datasets, show classical curve
+                    combinedChart.data.datasets[0].data = getNormalizedClassicalHits();
+                    combinedChart.data.datasets[0].backgroundColor = 'rgba(245, 158, 11, 0.7)';
+                    combinedChart.data.datasets[0].hidden = false;
+                    combinedChart.data.datasets[1].hidden = true;   // quantum theoretical
+                    combinedChart.data.datasets[2].hidden = false;  // classical Gaussian curve
                     combinedChart.data.datasets[2].data = generateClassicalData();
+
+                    // Legends: show classical, hide quantum
+                    document.getElementById('detected-legend').style.display = 'flex';
+                    document.getElementById('quantum-legend').style.display = 'none';
                     document.getElementById('classical-legend').style.display = 'flex';
                     combinedChart.update('none');
                 } else {
+                    // --- Switch back to quantum mode ---
                     classicalBtn.classList.remove('active');
                     classicalBtn.textContent = 'Show Classical Pattern';
+
                     classicalOverlayMesh.visible = false;
                     clearClassicalOverlay();
                     state.classicalHits.fill(0);
-                    // Hide classical envelope on chart
-                    combinedChart.data.datasets[2].hidden = true;
+
+                    // Chart: show quantum datasets, hide classical curve
+                    combinedChart.data.datasets[0].backgroundColor = nmToCSSRGBA(getCurrentWavelengthNM(), 0.7);
+                    combinedChart.data.datasets[0].hidden = false;
+                    combinedChart.data.datasets[1].hidden = false;  // quantum theoretical
+                    combinedChart.data.datasets[2].hidden = true;   // classical Gaussian curve
+
+                    // Legends: show quantum, hide classical
+                    document.getElementById('detected-legend').style.display = 'flex';
+                    document.getElementById('quantum-legend').style.display = 'flex';
                     document.getElementById('classical-legend').style.display = 'none';
-                    combinedChart.update('none');
+
+                    // Restart quantum accumulation from scratch
+                    resetSim();
                 }
             };
 
@@ -1436,13 +1459,29 @@
             }
 
             document.getElementById('slit-sep').oninput = (e) => {
-                const val = parseFloat(e.target.value);
+                const sepSlider = e.target;
+                const widthSlider = document.getElementById('slit-width');
+                let val = parseFloat(sepSlider.value);
+                const currentWidth = parseFloat(widthSlider.value);
+                const minGap = parseFloat(widthSlider.step) || 10;
+                if (val <= currentWidth) {
+                    val = currentWidth + minGap;
+                    sepSlider.value = val;
+                }
                 state.sep = val * NM_TO_SIM.sep;
                 document.getElementById('slit-sep-value').textContent = Math.round(val) + ' nm';
                 updateSimParams();
             };
             document.getElementById('slit-width').oninput = (e) => {
-                const val = parseFloat(e.target.value);
+                const widthSlider = e.target;
+                const sepSlider = document.getElementById('slit-sep');
+                let val = parseFloat(widthSlider.value);
+                const currentSep = parseFloat(sepSlider.value);
+                const minGap = parseFloat(widthSlider.step) || 10;
+                if (val >= currentSep) {
+                    val = currentSep - minGap;
+                    widthSlider.value = val;
+                }
                 state.slitWidth = val * NM_TO_SIM.width;
                 document.getElementById('slit-width-value').textContent = Math.round(val) + ' nm';
                 updateSimParams();
@@ -1506,7 +1545,11 @@
             renderer.render(scene, camera);
 
             if (time - (animate.lastFps || 0) > 250) {
-                combinedChart.data.datasets[0].data = getNormalizedHits();
+                if (state.showClassical) {
+                    combinedChart.data.datasets[0].data = getNormalizedClassicalHits();
+                } else {
+                    combinedChart.data.datasets[0].data = getNormalizedHits();
+                }
                 combinedChart.update('none');
                 animate.lastFps = time;
             }
