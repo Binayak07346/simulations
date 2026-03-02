@@ -1,0 +1,1095 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gaussian Wavepacket Time Evolution</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        body {
+            background: #0f172a;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Inter', sans-serif;
+            overflow: hidden;
+            color: #e2e8f0;
+            display: flex;
+            height: 100vh;
+            width: 100vw;
+        }
+
+        .main-area {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            min-width: 0;
+            overflow: hidden;
+        }
+
+        .header {
+            height: 48px;
+            background: rgba(15, 23, 42, 0.95);
+            backdrop-filter: blur(12px);
+            border-bottom: 1px solid rgba(148, 163, 184, 0.1);
+            display: flex;
+            align-items: center;
+            padding: 0 20px;
+            gap: 16px;
+            flex-shrink: 0;
+        }
+
+        .header-title-group {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            position: relative;
+        }
+
+        .header-title {
+            font-size: 15px;
+            font-weight: 600;
+            color: #f1f5f9;
+            white-space: nowrap;
+        }
+
+        .header-title span {
+            color: #60a5fa;
+        }
+
+        .header-controls {
+            display: flex;
+            gap: 8px;
+            margin-left: auto;
+        }
+
+        .header-btn {
+            padding: 6px 16px;
+            border: 1px solid rgba(148, 163, 184, 0.15);
+            border-radius: 6px;
+            background: rgba(148, 163, 184, 0.08);
+            color: #e2e8f0;
+            font-size: 12px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+            text-align: center;
+        }
+
+        .header-btn:hover {
+            background: rgba(148, 163, 184, 0.15);
+            border-color: rgba(148, 163, 184, 0.25);
+        }
+
+        .header-btn.primary {
+            background: rgba(59, 130, 246, 0.2);
+            border-color: rgba(59, 130, 246, 0.3);
+            color: #93bbfc;
+        }
+
+        .header-btn.primary:hover {
+            background: rgba(59, 130, 246, 0.3);
+        }
+
+        .header-btn.active {
+            background: rgba(59, 130, 246, 0.3);
+            border-color: #3b82f6;
+            color: #bdd4fe;
+        }
+
+        .header-btn.paused {
+            background: rgba(251, 191, 36, 0.2);
+            border-color: rgba(251, 191, 36, 0.4);
+            color: #fbbf24;
+        }
+
+        .plots-container {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            padding: 12px;
+            gap: 8px;
+            min-height: 0;
+        }
+
+        .plot-wrapper {
+            flex: 1;
+            background: rgba(15, 23, 42, 0.6);
+            border: 1px solid rgba(148, 163, 184, 0.08);
+            border-radius: 8px;
+            position: relative;
+            overflow: hidden;
+            min-height: 0;
+        }
+
+        .plot-label {
+            position: absolute;
+            top: 8px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 12px;
+            font-weight: 600;
+            color: #94a3b8;
+            z-index: 10;
+            pointer-events: none;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            background: rgba(15, 23, 42, 0.8);
+            padding: 2px 10px;
+            border-radius: 4px;
+        }
+
+        .plot-label .dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+        }
+
+        .plot-label .dot.real { background: #60a5fa; }
+        .plot-label .dot.imag { background: #a78bfa; }
+        .plot-label .dot.prob { background: #34d399; }
+
+        .plot-wrapper canvas {
+            width: 100%;
+            height: 100%;
+            display: block;
+        }
+
+        .legend-row {
+            position: absolute;
+            top: 6px;
+            right: 12px;
+            display: flex;
+            gap: 14px;
+            z-index: 10;
+            pointer-events: none;
+        }
+
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            font-size: 11px;
+            font-weight: 600;
+            color: #94a3b8;
+        }
+
+        .legend-item .ldot {
+            width: 10px;
+            height: 3px;
+            border-radius: 2px;
+        }
+
+        .legend-item.disabled {
+            opacity: 0.3;
+        }
+
+        /* Right Sidebar */
+        .sidebar {
+            width: 280px;
+            background: rgba(15, 23, 42, 0.95);
+            backdrop-filter: blur(12px);
+            border-left: 1px solid rgba(148, 163, 184, 0.1);
+            display: flex;
+            flex-direction: column;
+            flex-shrink: 0;
+            overflow-x: hidden;
+            overflow-y: auto;
+        }
+
+        .sidebar-section {
+            padding: 14px 16px;
+            border-bottom: 1px solid rgba(148, 163, 184, 0.08);
+        }
+
+        .sidebar-section:last-child {
+            border-bottom: none;
+        }
+
+        .section-title {
+            font-size: 11px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            color: #64748b;
+            margin-bottom: 12px;
+        }
+
+        .param-group {
+            margin-bottom: 12px;
+        }
+
+        .param-group:last-child {
+            margin-bottom: 0;
+        }
+
+        .param-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 5px;
+        }
+
+        .param-name {
+            font-size: 12px;
+            color: #94a3b8;
+            font-weight: 500;
+        }
+
+        .param-value {
+            font-size: 12px;
+            color: #e2e8f0;
+            font-weight: 600;
+            font-variant-numeric: tabular-nums;
+            background: rgba(148, 163, 184, 0.1);
+            padding: 2px 8px;
+            border-radius: 4px;
+        }
+
+        .slider-container {
+            position: relative;
+        }
+
+        input[type="range"] {
+            width: 100%;
+            height: 6px;
+            -webkit-appearance: none;
+            appearance: none;
+            background: rgba(148, 163, 184, 0.15);
+            border-radius: 3px;
+            outline: none;
+            cursor: pointer;
+        }
+
+        input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            width: 16px;
+            height: 16px;
+            background: #3b82f6;
+            border-radius: 50%;
+            cursor: pointer;
+            box-shadow: 0 0 8px rgba(59, 130, 246, 0.4);
+            transition: transform 0.15s, box-shadow 0.15s;
+        }
+
+        input[type="range"]::-webkit-slider-thumb:hover {
+            transform: scale(1.2);
+            box-shadow: 0 0 12px rgba(59, 130, 246, 0.6);
+        }
+
+        input[type="range"]::-moz-range-thumb {
+            width: 16px;
+            height: 16px;
+            background: #3b82f6;
+            border-radius: 50%;
+            cursor: pointer;
+            border: none;
+            box-shadow: 0 0 8px rgba(59, 130, 246, 0.4);
+        }
+
+        .toggle-group {
+            margin-bottom: 12px;
+        }
+
+        .toggle-row-sidebar {
+            display: flex;
+            gap: 8px;
+            margin-top: 5px;
+        }
+
+        .toggle-btn-sidebar {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            padding: 5px 12px;
+            border-radius: 5px;
+            font-size: 12px;
+            font-weight: 600;
+            cursor: pointer;
+            border: 1px solid rgba(148, 163, 184, 0.15);
+            background: rgba(148, 163, 184, 0.08);
+            color: #94a3b8;
+            transition: all 0.2s;
+            user-select: none;
+        }
+
+        .toggle-btn-sidebar.active-real {
+            background: rgba(96, 165, 250, 0.2);
+            border-color: rgba(96, 165, 250, 0.4);
+            color: #60a5fa;
+        }
+
+        .toggle-btn-sidebar.active-imag {
+            background: rgba(167, 139, 250, 0.2);
+            border-color: rgba(167, 139, 250, 0.4);
+            color: #a78bfa;
+        }
+
+        .toggle-btn-sidebar:hover {
+            background: rgba(148, 163, 184, 0.15);
+        }
+
+        .toggle-btn-sidebar .tdot {
+            width: 7px;
+            height: 7px;
+            border-radius: 50%;
+        }
+
+        .btn-row {
+            display: flex;
+            gap: 8px;
+        }
+
+        .btn {
+            flex: 1;
+            padding: 8px 12px;
+            border: 1px solid rgba(148, 163, 184, 0.15);
+            border-radius: 6px;
+            background: rgba(148, 163, 184, 0.08);
+            color: #e2e8f0;
+            font-size: 12px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+            text-align: center;
+        }
+
+        .btn:hover {
+            background: rgba(148, 163, 184, 0.15);
+            border-color: rgba(148, 163, 184, 0.25);
+        }
+
+        .btn.primary {
+            background: rgba(59, 130, 246, 0.2);
+            border-color: rgba(59, 130, 246, 0.3);
+            color: #93bbfc;
+        }
+
+        .btn.primary:hover {
+            background: rgba(59, 130, 246, 0.3);
+        }
+
+        .btn.active {
+            background: rgba(59, 130, 246, 0.3);
+            border-color: #3b82f6;
+            color: #bdd4fe;
+        }
+
+        .btn.paused {
+            background: rgba(251, 191, 36, 0.2);
+            border-color: rgba(251, 191, 36, 0.4);
+            color: #fbbf24;
+        }
+
+        .info-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 6px;
+        }
+
+        .info-card {
+            background: rgba(148, 163, 184, 0.05);
+            border: 1px solid rgba(148, 163, 184, 0.08);
+            border-radius: 6px;
+            padding: 6px 10px;
+        }
+
+        .info-card .label {
+            font-size: 10px;
+            color: #64748b;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .info-card .value {
+            font-size: 13px;
+            font-weight: 700;
+            color: #e2e8f0;
+            font-variant-numeric: tabular-nums;
+            margin-top: 1px;
+        }
+
+        .info-card .value.blue { color: #60a5fa; }
+        .info-card .value.green { color: #34d399; }
+        .info-card .value.purple { color: #a78bfa; }
+        .info-card .value.amber { color: #fbbf24; }
+
+        .atomic-units-badge {
+            display: inline-block;
+            background: rgba(251, 191, 36, 0.15);
+            border: 1px solid rgba(251, 191, 36, 0.3);
+            border-radius: 4px;
+            padding: 2px 8px;
+            font-size: 10px;
+            font-weight: 600;
+            color: #fbbf24;
+            margin-bottom: 10px;
+        }
+
+        .about-section {
+            padding: 14px 16px;
+            border-top: 1px solid rgba(148, 163, 184, 0.08);
+        }
+
+        .about-section .section-title {
+            margin-bottom: 10px;
+        }
+
+        .about-text {
+            font-size: 11.5px;
+            line-height: 1.65;
+            color: #94a3b8;
+        }
+
+        .about-text strong {
+            color: #cbd5e1;
+            font-weight: 600;
+        }
+
+        .about-text .highlight {
+            color: #60a5fa;
+        }
+
+        .about-equation {
+            background: rgba(148, 163, 184, 0.05);
+            border: 1px solid rgba(148, 163, 184, 0.08);
+            border-radius: 6px;
+            padding: 8px 8px;
+            margin-top: 10px;
+            text-align: center;
+            line-height: 1.8;
+            overflow-x: auto;
+            overflow-y: hidden;
+        }
+
+        .about-equation .katex-line {
+            margin-bottom: 2px;
+        }
+
+        .about-equation .katex {
+            font-size: 0.75em;
+        }
+
+        @media (max-width: 900px) {
+            .sidebar {
+                width: 240px;
+            }
+            .about-equation .katex {
+                font-size: 0.65em;
+            }
+        }
+
+        @media (max-width: 700px) {
+            body {
+                flex-direction: column;
+            }
+            .sidebar {
+                width: 100%;
+                max-height: 45vh;
+                border-left: none;
+                border-top: 1px solid rgba(148, 163, 184, 0.1);
+                flex-direction: column;
+                overflow-x: hidden;
+                overflow-y: auto;
+                flex-shrink: 0;
+            }
+            .main-area {
+                flex: 1;
+                min-height: 0;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="main-area">
+        <div class="header">
+            <div class="header-title-group">
+                <div class="header-title">⚛ Gaussian Wavepacket <span>Time Evolution</span></div>
+            </div>
+            <div class="header-controls">
+                <button class="header-btn primary active" id="playBtn">⏸ Pause</button>
+                <button class="header-btn" id="resetBtn">⟲ Reset</button>
+            </div>
+        </div>
+        <div class="plots-container">
+            <div class="plot-wrapper" style="flex: 1.2;">
+                <div class="plot-label">ψ(x,t) Components</div>
+                <div class="legend-row">
+                    <div class="legend-item" id="legendReal"><span class="ldot" style="background:#60a5fa;"></span> Re[ψ]</div>
+                    <div class="legend-item" id="legendImag"><span class="ldot" style="background:#a78bfa;"></span> Im[ψ]</div>
+                </div>
+                <canvas id="canvasWave"></canvas>
+            </div>
+            <div class="plot-wrapper" id="probPlotWrapper">
+                <div class="plot-label"><span class="dot prob"></span>|ψ(x,t)|²</div>
+                <canvas id="canvasProb"></canvas>
+            </div>
+        </div>
+    </div>
+
+    <div class="sidebar">
+        <div class="sidebar-section">
+            <div class="section-title">⚙ Parameters</div>
+            <div class="atomic-units-badge">Atomic Units: ℏ = 1, a₀ = 1</div>
+
+            <div class="param-group">
+                <div class="param-header">
+                    <span class="param-name">Initial Position x₀ (a₀)</span>
+                    <span class="param-value" id="x0Value">-15.0</span>
+                </div>
+                <input type="range" id="x0Slider" min="-30" max="10" step="0.5" value="-15.0">
+            </div>
+
+            <div class="param-group">
+                <div class="param-header">
+                    <span class="param-name">Initial Momentum k₀ (a₀⁻¹)</span>
+                    <span class="param-value" id="k0Value">5.0</span>
+                </div>
+                <input type="range" id="k0Slider" min="-15" max="15" step="0.1" value="5.0">
+            </div>
+
+            <div class="param-group">
+                <div class="param-header">
+                    <span class="param-name">Width σ (a₀)</span>
+                    <span class="param-value" id="sigmaValue">1.00</span>
+                </div>
+                <input type="range" id="sigmaSlider" min="0.2" max="5.0" step="0.05" value="1.0">
+            </div>
+
+            <div class="param-group">
+                <div class="param-header">
+                    <span class="param-name">Mass m (mₑ)</span>
+                    <span class="param-value" id="massValue">1.0</span>
+                </div>
+                <input type="range" id="massSlider" min="0.1" max="10.0" step="0.1" value="1.0">
+            </div>
+
+            <div class="param-group">
+                <div class="param-header">
+                    <span class="param-name">Time Speed</span>
+                    <span class="param-value" id="speedValue">1.0</span>
+                </div>
+                <input type="range" id="speedSlider" min="0.0" max="5.0" step="0.1" value="1.0">
+            </div>
+        </div>
+
+        <div class="sidebar-section">
+            <div class="section-title">👁 Display</div>
+            <div class="toggle-group">
+                <div class="param-name" style="margin-bottom:6px;">Wavefunction Components</div>
+                <div class="toggle-row-sidebar">
+                    <div class="toggle-btn-sidebar active-real" id="toggleReal"><span class="tdot" style="background:#60a5fa;"></span> Re[ψ]</div>
+                    <div class="toggle-btn-sidebar active-imag" id="toggleImag"><span class="tdot" style="background:#a78bfa;"></span> Im[ψ]</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="sidebar-section">
+            <div class="section-title">📊 Live Metrics</div>
+            <div class="info-grid">
+                <div class="info-card">
+                    <div class="label">Time (a.u.)</div>
+                    <div class="value blue" id="timeDisplay">0.00</div>
+                </div>
+                <div class="info-card">
+                    <div class="label">⟨x⟩ (a₀)</div>
+                    <div class="value blue" id="meanXDisplay">0.00</div>
+                </div>
+                <div class="info-card">
+                    <div class="label">Δx (a₀)</div>
+                    <div class="value amber" id="spreadDisplay">0.000</div>
+                </div>
+                <div class="info-card">
+                    <div class="label">Peak |ψ|²</div>
+                    <div class="value green" id="peakProb">0.00</div>
+                </div>
+                <div class="info-card">
+                    <div class="label">Group Vel.</div>
+                    <div class="value blue" id="groupVel">0.00</div>
+                </div>
+                <div class="info-card">
+                    <div class="label">Phase Vel.</div>
+                    <div class="value purple" id="phaseVel">0.00</div>
+                </div>
+                <div class="info-card">
+                    <div class="label">Norm</div>
+                    <div class="value amber" id="normVal">1.00</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="about-section">
+            <div class="section-title">ℹ About</div>
+            <div class="about-text">
+                This simulation visualizes the <strong>time evolution of a free Gaussian wavepacket</strong> in quantum mechanics, computed in <span class="highlight">atomic units</span> (ℏ = m_e = a₀ = 1).
+                <br><br>
+                A Gaussian wavepacket represents a quantum particle localized in both position and momentum space. As time progresses, the packet <strong>propagates</strong> at the group velocity v<sub>g</sub> = k₀/m while simultaneously <strong>spreading</strong> due to dispersion — a hallmark of quantum mechanics with no classical analog.
+                <br><br>
+                The upper plot shows the <span class="highlight">real</span> and <span class="highlight" style="color:#a78bfa;">imaginary</span> components of ψ(x,t), while the lower plot shows the <strong>probability density</strong> |ψ|². Adjust the parameters to explore how initial position, momentum, width, and mass affect the dynamics.
+            </div>
+            <div class="about-equation" id="aboutEquationBox"></div>
+        </div>
+    </div>
+
+    <script>
+    (function() {
+        // Render LaTeX equations in the About section
+        function renderAboutEquations() {
+            const box = document.getElementById('aboutEquationBox');
+            const equations = [
+                '\\psi(x,t) = N(t)\\, e^{-\\frac{(x - x_0 - v_g t)^2}{2\\alpha(t)} + i k_0 x}',
+                '\\alpha(t) = 2\\sigma^2 + \\frac{it}{m}'
+            ];
+            box.innerHTML = '';
+            equations.forEach(eq => {
+                const div = document.createElement('div');
+                div.className = 'katex-line';
+                katex.render(eq, div, { displayMode: true, throwOnError: false, output: 'html' });
+                box.appendChild(div);
+            });
+        }
+
+        // Wait for KaTeX to load, then render
+        if (typeof katex !== 'undefined') {
+            renderAboutEquations();
+        } else {
+            window.addEventListener('load', renderAboutEquations);
+        }
+
+        // Parameters (Atomic Units: ℏ = 1)
+        const hbar = 1.0;
+        let x0 = -15.0;
+        let k0 = 5.0;
+        let sigma = 1.0;
+        let mass = 1.0;
+        let timeSpeed = 1.0;
+        let simTime = 0;
+        let playing = true;
+
+        // Toggle states for Re/Im
+        let showReal = true;
+        let showImag = true;
+
+        // Canvas references
+        const canvasWave = document.getElementById('canvasWave');
+        const canvasProb = document.getElementById('canvasProb');
+        const probPlotWrapper = document.getElementById('probPlotWrapper');
+
+        const ctxWave = canvasWave.getContext('2d');
+        const ctxProb = canvasProb.getContext('2d');
+
+        // DOM elements
+        const x0Slider = document.getElementById('x0Slider');
+        const k0Slider = document.getElementById('k0Slider');
+        const sigmaSlider = document.getElementById('sigmaSlider');
+        const massSlider = document.getElementById('massSlider');
+        const speedSlider = document.getElementById('speedSlider');
+        const playBtn = document.getElementById('playBtn');
+        const resetBtn = document.getElementById('resetBtn');
+        const toggleRealBtn = document.getElementById('toggleReal');
+        const toggleImagBtn = document.getElementById('toggleImag');
+        const legendReal = document.getElementById('legendReal');
+        const legendImag = document.getElementById('legendImag');
+
+        // Function to update probability plot visibility
+        function updateProbPlotVisibility() {
+            if (!showReal && !showImag) {
+                probPlotWrapper.style.display = 'none';
+            } else {
+                probPlotWrapper.style.display = '';
+            }
+        }
+
+        // Toggle button event listeners
+        toggleRealBtn.addEventListener('click', function() {
+            showReal = !showReal;
+            if (showReal) {
+                this.classList.add('active-real');
+                legendReal.classList.remove('disabled');
+            } else {
+                this.classList.remove('active-real');
+                legendReal.classList.add('disabled');
+            }
+            updateProbPlotVisibility();
+        });
+
+        toggleImagBtn.addEventListener('click', function() {
+            showImag = !showImag;
+            if (showImag) {
+                this.classList.add('active-imag');
+                legendImag.classList.remove('disabled');
+            } else {
+                this.classList.remove('active-imag');
+                legendImag.classList.add('disabled');
+            }
+            updateProbPlotVisibility();
+        });
+
+        function resetSimulation() {
+            simTime = 0;
+        }
+
+        function updatePlayBtnAppearance() {
+            if (playing) {
+                playBtn.textContent = '⏸ Pause';
+                playBtn.classList.add('active');
+                playBtn.classList.remove('paused');
+            } else {
+                playBtn.textContent = '▶ Play';
+                playBtn.classList.remove('active');
+                playBtn.classList.add('paused');
+            }
+        }
+
+        x0Slider.addEventListener('input', function() {
+            x0 = parseFloat(this.value);
+            document.getElementById('x0Value').textContent = x0.toFixed(1);
+            resetSimulation();
+        });
+        k0Slider.addEventListener('input', function() {
+            k0 = parseFloat(this.value);
+            document.getElementById('k0Value').textContent = k0.toFixed(1);
+            resetSimulation();
+        });
+        sigmaSlider.addEventListener('input', function() {
+            sigma = parseFloat(this.value);
+            document.getElementById('sigmaValue').textContent = sigma.toFixed(2);
+            resetSimulation();
+        });
+        massSlider.addEventListener('input', function() {
+            mass = parseFloat(this.value);
+            document.getElementById('massValue').textContent = mass.toFixed(1);
+            resetSimulation();
+        });
+        speedSlider.addEventListener('input', function() {
+            timeSpeed = parseFloat(this.value);
+            document.getElementById('speedValue').textContent = timeSpeed.toFixed(1);
+        });
+
+        playBtn.addEventListener('click', function() {
+            playing = !playing;
+            updatePlayBtnAppearance();
+        });
+
+        resetBtn.addEventListener('click', function() {
+            resetSimulation();
+            playing = true;
+            updatePlayBtnAppearance();
+        });
+
+        updatePlayBtnAppearance();
+
+        function resizeCanvases() {
+            const dpr = window.devicePixelRatio || 1;
+            [canvasWave, canvasProb].forEach(c => {
+                const rect = c.parentElement.getBoundingClientRect();
+                c.width = rect.width * dpr;
+                c.height = rect.height * dpr;
+                c.getContext('2d').setTransform(dpr, 0, 0, dpr, 0, 0);
+            });
+        }
+
+        window.addEventListener('resize', resizeCanvases);
+        resizeCanvases();
+
+        function computeWavefunction(x, t) {
+            const sigma2 = sigma * sigma;
+            const sigmaT_re = 2 * sigma2;
+            const sigmaT_im = hbar * t / mass;
+
+            const denom = sigmaT_re * sigmaT_re + sigmaT_im * sigmaT_im;
+            const invSigmaT_re = sigmaT_re / denom;
+            const invSigmaT_im = -sigmaT_im / denom;
+
+            const vg = hbar * k0 / mass;
+            const x_shifted = x - x0 - vg * t;
+
+            const x2 = x_shifted * x_shifted;
+            const expArg_re = -0.5 * x2 * invSigmaT_re;
+            const expArg_im = -0.5 * x2 * invSigmaT_im;
+
+            const phase = k0 * (x - x0) - hbar * k0 * k0 * t / (2 * mass);
+
+            const total_re = expArg_re;
+            const total_im = expArg_im + phase;
+
+            const expMag = Math.exp(total_re);
+            const psi_re = expMag * Math.cos(total_im);
+            const psi_im = expMag * Math.sin(total_im);
+
+            const norm_mag = 1.0 / (Math.pow(2 * Math.PI * sigma2, 0.25) * Math.pow(denom, 0.25));
+            const norm_phase = -0.5 * Math.atan2(sigmaT_im, sigmaT_re);
+            const norm_re = norm_mag * Math.cos(norm_phase);
+            const norm_im = norm_mag * Math.sin(norm_phase);
+
+            const final_re = norm_re * psi_re - norm_im * psi_im;
+            const final_im = norm_re * psi_im + norm_im * psi_re;
+
+            return { re: final_re, im: final_im };
+        }
+
+        function drawPlot(ctx, canvas, datasets, yRange, xMin, xMax, xAxisLabel) {
+            const dpr = window.devicePixelRatio || 1;
+            const w = canvas.width / dpr;
+            const h = canvas.height / dpr;
+
+            ctx.clearRect(0, 0, w, h);
+            ctx.fillStyle = '#0f172a';
+            ctx.fillRect(0, 0, w, h);
+
+            const gridColor = 'rgba(148, 163, 184, 0.06)';
+            const axisColor = 'rgba(148, 163, 184, 0.15)';
+
+            const margin = { left: 50, right: 15, top: 32, bottom: 28 };
+            const plotW = w - margin.left - margin.right;
+            const plotH = h - margin.top - margin.bottom;
+            if (plotW <= 0 || plotH <= 0) return;
+
+            ctx.strokeStyle = gridColor;
+            ctx.lineWidth = 1;
+            const numHLines = 6;
+            for (let i = 0; i <= numHLines; i++) {
+                const y = margin.top + (plotH / numHLines) * i;
+                ctx.beginPath();
+                ctx.moveTo(margin.left, y);
+                ctx.lineTo(w - margin.right, y);
+                ctx.stroke();
+            }
+
+            const numVLines = 10;
+            for (let i = 0; i <= numVLines; i++) {
+                const x = margin.left + (plotW / numVLines) * i;
+                ctx.beginPath();
+                ctx.moveTo(x, margin.top);
+                ctx.lineTo(x, h - margin.bottom);
+                ctx.stroke();
+            }
+
+            ctx.strokeStyle = axisColor;
+            ctx.lineWidth = 1;
+            const zeroY = margin.top + plotH * (yRange[1] / (yRange[1] - yRange[0]));
+            if (zeroY >= margin.top && zeroY <= margin.top + plotH) {
+                ctx.beginPath();
+                ctx.moveTo(margin.left, zeroY);
+                ctx.lineTo(w - margin.right, zeroY);
+                ctx.stroke();
+            }
+
+            ctx.fillStyle = '#475569';
+            ctx.font = '10px -apple-system, sans-serif';
+            ctx.textAlign = 'right';
+            for (let i = 0; i <= numHLines; i++) {
+                const val = yRange[1] - (yRange[1] - yRange[0]) * (i / numHLines);
+                const y = margin.top + (plotH / numHLines) * i;
+                ctx.fillText(val.toFixed(2), margin.left - 5, y + 3);
+            }
+
+            ctx.fillStyle = '#475569';
+            ctx.font = '10px -apple-system, sans-serif';
+            ctx.textAlign = 'center';
+            const xRange = xMax - xMin;
+            let xTickStep = 5;
+            if (xRange <= 10) xTickStep = 1;
+            else if (xRange <= 20) xTickStep = 2;
+            else if (xRange <= 50) xTickStep = 5;
+            else if (xRange <= 100) xTickStep = 10;
+            else xTickStep = 20;
+
+            const firstTick = Math.ceil(xMin / xTickStep) * xTickStep;
+            for (let xVal = firstTick; xVal <= xMax; xVal += xTickStep) {
+                const px = margin.left + ((xVal - xMin) / xRange) * plotW;
+                if (px >= margin.left && px <= margin.left + plotW) {
+                    ctx.strokeStyle = 'rgba(148, 163, 184, 0.2)';
+                    ctx.beginPath();
+                    ctx.moveTo(px, margin.top + plotH);
+                    ctx.lineTo(px, margin.top + plotH + 4);
+                    ctx.stroke();
+                    ctx.fillText(xVal.toFixed(0), px, margin.top + plotH + 15);
+                }
+            }
+
+            if (xAxisLabel) {
+                ctx.fillStyle = '#64748b';
+                ctx.font = '10px -apple-system, sans-serif';
+                ctx.textAlign = 'right';
+                ctx.fillText(xAxisLabel, w - margin.right, margin.top + plotH + 24);
+            }
+
+            for (const ds of datasets) {
+                const data = ds.data;
+                const color = ds.color;
+                const fillColor = ds.fillColor;
+
+                if (data.length < 2) continue;
+
+                if (fillColor) {
+                    ctx.beginPath();
+                    const baseY = Math.min(Math.max(zeroY, margin.top), margin.top + plotH);
+                    ctx.moveTo(margin.left, baseY);
+                    for (let i = 0; i < data.length; i++) {
+                        const px = margin.left + (i / (data.length - 1)) * plotW;
+                        const val = data[i];
+                        const py = margin.top + plotH * (1 - (val - yRange[0]) / (yRange[1] - yRange[0]));
+                        const clampedPy = Math.min(Math.max(py, margin.top), margin.top + plotH);
+                        ctx.lineTo(px, clampedPy);
+                    }
+                    ctx.lineTo(margin.left + plotW, baseY);
+                    ctx.closePath();
+
+                    const grad = ctx.createLinearGradient(0, margin.top, 0, margin.top + plotH);
+                    grad.addColorStop(0, fillColor);
+                    grad.addColorStop(1, 'rgba(15, 23, 42, 0)');
+                    ctx.fillStyle = grad;
+                    ctx.fill();
+                }
+
+                ctx.beginPath();
+                for (let i = 0; i < data.length; i++) {
+                    const px = margin.left + (i / (data.length - 1)) * plotW;
+                    const val = data[i];
+                    const py = margin.top + plotH * (1 - (val - yRange[0]) / (yRange[1] - yRange[0]));
+                    const clampedPy = Math.min(Math.max(py, margin.top), margin.top + plotH);
+                    if (i === 0) ctx.moveTo(px, clampedPy);
+                    else ctx.lineTo(px, clampedPy);
+                }
+                ctx.strokeStyle = color;
+                ctx.lineWidth = 2;
+                ctx.stroke();
+
+                ctx.strokeStyle = color;
+                ctx.lineWidth = 1;
+                ctx.globalAlpha = 0.3;
+                ctx.shadowColor = color;
+                ctx.shadowBlur = 8;
+                ctx.beginPath();
+                for (let i = 0; i < data.length; i++) {
+                    const px = margin.left + (i / (data.length - 1)) * plotW;
+                    const val = data[i];
+                    const py = margin.top + plotH * (1 - (val - yRange[0]) / (yRange[1] - yRange[0]));
+                    const clampedPy = Math.min(Math.max(py, margin.top), margin.top + plotH);
+                    if (i === 0) ctx.moveTo(px, clampedPy);
+                    else ctx.lineTo(px, clampedPy);
+                }
+                ctx.stroke();
+                ctx.globalAlpha = 1;
+                ctx.shadowBlur = 0;
+            }
+
+            ctx.strokeStyle = 'rgba(148, 163, 184, 0.08)';
+            ctx.lineWidth = 1;
+            ctx.strokeRect(margin.left, margin.top, plotW, plotH);
+        }
+
+        const numPoints = 1200;
+        const xMin = -40;
+        const xMax = 60;
+        const dx = (xMax - xMin) / (numPoints - 1);
+
+        let lastTime = performance.now();
+
+        function animate(timestamp) {
+            requestAnimationFrame(animate);
+
+            const dt = (timestamp - lastTime) / 1000;
+            lastTime = timestamp;
+            const clampedDt = Math.min(dt, 0.1);
+
+            if (playing) {
+                simTime += clampedDt * timeSpeed;
+            }
+
+            // Compute wavefunction
+            const realData = new Float64Array(numPoints);
+            const imagData = new Float64Array(numPoints);
+            const probData = new Float64Array(numPoints);
+
+            let maxProb = 0;
+            let meanX = 0;
+            let totalProb = 0;
+            let maxReal = 0;
+            let maxImag = 0;
+
+            for (let i = 0; i < numPoints; i++) {
+                const x = xMin + i * dx;
+                const psi = computeWavefunction(x, simTime);
+                realData[i] = psi.re;
+                imagData[i] = psi.im;
+                const prob = psi.re * psi.re + psi.im * psi.im;
+                probData[i] = prob;
+
+                if (prob > maxProb) maxProb = prob;
+                if (Math.abs(psi.re) > maxReal) maxReal = Math.abs(psi.re);
+                if (Math.abs(psi.im) > maxImag) maxImag = Math.abs(psi.im);
+
+                meanX += x * prob * dx;
+                totalProb += prob * dx;
+            }
+
+            if (totalProb > 0) meanX /= totalProb;
+
+            let variance = 0;
+            for (let i = 0; i < numPoints; i++) {
+                const x = xMin + i * dx;
+                variance += (x - meanX) * (x - meanX) * probData[i] * dx;
+            }
+            if (totalProb > 0) variance /= totalProb;
+            const spread = Math.sqrt(variance);
+
+            const yMaxRI = Math.max(maxReal, maxImag, 0.1) * 1.3;
+            const yMaxP = Math.max(maxProb, 0.01) * 1.2;
+
+            const waveDatasets = [];
+            if (showReal) {
+                waveDatasets.push({
+                    data: realData,
+                    color: '#60a5fa',
+                    fillColor: 'rgba(96, 165, 250, 0.07)'
+                });
+            }
+            if (showImag) {
+                waveDatasets.push({
+                    data: imagData,
+                    color: '#a78bfa',
+                    fillColor: 'rgba(167, 139, 250, 0.07)'
+                });
+            }
+
+            drawPlot(ctxWave, canvasWave, waveDatasets, [-yMaxRI, yMaxRI], xMin, xMax, 'x (a₀)');
+
+            // Only draw probability plot if at least one component is shown
+            if (showReal || showImag) {
+                drawPlot(ctxProb, canvasProb, [{
+                    data: probData,
+                    color: '#34d399',
+                    fillColor: 'rgba(52, 211, 153, 0.15)'
+                }], [0, yMaxP], xMin, xMax, 'x (a₀)');
+            } else {
+                // Clear the probability canvas when both are off
+                const dpr = window.devicePixelRatio || 1;
+                const pw = canvasProb.width / dpr;
+                const ph = canvasProb.height / dpr;
+                ctxProb.clearRect(0, 0, pw, ph);
+                ctxProb.fillStyle = '#0f172a';
+                ctxProb.fillRect(0, 0, pw, ph);
+            }
+
+            // Update stats
+            document.getElementById('timeDisplay').textContent = simTime.toFixed(2);
+            document.getElementById('meanXDisplay').textContent = meanX.toFixed(2);
+            document.getElementById('spreadDisplay').textContent = spread.toFixed(3);
+            document.getElementById('peakProb').textContent = maxProb.toFixed(4);
+
+            const vg = hbar * k0 / mass;
+            const vp = hbar * k0 / (2 * mass);
+            document.getElementById('groupVel').textContent = vg.toFixed(2);
+            document.getElementById('phaseVel').textContent = vp.toFixed(2);
+            document.getElementById('normVal').textContent = totalProb.toFixed(4);
+        }
+
+        requestAnimationFrame(animate);
+    })();
+    </script>
+</body>
+</html>
