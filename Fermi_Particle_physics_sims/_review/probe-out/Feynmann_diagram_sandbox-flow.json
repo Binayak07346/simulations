@@ -1,0 +1,986 @@
+{
+  "errors": [],
+  "log": [
+    {
+      "label": "00-initial",
+      "step": "1 · A Feynman diagram is a topology",
+      "nextDisabled": false,
+      "pagerNextDisabled": false,
+      "q2slider": "-1",
+      "q2label": "-1.000",
+      "force": "QED",
+      "alpha": "7.297e-3",
+      "N": "1",
+      "amp": "8.542e-2",
+      "prob": "7.297e-3",
+      "vlog": "V1 · e⁻ e⁺ γ\n×√α = 8.54e-2",
+      "med": "no internal line",
+      "mass": "—",
+      "off": "—",
+      "prop": "—",
+      "onShell": "—",
+      "reason": "Single-vertex diagram: no internal line to be virtual.",
+      "refusal": {
+        "show": false,
+        "display": "none",
+        "text": ""
+      },
+      "allowed": {
+        "show": true,
+        "display": "block",
+        "text": "ALLOWED · ELECTROMAGNETIC\nEvery conservation rule passes."
+      },
+      "dragBtn": "✥ Drag a vertex",
+      "presetActive": [
+        "e⁻ · e⁺ · γ  (QED vertex)"
+      ],
+      "playVisible": false,
+      "errors": []
+    },
+    {
+      "label": "01-tchannel",
+      "step": "1 · A Feynman diagram is a topology",
+      "nextDisabled": false,
+      "pagerNextDisabled": false,
+      "q2slider": "-1",
+      "q2label": "-1.000",
+      "force": "QED",
+      "alpha": "7.297e-3",
+      "N": "2",
+      "amp": "7.297e-3",
+      "prob": "5.325e-5",
+      "vlog": "V1 · e⁻ e⁻ γ (top)\n×√α = 8.54e-2\nV2 · e⁻ e⁻ γ (bottom)\n×√α = 8.54e-2",
+      "med": "photon",
+      "mass": "0.000",
+      "off": "1.000",
+      "prop": "-1.000e+0",
+      "onShell": "no — virtual",
+      "reason": "off shell: the further from q² = m², the smaller the amplitude — q² is normally fixed by external kinematics; this slider is a \"what-if\" probe.",
+      "refusal": {
+        "show": false,
+        "display": "none",
+        "text": ""
+      },
+      "allowed": {
+        "show": true,
+        "display": "block",
+        "text": "ALLOWED · ELECTROMAGNETIC\nEvery conservation rule passes."
+      },
+      "dragBtn": "✥ Drag a vertex",
+      "presetActive": [
+        "e⁻e⁻ → e⁻e⁻  (t-channel)"
+      ],
+      "playVisible": false,
+      "errors": []
+    },
+    {
+      "label": "02-tchannel-q2-zero",
+      "step": "1 · A Feynman diagram is a topology",
+      "nextDisabled": false,
+      "pagerNextDisabled": false,
+      "q2slider": "0",
+      "q2label": "0.000",
+      "force": "QED",
+      "alpha": "7.297e-3",
+      "N": "2",
+      "amp": "7.297e-3",
+      "prob": "5.325e-5",
+      "vlog": "V1 · e⁻ e⁻ γ (top)\n×√α = 8.54e-2\nV2 · e⁻ e⁻ γ (bottom)\n×√α = 8.54e-2",
+      "med": "photon",
+      "mass": "0.000",
+      "off": "0.000",
+      "prop": "∞ (on shell!)",
+      "onShell": "YES — pole",
+      "reason": "q² = m²: the mediator is ON shell — a real particle, not a virtual exchange — q² is normally fixed by external kinematics; this slider is a \"what-if\" probe.",
+      "refusal": {
+        "show": false,
+        "display": "none",
+        "text": ""
+      },
+      "allowed": {
+        "show": true,
+        "display": "block",
+        "text": "ALLOWED · ELECTROMAGNETIC\nEvery conservation rule passes."
+      },
+      "dragBtn": "✥ Drag a vertex",
+      "presetActive": [
+        "e⁻e⁻ → e⁻e⁻  (t-channel)"
+      ],
+      "playVisible": false,
+      "q2AfterT": {
+        "slider": "0",
+        "label": "0.000",
+        "med": "photon",
+        "prop": "∞ (on shell!)",
+        "on": "YES — pole",
+        "N": "2",
+        "preset": [
+          "e⁻e⁻ → e⁻e⁻  (t-channel)"
+        ],
+        "allowed": true,
+        "refusal": ""
+      },
+      "errors": []
+    },
+    {
+      "label": "03-weak-cc",
+      "step": "1 · A Feynman diagram is a topology",
+      "nextDisabled": false,
+      "pagerNextDisabled": false,
+      "q2slider": "0",
+      "q2label": "0.000",
+      "force": "Weak (unified α_w, simplified)",
+      "alpha": "3.380e-2",
+      "N": "1",
+      "amp": "1.838e-1",
+      "prob": "3.380e-2",
+      "vlog": "V1 · e⁻ ν̄ₑ W⁻\n×√α = 1.84e-1",
+      "med": "no internal line",
+      "mass": "—",
+      "off": "—",
+      "prop": "—",
+      "onShell": "—",
+      "reason": "Single-vertex diagram: no internal line to be virtual.",
+      "refusal": {
+        "show": false,
+        "display": "none",
+        "text": ""
+      },
+      "allowed": {
+        "show": true,
+        "display": "block",
+        "text": "ALLOWED · WEAK-CHARGED\nEvery conservation rule passes."
+      },
+      "dragBtn": "✥ Drag a vertex",
+      "presetActive": [
+        "e⁻ · ν̄ₑ · W⁻  (charged current)"
+      ],
+      "playVisible": false,
+      "errors": []
+    },
+    {
+      "label": "04-fcnc",
+      "step": "1 · A Feynman diagram is a topology",
+      "nextDisabled": false,
+      "pagerNextDisabled": false,
+      "q2slider": "0",
+      "q2label": "0.000",
+      "force": "QED",
+      "alpha": "7.297e-3",
+      "N": "0",
+      "amp": "0 (refused)",
+      "prob": "0 (refused)",
+      "vlog": "V1 · γ e⁻ μ⁺\n× 0 (refused)",
+      "med": "no internal line",
+      "mass": "—",
+      "off": "—",
+      "prop": "—",
+      "onShell": "—",
+      "reason": "Single-vertex diagram: no internal line to be virtual.",
+      "refusal": {
+        "show": true,
+        "display": "block",
+        "text": "REFUSED · FLAVOUR CONSERVATION\nthe photon couples a fermion to its OWN antiparticle; 'electron' and 'muon' differ. Flavour-changing neutral currents do not occur at tree level"
+      },
+      "allowed": {
+        "show": false,
+        "display": "none",
+        "text": "Allowed · weak-chargedEvery conservation rule passes."
+      },
+      "dragBtn": "✥ Drag a vertex",
+      "presetActive": [
+        "γ · e⁻ · μ⁺  (refused)"
+      ],
+      "playVisible": false,
+      "errors": []
+    },
+    {
+      "label": "05-gluon-lepton",
+      "step": "1 · A Feynman diagram is a topology",
+      "nextDisabled": false,
+      "pagerNextDisabled": false,
+      "q2slider": "0",
+      "q2label": "0.000",
+      "force": "QCD",
+      "alpha": "1.179e-1",
+      "N": "0",
+      "amp": "0 (refused)",
+      "prob": "0 (refused)",
+      "vlog": "V1 · g e⁻ e⁺\n× 0 (refused)",
+      "med": "no internal line",
+      "mass": "—",
+      "off": "—",
+      "prop": "—",
+      "onShell": "—",
+      "reason": "Single-vertex diagram: no internal line to be virtual.",
+      "refusal": {
+        "show": true,
+        "display": "block",
+        "text": "REFUSED · COLOUR CHARGE\nthe strong force couples only to colour; 'electron' is a lepton and carries none"
+      },
+      "allowed": {
+        "show": false,
+        "display": "none",
+        "text": "Allowed · weak-chargedEvery conservation rule passes."
+      },
+      "dragBtn": "✥ Drag a vertex",
+      "presetActive": [
+        "gluon · e⁻ · e⁺  (refused)"
+      ],
+      "playVisible": false,
+      "errors": []
+    },
+    {
+      "label": "06-charge-fail",
+      "step": "1 · A Feynman diagram is a topology",
+      "nextDisabled": false,
+      "pagerNextDisabled": false,
+      "q2slider": "0",
+      "q2label": "0.000",
+      "force": "QED",
+      "alpha": "7.297e-3",
+      "N": "0",
+      "amp": "0 (refused)",
+      "prob": "0 (refused)",
+      "vlog": "V1 · e⁻ e⁻ γ\n× 0 (refused)",
+      "med": "no internal line",
+      "mass": "—",
+      "off": "—",
+      "prop": "—",
+      "onShell": "—",
+      "reason": "Single-vertex diagram: no internal line to be virtual.",
+      "refusal": {
+        "show": true,
+        "display": "block",
+        "text": "REFUSED · CHARGE CONSERVATION\nlegs sum to -2, must be 0"
+      },
+      "allowed": {
+        "show": false,
+        "display": "none",
+        "text": "Allowed · weak-chargedEvery conservation rule passes."
+      },
+      "dragBtn": "✥ Drag a vertex",
+      "presetActive": [
+        "e⁻ · e⁻ · γ  (refused)"
+      ],
+      "playVisible": false,
+      "errors": []
+    },
+    {
+      "label": "06b-lepton-fail",
+      "step": "1 · A Feynman diagram is a topology",
+      "nextDisabled": false,
+      "pagerNextDisabled": false,
+      "q2slider": "0",
+      "q2label": "0.000",
+      "force": "Weak (unified α_w, simplified)",
+      "alpha": "3.380e-2",
+      "N": "0",
+      "amp": "0 (refused)",
+      "prob": "0 (refused)",
+      "vlog": "V1 · W⁺ e⁻ νₑ\n× 0 (refused)",
+      "med": "no internal line",
+      "mass": "—",
+      "off": "—",
+      "prop": "—",
+      "onShell": "—",
+      "reason": "Single-vertex diagram: no internal line to be virtual.",
+      "refusal": {
+        "show": true,
+        "display": "block",
+        "text": "REFUSED · LEPTON NUMBER\nnet lepton number 2, must be 0"
+      },
+      "allowed": {
+        "show": false,
+        "display": "none",
+        "text": "Allowed · weak-chargedEvery conservation rule passes."
+      },
+      "dragBtn": "✥ Drag a vertex",
+      "presetActive": [
+        "W⁺ · e⁻ · νₑ  (refused)"
+      ],
+      "playVisible": false,
+      "errors": []
+    },
+    {
+      "label": "07-qcd",
+      "step": "1 · A Feynman diagram is a topology",
+      "nextDisabled": false,
+      "pagerNextDisabled": false,
+      "q2slider": "0",
+      "q2label": "0.000",
+      "force": "QCD",
+      "alpha": "1.179e-1",
+      "N": "1",
+      "amp": "3.434e-1",
+      "prob": "1.179e-1",
+      "vlog": "V1 · u ū g\n×√α = 3.43e-1",
+      "med": "no internal line",
+      "mass": "—",
+      "off": "—",
+      "prop": "—",
+      "onShell": "—",
+      "reason": "Single-vertex diagram: no internal line to be virtual.",
+      "refusal": {
+        "show": false,
+        "display": "none",
+        "text": "Refused · lepton numbernet lepton number 2, must be 0"
+      },
+      "allowed": {
+        "show": true,
+        "display": "block",
+        "text": "ALLOWED · STRONG\nEvery conservation rule passes."
+      },
+      "dragBtn": "✥ Drag a vertex",
+      "presetActive": [
+        "q · q̄ · g  (QCD vertex)"
+      ],
+      "playVisible": false,
+      "errors": []
+    },
+    {
+      "label": "08-z",
+      "step": "1 · A Feynman diagram is a topology",
+      "nextDisabled": false,
+      "pagerNextDisabled": false,
+      "q2slider": "0",
+      "q2label": "0.000",
+      "force": "Weak (unified α_w, simplified)",
+      "alpha": "3.380e-2",
+      "N": "1",
+      "amp": "1.838e-1",
+      "prob": "3.380e-2",
+      "vlog": "V1 · μ μ̄ Z\n×√α = 1.84e-1",
+      "med": "no internal line",
+      "mass": "—",
+      "off": "—",
+      "prop": "—",
+      "onShell": "—",
+      "reason": "Single-vertex diagram: no internal line to be virtual.",
+      "refusal": {
+        "show": false,
+        "display": "none",
+        "text": "Refused · lepton numbernet lepton number 2, must be 0"
+      },
+      "allowed": {
+        "show": true,
+        "display": "block",
+        "text": "ALLOWED · WEAK-NEUTRAL\nEvery conservation rule passes."
+      },
+      "dragBtn": "✥ Drag a vertex",
+      "presetActive": [
+        "Z · μ · μ̄  (weak neutral)"
+      ],
+      "playVisible": false,
+      "errors": []
+    },
+    {
+      "label": "09-qed",
+      "step": "1 · A Feynman diagram is a topology",
+      "nextDisabled": false,
+      "pagerNextDisabled": false,
+      "q2slider": "0",
+      "q2label": "0.000",
+      "force": "QED",
+      "alpha": "7.297e-3",
+      "N": "1",
+      "amp": "8.542e-2",
+      "prob": "7.297e-3",
+      "vlog": "V1 · e⁻ e⁺ γ\n×√α = 8.54e-2",
+      "med": "no internal line",
+      "mass": "—",
+      "off": "—",
+      "prop": "—",
+      "onShell": "—",
+      "reason": "Single-vertex diagram: no internal line to be virtual.",
+      "refusal": {
+        "show": false,
+        "display": "none",
+        "text": "Refused · lepton numbernet lepton number 2, must be 0"
+      },
+      "allowed": {
+        "show": true,
+        "display": "block",
+        "text": "ALLOWED · ELECTROMAGNETIC\nEvery conservation rule passes."
+      },
+      "dragBtn": "✥ Drag a vertex",
+      "presetActive": [
+        "e⁻ · e⁺ · γ  (QED vertex)"
+      ],
+      "playVisible": false,
+      "errors": []
+    },
+    {
+      "label": "10-q2-after-lecture",
+      "step": "8 · Free exploration",
+      "nextDisabled": false,
+      "pagerNextDisabled": true,
+      "q2slider": "5",
+      "q2label": "5.000",
+      "force": "QED",
+      "alpha": "7.297e-3",
+      "N": "1",
+      "amp": "8.542e-2",
+      "prob": "7.297e-3",
+      "vlog": "V1 · e⁻ e⁺ γ\n×√α = 8.54e-2",
+      "med": "no internal line",
+      "mass": "—",
+      "off": "—",
+      "prop": "—",
+      "onShell": "—",
+      "reason": "Single-vertex diagram: no internal line to be virtual.",
+      "refusal": {
+        "show": false,
+        "display": "none",
+        "text": "Refused · lepton numbernet lepton number 2, must be 0"
+      },
+      "allowed": {
+        "show": true,
+        "display": "block",
+        "text": "ALLOWED · ELECTROMAGNETIC\nEvery conservation rule passes."
+      },
+      "dragBtn": "✥ Drag a vertex",
+      "presetActive": [
+        "e⁻ · e⁺ · γ  (QED vertex)"
+      ],
+      "playVisible": false,
+      "q2set": "5",
+      "q2now": "5",
+      "errors": []
+    },
+    {
+      "label": "11-drag-after-tchannel",
+      "step": "1 · A Feynman diagram is a topology",
+      "nextDisabled": false,
+      "pagerNextDisabled": false,
+      "q2slider": "5",
+      "q2label": "5.000",
+      "force": "QED",
+      "alpha": "7.297e-3",
+      "N": "2",
+      "amp": "7.297e-3",
+      "prob": "5.325e-5",
+      "vlog": "V1 · e⁻ e⁻ γ (top)\n×√α = 8.54e-2\nV2 · e⁻ e⁻ γ (bottom)\n×√α = 8.54e-2",
+      "med": "photon",
+      "mass": "0.000",
+      "off": "5.000",
+      "prop": "2.000e-1",
+      "onShell": "no — virtual",
+      "reason": "off shell: the further from q² = m², the smaller the amplitude — q² is normally fixed by external kinematics; this slider is a \"what-if\" probe.",
+      "refusal": {
+        "show": false,
+        "display": "none",
+        "text": "Refused · lepton numbernet lepton number 2, must be 0"
+      },
+      "allowed": {
+        "show": true,
+        "display": "block",
+        "text": "ALLOWED · ELECTROMAGNETIC\nEvery conservation rule passes."
+      },
+      "dragBtn": "✥ Drag active — click a vertex",
+      "presetActive": [
+        "e⁻e⁻ → e⁻e⁻  (t-channel)"
+      ],
+      "playVisible": false,
+      "errors": []
+    },
+    {
+      "label": "12-after-drag",
+      "step": "1 · A Feynman diagram is a topology",
+      "nextDisabled": false,
+      "pagerNextDisabled": false,
+      "q2slider": "5",
+      "q2label": "5.000",
+      "force": "QED",
+      "alpha": "7.297e-3",
+      "N": "2",
+      "amp": "7.297e-3",
+      "prob": "5.325e-5",
+      "vlog": "V1 · e⁻ e⁻ γ (top)\n×√α = 8.54e-2\nV2 · e⁻ e⁻ γ (bottom)\n×√α = 8.54e-2",
+      "med": "photon",
+      "mass": "0.000",
+      "off": "5.000",
+      "prop": "2.000e-1",
+      "onShell": "no — virtual",
+      "reason": "off shell: the further from q² = m², the smaller the amplitude — q² is normally fixed by external kinematics; this slider is a \"what-if\" probe.",
+      "refusal": {
+        "show": false,
+        "display": "none",
+        "text": "Refused · lepton numbernet lepton number 2, must be 0"
+      },
+      "allowed": {
+        "show": true,
+        "display": "block",
+        "text": "ALLOWED · ELECTROMAGNETIC\nEvery conservation rule passes."
+      },
+      "dragBtn": "✥ Drag active — click a vertex",
+      "presetActive": [
+        "e⁻e⁻ → e⁻e⁻  (t-channel)"
+      ],
+      "playVisible": false,
+      "dragAmp": {
+        "amp0": "7.297e-3",
+        "amp1": "7.297e-3",
+        "N": "2",
+        "preset": [
+          "e⁻e⁻ → e⁻e⁻  (t-channel)"
+        ]
+      },
+      "errors": []
+    },
+    {
+      "label": "13-after-reset",
+      "step": "1 · A Feynman diagram is a topology",
+      "nextDisabled": false,
+      "pagerNextDisabled": false,
+      "q2slider": "-1",
+      "q2label": "-1.000",
+      "force": "QED",
+      "alpha": "7.297e-3",
+      "N": "1",
+      "amp": "8.542e-2",
+      "prob": "7.297e-3",
+      "vlog": "V1 · e⁻ e⁺ γ\n×√α = 8.54e-2",
+      "med": "no internal line",
+      "mass": "—",
+      "off": "—",
+      "prop": "—",
+      "onShell": "—",
+      "reason": "Single-vertex diagram: no internal line to be virtual.",
+      "refusal": {
+        "show": false,
+        "display": "none",
+        "text": "Refused · lepton numbernet lepton number 2, must be 0"
+      },
+      "allowed": {
+        "show": true,
+        "display": "block",
+        "text": "ALLOWED · ELECTROMAGNETIC\nEvery conservation rule passes."
+      },
+      "dragBtn": "✥ Drag a vertex",
+      "presetActive": [
+        "e⁻ · e⁺ · γ  (QED vertex)"
+      ],
+      "playVisible": false,
+      "errors": []
+    },
+    {
+      "label": "14-pager-to-step2",
+      "step": "2 · Predict: what changed?",
+      "nextDisabled": true,
+      "pagerNextDisabled": true,
+      "q2slider": "-1",
+      "q2label": "-1.000",
+      "force": "QED",
+      "alpha": "7.297e-3",
+      "N": "1",
+      "amp": "8.542e-2",
+      "prob": "7.297e-3",
+      "vlog": "V1 · e⁻ e⁺ γ\n×√α = 8.54e-2",
+      "med": "no internal line",
+      "mass": "—",
+      "off": "—",
+      "prop": "—",
+      "onShell": "—",
+      "reason": "Single-vertex diagram: no internal line to be virtual.",
+      "refusal": {
+        "show": false,
+        "display": "none",
+        "text": "Refused · lepton numbernet lepton number 2, must be 0"
+      },
+      "allowed": {
+        "show": true,
+        "display": "block",
+        "text": "ALLOWED · ELECTROMAGNETIC\nEvery conservation rule passes."
+      },
+      "dragBtn": "✥ Drag a vertex",
+      "presetActive": [
+        "e⁻ · e⁺ · γ  (QED vertex)"
+      ],
+      "playVisible": false,
+      "errors": []
+    },
+    {
+      "label": "15-next-blocked",
+      "step": "2 · Predict: what changed?",
+      "nextDisabled": true,
+      "pagerNextDisabled": true,
+      "q2slider": "-1",
+      "q2label": "-1.000",
+      "force": "QED",
+      "alpha": "7.297e-3",
+      "N": "1",
+      "amp": "8.542e-2",
+      "prob": "7.297e-3",
+      "vlog": "V1 · e⁻ e⁺ γ\n×√α = 8.54e-2",
+      "med": "no internal line",
+      "mass": "—",
+      "off": "—",
+      "prop": "—",
+      "onShell": "—",
+      "reason": "Single-vertex diagram: no internal line to be virtual.",
+      "refusal": {
+        "show": false,
+        "display": "none",
+        "text": "Refused · lepton numbernet lepton number 2, must be 0"
+      },
+      "allowed": {
+        "show": true,
+        "display": "block",
+        "text": "ALLOWED · ELECTROMAGNETIC\nEvery conservation rule passes."
+      },
+      "dragBtn": "✥ Drag a vertex",
+      "presetActive": [
+        "e⁻ · e⁺ · γ  (QED vertex)"
+      ],
+      "playVisible": false,
+      "errors": []
+    },
+    {
+      "label": "16-step5-refusals",
+      "step": "5 · Try it — and read the rule",
+      "nextDisabled": false,
+      "pagerNextDisabled": false,
+      "q2slider": "-1",
+      "q2label": "-1.000",
+      "force": "QED",
+      "alpha": "7.297e-3",
+      "N": "1",
+      "amp": "8.542e-2",
+      "prob": "7.297e-3",
+      "vlog": "V1 · e⁻ e⁺ γ\n×√α = 8.54e-2",
+      "med": "no internal line",
+      "mass": "—",
+      "off": "—",
+      "prop": "—",
+      "onShell": "—",
+      "reason": "Single-vertex diagram: no internal line to be virtual.",
+      "refusal": {
+        "show": false,
+        "display": "none",
+        "text": "Refused · lepton numbernet lepton number 2, must be 0"
+      },
+      "allowed": {
+        "show": true,
+        "display": "block",
+        "text": "ALLOWED · ELECTROMAGNETIC\nEvery conservation rule passes."
+      },
+      "dragBtn": "✥ Drag a vertex",
+      "presetActive": [
+        "e⁻ · e⁺ · γ  (QED vertex)"
+      ],
+      "playVisible": false,
+      "errors": []
+    },
+    {
+      "label": "17-step6-virtual",
+      "step": "6 · The internal line is virtual",
+      "nextDisabled": false,
+      "pagerNextDisabled": false,
+      "q2slider": "-1",
+      "q2label": "-1.000",
+      "force": "QED",
+      "alpha": "7.297e-3",
+      "N": "2",
+      "amp": "7.297e-3",
+      "prob": "5.325e-5",
+      "vlog": "V1 · e⁻ e⁻ γ (top)\n×√α = 8.54e-2\nV2 · e⁻ e⁻ γ (bottom)\n×√α = 8.54e-2",
+      "med": "photon",
+      "mass": "0.000",
+      "off": "1.000",
+      "prop": "-1.000e+0",
+      "onShell": "no — virtual",
+      "reason": "off shell: the further from q² = m², the smaller the amplitude — q² is normally fixed by external kinematics; this slider is a \"what-if\" probe.",
+      "refusal": {
+        "show": false,
+        "display": "none",
+        "text": "Refused · lepton numbernet lepton number 2, must be 0"
+      },
+      "allowed": {
+        "show": true,
+        "display": "block",
+        "text": "ALLOWED · ELECTROMAGNETIC\nEvery conservation rule passes."
+      },
+      "dragBtn": "✥ Drag a vertex",
+      "presetActive": [
+        "e⁻e⁻ → e⁻e⁻  (t-channel)"
+      ],
+      "playVisible": false,
+      "errors": []
+    },
+    {
+      "label": "18-step7-pole",
+      "step": "7 · Predict: what happens at q² = m²?",
+      "nextDisabled": true,
+      "pagerNextDisabled": true,
+      "q2slider": "-1",
+      "q2label": "-1.000",
+      "force": "QED",
+      "alpha": "7.297e-3",
+      "N": "2",
+      "amp": "7.297e-3",
+      "prob": "5.325e-5",
+      "vlog": "V1 · e⁻ e⁻ γ (top)\n×√α = 8.54e-2\nV2 · e⁻ e⁻ γ (bottom)\n×√α = 8.54e-2",
+      "med": "photon",
+      "mass": "0.000",
+      "off": "1.000",
+      "prop": "-1.000e+0",
+      "onShell": "no — virtual",
+      "reason": "off shell: the further from q² = m², the smaller the amplitude — q² is normally fixed by external kinematics; this slider is a \"what-if\" probe.",
+      "refusal": {
+        "show": false,
+        "display": "none",
+        "text": "Refused · lepton numbernet lepton number 2, must be 0"
+      },
+      "allowed": {
+        "show": true,
+        "display": "block",
+        "text": "ALLOWED · ELECTROMAGNETIC\nEvery conservation rule passes."
+      },
+      "dragBtn": "✥ Drag a vertex",
+      "presetActive": [
+        "e⁻e⁻ → e⁻e⁻  (t-channel)"
+      ],
+      "playVisible": false,
+      "errors": []
+    },
+    {
+      "label": "19-narrow-1100",
+      "step": "7 · Predict: what happens at q² = m²?",
+      "nextDisabled": true,
+      "pagerNextDisabled": true,
+      "q2slider": "-1",
+      "q2label": "-1.000",
+      "force": "QED",
+      "alpha": "7.297e-3",
+      "N": "2",
+      "amp": "7.297e-3",
+      "prob": "5.325e-5",
+      "vlog": "V1 · e⁻ e⁻ γ (top)\n×√α = 8.54e-2\nV2 · e⁻ e⁻ γ (bottom)\n×√α = 8.54e-2",
+      "med": "photon",
+      "mass": "0.000",
+      "off": "1.000",
+      "prop": "-1.000e+0",
+      "onShell": "no — virtual",
+      "reason": "off shell: the further from q² = m², the smaller the amplitude — q² is normally fixed by external kinematics; this slider is a \"what-if\" probe.",
+      "refusal": {
+        "show": false,
+        "display": "none",
+        "text": "Refused · lepton numbernet lepton number 2, must be 0"
+      },
+      "allowed": {
+        "show": true,
+        "display": "block",
+        "text": "ALLOWED · ELECTROMAGNETIC\nEvery conservation rule passes."
+      },
+      "dragBtn": "✥ Drag a vertex",
+      "presetActive": [
+        "e⁻e⁻ → e⁻e⁻  (t-channel)"
+      ],
+      "playVisible": false,
+      "errors": []
+    }
+  ],
+  "physics": {
+    "rows": [
+      {
+        "id": "qed-ok",
+        "allowed": true,
+        "rules": [],
+        "details": []
+      },
+      {
+        "id": "moller-as-drawn",
+        "allowed": false,
+        "rules": [
+          "charge conservation",
+          "lepton number"
+        ],
+        "details": [
+          "legs sum to -2, must be 0",
+          "net lepton number 2, must be 0"
+        ]
+      },
+      {
+        "id": "moller-incoming",
+        "allowed": true,
+        "rules": [],
+        "details": []
+      },
+      {
+        "id": "moller-all-outgoing",
+        "allowed": true,
+        "rules": [],
+        "details": []
+      },
+      {
+        "id": "weak-cc-as-drawn",
+        "allowed": false,
+        "rules": [
+          "charge conservation"
+        ],
+        "details": [
+          "legs sum to -2, must be 0"
+        ]
+      },
+      {
+        "id": "weak-cc-incoming-W",
+        "allowed": true,
+        "rules": [],
+        "details": []
+      },
+      {
+        "id": "lepton-fail",
+        "allowed": false,
+        "rules": [
+          "lepton number"
+        ],
+        "details": [
+          "net lepton number 2, must be 0"
+        ]
+      },
+      {
+        "id": "weak-cc-all-outgoing",
+        "allowed": true,
+        "rules": [],
+        "details": []
+      },
+      {
+        "id": "fcnc",
+        "allowed": false,
+        "rules": [
+          "flavour conservation"
+        ],
+        "details": [
+          "the photon couples a fermion to its OWN antiparticle; 'electron' and 'muon' differ. Flavour-changing neutral currents do not occur at tree level"
+        ]
+      },
+      {
+        "id": "gluon-lepton",
+        "allowed": false,
+        "rules": [
+          "colour charge"
+        ],
+        "details": [
+          "the strong force couples only to colour; 'electron' is a lepton and carries none"
+        ]
+      },
+      {
+        "id": "nu-photon",
+        "allowed": false,
+        "rules": [
+          "electromagnetic coupling"
+        ],
+        "details": [
+          "the photon couples only to electric charge, and both fermions are neutral"
+        ]
+      },
+      {
+        "id": "W-ud",
+        "allowed": true,
+        "rules": [],
+        "details": []
+      }
+    ],
+    "vf": {
+      "amplitudeFactor": 0.08542454313184122,
+      "probabilityFactor": 0.0072973525692838015,
+      "alpha": 0.0072973525692838015
+    },
+    "prop0": {
+      "propagator": null,
+      "offShellnessGeV2": 0,
+      "onShell": true,
+      "qSquaredGeV2": 0,
+      "mediatorMassGeV": 0,
+      "reason": "q² = m²: the mediator is ON shell — a real particle, not a virtual exchange"
+    },
+    "propNeg": {
+      "propagator": -1,
+      "offShellnessGeV2": 1,
+      "onShell": false,
+      "qSquaredGeV2": -1,
+      "mediatorMassGeV": 0,
+      "reason": "off shell: the further from q² = m², the smaller the amplitude"
+    },
+    "rangeW": {
+      "rangeFm": 0.0024550179827562612,
+      "mediatorMassGeV": 80.377
+    },
+    "at0": {
+      "alpha": 0.0072973525692838015,
+      "allowedVertexCount": 1,
+      "totalVertexCount": 1,
+      "amplitudeScaling": 0.08542454313184122,
+      "probabilityScaling": 0.0072973525692838015,
+      "propagator": null,
+      "offShellnessGeV2": null,
+      "onShell": null,
+      "allViolationRules": [],
+      "presetId": "qed-tree"
+    },
+    "atQED": {
+      "alpha": 0.0072973525692838015,
+      "allowedVertexCount": 1,
+      "totalVertexCount": 1,
+      "amplitudeScaling": 0.08542454313184122,
+      "probabilityScaling": 0.0072973525692838015,
+      "propagator": null,
+      "offShellnessGeV2": null,
+      "onShell": null,
+      "allViolationRules": [],
+      "presetId": "qed-tree"
+    },
+    "atEE": {
+      "alpha": 0.0072973525692838015,
+      "allowedVertexCount": 2,
+      "totalVertexCount": 2,
+      "amplitudeScaling": 0.0072973525692838015,
+      "probabilityScaling": 0.000053251354520432896,
+      "propagator": -1,
+      "offShellnessGeV2": 1,
+      "onShell": false,
+      "allViolationRules": [],
+      "presetId": "ee-scatter"
+    },
+    "atW": {
+      "alpha": 0.0338,
+      "allowedVertexCount": 1,
+      "totalVertexCount": 1,
+      "amplitudeScaling": 0.18384776310850234,
+      "probabilityScaling": 0.0338,
+      "propagator": null,
+      "offShellnessGeV2": null,
+      "onShell": null,
+      "allViolationRules": [],
+      "presetId": "weak-cc"
+    },
+    "couplings": {
+      "electromagnetic": 0.0072973525692838015,
+      "strongAtZPole": 0.1179,
+      "weak": 0.0338,
+      "referenceScaleGeV": 91.1876
+    }
+  },
+  "q2AfterT": {
+    "slider": "0",
+    "label": "0.000",
+    "med": "photon",
+    "prop": "∞ (on shell!)",
+    "on": "YES — pole",
+    "N": "2",
+    "preset": [
+      "e⁻e⁻ → e⁻e⁻  (t-channel)"
+    ],
+    "allowed": true,
+    "refusal": ""
+  },
+  "dragAmp": {
+    "amp0": "7.297e-3",
+    "amp1": "7.297e-3",
+    "N": "2",
+    "preset": [
+      "e⁻e⁻ → e⁻e⁻  (t-channel)"
+    ]
+  }
+}

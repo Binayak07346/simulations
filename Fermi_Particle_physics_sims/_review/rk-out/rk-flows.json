@@ -1,0 +1,108 @@
+{
+  "audit0": {
+    "mode": "inelastic",
+    "valid": true,
+    "M": 3.333333333333334,
+    "inv2": 11.111111111111114,
+    "totalEnergy": 3.333333333333334,
+    "totalMomentum": 0,
+    "kinetic": 1.333333333333334,
+    "gamma": 1.666666666666667,
+    "momentum": 0,
+    "m1": 1,
+    "m2": 1,
+    "v1": 0.8,
+    "v2": -0.8,
+    "Mparent": 3.333333333333334,
+    "boost": 0
+  },
+  "table0": " m E p BEFORE m₁ 1.00 1.667 1.333 m₂ 1.00 1.667 −1.333 Σ 2.00 3.333 0.000 AFTER M 3.33 3.333 0.000 Σ 3.33 3.333 0.000 ✓ ΣE and Σp conserved (before = after) m, E, p in arbitrary units (c = 1)",
+  "inv0": "M² = (ΣE)² − (Σp)² = 11.111 M = 3.333 Invariant — same value in S and S′. Move the Boost slider and watch it stay fixed.",
+  "auditBoost": {
+    "mode": "inelastic",
+    "valid": true,
+    "M": 3.333333333333335,
+    "inv2": 11.111111111111121,
+    "totalEnergy": 5.555555555555558,
+    "totalMomentum": -4.444444444444446,
+    "kinetic": 3.555555555555558,
+    "gamma": 1,
+    "momentum": -4.444444444444446,
+    "m1": 1,
+    "m2": 1,
+    "v1": 0.8,
+    "v2": -0.8,
+    "Mparent": 3.333333333333334,
+    "boost": 0.8
+  },
+  "tableBoost": " m E p BEFORE m₁ 1.00 1.000 0.000 m₂ 1.00 4.556 −4.444 Σ 2.00 5.556 −4.444 AFTER M 3.33 5.556 −4.444 Σ 3.33 5.556 −4.444 ✓ ΣE and Σp conserved (before = after) m, E, p in arbitrary units (c = 1)",
+  "invBoost": "M² = (ΣE)² − (Σp)² = 11.111 M = 3.333 Invariant — same value in S and S′. Move the Boost slider and watch it stay fixed.",
+  "auditUnequal": {
+    "mode": "inelastic",
+    "valid": true,
+    "M": 3.3443804413761478,
+    "inv2": 11.184880536659318,
+    "totalEnergy": 3.548284836721918,
+    "totalMomentum": 1.1855145489834245,
+    "kinetic": 0.5482848367219182,
+    "gamma": 1.25,
+    "momentum": 1.1855145489834245,
+    "m1": 2,
+    "m2": 1,
+    "v1": 0.6,
+    "v2": -0.3,
+    "Mparent": 3.333333333333334,
+    "boost": 0
+  },
+  "slidersAfterMode": {
+    "m1": "2",
+    "v1": "0.6",
+    "m2": "1",
+    "v2": "-0.3"
+  },
+  "tableElastic": " m E p BEFORE m₁ 1.00 1.667 1.333 m₂ 1.00 1.667 −1.333 Σ 2.00 3.333 0.000 AFTER m₁ 1.00 1.667 −1.333 m₂ 1.00 1.667 1.333 Σ 2.00 3.333 0.000 ✓ ΣE and Σp conserved (before = after) m, E, p in arbitrary units (c = 1)",
+  "mpEnabled": true,
+  "tableDecay": " m E p BEFORE M 3.33 3.333 0.000 Σ 3.33 3.333 0.000 AFTER A 1.00 1.667 1.333 B 1.00 1.667 −1.333 Σ 2.00 3.333 0.000 ✓ ΣE and Σp conserved (before = after) m, E, p in arbitrary units (c = 1)",
+  "auditDecay": {
+    "mode": "decay",
+    "valid": true,
+    "M": 3.333333333333334,
+    "inv2": 11.111111111111114,
+    "totalEnergy": 3.333333333333334,
+    "totalMomentum": 0,
+    "kinetic": 0,
+    "gamma": 1,
+    "momentum": 0,
+    "m1": 1,
+    "m2": 1,
+    "v1": 0.8,
+    "v2": -0.8,
+    "Mparent": 3.333333333333334,
+    "boost": 0
+  },
+  "forbidden": {
+    "table": " m E p PARENT (STABLE — NO DECAY) M 3.33 3.333 0.000 No decay occurs: Q = M − (m_A + m_B) < 0, so there is no “after” state to compare. m, E, p in arbitrary units (c = 1)",
+    "body": "Decay: a parent at rest cannot decay — the products would need more rest energy than is available. Parent rest mass M = 3.333 Products m_A + m_B = 4.000 Q = M − (m_A+m_B) = -0.667 no energy left for products — decay is forbidden Available (M) 3.33 Required (m_A+m_B) 4.00 Q = M − "
+  },
+  "invDecayBoost": "M² = (ΣE)² − (Σp)² = 11.111 M = 3.333 Invariant — same value in S and S′. Move the Boost slider and watch it stay fixed.",
+  "roundTrip": {
+    "m1": "1.5",
+    "boost": "0.6",
+    "mp": "3.333"
+  },
+  "afterReset": {
+    "mode": "inelastic",
+    "m1": "1",
+    "v1": "0.8",
+    "boost": "0",
+    "playing": "▶ Play"
+  },
+  "exitLecture": "0",
+  "gateBefore": true,
+  "gateAfterWrongChoice": {
+    "next": false,
+    "feedback": "predict-eval show wrong"
+  },
+  "overflow1100": false,
+  "jsErrors": []
+}

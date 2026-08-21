@@ -1,0 +1,780 @@
+{
+  "errors": [],
+  "log": [
+    {
+      "label": "00-initial-octet",
+      "title": "Baryon octet (J=½)  ·  vertical: S",
+      "mult": "octet",
+      "axis": "S",
+      "revealBox": "none",
+      "detail": "Click a tile on the grid to see its quantum numbers, quark content and story.",
+      "step": "1 · Eight particles, one pattern",
+      "nextDisabled": false,
+      "pagerNextDisabled": false,
+      "placed": [],
+      "errors": []
+    },
+    {
+      "label": "01-click-proton",
+      "title": "Baryon octet (J=½)  ·  vertical: S",
+      "mult": "octet",
+      "axis": "S",
+      "revealBox": "none",
+      "detail": "pproton\nQuarks\nu u d\nSpin\n½\nI₃\n0.5\nS\n0\nB\n1\nY = B + S\n1\nQ (from Q = I₃+(B+S)/2)\n1\nMass\n0.938 GeV/c²\nLifetime τ\nstable\nDiscovered\n1919\nDiscovered by Rutherford (1919) as the hydrogen nucleus; the anchor of nuclear physics.",
+      "step": "1 · Eight particles, one pattern",
+      "nextDisabled": false,
+      "pagerNextDisabled": false,
+      "placed": [],
+      "errors": []
+    },
+    {
+      "label": "02-click-lambda",
+      "title": "Baryon octet (J=½)  ·  vertical: S",
+      "mult": "octet",
+      "axis": "S",
+      "revealBox": "none",
+      "detail": "ΛΛ\nQuarks\nu d s\nSpin\n½\nI₃\n0\nS\n-1\nB\n1\nY = B + S\n0\nQ (from Q = I₃+(B+S)/2)\n0\nMass\n1.116 GeV/c²\nLifetime τ\n2.60e-10 s\nDiscovered\n1950\nFirst \"strange\" baryon. Cosmic-ray V-events from 1947; listed here with the conventional 1950 identification.",
+      "step": "1 · Eight particles, one pattern",
+      "nextDisabled": false,
+      "pagerNextDisabled": false,
+      "placed": [],
+      "errors": []
+    },
+    {
+      "label": "03-click-sigma0",
+      "title": "Baryon octet (J=½)  ·  vertical: S",
+      "mult": "octet",
+      "axis": "S",
+      "revealBox": "none",
+      "detail": "Σ⁰Σ⁰\nQuarks\nu d s\nSpin\n½\nI₃\n0\nS\n-1\nB\n1\nY = B + S\n0\nQ (from Q = I₃+(B+S)/2)\n0\nMass\n1.193 GeV/c²\nLifetime τ\n7.40e-20 s\nDiscovered\n1956\nΣ⁰ decays electromagnetically to Λγ — a very short lifetime (~10⁻²⁰ s). Shares (I₃, S) with Λ; they differ in isospin (I = 1 vs I = 0).",
+      "step": "1 · Eight particles, one pattern",
+      "nextDisabled": false,
+      "pagerNextDisabled": false,
+      "placed": [],
+      "errors": []
+    },
+    {
+      "label": "04-meson-octet",
+      "title": "Meson octet (J=0)  ·  vertical: S",
+      "mult": "meson",
+      "axis": "S",
+      "revealBox": "none",
+      "detail": "Click a tile on the grid to see its quantum numbers, quark content and story.",
+      "step": "1 · Eight particles, one pattern",
+      "nextDisabled": false,
+      "pagerNextDisabled": false,
+      "placed": [],
+      "errors": []
+    },
+    {
+      "label": "05-click-piplus",
+      "title": "Meson octet (J=0)  ·  vertical: S",
+      "mult": "meson",
+      "axis": "S",
+      "revealBox": "none",
+      "detail": "π⁺π⁺\nQuarks\nu d̄\nSpin\n0\nI₃\n1\nS\n0\nB\n0\nY = B + S\n0\nQ (from Q = I₃+(B+S)/2)\n1\nMass\n0.140 GeV/c²\nLifetime τ\n2.60e-8 s\nDiscovered\n1947\nPredicted by Yukawa (1935) as the nuclear force carrier; observed 1947.",
+      "step": "1 · Eight particles, one pattern",
+      "nextDisabled": false,
+      "pagerNextDisabled": false,
+      "placed": [],
+      "errors": []
+    },
+    {
+      "label": "06-click-eta",
+      "title": "Meson octet (J=0)  ·  vertical: S",
+      "mult": "meson",
+      "axis": "S",
+      "revealBox": "none",
+      "detail": "ηη\nFlavour\n(uū + dd̄ − 2ss̄)/√6\nSpin\n0\nI₃\n0\nS\n0\nB\n0\nY = B + S\n0\nQ (from Q = I₃+(B+S)/2)\n0\nMass\n0.548 GeV/c²\nLifetime τ\n5.00e-19 s\nDiscovered\n1961\nDiscovered 1961 — completes the pseudoscalar meson octet. Flavour mix includes s s̄, unlike π⁰.",
+      "step": "1 · Eight particles, one pattern",
+      "nextDisabled": false,
+      "pagerNextDisabled": false,
+      "placed": [],
+      "errors": []
+    },
+    {
+      "label": "07-click-pi0",
+      "title": "Meson octet (J=0)  ·  vertical: S",
+      "mult": "meson",
+      "axis": "S",
+      "revealBox": "none",
+      "detail": "π⁰π⁰\nFlavour\n(uū − dd̄)/√2\nSpin\n0\nI₃\n0\nS\n0\nB\n0\nY = B + S\n0\nQ (from Q = I₃+(B+S)/2)\n0\nMass\n0.135 GeV/c²\nLifetime τ\n8.50e-17 s\nDiscovered\n1950\nNeutral pion; flavour wavefunction (uū − dd̄)/√2. Observed 1950.",
+      "step": "1 · Eight particles, one pattern",
+      "nextDisabled": false,
+      "pagerNextDisabled": false,
+      "placed": [],
+      "errors": []
+    },
+    {
+      "label": "08-decuplet-gap",
+      "title": "Baryon decuplet (J=3/2)  ·  vertical: S",
+      "mult": "decuplet",
+      "axis": "S",
+      "revealBox": "block",
+      "detail": "Click a tile on the grid to see its quantum numbers, quark content and story.",
+      "step": "1 · Eight particles, one pattern",
+      "nextDisabled": false,
+      "pagerNextDisabled": false,
+      "placed": [],
+      "errors": []
+    },
+    {
+      "label": "09-reveal-omega",
+      "title": "Baryon decuplet (J=3/2)  ·  vertical: S",
+      "mult": "decuplet",
+      "axis": "S",
+      "revealBox": "none",
+      "detail": "Ω⁻Ω⁻\nQuarks\ns s s\nSpin\n3/2\nI₃\n0\nS\n-3\nB\n1\nY = B + S\n-2\nQ (from Q = I₃+(B+S)/2)\n-1\nMass\n1.673 GeV/c²\nLifetime τ\n8.20e-11 s\nDiscovered\n1964\nPredicted by Gell-Mann in 1962 to fill the apex of the baryon decuplet. Discovered at Brookhaven in 1964 with the mass, charge and strangeness the pattern required — landmark confirmation of SU(3) flavour symmetry.\nPredicted 1962 · discovered 1964. Its quantum nu",
+      "step": "1 · Eight particles, one pattern",
+      "nextDisabled": false,
+      "pagerNextDisabled": false,
+      "placed": [],
+      "errors": []
+    },
+    {
+      "label": "10-decuplet-Y",
+      "title": "Baryon decuplet (J=3/2)  ·  vertical: Y = B+S",
+      "mult": "decuplet",
+      "axis": "Y",
+      "revealBox": "none",
+      "detail": "Ω⁻Ω⁻\nQuarks\ns s s\nSpin\n3/2\nI₃\n0\nS\n-3\nB\n1\nY = B + S\n-2\nQ (from Q = I₃+(B+S)/2)\n-1\nMass\n1.673 GeV/c²\nLifetime τ\n8.20e-11 s\nDiscovered\n1964\nPredicted by Gell-Mann in 1962 to fill the apex of the baryon decuplet. Discovered at Brookhaven in 1964 with the mass, charge and strangeness the pattern required — landmark confirmation of SU(3) flavour symmetry.\nPredicted 1962 · discovered 1964. Its quantum nu",
+      "step": "1 · Eight particles, one pattern",
+      "nextDisabled": false,
+      "pagerNextDisabled": false,
+      "placed": [],
+      "errors": []
+    },
+    {
+      "label": "11-meson-on-Y",
+      "title": "Meson octet (J=0)  ·  vertical: Y = B+S",
+      "mult": "meson",
+      "axis": "Y",
+      "revealBox": "none",
+      "detail": "Click a tile on the grid to see its quantum numbers, quark content and story.",
+      "step": "1 · Eight particles, one pattern",
+      "nextDisabled": false,
+      "pagerNextDisabled": false,
+      "placed": [],
+      "errors": []
+    },
+    {
+      "label": "12-after-reset",
+      "title": "Baryon octet (J=½)  ·  vertical: S",
+      "mult": "octet",
+      "axis": "S",
+      "revealBox": "none",
+      "detail": "Click a tile on the grid to see its quantum numbers, quark content and story.",
+      "step": "1 · Eight particles, one pattern",
+      "nextDisabled": false,
+      "pagerNextDisabled": false,
+      "placed": [],
+      "errors": []
+    },
+    {
+      "label": "13-pager-to-step2",
+      "title": "Baryon octet (J=½)  ·  vertical: S",
+      "mult": "octet",
+      "axis": "S",
+      "revealBox": "none",
+      "detail": "Click a tile on the grid to see its quantum numbers, quark content and story.",
+      "step": "2 · What organises them?",
+      "nextDisabled": true,
+      "pagerNextDisabled": true,
+      "placed": [],
+      "errors": []
+    },
+    {
+      "label": "14-next-blocked-on-gate",
+      "title": "Baryon octet (J=½)  ·  vertical: S",
+      "mult": "octet",
+      "axis": "S",
+      "revealBox": "none",
+      "detail": "Click a tile on the grid to see its quantum numbers, quark content and story.",
+      "step": "2 · What organises them?",
+      "nextDisabled": true,
+      "pagerNextDisabled": true,
+      "placed": [],
+      "errors": []
+    },
+    {
+      "label": "15-step3-meson-prompt",
+      "title": "Baryon octet (J=½)  ·  vertical: S",
+      "mult": "octet",
+      "axis": "S",
+      "revealBox": "none",
+      "detail": "Click a tile on the grid to see its quantum numbers, quark content and story.",
+      "step": "3 · Try the meson octet",
+      "nextDisabled": false,
+      "pagerNextDisabled": false,
+      "placed": [],
+      "errors": []
+    },
+    {
+      "label": "16-step4-decuplet-auto",
+      "title": "Baryon decuplet (J=3/2)  ·  vertical: S",
+      "mult": "decuplet",
+      "axis": "S",
+      "revealBox": "block",
+      "detail": "Click a tile on the grid to see its quantum numbers, quark content and story.",
+      "step": "4 · Now switch to the decuplet — and predict",
+      "nextDisabled": true,
+      "pagerNextDisabled": true,
+      "placed": [],
+      "errors": []
+    },
+    {
+      "label": "17-step5-auto-reveal",
+      "title": "Baryon decuplet (J=3/2)  ·  vertical: S",
+      "mult": "decuplet",
+      "axis": "S",
+      "revealBox": "block",
+      "detail": "Click a tile on the grid to see its quantum numbers, quark content and story.",
+      "step": "5 · Reveal the prediction",
+      "nextDisabled": false,
+      "pagerNextDisabled": false,
+      "placed": [],
+      "errors": []
+    },
+    {
+      "label": "18-step6-auto-Y",
+      "title": "Baryon decuplet (J=3/2)  ·  vertical: S",
+      "mult": "decuplet",
+      "axis": "S",
+      "revealBox": "block",
+      "detail": "Click a tile on the grid to see its quantum numbers, quark content and story.",
+      "step": "6 · A change of coordinates is not a change of physics",
+      "nextDisabled": false,
+      "pagerNextDisabled": true,
+      "placed": [],
+      "errors": []
+    },
+    {
+      "label": "19-narrow-1100",
+      "title": "Baryon decuplet (J=3/2)  ·  vertical: S",
+      "mult": "decuplet",
+      "axis": "S",
+      "revealBox": "block",
+      "detail": "Click a tile on the grid to see its quantum numbers, quark content and story.",
+      "step": "6 · A change of coordinates is not a change of physics",
+      "nextDisabled": false,
+      "pagerNextDisabled": true,
+      "placed": [],
+      "errors": []
+    }
+  ],
+  "physics": {
+    "rows": [
+      {
+        "id": "proton",
+        "symbol": "p",
+        "Q": 1,
+        "Qgn": 1,
+        "quarkQ": 1,
+        "consistent": true,
+        "I3": 0.5,
+        "S": 0,
+        "B": 1,
+        "Y": 1,
+        "quarks": [
+          "u",
+          "u",
+          "d"
+        ],
+        "mass": 0.9383,
+        "year": 1919
+      },
+      {
+        "id": "neutron",
+        "symbol": "n",
+        "Q": 0,
+        "Qgn": 0,
+        "quarkQ": 0,
+        "consistent": true,
+        "I3": -0.5,
+        "S": 0,
+        "B": 1,
+        "Y": 1,
+        "quarks": [
+          "u",
+          "d",
+          "d"
+        ],
+        "mass": 0.9396,
+        "year": 1932
+      },
+      {
+        "id": "lambda",
+        "symbol": "Λ",
+        "Q": 0,
+        "Qgn": 0,
+        "quarkQ": 0,
+        "consistent": true,
+        "I3": 0,
+        "S": -1,
+        "B": 1,
+        "Y": 0,
+        "quarks": [
+          "u",
+          "d",
+          "s"
+        ],
+        "mass": 1.1157,
+        "year": 1950
+      },
+      {
+        "id": "sigma-plus",
+        "symbol": "Σ⁺",
+        "Q": 1,
+        "Qgn": 1,
+        "quarkQ": 1,
+        "consistent": true,
+        "I3": 1,
+        "S": -1,
+        "B": 1,
+        "Y": 0,
+        "quarks": [
+          "u",
+          "u",
+          "s"
+        ],
+        "mass": 1.1894,
+        "year": 1953
+      },
+      {
+        "id": "sigma-zero",
+        "symbol": "Σ⁰",
+        "Q": 0,
+        "Qgn": 0,
+        "quarkQ": 0,
+        "consistent": true,
+        "I3": 0,
+        "S": -1,
+        "B": 1,
+        "Y": 0,
+        "quarks": [
+          "u",
+          "d",
+          "s"
+        ],
+        "mass": 1.1926,
+        "year": 1956
+      },
+      {
+        "id": "sigma-minus",
+        "symbol": "Σ⁻",
+        "Q": -1,
+        "Qgn": -1,
+        "quarkQ": -1,
+        "consistent": true,
+        "I3": -1,
+        "S": -1,
+        "B": 1,
+        "Y": 0,
+        "quarks": [
+          "d",
+          "d",
+          "s"
+        ],
+        "mass": 1.1975,
+        "year": 1953
+      },
+      {
+        "id": "xi-zero",
+        "symbol": "Ξ⁰",
+        "Q": 0,
+        "Qgn": 0,
+        "quarkQ": 0,
+        "consistent": true,
+        "I3": 0.5,
+        "S": -2,
+        "B": 1,
+        "Y": -1,
+        "quarks": [
+          "u",
+          "s",
+          "s"
+        ],
+        "mass": 1.3149,
+        "year": 1959
+      },
+      {
+        "id": "xi-minus",
+        "symbol": "Ξ⁻",
+        "Q": -1,
+        "Qgn": -1,
+        "quarkQ": -1,
+        "consistent": true,
+        "I3": -0.5,
+        "S": -2,
+        "B": 1,
+        "Y": -1,
+        "quarks": [
+          "d",
+          "s",
+          "s"
+        ],
+        "mass": 1.3217,
+        "year": 1952
+      },
+      {
+        "id": "delta-plusplus",
+        "symbol": "Δ⁺⁺",
+        "Q": 2,
+        "Qgn": 2,
+        "quarkQ": 2,
+        "consistent": true,
+        "I3": 1.5,
+        "S": 0,
+        "B": 1,
+        "Y": 1,
+        "quarks": [
+          "u",
+          "u",
+          "u"
+        ],
+        "mass": 1.232,
+        "year": 1952
+      },
+      {
+        "id": "delta-plus",
+        "symbol": "Δ⁺",
+        "Q": 1,
+        "Qgn": 1,
+        "quarkQ": 1,
+        "consistent": true,
+        "I3": 0.5,
+        "S": 0,
+        "B": 1,
+        "Y": 1,
+        "quarks": [
+          "u",
+          "u",
+          "d"
+        ],
+        "mass": 1.232,
+        "year": 1952
+      },
+      {
+        "id": "delta-zero",
+        "symbol": "Δ⁰",
+        "Q": 0,
+        "Qgn": 0,
+        "quarkQ": 0,
+        "consistent": true,
+        "I3": -0.5,
+        "S": 0,
+        "B": 1,
+        "Y": 1,
+        "quarks": [
+          "u",
+          "d",
+          "d"
+        ],
+        "mass": 1.232,
+        "year": 1952
+      },
+      {
+        "id": "delta-minus",
+        "symbol": "Δ⁻",
+        "Q": -1,
+        "Qgn": -1,
+        "quarkQ": -1,
+        "consistent": true,
+        "I3": -1.5,
+        "S": 0,
+        "B": 1,
+        "Y": 1,
+        "quarks": [
+          "d",
+          "d",
+          "d"
+        ],
+        "mass": 1.232,
+        "year": 1952
+      },
+      {
+        "id": "sigma*-plus",
+        "symbol": "Σ*⁺",
+        "Q": 1,
+        "Qgn": 1,
+        "quarkQ": 1,
+        "consistent": true,
+        "I3": 1,
+        "S": -1,
+        "B": 1,
+        "Y": 0,
+        "quarks": [
+          "u",
+          "u",
+          "s"
+        ],
+        "mass": 1.383,
+        "year": 1960
+      },
+      {
+        "id": "sigma*-zero",
+        "symbol": "Σ*⁰",
+        "Q": 0,
+        "Qgn": 0,
+        "quarkQ": 0,
+        "consistent": true,
+        "I3": 0,
+        "S": -1,
+        "B": 1,
+        "Y": 0,
+        "quarks": [
+          "u",
+          "d",
+          "s"
+        ],
+        "mass": 1.384,
+        "year": 1963
+      },
+      {
+        "id": "sigma*-minus",
+        "symbol": "Σ*⁻",
+        "Q": -1,
+        "Qgn": -1,
+        "quarkQ": -1,
+        "consistent": true,
+        "I3": -1,
+        "S": -1,
+        "B": 1,
+        "Y": 0,
+        "quarks": [
+          "d",
+          "d",
+          "s"
+        ],
+        "mass": 1.387,
+        "year": 1960
+      },
+      {
+        "id": "xi*-zero",
+        "symbol": "Ξ*⁰",
+        "Q": 0,
+        "Qgn": 0,
+        "quarkQ": 0,
+        "consistent": true,
+        "I3": 0.5,
+        "S": -2,
+        "B": 1,
+        "Y": -1,
+        "quarks": [
+          "u",
+          "s",
+          "s"
+        ],
+        "mass": 1.5318,
+        "year": 1962
+      },
+      {
+        "id": "xi*-minus",
+        "symbol": "Ξ*⁻",
+        "Q": -1,
+        "Qgn": -1,
+        "quarkQ": -1,
+        "consistent": true,
+        "I3": -0.5,
+        "S": -2,
+        "B": 1,
+        "Y": -1,
+        "quarks": [
+          "d",
+          "s",
+          "s"
+        ],
+        "mass": 1.535,
+        "year": 1962
+      },
+      {
+        "id": "omega-minus",
+        "symbol": "Ω⁻",
+        "Q": -1,
+        "Qgn": -1,
+        "quarkQ": -1,
+        "consistent": true,
+        "I3": 0,
+        "S": -3,
+        "B": 1,
+        "Y": -2,
+        "quarks": [
+          "s",
+          "s",
+          "s"
+        ],
+        "mass": 1.6725,
+        "year": 1964
+      },
+      {
+        "id": "pion-plus",
+        "symbol": "π⁺",
+        "Q": 1,
+        "Qgn": 1,
+        "quarkQ": 1,
+        "consistent": true,
+        "I3": 1,
+        "S": 0,
+        "B": 0,
+        "Y": 0,
+        "quarks": [
+          "u",
+          "anti-d"
+        ],
+        "mass": 0.1396,
+        "year": 1947
+      },
+      {
+        "id": "pion-zero",
+        "symbol": "π⁰",
+        "Q": 0,
+        "Qgn": 0,
+        "quarkQ": 0,
+        "consistent": true,
+        "I3": 0,
+        "S": 0,
+        "B": 0,
+        "Y": 0,
+        "quarks": [],
+        "mass": 0.135,
+        "year": 1950
+      },
+      {
+        "id": "pion-minus",
+        "symbol": "π⁻",
+        "Q": -1,
+        "Qgn": -1,
+        "quarkQ": -1,
+        "consistent": true,
+        "I3": -1,
+        "S": 0,
+        "B": 0,
+        "Y": 0,
+        "quarks": [
+          "d",
+          "anti-u"
+        ],
+        "mass": 0.1396,
+        "year": 1947
+      },
+      {
+        "id": "kaon-plus",
+        "symbol": "K⁺",
+        "Q": 1,
+        "Qgn": 1,
+        "quarkQ": 1,
+        "consistent": true,
+        "I3": 0.5,
+        "S": 1,
+        "B": 0,
+        "Y": 1,
+        "quarks": [
+          "u",
+          "anti-s"
+        ],
+        "mass": 0.4937,
+        "year": 1949
+      },
+      {
+        "id": "kaon-zero",
+        "symbol": "K⁰",
+        "Q": 0,
+        "Qgn": 0,
+        "quarkQ": 0,
+        "consistent": true,
+        "I3": -0.5,
+        "S": 1,
+        "B": 0,
+        "Y": 1,
+        "quarks": [
+          "d",
+          "anti-s"
+        ],
+        "mass": 0.4976,
+        "year": 1947
+      },
+      {
+        "id": "kaon-zerobar",
+        "symbol": "K̄⁰",
+        "Q": 0,
+        "Qgn": 0,
+        "quarkQ": 0,
+        "consistent": true,
+        "I3": 0.5,
+        "S": -1,
+        "B": 0,
+        "Y": -1,
+        "quarks": [
+          "s",
+          "anti-d"
+        ],
+        "mass": 0.4976,
+        "year": 1947
+      },
+      {
+        "id": "kaon-minus",
+        "symbol": "K⁻",
+        "Q": -1,
+        "Qgn": -1,
+        "quarkQ": -1,
+        "consistent": true,
+        "I3": -0.5,
+        "S": -1,
+        "B": 0,
+        "Y": -1,
+        "quarks": [
+          "s",
+          "anti-u"
+        ],
+        "mass": 0.4937,
+        "year": 1949
+      },
+      {
+        "id": "eta",
+        "symbol": "η",
+        "Q": 0,
+        "Qgn": 0,
+        "quarkQ": 0,
+        "consistent": true,
+        "I3": 0,
+        "S": 0,
+        "B": 0,
+        "Y": 0,
+        "quarks": [],
+        "mass": 0.5479,
+        "year": 1961
+      }
+    ],
+    "at0": {
+      "charge": -1,
+      "gridX": 0,
+      "gridY": -3
+    },
+    "at": {
+      "charge": -1,
+      "gridX": 0,
+      "gridY": -3
+    },
+    "inv": {
+      "ok": true,
+      "value": 0,
+      "expected": 0,
+      "tol": 1e-9
+    }
+  },
+  "protonClick": {
+    "px": 691.1764705882354,
+    "py": 162.75,
+    "via": "__pos"
+  },
+  "lambdaClick": {
+    "px": 522,
+    "py": 374,
+    "via": "__pos"
+  },
+  "sigma0Click": {
+    "px": 578,
+    "py": 374,
+    "via": "__pos"
+  }
+}

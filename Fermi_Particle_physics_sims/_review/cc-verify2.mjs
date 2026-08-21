@@ -1,0 +1,16 @@
+import { createRequire } from 'node:module';
+import { pathToFileURL, fileURLToPath } from 'node:url';
+import { resolve, dirname, join } from 'node:path';
+const HERE = dirname(fileURLToPath(import.meta.url));
+const puppeteer = createRequire(join(resolve(HERE,'../..'),'Capacity_SR_sims_v2_engine/_review/'))('puppeteer-core');
+const browser = await puppeteer.launch({ executablePath:'/Applications/Google Chrome.app/Contents/MacOS/Google Chrome', headless:true, args:['--no-sandbox'] });
+const page = await browser.newPage(); await page.setViewport({width:1440,height:900});
+const errors=[]; page.on('pageerror',e=>errors.push(e.message));
+await page.goto(pathToFileURL(resolve(HERE,'../Charged_particle_in_a_magnetic_field_v2.html')).href,{waitUntil:'networkidle2'});
+const sleep=ms=>new Promise(r=>setTimeout(r,ms)); await sleep(900);
+await page.evaluate(()=>{const p=document.getElementById('lead-plate');if(!p.checked)p.click();});
+await page.evaluate(()=>{const el=document.getElementById('ke');el.value=8;el.dispatchEvent(new Event('input',{bubbles:true}));});
+await sleep(20000);
+await page.screenshot({path:join(HERE,'cc-out/18-final-plate-spiral.png')});
+console.log(JSON.stringify({jsErrors:errors}));
+await browser.close();

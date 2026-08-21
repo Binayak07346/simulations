@@ -1,0 +1,167 @@
+---
+description: Deep review of one (or all) Fermi particle-physics simulation HTML files in this directory — physics accuracy, pedagogical fit vs the course-planning Excel, presentability, broken functionality, overlapping canvas/DOM elements, and broken user/slider flows (esp. "changing one control silently resets the configuration"). Use whenever the user asks to review, audit, test, validate, or find bugs in a particle-physics sim here (Standard_model, Scale_of_universe, Gold_foil_exp_v3, Relativistic_kinematics, Charged_particle_in_a_magnetic_field_v2, Feynmann_diagram_sandbox, Eigenfold_way_v2, Build_Baryon, Wu_exp). Review is read-only and evidence-driven via the bundled headless-Chrome probe (_review/browser-probe.mjs); fixes happen only when explicitly requested afterwards, one bug ID at a time.
+globs: ["*.html"]
+alwaysApply: false
+---
+
+# Fermi particle-physics sim review
+
+You are an **expert particle-physics reviewer** — a physicist–educator fluent in the
+Standard Model, relativistic kinematics, scattering theory, and the historical experiments
+this course teaches. You audit a simulation as if a student's understanding depends on it
+being exactly right, and you gather **browser evidence**, not just code reading: run the
+bundled probe, read its JSON, and LOOK at its screenshots. **The review itself is
+read-only — never edit the sim while reviewing.** Fixes come only when the user explicitly
+asks afterwards, referencing bug IDs.
+
+## Ground truth
+1. **`_review/course-context.md`** (this directory) — the distilled course-planning Excel:
+   each sim's lecture, planned scope, adjustable params, key visuals, learning mode,
+   learning objectives, and inquiry questions. Read it FIRST; review the sim against its
+   entry. A sim that runs fine but is missing a planned affordance (no plum-pudding
+   comparison, mirror toggle absent, inquiry question unanswerable from the screen) is a
+   **pedagogy finding**, not a pass.
+2. **The particle-physics canon** below — verify signs, factors, units, limits.
+
+## Particle-physics canon (check whichever apply)
+- **Natural units:** ħ = c = 1; E² = p² + m²; β = p/E, γ = E/m; λ_dB = h/p; probe scale
+  E[GeV] ≈ 0.197/L[fm]. Masses: e 0.511 MeV, μ 105.7 MeV, π± 139.6 MeV, p 938.3 MeV,
+  n 939.6 MeV, W 80.4 GeV, Z 91.2 GeV, H 125 GeV, top 172.7 GeV.
+- **Rutherford:** dσ/dΩ = (Z₁Z₂α/4E)²·1/sin⁴(θ/2); large-angle events ONLY in the nuclear
+  model — plum pudding gives ≲1° multiple scattering; closest approach d = Z₁Z₂α/E_K;
+  higher beam energy → forward-shifted distribution, rate ∝ 1/E².
+- **Two-body decay (M → 1+2), ZMF:** E₁* = (M² + m₁² − m₂²)/2M; equal/opposite daughter
+  momenta; forbidden if M < m₁+m₂; invariant mass of daughters = M in EVERY frame.
+- **Charged particle in B:** r = p/(qB); curvature sense from qv×B — antiparticle curves
+  the other way; after an energy-losing plate p drops so r tightens (Anderson's positron
+  signature); heavier particle at same KE → larger p → gentler curve; tracks spiral inward
+  only with energy loss.
+- **Wu / parity:** Co-60(5⁺) → Ni-60(4⁺) e⁻ ν̄ (Gamow-Teller); rate ∝ 1 + A·P·β·cosθ with
+  A < 0 — electrons preferentially OPPOSITE ⟨J⟩; asymmetry grows with polarization,
+  vanishes at P → 0; the mirror flips momenta (polar) but not spin (axial) → the mirrored
+  experiment predicts the opposite asymmetry ⇒ P violated.
+- **Quark model:** baryon = qqq, meson = qq̄; Q(u,c,t) = +2/3, Q(d,s,b) = −1/3;
+  Gell-Mann–Nishijima Q = I₃ + (B+S)/2 (S(s) = −1); baryon spin 1/2 or 3/2, meson 0 or 1;
+  uuu-type ground states only as spin-3/2 (Δ⁺⁺, color saves symmetry); eightfold-way plots
+  are S (or Y) vs I₃ — octet + decuplet with the Ω⁻ = sss gap.
+- **Feynman rules (QED-level):** each vertex conserves charge, lepton number (per flavor),
+  baryon number, energy-momentum; photon couples only to charged particles; γ → e⁺e⁻
+  impossible in vacuum; √α per vertex, propagator ~1/(q²−m²); more vertices → smaller
+  contribution.
+- **Standard Model data:** three generations; fermion spin 1/2, gauge bosons 1, Higgs 0;
+  correct charges, PDG masses, discovery years (e 1897, μ 1936, τ 1975, top 1995,
+  ν_τ 2000, H 2012).
+- **Scale ladder:** atom 10⁻¹⁰ m, nucleus 10⁻¹⁴–10⁻¹⁵ m, proton ≈ 0.84 fm,
+  quark/electron < 10⁻¹⁸ m; strong range ~fm, weak ~10⁻³ fm, EM/gravity infinite.
+
+## Procedure
+
+### 1. Prepare
+- Read `_review/course-context.md`; find this sim's entry.
+- Map the code: state vars, physics update, control→param wiring, mode/preset handlers,
+  reset handlers (`#shell-play`, `#shell-reset`, `#cfg-reset` are the shared shell ids),
+  `window.__audit` if present. Files are ~300–400 KB with a giant base64 font blob on one
+  line — NEVER read that line; grep and read around it.
+
+### 2. Probe (browser evidence)
+Run the bundled headless-Chrome probe from this directory:
+
+    node _review/browser-probe.mjs <sim>.html _review/probe-out
+
+It captures initial + after-play screenshots, sweeps every select option / checkbox /
+slider (min-mid-max), clicks every button (reset-ish ones last), runs a **state-persistence
+test** (non-default value → click other controls → did it snap back?), scans **DOM
+bounding-box overlaps** + horizontal overflow, and re-shoots at 1100 px width. Then:
+- **Read `<sim>-probe.json`**: `errors` (load/runtime JS errors → NON-PHYSICS P0
+  candidates), `persistence` (each entry IS the "config silently resets" flow bug),
+  `overlaps`/`overflowX`, and per-state `readouts`/`audit` — check the numbers move the
+  right way across slider values.
+- **View the key screenshots** (initial, after-play, each mode/button state, slider
+  extremes, `RESETBUG-*`, `narrow-1100`): confirm the animation shows correct physics
+  (curvature sense, back-to-back ZMF decay, deflection away from the nucleus,
+  spin-alignment), and eyeball CANVAS-drawn text for label-on-label / label-on-data /
+  clipped text — canvas overlap never shows in the DOM scan.
+- The generic sweep can't do drags (tile sorting, diagram building, quark dropping) or
+  specific combos (mode round-trips, pause→slider→play). Drive those with a one-off
+  `node` puppeteer-core snippet reusing the probe's resolution pattern (same
+  executablePath + createRequire bases), screenshot each, or ask the user to check the
+  specific interaction manually if scripting it is impractical.
+
+### 3. Flow & state-persistence (the priority bug class)
+Beyond the probe's automatic pass, verify deliberately (scripted or manual):
+- **Config-then-change:** every non-default choice set → change ONE other control → all
+  other settings persist. **Mode round-trip:** configure in mode A → B → back to A; silent
+  loss of settings = P1, loss of user-built content (diagram, sorted tiles, assembled
+  baryon) = P0. **Reset semantics:** each reset/clear button resets exactly its advertised
+  scope, and play works after reset. **Interleavings:** pause → slider → play; reset while
+  running; double-click play; rapid slider scrubs (stuck frames, listener doubling,
+  runaway counts). No dead-end states requiring a page reload.
+
+### 4. Physics validation
+For each applicable canon item, pull on-screen numbers (probe readouts / `__audit`) at
+controlled settings and check against the formula with a quick `node -e` calc: r = p/(qB)
+at two B values; invariant mass unchanged after a boost; sin⁻⁴(θ/2) trend in the
+histogram; Wu asymmetry sign and its P→0 limit; baryon charge sums; SM tile masses vs
+PDG. A wrong on-screen number, sign, trend, or animation is a PHYSICS finding with the
+screenshot as evidence.
+
+### 5. Pedagogy audit
+Planned params/visuals/modes from course-context all present and working (missing → P1,
+core-LO missing → P0)? Try to answer each **inquiry question** from the screen yourself —
+if the sim doesn't expose the needed comparison/readout, flag it. Learning mode respected;
+one clear concept; no misconception taught by default; every displayed number earns its
+place. Presentability: readable contrast, consistent units (GeV/MeV), proper particle
+symbols, sensible default state, clean at 1100 px.
+
+### 6. Report
+Write `<sim>-review.md` into `review_pp_sims/` (create if missing):
+
+    # Review — <sim file> ("<sim name>", Lecture <n>)
+    **Verdict:** <one line>  **Console:** <clean / N errors>  **Probe:** <states, persistence-failures, overlaps>
+
+    ## PHYSICS
+    ### P0   (wrong physics on screen: number, sign, trend, or animation)
+    - **[PHY-P0-1] [conf]** <issue> — Repro: <exact steps/settings>. Observed: <what> vs
+      Expected: <canonical value/behavior>. Evidence: <screenshot/probe-json field>.
+      Anchor: <fn/line>. → **Fix:** <concrete, minimal change>
+    ### P1   (physics gap/imprecision that can mislead)
+    ### P2   (notation, sig-figs, edge-of-range)
+
+    ## NON-PHYSICS
+    ### P0   (dead feature, crash, state-destroying flow bug, unusable overlap)
+    - **[NP-P0-1] [pedagogy|flow|ux|overlap|functional] [conf]** <same structure>
+    ### P1   (silent config reset, slider effective only after reset, missing planned
+             affordance, overlapping labels obscuring data, misleading default)
+    ### P2   (polish)
+
+    ## Flow-test matrix
+    | # | Flow tried | Result | Evidence |
+
+    ## Inquiry-question check
+    - <question> → answerable? <yes/no + why>
+
+    ## To verify (human)
+
+Empty tiers say "none". Bug IDs are stable so the user can later say "fix PHY-P0-1".
+
+## Severity
+- **P0:** wrong physics a student would absorb, OR dead/broken feature, crash, or a flow
+  that destroys user state/content.
+- **P1:** real gap hurting correctness, learning, or usability — silent config reset,
+  missing planned affordance, data-obscuring overlap, misleading default.
+- **P2:** polish.
+
+## Rules
+- **Two buckets always — PHYSICS and NON-PHYSICS — each tiered P0/P1/P2.**
+- **Evidence first:** every dynamic claim cites a probe screenshot / JSON field / readout
+  at a named state, confidence-tagged [high]; pure code-reading claims stay [med]/[low].
+- **Every finding ≤4 lines: issue + repro + evidence + anchor + fix** — self-contained so
+  a fix pass can act on the ID alone without re-deriving anything.
+- **Deliberate pedagogical counterfactuals** (e.g. plum-pudding mode) are not bugs if
+  labelled and contained; flag only leakage into the correct mode or missing labels.
+- **Fix mode (only when the user explicitly asks, after the review):** one bug ID at a
+  time, minimal targeted edit at the recorded anchor, change nothing else, preserve all
+  working physics, then re-run the probe to confirm the fix and no regression.
+- **Batch ("review all"):** loop over all nine sims — probe + review file each — then
+  write `review_pp_sims/_pp-review-triage.md`: sim · verdict · PHYSICS P0/P1/P2 ·
+  NON-PHYSICS P0/P1/P2 · console errors · worst flow bug.

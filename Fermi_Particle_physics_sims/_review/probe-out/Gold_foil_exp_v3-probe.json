@@ -1,0 +1,540 @@
+{
+  "sim": "Gold_foil_exp_v3",
+  "errors": [],
+  "states": [
+    {
+      "label": "initial",
+      "readouts": [],
+      "playLabel": "▶ Play",
+      "audit": {
+        "differentialCrossSectionFm2PerSr": 218.26109372526074,
+        "closestApproachFm": 29.547324327272726,
+        "impactParameterFm": 14.773662163636365,
+        "z2": 79,
+        "kineticEnergyMeV": 7.7,
+        "thetaDegrees": 90
+      }
+    },
+    {
+      "label": "after-play",
+      "readouts": [],
+      "playLabel": "⏸ Pause",
+      "audit": {
+        "differentialCrossSectionFm2PerSr": 218.26109372526074,
+        "closestApproachFm": 29.547324327272726,
+        "impactParameterFm": 14.773662163636365,
+        "z2": 79,
+        "kineticEnergyMeV": 7.7,
+        "thetaDegrees": 90
+      }
+    },
+    {
+      "label": "shell-speed-0.25",
+      "readouts": [],
+      "playLabel": "⏸ Pause",
+      "audit": {
+        "differentialCrossSectionFm2PerSr": 218.26109372526074,
+        "closestApproachFm": 29.547324327272726,
+        "impactParameterFm": 14.773662163636365,
+        "z2": 79,
+        "kineticEnergyMeV": 7.7,
+        "thetaDegrees": 90
+      }
+    },
+    {
+      "label": "shell-speed-0.5",
+      "readouts": [],
+      "playLabel": "⏸ Pause",
+      "audit": {
+        "differentialCrossSectionFm2PerSr": 218.26109372526074,
+        "closestApproachFm": 29.547324327272726,
+        "impactParameterFm": 14.773662163636365,
+        "z2": 79,
+        "kineticEnergyMeV": 7.7,
+        "thetaDegrees": 90
+      }
+    },
+    {
+      "label": "shell-speed-1",
+      "readouts": [],
+      "playLabel": "⏸ Pause",
+      "audit": {
+        "differentialCrossSectionFm2PerSr": 218.26109372526074,
+        "closestApproachFm": 29.547324327272726,
+        "impactParameterFm": 14.773662163636365,
+        "z2": 79,
+        "kineticEnergyMeV": 7.7,
+        "thetaDegrees": 90
+      }
+    },
+    {
+      "label": "shell-speed-2",
+      "readouts": [],
+      "playLabel": "⏸ Pause",
+      "audit": {
+        "differentialCrossSectionFm2PerSr": 218.26109372526074,
+        "closestApproachFm": 29.547324327272726,
+        "impactParameterFm": 14.773662163636365,
+        "z2": 79,
+        "kineticEnergyMeV": 7.7,
+        "thetaDegrees": 90
+      }
+    },
+    {
+      "label": "shell-speed-4",
+      "readouts": [],
+      "playLabel": "⏸ Pause",
+      "audit": {
+        "differentialCrossSectionFm2PerSr": 218.26109372526074,
+        "closestApproachFm": 29.547324327272726,
+        "impactParameterFm": 14.773662163636365,
+        "z2": 79,
+        "kineticEnergyMeV": 7.7,
+        "thetaDegrees": 90
+      }
+    },
+    {
+      "label": "ke-min",
+      "readouts": [],
+      "playLabel": "⏸ Pause",
+      "audit": {
+        "differentialCrossSectionFm2PerSr": 12940.70024697071,
+        "closestApproachFm": 227.51439732,
+        "impactParameterFm": 113.75719866000001,
+        "z2": 79,
+        "kineticEnergyMeV": 1,
+        "thetaDegrees": 90
+      }
+    },
+    {
+      "label": "ke-mid",
+      "readouts": [],
+      "playLabel": "⏸ Pause",
+      "audit": {
+        "differentialCrossSectionFm2PerSr": 117.37596595891802,
+        "closestApproachFm": 21.66803784,
+        "impactParameterFm": 10.834018920000002,
+        "z2": 79,
+        "kineticEnergyMeV": 10.5,
+        "thetaDegrees": 90
+      }
+    },
+    {
+      "label": "ke-max",
+      "readouts": [],
+      "playLabel": "⏸ Pause",
+      "audit": {
+        "differentialCrossSectionFm2PerSr": 32.35175061742678,
+        "closestApproachFm": 11.375719866,
+        "impactParameterFm": 5.687859933000001,
+        "z2": 79,
+        "kineticEnergyMeV": 20,
+        "thetaDegrees": 90
+      }
+    },
+    {
+      "label": "z-min",
+      "readouts": [],
+      "playLabel": "⏸ Pause",
+      "audit": {
+        "differentialCrossSectionFm2PerSr": 1.2589968553291762,
+        "closestApproachFm": 2.244100581818182,
+        "impactParameterFm": 1.1220502909090913,
+        "z2": 6,
+        "kineticEnergyMeV": 7.7,
+        "thetaDegrees": 90
+      }
+    },
+    {
+      "label": "z-mid",
+      "readouts": [],
+      "playLabel": "⏸ Pause",
+      "audit": {
+        "differentialCrossSectionFm2PerSr": 83.96809582348199,
+        "closestApproachFm": 18.32682141818182,
+        "impactParameterFm": 9.163410709090911,
+        "z2": 49,
+        "kineticEnergyMeV": 7.7,
+        "thetaDegrees": 90
+      }
+    },
+    {
+      "label": "z-max",
+      "readouts": [],
+      "playLabel": "⏸ Pause",
+      "audit": {
+        "differentialCrossSectionFm2PerSr": 296.0041495418374,
+        "closestApproachFm": 34.40954225454546,
+        "impactParameterFm": 17.204771127272732,
+        "z2": 92,
+        "kineticEnergyMeV": 7.7,
+        "thetaDegrees": 90
+      }
+    },
+    {
+      "label": "b-min",
+      "readouts": [],
+      "playLabel": "⏸ Pause",
+      "audit": {
+        "differentialCrossSectionFm2PerSr": 218.26109372526074,
+        "closestApproachFm": 29.547324327272726,
+        "impactParameterFm": 14.773662163636365,
+        "z2": 79,
+        "kineticEnergyMeV": 7.7,
+        "thetaDegrees": 90
+      }
+    },
+    {
+      "label": "b-mid",
+      "readouts": [],
+      "playLabel": "⏸ Pause",
+      "audit": {
+        "differentialCrossSectionFm2PerSr": 218.26109372526074,
+        "closestApproachFm": 29.547324327272726,
+        "impactParameterFm": 14.773662163636365,
+        "z2": 79,
+        "kineticEnergyMeV": 7.7,
+        "thetaDegrees": 90
+      }
+    },
+    {
+      "label": "b-max",
+      "readouts": [],
+      "playLabel": "⏸ Pause",
+      "audit": {
+        "differentialCrossSectionFm2PerSr": 218.26109372526074,
+        "closestApproachFm": 29.547324327272726,
+        "impactParameterFm": 14.773662163636365,
+        "z2": 79,
+        "kineticEnergyMeV": 7.7,
+        "thetaDegrees": 90
+      }
+    },
+    {
+      "label": "btn-shell-info",
+      "readouts": [],
+      "playLabel": "⏸ Pause",
+      "audit": {
+        "differentialCrossSectionFm2PerSr": 218.26109372526074,
+        "closestApproachFm": 29.547324327272726,
+        "impactParameterFm": 14.773662163636365,
+        "z2": 79,
+        "kineticEnergyMeV": 7.7,
+        "thetaDegrees": 90
+      }
+    },
+    {
+      "label": "btn-shell-theme",
+      "readouts": [],
+      "playLabel": "⏸ Pause",
+      "audit": {
+        "differentialCrossSectionFm2PerSr": 218.26109372526074,
+        "closestApproachFm": 29.547324327272726,
+        "impactParameterFm": 14.773662163636365,
+        "z2": 79,
+        "kineticEnergyMeV": 7.7,
+        "thetaDegrees": 90
+      }
+    },
+    {
+      "label": "btn-shell-lecture",
+      "readouts": [],
+      "playLabel": "⏸ Pause",
+      "audit": {
+        "differentialCrossSectionFm2PerSr": 218.26109372526074,
+        "closestApproachFm": 29.547324327272726,
+        "impactParameterFm": 14.773662163636365,
+        "z2": 79,
+        "kineticEnergyMeV": 7.7,
+        "thetaDegrees": 90
+      }
+    },
+    {
+      "label": "btn-shell-maximize",
+      "readouts": [],
+      "playLabel": "⏸ Pause",
+      "audit": {
+        "differentialCrossSectionFm2PerSr": 218.26109372526074,
+        "closestApproachFm": 29.547324327272726,
+        "impactParameterFm": 14.773662163636365,
+        "z2": 79,
+        "kineticEnergyMeV": 7.7,
+        "thetaDegrees": 90
+      }
+    },
+    {
+      "label": "btn-toggle-formal",
+      "readouts": [],
+      "playLabel": "⏸ Pause",
+      "audit": {
+        "differentialCrossSectionFm2PerSr": 218.26109372526074,
+        "closestApproachFm": 29.547324327272726,
+        "impactParameterFm": 14.773662163636365,
+        "z2": 79,
+        "kineticEnergyMeV": 7.7,
+        "thetaDegrees": 90
+      }
+    },
+    {
+      "label": "btn-shell-play",
+      "readouts": [],
+      "playLabel": "▶ Play",
+      "audit": {
+        "differentialCrossSectionFm2PerSr": 218.26109372526074,
+        "closestApproachFm": 29.547324327272726,
+        "impactParameterFm": 14.773662163636365,
+        "z2": 79,
+        "kineticEnergyMeV": 7.7,
+        "thetaDegrees": 90
+      }
+    },
+    {
+      "label": "btn-inq-prev",
+      "readouts": [],
+      "playLabel": "⏸ Pause",
+      "audit": {
+        "differentialCrossSectionFm2PerSr": 218.26109372526074,
+        "closestApproachFm": 29.547324327272726,
+        "impactParameterFm": 14.773662163636365,
+        "z2": 79,
+        "kineticEnergyMeV": 7.7,
+        "thetaDegrees": 90
+      }
+    },
+    {
+      "label": "btn-inq-pager-next",
+      "readouts": [],
+      "playLabel": "⏸ Pause",
+      "audit": {
+        "differentialCrossSectionFm2PerSr": 218.26109372526074,
+        "closestApproachFm": 29.547324327272726,
+        "impactParameterFm": 14.773662163636365,
+        "z2": 79,
+        "kineticEnergyMeV": 7.7,
+        "thetaDegrees": 90
+      }
+    },
+    {
+      "label": "btn-inq-next",
+      "readouts": [],
+      "playLabel": "⏸ Pause",
+      "audit": {
+        "differentialCrossSectionFm2PerSr": 218.26109372526074,
+        "closestApproachFm": 29.547324327272726,
+        "impactParameterFm": 14.773662163636365,
+        "z2": 79,
+        "kineticEnergyMeV": 7.7,
+        "thetaDegrees": 90
+      }
+    },
+    {
+      "label": "btn-11",
+      "readouts": [],
+      "playLabel": "⏸ Pause",
+      "audit": {
+        "differentialCrossSectionFm2PerSr": 218.26109372526074,
+        "closestApproachFm": 29.547324327272726,
+        "impactParameterFm": 14.773662163636365,
+        "z2": 79,
+        "kineticEnergyMeV": 7.7,
+        "thetaDegrees": 90
+      }
+    },
+    {
+      "label": "btn-12",
+      "readouts": [],
+      "playLabel": "⏸ Pause",
+      "audit": {
+        "differentialCrossSectionFm2PerSr": 218.26109372526074,
+        "closestApproachFm": 29.547324327272726,
+        "impactParameterFm": 14.773662163636365,
+        "z2": 79,
+        "kineticEnergyMeV": 7.7,
+        "thetaDegrees": 90
+      }
+    },
+    {
+      "label": "btn-13",
+      "readouts": [],
+      "playLabel": "⏸ Pause",
+      "audit": {
+        "differentialCrossSectionFm2PerSr": 218.26109372526074,
+        "closestApproachFm": 29.547324327272726,
+        "impactParameterFm": 14.773662163636365,
+        "z2": 79,
+        "kineticEnergyMeV": 7.7,
+        "thetaDegrees": 90
+      }
+    },
+    {
+      "label": "btn-shell-reset",
+      "readouts": [],
+      "playLabel": "⏸ Pause",
+      "audit": {
+        "differentialCrossSectionFm2PerSr": 218.26109372526074,
+        "closestApproachFm": 29.547324327272726,
+        "impactParameterFm": 14.773662163636365,
+        "z2": 79,
+        "kineticEnergyMeV": 7.7,
+        "thetaDegrees": 90
+      }
+    },
+    {
+      "label": "btn-10",
+      "readouts": [],
+      "playLabel": "⏸ Pause",
+      "audit": {
+        "differentialCrossSectionFm2PerSr": 218.26109372526074,
+        "closestApproachFm": 29.547324327272726,
+        "impactParameterFm": 14.773662163636365,
+        "z2": 79,
+        "kineticEnergyMeV": 7.7,
+        "thetaDegrees": 90
+      }
+    },
+    {
+      "label": "narrow-1100",
+      "readouts": [],
+      "playLabel": "▶ Play",
+      "audit": {
+        "differentialCrossSectionFm2PerSr": 218.26109372526074,
+        "closestApproachFm": 29.547324327272726,
+        "impactParameterFm": 14.773662163636365,
+        "z2": 79,
+        "kineticEnergyMeV": 7.7,
+        "thetaDegrees": 90
+      }
+    }
+  ],
+  "persistence": [],
+  "overlaps": [
+    {
+      "a": "mode-btn active",
+      "b": "eq-label",
+      "ox": 113,
+      "oy": 9
+    },
+    {
+      "a": "mode-btn",
+      "b": "eq-label",
+      "ox": 113,
+      "oy": 9
+    },
+    {
+      "a": "ke",
+      "b": "eq-label",
+      "ox": 227,
+      "oy": 5
+    }
+  ],
+  "overflowX": false,
+  "controls": {
+    "sliders": [
+      {
+        "id": "ke",
+        "min": 1,
+        "max": 20,
+        "value": 7.7
+      },
+      {
+        "id": "z",
+        "min": 6,
+        "max": 92,
+        "value": 79
+      },
+      {
+        "id": "b",
+        "min": 0,
+        "max": 500,
+        "value": 50
+      }
+    ],
+    "selects": [
+      {
+        "id": "shell-speed",
+        "key": "shell-speed",
+        "options": [
+          "0.25",
+          "0.5",
+          "1",
+          "2",
+          "4"
+        ],
+        "value": "1"
+      }
+    ],
+    "checkboxes": [],
+    "buttons": [
+      {
+        "id": "shell-info",
+        "idx": 0,
+        "label": "ⓘ Info"
+      },
+      {
+        "id": "shell-theme",
+        "idx": 1,
+        "label": "☾"
+      },
+      {
+        "id": "shell-lecture",
+        "idx": 2,
+        "label": "🎓 Hide Guided Inquiry"
+      },
+      {
+        "id": "shell-maximize",
+        "idx": 3,
+        "label": "⛶ Maximize"
+      },
+      {
+        "id": "toggle-formal",
+        "idx": 4,
+        "label": "∑ Formal"
+      },
+      {
+        "id": "shell-reset",
+        "idx": 5,
+        "label": "↻ Reset"
+      },
+      {
+        "id": "shell-play",
+        "idx": 6,
+        "label": "⏸ Pause"
+      },
+      {
+        "id": "inq-prev",
+        "idx": 7,
+        "label": "<"
+      },
+      {
+        "id": "inq-pager-next",
+        "idx": 8,
+        "label": ">"
+      },
+      {
+        "id": "inq-next",
+        "idx": 9,
+        "label": "Next →"
+      },
+      {
+        "id": "",
+        "idx": 10,
+        "label": "Nuclear (Rutherford)"
+      },
+      {
+        "id": "",
+        "idx": 11,
+        "label": "Plum pudding"
+      },
+      {
+        "id": "",
+        "idx": 12,
+        "label": "Beam"
+      },
+      {
+        "id": "",
+        "idx": 13,
+        "label": "Single shot"
+      }
+    ]
+  }
+}

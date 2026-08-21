@@ -1,0 +1,91 @@
+{
+  "audit": {
+    "atom": {
+      "wavelength": 1e-10,
+      "probeEnergyJoules": 1.986445855931795e-15,
+      "probeEnergyEV": 12398.419835723276,
+      "probeEnergyHbarcEV": 1973.2698033839642,
+      "probeMomentum": 6.62607014594008e-24,
+      "dominantForce": "EM",
+      "imagingTech": "X-ray / e⁻"
+    },
+    "nucleus": {
+      "wavelength": 1e-14,
+      "probeEnergyJoules": 1.986445855931795e-11,
+      "probeEnergyEV": 123984198.35723276,
+      "probeEnergyHbarcEV": 19732698.033839647,
+      "probeMomentum": 6.62607014594008e-20,
+      "dominantForce": "Strong",
+      "imagingTech": "e⁻ / Collider"
+    },
+    "proton": {
+      "wavelength": 8.400000000000007e-16,
+      "probeEnergyJoules": 2.364816495156897e-10,
+      "probeEnergyEV": 1476002361.3956268,
+      "probeEnergyHbarcEV": 234913071.83142415,
+      "probeMomentum": 7.888178745166755e-19,
+      "dominantForce": "Strong",
+      "imagingTech": "Collider"
+    },
+    "quark": {
+      "wavelength": 1e-18,
+      "probeEnergyJoules": 1.986445855931795e-7,
+      "probeEnergyEV": 1239841983572.3276,
+      "probeEnergyHbarcEV": 197326980338.39642,
+      "probeMomentum": 6.626070145940079e-16,
+      "dominantForce": "Weak+Strong",
+      "imagingTech": "Collider"
+    },
+    "earth": {
+      "wavelength": 10000000,
+      "probeEnergyJoules": 1.9864458559317952e-32,
+      "probeEnergyEV": 1.2398419835723278e-13,
+      "probeEnergyHbarcEV": 1.9732698033839645e-14,
+      "probeMomentum": 6.626070145940079e-41,
+      "dominantForce": "Gravity",
+      "imagingTech": "Eye"
+    },
+    "inv": {
+      "ok": true,
+      "value": 6.62607014594008e-34,
+      "expected": 6.62607014594008e-34,
+      "tol": 1e-9
+    }
+  },
+  "coupleE4": {
+    "L": "-10",
+    "E": "4.09336633835939",
+    "Lval": "-10.00",
+    "Eval": "4.09"
+  },
+  "coupleE12": {
+    "L": "-18",
+    "E": "12.0933663383594",
+    "Lval": "-18.00",
+    "Eval": "12.09"
+  },
+  "coupleL14": {
+    "L": "-14",
+    "E": "8.09336633835939",
+    "Lval": "-14.00",
+    "Eval": "8.09"
+  },
+  "afterRulerDrag": {
+    "L": "-1.39",
+    "E": "-4.51663366164061",
+    "Lval": "-1.39",
+    "Eval": "-4.52"
+  },
+  "afterReset": {
+    "L": "-10",
+    "E": "4.09336633835939",
+    "Lval": "-10.00",
+    "Eval": "4.09"
+  },
+  "inquiry": {
+    "cards": 6,
+    "gates": 3
+  },
+  "overflow1100": false,
+  "jsErrors": []
+}

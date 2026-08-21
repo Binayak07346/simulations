@@ -1,0 +1,565 @@
+{
+  "sim": "Wu_exp",
+  "errors": [],
+  "states": [
+    {
+      "label": "initial",
+      "readouts": [],
+      "playLabel": "⏸ Pause",
+      "audit": {
+        "polarization": 0.6717800943562147,
+        "fieldOverTemperature": 1655.6556074129555,
+        "coefficient": -0.4030680566137288,
+        "asymmetry": -0.2015340283068644,
+        "polarAsymmetry": -0.4030680566137288,
+        "intensityAlongSpin": 0.5969319433862712,
+        "intensityAgainstSpin": 1.4030680566137288,
+        "nSpins": 1,
+        "firing": false,
+        "showMirror": false
+      }
+    },
+    {
+      "label": "after-play",
+      "readouts": [],
+      "playLabel": "▶ Play",
+      "audit": {
+        "polarization": 0.6717800943562147,
+        "fieldOverTemperature": 1655.6556074129555,
+        "coefficient": -0.4030680566137288,
+        "asymmetry": -0.2015340283068644,
+        "polarAsymmetry": -0.4030680566137288,
+        "intensityAlongSpin": 0.5969319433862712,
+        "intensityAgainstSpin": 1.4030680566137288,
+        "nSpins": 1,
+        "firing": false,
+        "showMirror": false
+      }
+    },
+    {
+      "label": "shell-speed-0.25",
+      "readouts": [],
+      "playLabel": "▶ Play",
+      "audit": {
+        "polarization": 0.6717800943562147,
+        "fieldOverTemperature": 1655.6556074129555,
+        "coefficient": -0.4030680566137288,
+        "asymmetry": -0.2015340283068644,
+        "polarAsymmetry": -0.4030680566137288,
+        "intensityAlongSpin": 0.5969319433862712,
+        "intensityAgainstSpin": 1.4030680566137288,
+        "nSpins": 1,
+        "firing": false,
+        "showMirror": false
+      }
+    },
+    {
+      "label": "shell-speed-0.5",
+      "readouts": [],
+      "playLabel": "▶ Play",
+      "audit": {
+        "polarization": 0.6717800943562147,
+        "fieldOverTemperature": 1655.6556074129555,
+        "coefficient": -0.4030680566137288,
+        "asymmetry": -0.2015340283068644,
+        "polarAsymmetry": -0.4030680566137288,
+        "intensityAlongSpin": 0.5969319433862712,
+        "intensityAgainstSpin": 1.4030680566137288,
+        "nSpins": 1,
+        "firing": false,
+        "showMirror": false
+      }
+    },
+    {
+      "label": "shell-speed-1",
+      "readouts": [],
+      "playLabel": "▶ Play",
+      "audit": {
+        "polarization": 0.6717800943562147,
+        "fieldOverTemperature": 1655.6556074129555,
+        "coefficient": -0.4030680566137288,
+        "asymmetry": -0.2015340283068644,
+        "polarAsymmetry": -0.4030680566137288,
+        "intensityAlongSpin": 0.5969319433862712,
+        "intensityAgainstSpin": 1.4030680566137288,
+        "nSpins": 1,
+        "firing": false,
+        "showMirror": false
+      }
+    },
+    {
+      "label": "shell-speed-2",
+      "readouts": [],
+      "playLabel": "▶ Play",
+      "audit": {
+        "polarization": 0.6717800943562147,
+        "fieldOverTemperature": 1655.6556074129555,
+        "coefficient": -0.4030680566137288,
+        "asymmetry": -0.2015340283068644,
+        "polarAsymmetry": -0.4030680566137288,
+        "intensityAlongSpin": 0.5969319433862712,
+        "intensityAgainstSpin": 1.4030680566137288,
+        "nSpins": 1,
+        "firing": false,
+        "showMirror": false
+      }
+    },
+    {
+      "label": "shell-speed-4",
+      "readouts": [],
+      "playLabel": "▶ Play",
+      "audit": {
+        "polarization": 0.6717800943562147,
+        "fieldOverTemperature": 1655.6556074129555,
+        "coefficient": -0.4030680566137288,
+        "asymmetry": -0.2015340283068644,
+        "polarAsymmetry": -0.4030680566137288,
+        "intensityAlongSpin": 0.5969319433862712,
+        "intensityAgainstSpin": 1.4030680566137288,
+        "nSpins": 1,
+        "firing": false,
+        "showMirror": false
+      }
+    },
+    {
+      "label": "B-min",
+      "readouts": [],
+      "playLabel": "▶ Play",
+      "audit": {
+        "polarization": 0,
+        "coefficient": 0,
+        "asymmetry": 0,
+        "polarAsymmetry": 0,
+        "intensityAlongSpin": 1,
+        "intensityAgainstSpin": 1,
+        "nSpins": 1,
+        "firing": false,
+        "showMirror": false
+      }
+    },
+    {
+      "label": "B-mid",
+      "readouts": [],
+      "playLabel": "▶ Play",
+      "audit": {
+        "polarization": 0.6717800943562147,
+        "fieldOverTemperature": 1655.6556074129555,
+        "coefficient": -0.4030680566137288,
+        "asymmetry": -0.2015340283068644,
+        "polarAsymmetry": -0.4030680566137288,
+        "intensityAlongSpin": 0.5969319433862712,
+        "intensityAgainstSpin": 1.4030680566137288,
+        "nSpins": 1,
+        "firing": false,
+        "showMirror": false
+      }
+    },
+    {
+      "label": "B-max",
+      "readouts": [],
+      "playLabel": "▶ Play",
+      "audit": {
+        "polarization": 0.8676628291231535,
+        "fieldOverTemperature": 3311.311214825911,
+        "coefficient": -0.5205976974738921,
+        "asymmetry": -0.26029884873694603,
+        "polarAsymmetry": -0.5205976974738921,
+        "intensityAlongSpin": 0.47940230252610794,
+        "intensityAgainstSpin": 1.520597697473892,
+        "nSpins": 1,
+        "firing": false,
+        "showMirror": false
+      }
+    },
+    {
+      "label": "T-min",
+      "readouts": [],
+      "playLabel": "▶ Play",
+      "audit": {
+        "polarization": 0.9336424148384399,
+        "fieldOverTemperature": 5000,
+        "coefficient": -0.5601854489030639,
+        "asymmetry": -0.28009272445153194,
+        "polarAsymmetry": -0.5601854489030639,
+        "intensityAlongSpin": 0.4398145510969361,
+        "intensityAgainstSpin": 1.5601854489030638,
+        "nSpins": 1,
+        "firing": false,
+        "showMirror": false
+      }
+    },
+    {
+      "label": "T-mid",
+      "readouts": [],
+      "playLabel": "▶ Play",
+      "audit": {
+        "polarization": 0.08755385530102533,
+        "fieldOverTemperature": 158.11388300841898,
+        "coefficient": -0.052532313180615194,
+        "asymmetry": -0.026266156590307597,
+        "polarAsymmetry": -0.052532313180615194,
+        "intensityAlongSpin": 0.9474676868193848,
+        "intensityAgainstSpin": 1.0525323131806152,
+        "nSpins": 1,
+        "firing": false,
+        "showMirror": false
+      }
+    },
+    {
+      "label": "T-max",
+      "readouts": [],
+      "playLabel": "▶ Play",
+      "audit": {
+        "polarization": 0.0027795409323232434,
+        "fieldOverTemperature": 5,
+        "coefficient": -0.001667724559393946,
+        "asymmetry": -0.000833862279696973,
+        "polarAsymmetry": -0.001667724559393946,
+        "intensityAlongSpin": 0.9983322754406061,
+        "intensityAgainstSpin": 1.001667724559394,
+        "nSpins": 1,
+        "firing": false,
+        "showMirror": false
+      }
+    },
+    {
+      "label": "btn-shell-info",
+      "readouts": [],
+      "playLabel": "▶ Play",
+      "audit": {
+        "polarization": 0.6717800943562147,
+        "fieldOverTemperature": 1655.6556074129555,
+        "coefficient": -0.4030680566137288,
+        "asymmetry": -0.2015340283068644,
+        "polarAsymmetry": -0.4030680566137288,
+        "intensityAlongSpin": 0.5969319433862712,
+        "intensityAgainstSpin": 1.4030680566137288,
+        "nSpins": 1,
+        "firing": false,
+        "showMirror": false
+      }
+    },
+    {
+      "label": "btn-shell-theme",
+      "readouts": [],
+      "playLabel": "▶ Play",
+      "audit": {
+        "polarization": 0.6717800943562147,
+        "fieldOverTemperature": 1655.6556074129555,
+        "coefficient": -0.4030680566137288,
+        "asymmetry": -0.2015340283068644,
+        "polarAsymmetry": -0.4030680566137288,
+        "intensityAlongSpin": 0.5969319433862712,
+        "intensityAgainstSpin": 1.4030680566137288,
+        "nSpins": 1,
+        "firing": false,
+        "showMirror": false
+      }
+    },
+    {
+      "label": "btn-shell-lecture",
+      "readouts": [],
+      "playLabel": "▶ Play",
+      "audit": {
+        "polarization": 0.6717800943562147,
+        "fieldOverTemperature": 1655.6556074129555,
+        "coefficient": -0.4030680566137288,
+        "asymmetry": -0.2015340283068644,
+        "polarAsymmetry": -0.4030680566137288,
+        "intensityAlongSpin": 0.5969319433862712,
+        "intensityAgainstSpin": 1.4030680566137288,
+        "nSpins": 18,
+        "firing": false,
+        "showMirror": true
+      }
+    },
+    {
+      "label": "btn-shell-maximize",
+      "readouts": [],
+      "playLabel": "▶ Play",
+      "audit": {
+        "polarization": 0.6717800943562147,
+        "fieldOverTemperature": 1655.6556074129555,
+        "coefficient": -0.4030680566137288,
+        "asymmetry": -0.2015340283068644,
+        "polarAsymmetry": -0.4030680566137288,
+        "intensityAlongSpin": 0.5969319433862712,
+        "intensityAgainstSpin": 1.4030680566137288,
+        "nSpins": 18,
+        "firing": false,
+        "showMirror": true
+      }
+    },
+    {
+      "label": "btn-toggle-formal",
+      "readouts": [],
+      "playLabel": "▶ Play",
+      "audit": {
+        "polarization": 0.6717800943562147,
+        "fieldOverTemperature": 1655.6556074129555,
+        "coefficient": -0.4030680566137288,
+        "asymmetry": -0.2015340283068644,
+        "polarAsymmetry": -0.4030680566137288,
+        "intensityAlongSpin": 0.5969319433862712,
+        "intensityAgainstSpin": 1.4030680566137288,
+        "nSpins": 18,
+        "firing": false,
+        "showMirror": true
+      }
+    },
+    {
+      "label": "btn-shell-play",
+      "readouts": [],
+      "playLabel": "⏸ Pause",
+      "audit": {
+        "polarization": 0.6717800943562147,
+        "fieldOverTemperature": 1655.6556074129555,
+        "coefficient": -0.4030680566137288,
+        "asymmetry": -0.2015340283068644,
+        "polarAsymmetry": -0.4030680566137288,
+        "intensityAlongSpin": 0.5969319433862712,
+        "intensityAgainstSpin": 1.4030680566137288,
+        "nSpins": 18,
+        "firing": false,
+        "showMirror": true
+      }
+    },
+    {
+      "label": "btn-inq-prev",
+      "readouts": [],
+      "playLabel": "⏸ Pause",
+      "audit": {
+        "polarization": 0.6717800943562147,
+        "fieldOverTemperature": 1655.6556074129555,
+        "coefficient": -0.4030680566137288,
+        "asymmetry": -0.2015340283068644,
+        "polarAsymmetry": -0.4030680566137288,
+        "intensityAlongSpin": 0.5969319433862712,
+        "intensityAgainstSpin": 1.4030680566137288,
+        "nSpins": 18,
+        "firing": false,
+        "showMirror": true
+      }
+    },
+    {
+      "label": "btn-inq-pager-next",
+      "readouts": [],
+      "playLabel": "⏸ Pause",
+      "audit": {
+        "polarization": 0.6717800943562147,
+        "fieldOverTemperature": 1655.6556074129555,
+        "coefficient": -0.4030680566137288,
+        "asymmetry": -0.2015340283068644,
+        "polarAsymmetry": -0.4030680566137288,
+        "intensityAlongSpin": 0.5969319433862712,
+        "intensityAgainstSpin": 1.4030680566137288,
+        "nSpins": 18,
+        "firing": false,
+        "showMirror": true
+      }
+    },
+    {
+      "label": "btn-inq-next",
+      "readouts": [],
+      "playLabel": "⏸ Pause",
+      "audit": {
+        "polarization": 0.6717800943562147,
+        "fieldOverTemperature": 1655.6556074129555,
+        "coefficient": -0.4030680566137288,
+        "asymmetry": -0.2015340283068644,
+        "polarAsymmetry": -0.4030680566137288,
+        "intensityAlongSpin": 0.5969319433862712,
+        "intensityAgainstSpin": 1.4030680566137288,
+        "nSpins": 18,
+        "firing": false,
+        "showMirror": true
+      }
+    },
+    {
+      "label": "btn-fire-btn",
+      "readouts": [],
+      "playLabel": "⏸ Pause",
+      "audit": {
+        "polarization": 0.6717800943562147,
+        "fieldOverTemperature": 1655.6556074129555,
+        "coefficient": -0.4030680566137288,
+        "asymmetry": -0.2015340283068644,
+        "polarAsymmetry": -0.4030680566137288,
+        "intensityAlongSpin": 0.5969319433862712,
+        "intensityAgainstSpin": 1.4030680566137288,
+        "nSpins": 18,
+        "firing": true,
+        "showMirror": true
+      }
+    },
+    {
+      "label": "btn-mirror-btn",
+      "readouts": [],
+      "playLabel": "⏸ Pause",
+      "audit": {
+        "polarization": 0.6717800943562147,
+        "fieldOverTemperature": 1655.6556074129555,
+        "coefficient": -0.4030680566137288,
+        "asymmetry": -0.2015340283068644,
+        "polarAsymmetry": -0.4030680566137288,
+        "intensityAlongSpin": 0.5969319433862712,
+        "intensityAgainstSpin": 1.4030680566137288,
+        "nSpins": 18,
+        "firing": true,
+        "showMirror": false
+      }
+    },
+    {
+      "label": "btn-shell-reset",
+      "readouts": [],
+      "playLabel": "⏸ Pause",
+      "audit": {
+        "polarization": 0.6717800943562147,
+        "fieldOverTemperature": 1655.6556074129555,
+        "coefficient": -0.4030680566137288,
+        "asymmetry": -0.2015340283068644,
+        "polarAsymmetry": -0.4030680566137288,
+        "intensityAlongSpin": 0.5969319433862712,
+        "intensityAgainstSpin": 1.4030680566137288,
+        "nSpins": 18,
+        "firing": false,
+        "showMirror": false
+      }
+    },
+    {
+      "label": "btn-clear-btn",
+      "readouts": [],
+      "playLabel": "⏸ Pause",
+      "audit": {
+        "polarization": 0.6717800943562147,
+        "fieldOverTemperature": 1655.6556074129555,
+        "coefficient": -0.4030680566137288,
+        "asymmetry": -0.2015340283068644,
+        "polarAsymmetry": -0.4030680566137288,
+        "intensityAlongSpin": 0.5969319433862712,
+        "intensityAgainstSpin": 1.4030680566137288,
+        "nSpins": 18,
+        "firing": false,
+        "showMirror": false
+      }
+    },
+    {
+      "label": "narrow-1100",
+      "readouts": [],
+      "playLabel": "⏸ Pause",
+      "audit": {
+        "polarization": 0.6717800943562147,
+        "fieldOverTemperature": 1655.6556074129555,
+        "coefficient": -0.4030680566137288,
+        "asymmetry": -0.2015340283068644,
+        "polarAsymmetry": -0.4030680566137288,
+        "intensityAlongSpin": 0.5969319433862712,
+        "intensityAgainstSpin": 1.4030680566137288,
+        "nSpins": 18,
+        "firing": false,
+        "showMirror": false
+      }
+    }
+  ],
+  "persistence": [],
+  "overlaps": [],
+  "overflowX": false,
+  "controls": {
+    "sliders": [
+      {
+        "id": "B",
+        "min": 0,
+        "max": 10,
+        "value": 5
+      },
+      {
+        "id": "T",
+        "min": -3,
+        "max": 0,
+        "value": -2.52
+      }
+    ],
+    "selects": [
+      {
+        "id": "shell-speed",
+        "key": "shell-speed",
+        "options": [
+          "0.25",
+          "0.5",
+          "1",
+          "2",
+          "4"
+        ],
+        "value": "1"
+      }
+    ],
+    "checkboxes": [],
+    "buttons": [
+      {
+        "id": "shell-info",
+        "idx": 0,
+        "label": "ⓘ Info"
+      },
+      {
+        "id": "shell-theme",
+        "idx": 1,
+        "label": "☾"
+      },
+      {
+        "id": "shell-lecture",
+        "idx": 2,
+        "label": "🎓 Hide Guided Inquiry"
+      },
+      {
+        "id": "shell-maximize",
+        "idx": 3,
+        "label": "⛶ Maximize"
+      },
+      {
+        "id": "toggle-formal",
+        "idx": 4,
+        "label": "∑ Formal"
+      },
+      {
+        "id": "shell-reset",
+        "idx": 5,
+        "label": "↻ Reset"
+      },
+      {
+        "id": "shell-play",
+        "idx": 6,
+        "label": "▶ Play"
+      },
+      {
+        "id": "inq-prev",
+        "idx": 7,
+        "label": "<"
+      },
+      {
+        "id": "inq-pager-next",
+        "idx": 8,
+        "label": ">"
+      },
+      {
+        "id": "inq-next",
+        "idx": 9,
+        "label": "Next →"
+      },
+      {
+        "id": "fire-btn",
+        "idx": 10,
+        "label": "▶ Fire decays"
+      },
+      {
+        "id": "mirror-btn",
+        "idx": 11,
+        "label": "⇋ Show mirror"
+      },
+      {
+        "id": "clear-btn",
+        "idx": 12,
+        "label": "✕ Clear counts"
+      }
+    ]
+  }
+}

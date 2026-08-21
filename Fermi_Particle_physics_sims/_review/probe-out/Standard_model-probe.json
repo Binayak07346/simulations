@@ -1,0 +1,225 @@
+{
+  "sim": "Standard_model",
+  "errors": [],
+  "states": [
+    {
+      "label": "initial",
+      "readouts": [],
+      "playLabel": null,
+      "audit": {
+        "mode": "table",
+        "selected": null,
+        "lastParticle": null,
+        "lastTerm": null
+      }
+    },
+    {
+      "label": "after-play",
+      "readouts": [],
+      "playLabel": null,
+      "audit": {
+        "mode": "table",
+        "selected": null,
+        "lastParticle": null,
+        "lastTerm": null
+      }
+    },
+    {
+      "label": "btn-shell-info",
+      "readouts": [],
+      "playLabel": null,
+      "audit": {
+        "mode": "table",
+        "selected": null,
+        "lastParticle": null,
+        "lastTerm": null
+      }
+    },
+    {
+      "label": "btn-shell-theme",
+      "readouts": [],
+      "playLabel": null,
+      "audit": {
+        "mode": "table",
+        "selected": null,
+        "lastParticle": null,
+        "lastTerm": null
+      }
+    },
+    {
+      "label": "btn-shell-lecture",
+      "readouts": [],
+      "playLabel": null,
+      "audit": {
+        "mode": "table",
+        "selected": null,
+        "lastParticle": null,
+        "lastTerm": null
+      }
+    },
+    {
+      "label": "btn-shell-maximize",
+      "readouts": [],
+      "playLabel": null,
+      "audit": {
+        "mode": "table",
+        "selected": null,
+        "lastParticle": null,
+        "lastTerm": null
+      }
+    },
+    {
+      "label": "btn-toggle-formal",
+      "readouts": [],
+      "playLabel": null,
+      "audit": {
+        "mode": "table",
+        "selected": null,
+        "lastParticle": null,
+        "lastTerm": null
+      }
+    },
+    {
+      "label": "btn-inq-prev",
+      "readouts": [],
+      "playLabel": null,
+      "audit": {
+        "mode": "table",
+        "selected": null,
+        "lastParticle": null,
+        "lastTerm": null
+      }
+    },
+    {
+      "label": "btn-inq-pager-next",
+      "readouts": [],
+      "playLabel": null,
+      "audit": {
+        "mode": "table",
+        "selected": null,
+        "lastParticle": null,
+        "lastTerm": null
+      }
+    },
+    {
+      "label": "btn-inq-next",
+      "readouts": [],
+      "playLabel": null,
+      "audit": {
+        "mode": "table",
+        "selected": null,
+        "lastParticle": null,
+        "lastTerm": null
+      }
+    },
+    {
+      "label": "btn-mode-table",
+      "readouts": [],
+      "playLabel": null,
+      "audit": {
+        "mode": "table",
+        "selected": null,
+        "lastParticle": null,
+        "lastTerm": null
+      }
+    },
+    {
+      "label": "btn-mode-lagr",
+      "readouts": [],
+      "playLabel": null,
+      "audit": {
+        "mode": "lagrangian",
+        "selected": null,
+        "lastParticle": null,
+        "lastTerm": null
+      }
+    },
+    {
+      "label": "btn-shell-reset",
+      "readouts": [],
+      "playLabel": null,
+      "audit": {
+        "mode": "table",
+        "selected": null,
+        "lastParticle": null,
+        "lastTerm": null
+      }
+    },
+    {
+      "label": "narrow-1100",
+      "readouts": [],
+      "playLabel": null,
+      "audit": {
+        "mode": "table",
+        "selected": null,
+        "lastParticle": null,
+        "lastTerm": null
+      }
+    }
+  ],
+  "persistence": [],
+  "overlaps": [],
+  "overflowX": false,
+  "controls": {
+    "sliders": [],
+    "selects": [],
+    "checkboxes": [],
+    "buttons": [
+      {
+        "id": "shell-info",
+        "idx": 0,
+        "label": "ⓘ Info"
+      },
+      {
+        "id": "shell-theme",
+        "idx": 1,
+        "label": "☾"
+      },
+      {
+        "id": "shell-lecture",
+        "idx": 2,
+        "label": "🎓 Hide Guided Inquiry"
+      },
+      {
+        "id": "shell-maximize",
+        "idx": 3,
+        "label": "⛶ Maximize"
+      },
+      {
+        "id": "toggle-formal",
+        "idx": 4,
+        "label": "∑ Formal"
+      },
+      {
+        "id": "shell-reset",
+        "idx": 5,
+        "label": "↻ Reset"
+      },
+      {
+        "id": "inq-prev",
+        "idx": 6,
+        "label": "<"
+      },
+      {
+        "id": "inq-pager-next",
+        "idx": 7,
+        "label": ">"
+      },
+      {
+        "id": "inq-next",
+        "idx": 8,
+        "label": "Next →"
+      },
+      {
+        "id": "mode-table",
+        "idx": 9,
+        "label": "The Table"
+      },
+      {
+        "id": "mode-lagr",
+        "idx": 10,
+        "label": "The Lagrangian"
+      }
+    ]
+  }
+}
