@@ -1857,7 +1857,8 @@ function drawApparatus(cx, cy, scale, mirrored){
   ctx.font = '12px ' + cssVar('--font-sans');
   ctx.fillStyle = coilColor;
   ctx.textAlign = 'center';
-  ctx.fillText(mirrored ? 'coil current (unchanged — loops lie parallel to the mirror)' : 'coil current', 0, -128*scale);
+  // Short label sits left-of-center so it clears the DOM legend chip (top right).
+  ctx.fillText(mirrored ? 'coil current (unchanged — loops lie parallel to the mirror)' : 'coil current', mirrored ? 0 : -62*scale, -128*scale);
 
   // Crystal
   ctx.fillStyle = 'rgba(94,164,150,0.10)';
@@ -1903,8 +1904,9 @@ function drawApparatus(cx, cy, scale, mirrored){
   // In-flight particles
   drawParticles(ctx, scale, mirrored);
 
-  // Angular polar curve
-  drawAngularHistogram(ctx, scale, mirrored);
+  // W(θ) polar plot beside the apparatus (was drawn over the crystal, where it
+  // read as a cross-section of the hardware)
+  drawWPlot(ctx, -196*scale, 0, scale, mirrored);
 
   // Panel title
   ctx.font = 'bold 12px ' + cssVar('--font-sans');
@@ -2038,33 +2040,66 @@ function drawParticles(ctx, scale, mirrored){
   });
 }
 
-function drawAngularHistogram(ctx, scale, mirrored){
-  const Rmax = 55 * scale;
+function drawWPlot(ctx, px, py, scale, mirrored){
+  const R = 45 * scale;
   const maxCoef = Math.abs(A_CO60) * 1.0 * BETA_EL;
   const norm = 1 + maxCoef;
+  ctx.save();
+  ctx.translate(px, py);
 
-  ctx.strokeStyle = mirrored ? 'rgba(248,113,113,0.7)' : 'rgba(96,165,250,0.7)';
-  ctx.lineWidth = 1.6;
+  // θ = 0 axis, along +J (canvas up)
+  ctx.strokeStyle = 'rgba(148,163,184,0.25)';
+  ctx.lineWidth = 1;
+  ctx.setLineDash([3,3]);
+  ctx.beginPath();
+  ctx.moveTo(0, R + 4*scale);
+  ctx.lineTo(0, -R - 4*scale);
+  ctx.stroke();
+  ctx.setLineDash([]);
+
+  // isotropic reference — what parity conservation (or P = 0) would give
+  ctx.strokeStyle = 'rgba(148,163,184,0.4)';
+  ctx.setLineDash([2,3]);
+  ctx.beginPath();
+  ctx.arc(0, 0, (1/norm)*R, 0, Math.PI*2);
+  ctx.stroke();
+  ctx.setLineDash([]);
+
+  ctx.strokeStyle = mirrored ? 'rgba(248,113,113,0.85)' : 'rgba(96,165,250,0.85)';
+  ctx.lineWidth = 1.8;
   ctx.beginPath();
   const steps = 128;
   for(let i = 0; i <= steps; i++){
     const theta = i / steps * Math.PI * 2;
     const dist = Engine.weak.wuAngularDistribution(A_CO60, state.P, BETA_EL, theta);
     const W = mirrored ? dist.mirroredIntensity : dist.intensity;
-    const r = (W / norm) * Rmax;
-    const px = r * Math.sin(theta);
-    const py = -r * Math.cos(theta);
-    if(i === 0) ctx.moveTo(px, py);
-    else ctx.lineTo(px, py);
+    const r = (W / norm) * R;
+    const x = r * Math.sin(theta);
+    const y = -r * Math.cos(theta);
+    if(i === 0) ctx.moveTo(x, y);
+    else ctx.lineTo(x, y);
   }
   ctx.stroke();
 
-  ctx.strokeStyle = 'rgba(148,163,184,0.15)';
-  ctx.setLineDash([2,3]);
+  // source at the plot origin
+  ctx.fillStyle = 'rgba(148,163,184,0.8)';
   ctx.beginPath();
-  ctx.arc(0, 0, (1/norm)*Rmax, 0, Math.PI*2);
-  ctx.stroke();
-  ctx.setLineDash([]);
+  ctx.arc(0, 0, 2.2, 0, Math.PI*2);
+  ctx.fill();
+
+  // angle references
+  ctx.font = '10px ' + cssVar('--font-nums');
+  ctx.fillStyle = '#f59e0b';
+  ctx.textAlign = 'center';
+  ctx.fillText('θ = 0 ∥ J', 0, -R - 10*scale);
+  ctx.fillStyle = cssVar('--muted');
+  ctx.fillText('θ = 180°', 0, R + 16*scale);
+
+  // caption
+  ctx.font = '11px ' + cssVar('--font-sans');
+  ctx.fillStyle = mirrored ? '#f87171' : '#93c5fd';
+  ctx.fillText(mirrored ? 'W(θ) in the mirror' : 'W(θ) emission rate', 0, R + 32*scale);
+  ctx.restore();
 }
 
 /* -------- SCENE ROOT -------- */
@@ -2076,10 +2111,12 @@ function drawScene(){
 
   if(state.showMirror){
     // Stack panels TOP (real) and BOTTOM (mirror) with a HORIZONTAL mirror plane between them.
-    const scale = Math.min(w / 380, h / 720);
+    // Width budget 470 units: W(θ) side plot extends to −241·s, spin legend to +150·s;
+    // apparatus center sits right of canvas center to balance the side plot.
+    const scale = Math.min(w / 470, h / 720);
     const s = Math.max(0.55, Math.min(1.4, scale));
-    drawApparatus(w * 0.5, h * 0.27, s, false);
-    drawApparatus(w * 0.5, h * 0.73, s, true);
+    drawApparatus(w * 0.5 + 30*s, h * 0.27, s, false);
+    drawApparatus(w * 0.5 + 30*s, h * 0.73, s, true);
     // horizontal mirror line
     sctx.strokeStyle = 'rgba(148,163,184,0.35)';
     sctx.setLineDash([6,6]);
@@ -2093,9 +2130,9 @@ function drawScene(){
     sctx.textAlign = 'left';
     sctx.fillText('mirror plane', 24, h*0.5 - 6);
   } else {
-    const scale = Math.min(w / 380, h / 360) * 0.95;
+    const scale = Math.min(w / 470, h / 360) * 0.95;
     const s = Math.max(0.8, scale);
-    drawApparatus(w * 0.5, h * 0.5, s, false);
+    drawApparatus(w * 0.5 + 30*s, h * 0.5, s, false);
   }
 
   sctx.fillStyle = cssVar('--muted');
