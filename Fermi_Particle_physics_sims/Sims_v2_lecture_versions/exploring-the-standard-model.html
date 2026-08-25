@@ -213,8 +213,10 @@ body.light-theme .predict-eval .answer,body.light-theme .predict-eval strong,htm
 #inq-cards{flex:1 1 auto;min-height:0;}
 .inq-step{display:none;}
 .inq-step.active{display:block;}
-.inq-nav{display:flex;justify-content:flex-end;flex-shrink:0;}
-#inq-next{min-width:96px;justify-content:center;}
+.inq-nav{display:flex;justify-content:space-between;flex-shrink:0;}
+.inq-pager{display:flex;align-items:center;gap:8px;}
+.inq-pager-btn{min-width:36px;padding:6px 11px;justify-content:center;font-size:13px;line-height:1;}
+#inq-next{min-width:96px;justify-content:center;margin-left:auto;}
 .aside-restore{display:none;width:100%;text-align:left;background:var(--panel-2);border:1px solid var(--line);
   color:var(--ink-mid);font:inherit;font-size:11px;letter-spacing:.06em;text-transform:uppercase;
   padding:8px 12px;border-radius:6px;cursor:pointer;flex-shrink:0;transition:background .15s,color .15s;}
@@ -305,12 +307,6 @@ body.light-theme .predict-eval .answer,body.light-theme .predict-eval strong,htm
 .sim-props td:last-child{text-align:right;color:var(--text);font-weight:700;font-size:16px;}
 .sim-props tr:last-child td{border-bottom:none;}
 .sim-tidbit{margin:8px 0 0;font-size:14px;line-height:1.4;font-style:italic;color:var(--muted);min-width:140px;overflow-wrap:anywhere;box-sizing:border-box;}
-.sim-q{margin:0 0 8px;font-size:14px;color:var(--text);min-width:140px;}
-.sim-chips{display:flex;flex-wrap:wrap;gap:6px;}
-.sim-chip{padding:6px 12px;font-size:14px;font-weight:600;color:var(--text);background:var(--surface);border:1.5px solid var(--border);border-radius:999px;cursor:pointer;}
-.sim-chip:hover{border-color:var(--accent);}
-.sim-chip.sim-on{border-color:var(--accent);box-shadow:inset 0 0 0 1.5px var(--accent);color:var(--accent);}
-.sim-feedback{margin:8px 0 0;font-size:14px;line-height:1.4;color:var(--text);min-height:38px;min-width:140px;overflow-wrap:anywhere;}
 .sim-formal{color:var(--text);}
 .sim-eq{color:var(--text);text-align:center;font-size:18px;overflow-x:auto;padding:2px 0;}
 .sim-eq-row{display:flex;flex-wrap:wrap;gap:8px 32px;justify-content:center;align-items:center;margin-top:8px;font-size:15px;color:var(--text);}
@@ -324,6 +320,9 @@ body.light-theme .predict-eval .answer,body.light-theme .predict-eval strong,htm
 .inq-step p{margin:0 0 12px;font-size:14px;line-height:1.55;color:var(--muted);}
 .inq-step .predict-eval{display:none;}
 .inq-step .predict-eval.show{display:block;}
+/* Post-answer reveal: extension prose hidden until the card's predict is committed. */
+.inq-step .inq-after{display:none;}
+.inq-step[data-answered] .inq-after{display:block;}
 </style>
 </head>
 <body>
@@ -363,6 +362,7 @@ body.light-theme .predict-eval .answer,body.light-theme .predict-eval strong,htm
     <div class="shell-group">
       <button id="shell-info" class="shell-btn" title="About this simulation">ⓘ Info</button>
       <button id="shell-theme" class="shell-btn" title="Toggle light / dark theme">☾</button>
+      <button id="shell-lecture" class="shell-btn" title="Lecture display mode — hide the guided inquiry, show the full simulation">🎓 Lecture</button>
     </div>
     <div class="shell-controls"><a id="shell-refine" class="shell-btn" style="display:none" target="_blank" rel="noopener" title="Refine this simulation (dev only)">✎ Refine</a>
       <div class="shell-group">
@@ -392,18 +392,38 @@ body.light-theme .predict-eval .answer,body.light-theme .predict-eval strong,htm
     <div id="aside-inquiry" class="aside-zone">
       <div class="aside-zone-head">
         <h3>Guided Inquiry</h3>
-        <button id="aside-inquiry-skip" class="shell-btn aside-skip" title="Skip the guided inquiry">Skip ✕</button>
       </div>
       <div id="inq-dots" class="inq-dots"></div>
       <div id="inq-cards" class="aside-zone-body">
-        <div class="inq-step"><h4>Start familiar</h4><p>The electron — known since 1897.</p></div>
-<div class="inq-step"><h4>Meet the newest</h4><p>The Higgs boson arrived in 2012.</p></div>
-<div class="inq-step"><h4>Charge pattern</h4><p>Recolor by charge: each row repeats one value.</p></div>
-<div class="inq-step"><h4>Mass pattern</h4><p>Recolor by mass: generations grow drastically heavier.</p></div>
-<div class="inq-step"><h4>One equation</h4><p>The Lagrangian packs it all together.</p></div>
-<div class="inq-step"><h4>Explore</h4><p>Click tiles, terms, and the mass ladder.</p></div>
+        <div class="inq-step"><h4>1 · Seventeen particles</h4>
+          <p>Columns I–III hold matter; the right columns hold force carriers and the Higgs — colors mark family. Selected: the <strong>electron</strong>, found 1897, the most familiar. The <strong>mass ladder</strong> below places every measured mass on a log scale.</p></div>
+<div class="inq-step" data-gate data-build="color:charge"><h4>2 · Heavier copies?</h4>
+          <p>Column II holds the muon — a heavier electron. “Who ordered that?” Going I → II → III along a row, what actually changes? Commit to recolor the tiles.</p>
+          <button class="choice" data-fb="Recolored by charge: each row keeps one value across I–III — charge never grows.">Charge grows with each generation</button>
+          <button class="choice" data-correct data-fb="Right — each row holds one charge across I–III: generations are heavier copies of generation I.">Only mass — charges repeat exactly</button>
+          <button class="choice" data-fb="Spin stays ½ and the recolor shows one charge per row — only mass changes.">Charge, spin and mass all change</button>
+          <div class="predict-eval"></div></div>
+<div class="inq-step" data-gate data-build="color:mass:11"><h4>3 · Meet the newest</h4>
+          <p>The <strong>Higgs</strong> arrived last — 2012 completed the table (panel: <strong>125.2 GeV</strong>). Is the newest also the heaviest? Commit, then read the <strong>mass ladder</strong>.</p>
+          <button class="choice" data-fb="Top beats Higgs: 172.7 vs 125.2 GeV — the ladder puts t rightmost.">Yes — the famous Higgs</button>
+          <button class="choice" data-fb="The Z reaches 91.19 GeV — a quark outweighs it: top, 172.7 GeV.">The Z — heaviest force carrier</button>
+          <button class="choice" data-correct data-fb="The <strong>top</strong>: 172.7 GeV, massive as a whole tungsten atom — rightmost on the ladder, found 1995.">The top quark</button>
+          <div class="predict-eval"></div></div>
+<div class="inq-step" data-gate data-build="mode:lagrangian"><h4>4 · One equation</h4>
+          <p>Masses span twelve orders of magnitude and three forces differ wildly — yet one Lagrangian ℒ governs all seventeen particles. How many terms does it need? Commit to see it.</p>
+          <button class="choice" data-correct data-fb="Five: gauge fields, matter, fermion masses, W/Z masses, Higgs potential — click each chip to expand it.">Five</button>
+          <button class="choice" data-fb="Fields share terms: i ψ̄ D̸ ψ alone moves all twelve fermions. Five terms cover everything.">Seventeen — one per particle</button>
+          <button class="choice" data-fb="It fits one line — on screen now: all three forces enter through one derivative Dμ.">No single equation — the forces differ too much</button>
+          <div class="predict-eval"></div>
+          <p class="inq-after">Every tile and term is a measurement, 1897–2012 — that is “experimentally well-tested”. Everyday matter is generation I alone; why three generations, nobody knows. Press <strong>Finish</strong> to explore: recolor with <strong>Tile colors</strong>, open <strong>∑ Formal</strong> for the typeset ℒ.</p></div>
       </div>
-      <div class="inq-nav"><button id="inq-next" class="shell-btn primary">Next →</button></div>
+      <div class="inq-nav">
+        <div class="inq-pager">
+          <button id="inq-prev" class="shell-btn primary inq-pager-btn" title="Previous step" aria-label="Previous step" disabled>&lt;</button>
+          <button id="inq-pager-next" class="shell-btn primary inq-pager-btn" title="Next step" aria-label="Next step">&gt;</button>
+        </div>
+        <button id="inq-next" class="shell-btn primary">Next →</button>
+      </div>
     </div>
     <button id="aside-inquiry-restore" class="aside-restore" title="Revisit the guided inquiry">▸ Guided inquiry</button>
     <div id="aside-controls" class="aside-zone">
@@ -429,16 +449,6 @@ body.light-theme .predict-eval .answer,body.light-theme .predict-eval strong,htm
     <tr><td>Found</td><td id="pYear">2012</td></tr>
   </table>
   <p class="sim-tidbit" id="pFact">Predicted 1964; its 2012 discovery completed the Standard Model.</p>
-</div>
-<div class="shell-panel">
-  <h3 class="sim-h">Predict</h3>
-  <p class="sim-q">Which particle is heaviest?</p>
-  <div class="sim-chips" id="guessChips">
-    <button type="button" class="sim-chip" data-guess="e">Electron</button>
-    <button type="button" class="sim-chip" data-guess="h">Higgs</button>
-    <button type="button" class="sim-chip" data-guess="t">Top quark</button>
-  </div>
-  <p class="sim-feedback" id="predictOut">Pick one, then check the mass ladder.</p>
 </div>
     </div>
   </aside>
@@ -495,6 +505,16 @@ const Shell = (function(){
     root.classList.toggle('inquiry-collapsed', on);
     requestAnimationFrame(refit);
   }
+  // Lecture display mode: ON = the post-completion free-exploration state
+  // (finishInquiry fast-forwards, runs onComplete, collapses, resumes play);
+  // OFF (second click or the restore chip) = reopen the inquiry at card 1.
+  function setLectureMode(on){
+    root.classList.toggle('lecture-mode', on);
+    const b=document.getElementById('shell-lecture');
+    if(b) b.classList.toggle('active', on);
+    if(on){ finishInquiry(); }
+    else { setInquiryCollapsed(false); if(inqCards().length) inqShow(0); }
+  }
 
   // ---- Guided-inquiry stepper (shell-owned, so Next/Finish are always wired) ----
   // The SIM supplies sequential <div class="inq-step"> cards in #inq-cards. The
@@ -518,8 +538,23 @@ const Shell = (function(){
       next.disabled = gated;
       next.textContent = (inqStep>=cards.length-1) ? 'Finish' : 'Next →';
     }
+    inqUpdatePager();
     onStep(inqStep);
     requestAnimationFrame(refit);
+  }
+  function inqUpdatePager(){
+    const cards=inqCards();
+    const prev=document.getElementById('inq-prev');
+    const pnext=document.getElementById('inq-pager-next');
+    if(prev) prev.disabled = inqStep<=0;
+    if(pnext) pnext.disabled = inqStep>=cards.length-1;
+  }
+  function inqPrev(){
+    if(inqStep>0) inqShow(inqStep-1);
+  }
+  function inqPagerNext(){
+    const cards=inqCards();
+    if(inqStep<cards.length-1) inqShow(inqStep+1);
   }
   function inqNext(){
     const cards=inqCards();
@@ -556,7 +591,6 @@ const Shell = (function(){
     const reset=document.getElementById('shell-reset');
     const spd=document.getElementById('shell-speed');
     const maxBtn=document.getElementById('shell-maximize');
-    const skip=document.getElementById('aside-inquiry-skip');
     const restore=document.getElementById('aside-inquiry-restore');
     const tFormal=document.getElementById('toggle-formal');
 
@@ -589,12 +623,17 @@ const Shell = (function(){
       else if(root.classList.contains('shell-max')) setMaximized(false);
     });
 
-    // Skip ✕ jumps to the completed state (all controls live); restore reopens it.
-    if(skip) skip.addEventListener('click',finishInquiry);
-    if(restore) restore.addEventListener('click',()=>setInquiryCollapsed(false));
+    // Lecture mode owns hiding the inquiry; restore reopens it at card 1.
+    const lecture=document.getElementById('shell-lecture');
+    if(lecture) lecture.addEventListener('click',()=>setLectureMode(!root.classList.contains('lecture-mode')));
+    if(restore) restore.addEventListener('click',()=>setLectureMode(false));
     // Next / Finish — shell-driven step advance (Finish collapses the inquiry).
     const inqNextBtn=document.getElementById('inq-next');
     if(inqNextBtn) inqNextBtn.addEventListener('click',inqNext);
+    const inqPrevBtn=document.getElementById('inq-prev');
+    if(inqPrevBtn) inqPrevBtn.addEventListener('click',inqPrev);
+    const inqPagerNextBtn=document.getElementById('inq-pager-next');
+    if(inqPagerNextBtn) inqPagerNextBtn.addEventListener('click',inqPagerNext);
     // Auto-gate: a .choice click inside the active gated card enables Next.
     const cardsHost=document.getElementById('inq-cards');
     if(cardsHost) cardsHost.addEventListener('click',e=>{
@@ -622,15 +661,25 @@ const Shell = (function(){
     init(opts){
       onFrame=opts.onFrame||onFrame; onReset=opts.onReset||onReset; onResize=opts.onResize||onResize; onStep=opts.onStep||onStep; onComplete=opts.onComplete||onComplete;
       wire();
-      // Guided inquiry is retired from the sidebar: hide the whole zone + restore bar,
-      // and open the sim directly in its COMPLETED state (as if the student had finished
-      // the inquiry) — every control live, every staged panel revealed.
+      // Guided inquiry RE-ENABLED (was retired in the raw lecture export): build the
+      // step dots and open on card 1. Sims that ship no cards still fall back to the
+      // retired behaviour — zone hidden, sim opened in its completed state.
       const cards=inqCards();
       inqTotal=cards.length;
-      root.classList.add('no-inquiry');
-      onResize(); onReset();
-      if(inqTotal>0){ for(let k=0;k<cards.length;k++) onStep(k); inqStep=cards.length-1; }
-      onComplete();
+      if(inqTotal>0){
+        const dotsHost=document.getElementById('inq-dots');
+        if(dotsHost&&!dotsHost.children.length){
+          for(let k=0;k<inqTotal;k++){const d=document.createElement('div');d.className='inq-dot';dotsHost.appendChild(d);}
+        }
+        onResize(); onReset();
+        inqShow(0);
+      }else{
+        root.classList.add('no-inquiry');
+        const lb=document.getElementById('shell-lecture');
+        if(lb) lb.style.display='none';
+        onResize(); onReset();
+        onComplete();
+      }
       setPlaying(true);
       last=performance.now();
       if(!started){ started=true; requestAnimationFrame(loop); }
@@ -729,14 +778,9 @@ window.__audit = {
   ];
   const PREF = [{ t: 'ℒ =' }];
   const ALLROW = [0, 1, 2, 3, 4];
-  const FB = {
-    e: '✗ Lightest charged particle — check the far left.',
-    h: '✗ Top beats Higgs: 172.7 vs 125.2 GeV.',
-    t: '✓ Top quark: 172.7 GeV — above the Higgs.'
-  };
 
   /* ---------------- state & canvas ---------------- */
-  const state = { mode: 'particles', colorBy: 'family', sel: 3, term: 0, hovT: -1, hovC: -1, guessed: null, t: 0 };
+  const state = { mode: 'particles', colorBy: 'family', sel: 3, term: 0, hovT: -1, hovC: -1, t: 0 };
   const cv = document.getElementById('smCanvas');
   const ctx = cv.getContext('2d');
   let W = 600, H = 400, DPR = 1;
@@ -1192,8 +1236,6 @@ window.__audit = {
     setTxt('pSpin', p.spin === 0.5 ? '½ ħ' : (p.spin === 1 ? '1 ħ' : '0'));
     setTxt('pYear', String(p.year));
     setTxt('pFact', p.fact);
-    document.querySelectorAll('#guessChips .sim-chip').forEach(b => b.classList.toggle('sim-on', state.guessed === b.dataset.guess));
-    setTxt('predictOut', state.guessed ? FB[state.guessed] : 'Pick one, then check the mass ladder.');
   }
   let formalDone = false;
   function renderFormal() {
@@ -1253,18 +1295,11 @@ window.__audit = {
   document.querySelectorAll('#colorSeg .sim-segbtn').forEach(b => b.addEventListener('click', function () {
     state.colorBy = b.dataset.color; state.mode = 'particles'; syncDom(); draw();
   }));
-  document.querySelectorAll('#guessChips .sim-chip').forEach(b => b.addEventListener('click', function () {
-    state.guessed = b.dataset.guess;
-    state.mode = 'particles';
-    state.sel = state.guessed === 'e' ? 0 : 11;
-    syncDom(); draw();
-  }));
-
   /* ---------------- shell hooks ---------------- */
   function onFrame(dt) { state.t += dt; draw(); }
   function onReset() {
     state.mode = 'particles'; state.colorBy = 'family'; state.sel = 3; state.term = 0;
-    state.hovT = -1; state.hovC = -1; state.guessed = null; state.t = 0;
+    state.hovT = -1; state.hovC = -1; state.t = 0;
     introStart = performance.now();
     syncDom(); draw();
   }
@@ -1273,12 +1308,16 @@ window.__audit = {
     state.hovT = -1; state.hovC = -1;
     switch (i) {
       case 0: state.mode = 'particles'; state.colorBy = 'family'; state.sel = 0; break;
-      case 1: state.mode = 'particles'; state.colorBy = 'family'; state.sel = 3; break;
-      case 2: state.mode = 'particles'; state.colorBy = 'charge'; state.sel = 2; break;
+      case 1: state.mode = 'particles'; state.colorBy = 'family'; state.sel = 1; break;
+      case 2: state.mode = 'particles'; state.colorBy = 'charge'; state.sel = 3; break;
       case 3: state.mode = 'particles'; state.colorBy = 'mass'; state.sel = 11; break;
-      case 4: state.mode = 'lagrangian'; state.term = 0; break;
       default: state.mode = 'particles'; state.colorBy = 'family'; state.sel = 3; break;
     }
+    syncDom(); draw();
+  }
+  function onComplete() {
+    state.mode = 'particles'; state.colorBy = 'family'; state.sel = 3;
+    state.hovT = -1; state.hovC = -1;
     syncDom(); draw();
   }
 
@@ -1287,7 +1326,29 @@ window.__audit = {
   setTimeout(function () { draw(); }, 900);
   renderFormal();
 
-  Shell.init({ onFrame: onFrame, onReset: onReset, onResize: onResize, onStep: onStep });
+  /* ---------- guided-inquiry layer: choice feedback + data-build reveals ---------- */
+  document.querySelectorAll('#inq-cards .inq-step').forEach(card => {
+    const evalBox = card.querySelector('.predict-eval');
+    card.querySelectorAll('.choice').forEach(ch => ch.addEventListener('click', function () {
+      if (card.dataset.answered) return; card.dataset.answered = '1';
+      const correct = ch.hasAttribute('data-correct');
+      card.querySelectorAll('.choice').forEach(c => { c.disabled = true;
+        if (c.hasAttribute('data-correct')) c.classList.add('correct');
+        else if (c === ch) c.classList.add('wrong'); else c.classList.add('dim'); });
+      if (evalBox) { evalBox.innerHTML = ch.dataset.fb || ''; evalBox.classList.add('show', correct ? 'correct' : 'wrong'); }
+      /* data-build — the commitment triggers the reveal via the sim's own state fields
+         (the same ones the View / Tile colors controls set). */
+      const spec = card.dataset.build;
+      if (spec) {
+        const a = spec.split(':');
+        if (a[0] === 'color') { state.mode = 'particles'; state.colorBy = a[1]; if (a[2] !== undefined) state.sel = parseInt(a[2], 10); }
+        else if (a[0] === 'mode') { state.mode = a[1]; if (a[1] === 'lagrangian') state.term = 0; }
+        state.hovT = -1; state.hovC = -1; syncDom(); draw();
+      }
+    }));
+  });
+
+  Shell.init({ onFrame: onFrame, onReset: onReset, onResize: onResize, onStep: onStep, onComplete: onComplete });
 })();
 </script>
 <script>/* dev-only reviewer affordance: link this sim to the refinement studio.
