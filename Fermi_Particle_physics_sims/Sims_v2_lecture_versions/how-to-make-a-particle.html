@@ -214,7 +214,9 @@ body.light-theme .predict-eval .answer,body.light-theme .predict-eval strong,htm
 #inq-cards{flex:1 1 auto;min-height:0;}
 .inq-step{display:none;}
 .inq-step.active{display:block;}
-.inq-nav{display:flex;justify-content:flex-end;flex-shrink:0;}
+.inq-nav{display:flex;justify-content:space-between;flex-shrink:0;}
+.inq-pager{display:flex;align-items:center;gap:8px;}
+.inq-pager-btn{min-width:36px;padding:6px 11px;justify-content:center;font-size:13px;line-height:1;}
 #inq-next{min-width:96px;justify-content:center;}
 .aside-restore{display:none;width:100%;text-align:left;background:var(--panel-2);border:1px solid var(--line);
   color:var(--ink-mid);font:inherit;font-size:11px;letter-spacing:.06em;text-transform:uppercase;
@@ -269,6 +271,9 @@ body.light-theme .predict-eval .answer,body.light-theme .predict-eval strong,htm
 .inq-step p{margin:0 0 12px;font-size:14px;line-height:1.55;color:var(--muted);}
 .inq-step .predict-eval{display:none;}
 .inq-step .predict-eval.show{display:block;}
+/* Post-answer reveal: extension prose hidden until the card's predict is committed. */
+.inq-step .inq-after{display:none;}
+.inq-step[data-answered] .inq-after{display:block;}
 
 /* Readout β/φ switch (a genuine sim control — not a shell duplicate). */
 .switch{display:inline-flex;border:1px solid var(--ctrl-border);border-radius:6px;overflow:hidden;}
@@ -297,13 +302,8 @@ body.light-theme .predict-eval .answer,body.light-theme .predict-eval strong,htm
 .sim-bigread{font-size:22px;font-weight:800;color:var(--accent);margin:2px 0 8px;overflow-wrap:anywhere;}
 .sim-mini{display:block;font-size:12.5px;color:var(--muted);margin:6px 0 2px;line-height:1.45;}
 .sim-chips{display:flex;gap:6px;flex-wrap:wrap;margin-top:8px;}
-.sim-chips.sim-col{flex-direction:column;align-items:stretch;}
 .sim-chip{font-size:13.5px;font-weight:600;color:var(--text);background:var(--surface);border:1.5px solid var(--border);border-radius:8px;padding:7px 9px;cursor:pointer;text-align:left;box-sizing:border-box;overflow-wrap:anywhere;min-width:60px;font-family:var(--font-sans);}
 .sim-chip:hover{border-color:var(--accent);}
-.sim-chip.sim-sel.sim-good{border-color:var(--accent);outline:2px solid var(--accent);outline-offset:-1px;}
-.sim-chip.sim-sel.sim-bad{border-style:dashed;border-color:var(--muted);}
-.sim-q{margin:0 0 6px;font-size:13.5px;line-height:1.5;color:var(--text);min-width:120px;}
-.sim-feedback{margin:10px 0 0;font-size:13px;line-height:1.5;font-weight:600;color:var(--text);background:var(--bg);border-left:3px solid var(--accent);border-radius:6px;padding:8px 9px;overflow-wrap:anywhere;min-width:120px;}
 .sim-tbl{display:flex;flex-direction:column;gap:6px;}
 .sim-tr{display:flex;justify-content:space-between;align-items:baseline;gap:10px;font-size:13.5px;border-bottom:1px dashed var(--border);padding-bottom:4px;}
 .sim-tr span{color:var(--muted);min-width:96px;}
@@ -365,6 +365,7 @@ body.light-theme .predict-eval .answer,body.light-theme .predict-eval strong,htm
     <div class="shell-group">
       <button id="shell-info" class="shell-btn" title="About this simulation">ⓘ Info</button>
       <button id="shell-theme" class="shell-btn" title="Toggle light / dark theme">☾</button>
+      <button id="shell-lecture" class="shell-btn" title="Lecture display mode — hide the guided inquiry, show the full simulation">🎓 Lecture</button>
     </div>
     <div class="shell-controls"><a id="shell-refine" class="shell-btn" style="display:none" target="_blank" rel="noopener" title="Refine this simulation (dev only)">✎ Refine</a>
       <div class="shell-group">
@@ -395,27 +396,47 @@ body.light-theme .predict-eval .answer,body.light-theme .predict-eval strong,htm
     <div id="aside-inquiry" class="aside-zone">
       <div class="aside-zone-head">
         <h3>Guided Inquiry</h3>
-        <button id="aside-inquiry-skip" class="shell-btn aside-skip" title="Skip the guided inquiry">Skip ✕</button>
       </div>
       <div id="inq-dots" class="inq-dots"></div>
-      <div id="inq-cards" class="aside-zone-body"></div>
-      <div class="inq-nav"><button id="inq-next" class="shell-btn primary">Next →</button></div>
+      <div id="inq-cards" class="aside-zone-body">
+        <div class="inq-step" data-gate><h4>1 · Can light become matter?</h4>
+          <p>Pure energy in, matter out — that is this chamber's game. A γ ray flies toward a Pb nucleus (<strong>B = 1 T</strong>); the ladder on the right marks the energies where new particles can appear. Press <strong>⚡ Fire γ</strong> and watch the photon.</p></div>
+        <div class="inq-step" data-gate data-build="goal-p"><h4>2 · Predict: protons from light?</h4>
+          <p>It sailed through — 0.8 MeV is below every rung. A proton's rest energy is 0.938 GeV. If the photon carried <strong>E<sub>γ</sub></strong> = 1 GeV, would proton–antiproton pairs appear?</p>
+          <button class="choice" data-fb="That buys ONE proton — charge and baryon number demand a p̄ too. Drag <strong>E<sub>γ</sub></strong> up and read where the p rung actually lights.">Yes — 1 GeV &gt; 0.938 GeV</button>
+          <button class="choice" data-fb="They can — but only as a p p̄ pair. Drag <strong>E<sub>γ</sub></strong> up and watch for the p rung.">Protons can't be created at all</button>
+          <button class="choice" data-correct data-fb="Right — creation is pairwise. Beam set to 1 GeV: drag <strong>E<sub>γ</sub></strong> up and read exactly where the p rung switches on.">No — a pair costs 2mc²</button>
+          <div class="predict-eval"></div></div>
+        <div class="inq-step" data-gate data-build="show-T"><h4>3 · Born at rest — then what?</h4>
+          <p>Beam parked exactly on the e rung: at 1.022 MeV the pair is born at rest — two dots, T = 0. If <strong>E<sub>γ</sub></strong> rose well above the rung, what would the two tracks do?</p>
+          <button class="choice" data-correct data-fb="Yes — the surplus T = E<sub>γ</sub> − 2mc² becomes momentum, and r = p/qB grows. Slide <strong>E<sub>γ</sub></strong> up and watch <strong>Kinetic energy T</strong> climb.">Stretch out longer and straighter</button>
+          <button class="choice" data-fb="Tight spirals mean SMALL p — that happens right at a rung. Slide <strong>E<sub>γ</sub></strong> up: r = p/qB grows with the surplus.">Curl into tighter spirals</button>
+          <button class="choice" data-fb="The surplus must go somewhere: T = E<sub>γ</sub> − 2mc² becomes momentum, so r = p/qB grows. Slide <strong>E<sub>γ</sub></strong> up and compare.">Stay exactly the same</button>
+          <div class="predict-eval"></div></div>
+        <div class="inq-step" data-gate data-build="show-next"><h4>4 · Price a τ⁺τ⁻ pair</h4>
+          <p>The beam waits at 3.40 GeV, just under the next rung. The τ lepton's mass is 1.777 GeV/c². At what <strong>E<sub>γ</sub></strong> does the τ⁺τ⁻ rung switch on?</p>
+          <button class="choice" data-fb="The bill doubles — it never halves. Two τ masses must be paid: 2mc².">0.888 GeV</button>
+          <button class="choice" data-correct data-fb="2 × 1.777 GeV. Press <strong>↑ Rung above</strong> and watch the ? rung light exactly there — <strong>Next threshold</strong> agrees.">3.554 GeV</button>
+          <button class="choice" data-fb="That is mc² — one τ. The τ̄ costs the same again: threshold 2mc².">1.777 GeV</button>
+          <div class="predict-eval"></div></div>
+        <div class="inq-step" data-gate><h4>5 · The rung inside a PET scanner</h4>
+          <p>Back on the e rung: 1.022 MeV. Hospital PET scanners detect photons of exactly 511 keV coming from e⁺e⁻ annihilation. Why does creating the pair cost 1.022 MeV, not 511 keV?</p>
+          <button class="choice" data-fb="The nucleus takes the recoil momentum but almost none of the energy. The doubling is the antiparticle: 2mc².">The nucleus swallows half the energy</button>
+          <button class="choice" data-fb="They measure what really arrives: two 511 keV photons sharing the pair's full 1.022 MeV.">Detectors register only half of what arrives</button>
+          <button class="choice" data-correct data-fb="Right — and annihilation runs the rung backwards: e⁺e⁻ → two 511 keV photons. Same 2mc², read in reverse.">Charge conservation puts an e⁺ beside every e⁻ — mc², twice</button>
+          <div class="predict-eval"></div>
+          <p class="inq-after">Every rung obeys E<sub>γ</sub> = 2mc² — pair production, first caught on film by Blackett &amp; Occhialini (1933). Climb to 10.56 GeV and open all eight. One puzzle remains: why is the nucleus needed at all? <strong>∑ Formal</strong> knows.</p></div>
+      </div>
+      <div class="inq-nav">
+        <div class="inq-pager">
+          <button id="inq-prev" class="shell-btn primary inq-pager-btn" title="Previous step" aria-label="Previous step" disabled>&lt;</button>
+          <button id="inq-pager-next" class="shell-btn primary inq-pager-btn" title="Next step" aria-label="Next step">&gt;</button>
+        </div>
+        <button id="inq-next" class="shell-btn primary">Next →</button>
+      </div>
     </div>
     <button id="aside-inquiry-restore" class="aside-restore" title="Revisit the guided inquiry">▸ Guided inquiry</button>
     <div id="aside-controls" class="aside-zone">
-
-      <div class="shell-panel" id="panelPredict">
-        <div class="shell-panel-head"><h3>Predict first</h3><span class="shell-caret">▾</span></div>
-        <div class="shell-panel-body">
-          <p class="sim-q">The beam is parked below every threshold and the chamber is empty. Before you raise it — <b>if</b> the photon carried E<sub>γ</sub> = 1 GeV, would proton–antiproton pairs appear?</p>
-          <div class="sim-chips sim-col">
-            <button class="sim-chip sim-predict" data-k="yes">Yes — 1 GeV &gt; 0.938 GeV</button>
-            <button class="sim-chip sim-predict" data-k="no2m">No — a pair costs 2m<sub>p</sub>c²</button>
-            <button class="sim-chip sim-predict" data-k="never">Protons can't be created at all</button>
-          </div>
-          <p class="sim-feedback" id="predFb" hidden></p>
-        </div>
-      </div>
 
       <div class="shell-panel">
         <div class="shell-panel-head"><h3>Photon energy E<sub>γ</sub> · chamber frame</h3><span class="shell-caret">▾</span></div>
@@ -446,45 +467,6 @@ body.light-theme .predict-eval .answer,body.light-theme .predict-eval strong,htm
             <div class="sim-tr sim-hidden" id="rowKE"><span>Kinetic energy T (heaviest pair)</span><b id="roKE">—</b></div>
             <div class="sim-tr sim-hidden" id="rowNext"><span>Next threshold</span><b id="roNext">—</b></div>
           </div>
-        </div>
-      </div>
-
-      <div class="shell-panel sim-hidden" id="panelB">
-        <div class="shell-panel-head"><h3>Investigate</h3><span class="shell-caret">▾</span></div>
-        <div class="shell-panel-body">
-          <p class="sim-q">Park the beam on a rung, then slide it well above. As the kinetic energy T grows, what do the two tracks do?</p>
-          <div class="sim-chips sim-col">
-            <button class="sim-chip sim-qb" data-k="a">Curl into tighter spirals</button>
-            <button class="sim-chip sim-qb" data-k="b">Stretch out longer and straighter</button>
-            <button class="sim-chip sim-qb" data-k="c">Stay exactly the same</button>
-          </div>
-          <p class="sim-feedback" id="fbB" hidden></p>
-        </div>
-      </div>
-
-      <div class="shell-panel sim-hidden" id="panelC">
-        <div class="shell-panel-head"><h3>Apply the rule</h3><span class="shell-caret">▾</span></div>
-        <div class="shell-panel-body">
-          <p class="sim-q">The τ lepton has mass 1.777 GeV/c². At what photon energy should the τ⁺τ⁻ rung switch on?</p>
-          <div class="sim-chips sim-col">
-            <button class="sim-chip sim-qc" data-k="a">0.888 GeV</button>
-            <button class="sim-chip sim-qc" data-k="b">1.777 GeV</button>
-            <button class="sim-chip sim-qc" data-k="c">3.554 GeV</button>
-          </div>
-          <p class="sim-feedback" id="fbC" hidden></p>
-        </div>
-      </div>
-
-      <div class="shell-panel sim-hidden" id="panelD">
-        <div class="shell-panel-head"><h3>Explain it</h3><span class="shell-caret">▾</span></div>
-        <div class="shell-panel-body">
-          <p class="sim-q">A PET scanner detects photons at exactly 511 keV. Why does the electron rung sit at 1.022 MeV rather than 511 keV?</p>
-          <div class="sim-chips sim-col">
-            <button class="sim-chip sim-qd" data-k="a">Charge conservation forces an e⁺ beside every e⁻ — you pay mc² twice</button>
-            <button class="sim-chip sim-qd" data-k="b">The photon hands half its energy to the nucleus</button>
-            <button class="sim-chip sim-qd" data-k="c">The detector only registers half of what arrives</button>
-          </div>
-          <p class="sim-feedback" id="fbD" hidden></p>
         </div>
       </div>
 
@@ -543,6 +525,16 @@ const Shell = (function(){
     root.classList.toggle('inquiry-collapsed', on);
     requestAnimationFrame(refit);
   }
+  // Lecture display mode: ON = the post-completion free-exploration state
+  // (finishInquiry fast-forwards, runs onComplete, collapses, resumes play);
+  // OFF (second click or the restore chip) = reopen the inquiry at card 1.
+  function setLectureMode(on){
+    root.classList.toggle('lecture-mode', on);
+    const b=document.getElementById('shell-lecture');
+    if(b) b.classList.toggle('active', on);
+    if(on){ finishInquiry(); }
+    else { setInquiryCollapsed(false); if(inqCards().length) inqShow(0); }
+  }
 
   // ---- Guided-inquiry stepper (shell-owned, so Next/Finish are always wired) ----
   // The SIM supplies sequential <div class="inq-step"> cards in #inq-cards. The
@@ -566,8 +558,23 @@ const Shell = (function(){
       next.disabled = gated;
       next.textContent = (inqStep>=cards.length-1) ? 'Finish' : 'Next →';
     }
+    inqUpdatePager();
     onStep(inqStep);
     requestAnimationFrame(refit);
+  }
+  function inqUpdatePager(){
+    const cards=inqCards();
+    const prev=document.getElementById('inq-prev');
+    const pnext=document.getElementById('inq-pager-next');
+    if(prev) prev.disabled = inqStep<=0;
+    if(pnext) pnext.disabled = inqStep>=cards.length-1;
+  }
+  function inqPrev(){
+    if(inqStep>0) inqShow(inqStep-1);
+  }
+  function inqPagerNext(){
+    const cards=inqCards();
+    if(inqStep<cards.length-1) inqShow(inqStep+1);
   }
   function inqNext(){
     const cards=inqCards();
@@ -604,7 +611,6 @@ const Shell = (function(){
     const reset=document.getElementById('shell-reset');
     const spd=document.getElementById('shell-speed');
     const maxBtn=document.getElementById('shell-maximize');
-    const skip=document.getElementById('aside-inquiry-skip');
     const restore=document.getElementById('aside-inquiry-restore');
     const tFormal=document.getElementById('toggle-formal');
 
@@ -637,12 +643,17 @@ const Shell = (function(){
       else if(root.classList.contains('shell-max')) setMaximized(false);
     });
 
-    // Skip ✕ jumps to the completed state (all controls live); restore reopens it.
-    if(skip) skip.addEventListener('click',finishInquiry);
-    if(restore) restore.addEventListener('click',()=>setInquiryCollapsed(false));
+    // 🎓 Lecture toggles the post-completion display state; restore reopens at card 1.
+    const lecture=document.getElementById('shell-lecture');
+    if(lecture) lecture.addEventListener('click',()=>setLectureMode(!root.classList.contains('lecture-mode')));
+    if(restore) restore.addEventListener('click',()=>setLectureMode(false));
     // Next / Finish — shell-driven step advance (Finish collapses the inquiry).
     const inqNextBtn=document.getElementById('inq-next');
     if(inqNextBtn) inqNextBtn.addEventListener('click',inqNext);
+    const inqPrevBtn=document.getElementById('inq-prev');
+    if(inqPrevBtn) inqPrevBtn.addEventListener('click',inqPrev);
+    const inqPagerNextBtn=document.getElementById('inq-pager-next');
+    if(inqPagerNextBtn) inqPagerNextBtn.addEventListener('click',inqPagerNext);
     // Auto-gate: a .choice click inside the active gated card enables Next.
     const cardsHost=document.getElementById('inq-cards');
     if(cardsHost) cardsHost.addEventListener('click',e=>{
@@ -670,15 +681,25 @@ const Shell = (function(){
     init(opts){
       onFrame=opts.onFrame||onFrame; onReset=opts.onReset||onReset; onResize=opts.onResize||onResize; onStep=opts.onStep||onStep; onComplete=opts.onComplete||onComplete;
       wire();
-      // Guided inquiry is retired from the sidebar: hide the whole zone + restore bar,
-      // and open the sim directly in its COMPLETED state (as if the student had finished
-      // the inquiry) — every control live, every staged panel revealed.
+      // Guided inquiry RE-ENABLED (was retired in the raw lecture export): build the
+      // step dots and open on card 1. Sims that ship no cards still fall back to the
+      // retired behaviour — zone hidden, sim opened in its completed state.
       const cards=inqCards();
       inqTotal=cards.length;
-      root.classList.add('no-inquiry');
-      onResize(); onReset();
-      if(inqTotal>0){ for(let k=0;k<cards.length;k++) onStep(k); inqStep=cards.length-1; }
-      onComplete();
+      if(inqTotal>0){
+        const dotsHost=document.getElementById('inq-dots');
+        if(dotsHost&&!dotsHost.children.length){
+          for(let k=0;k<inqTotal;k++){const d=document.createElement('div');d.className='inq-dot';dotsHost.appendChild(d);}
+        }
+        onResize(); onReset();
+        inqShow(0);
+      }else{
+        root.classList.add('no-inquiry');
+        const lb=document.getElementById('shell-lecture');
+        if(lb) lb.style.display='none';
+        onResize(); onReset();
+        onComplete();
+      }
       setPlaying(true);
       last=performance.now();
       if(!started){ started=true; requestAnimationFrame(loop); }
@@ -823,7 +844,7 @@ function updateReadouts(){
 function reveal(){
   if(state.revealed) return;
   state.revealed=true;
-  show('panelOpen'); show('panelB');
+  show('panelOpen');
   updateReadouts();
 }
 function maybeReveal(){ if(openList().length) reveal(); }
@@ -901,8 +922,9 @@ function step(dt){
     var ph=state.photons[i];
     ph.u+=dt*PH_U_RATE;
     if(ph.u>=1 && !ph.past){
-      if(o.length){ state.photons.splice(i,1); spawnEvent(o); continue; }
+      if(o.length){ state.photons.splice(i,1); spawnEvent(o); inqSaw(); continue; }
       ph.past=true;
+      inqSaw();
     }
     if(ph.u>2.2) state.photons.splice(i,1);
   }
@@ -1186,12 +1208,8 @@ function onResize(){
   draw();
 }
 function resetPrompts(){
-  hide('panelOpen'); hide('panelB'); hide('panelC'); hide('panelD');
+  hide('panelOpen');
   hide('rowKE'); hide('rowNext');
-  var ids=['predFb','fbB','fbC','fbD'], i;
-  for(i=0;i<ids.length;i++){ var f=$(ids[i]); if(f){ f.hidden=true; f.textContent=''; } }
-  var chips=document.querySelectorAll('.sim-chip');
-  for(i=0;i<chips.length;i++) chips[i].classList.remove('sim-sel','sim-good','sim-bad');
 }
 function onReset(){
   state.photons=[];
@@ -1210,6 +1228,8 @@ function onReset(){
   state.newOpen=null;
   resetPrompts();
   updateReadouts();
+  /* If the guided inquiry is live, land back on the current card's exact scene. */
+  if(typeof Shell!=='undefined' && Shell.totalSteps>0 && STEPS[Shell.step]) applyStep(STEPS[Shell.step]);
   draw();
 }
 function onFrame(dt){
@@ -1230,7 +1250,7 @@ $('btnFire').addEventListener('click',function(){
   state.photons.push({u:0});
   state.spawnT=3.8;
   maybeReveal();
-  if(window.Shell && Shell.setPlaying) Shell.setPlaying(true);
+  if(typeof Shell!=='undefined' && Shell.setPlaying) Shell.setPlaying(true);
   draw();
 });
 function snap(dir){
@@ -1249,63 +1269,43 @@ function snap(dir){
 $('btnUp').addEventListener('click',function(){ snap(1); });
 $('btnDown').addEventListener('click',function(){ snap(-1); });
 
-/* ---------- prompts ---------- */
-function wireQuiz(sel, fbId, correctKey, msgs, after){
-  var bs=document.querySelectorAll(sel);
-  for(var i=0;i<bs.length;i++)(function(b){
-    b.addEventListener('click',function(){
-      for(var x=0;x<bs.length;x++) bs[x].classList.remove('sim-sel','sim-good','sim-bad');
-      var k=b.dataset.k, ok=(k===correctKey);
-      b.classList.add('sim-sel', ok?'sim-good':'sim-bad');
-      var fb=$(fbId); fb.textContent=msgs[k]; fb.hidden=false;
-      if(after) after(ok,k);
-      draw();
-    });
-  })(bs[i]);
-}
-
-/* Q1 — the misconception trap. Formative: every branch sends the student to the
-   ladder rather than handing over the number. */
-wireQuiz('.sim-predict','predFb','no2m',{
-  yes:'\u2717 Enough rest energy for ONE proton \u2014 but charge and baryon number force pairwise creation, so you must pay for the antiproton too. Beam set to 1 GeV: drag it up until the p rung lights, and read where it lit.',
-  no2m:'\u2713 A pair costs 2mc\u00b2. Beam set to 1 GeV \u2014 now drag it up and confirm exactly where the p rung switches on.',
-  never:'\u2717 They can \u2014 but only as p p\u0304. Beam set to 1 GeV: push it higher and watch for the p rung.'
-},function(){
-  setEnergy(1.0);
+/* ---------- guided-inquiry scene steps (each self-contained: pager/restore-safe) ---------- */
+var STEPS=[
+ {E:E0,             beam:false, revealed:false, ke:false, next:false, pause:true}, /* 1 - fire below every rung   */
+ {E:E0,             beam:true,  revealed:false, ke:false, next:false},             /* 2 - predict p pbar at 1 GeV */
+ {E:SPECIES[0].thr, beam:true,  revealed:true,  ke:false, next:false},             /* 3 - born at rest on e rung  */
+ {E:3.4,            beam:true,  revealed:true,  ke:true,  next:false},             /* 4 - price the tau pair      */
+ {E:SPECIES[0].thr, beam:true,  revealed:true,  ke:true,  next:true}               /* 5 - PET: the 1.022 MeV rung */
+];
+function applyStep(s){
+  state.beamOn=false;
+  state.photons.length=0;
   state.events.length=0;
-  state.photons=[{u:0}];
+  state.highlight=null;
+  setEnergy(s.E);
+  state.maxSeenE=s.E;          /* deterministic ladder labels (same field onReset sets) */
+  state.newOpen=null;
+  state.forceSp=null;
+  if(s.beam){ state.beamOn=true; state.photons.push({u:0}); state.spawnT=3.8; }
+  state.revealed=false; hide('panelOpen');
+  if(s.revealed) reveal();
+  if(s.ke) show('rowKE'); else hide('rowKE');
+  if(s.next) show('rowNext'); else hide('rowNext');
+  updateReadouts();
+  if(typeof Shell!=='undefined' && Shell.setPlaying) Shell.setPlaying(!s.pause);
+  draw();
+}
+function onStep(i){ var s=STEPS[i]; if(s) applyStep(s); }
+function onComplete(){
+  reveal(); show('rowKE'); show('rowNext');
   state.beamOn=true;
-  state.spawnT=3.8;
-  state.highlight={t0:state.time};
-  reveal();
-  if(window.Shell && Shell.setPlaying) Shell.setPlaying(true);
-});
-
-/* Q2 — investigation: relationship between surplus T and track shape. */
-wireQuiz('.sim-qb','fbB','b',{
-  a:'\u2717 Tight spirals mean SMALL p \u2014 that happens right at a rung, where T = 0. Park on a rung, then slide up and watch r = p/qB grow.',
-  b:'\u2713 Longer and straighter. The surplus T becomes momentum, and the radius r = p/qB grows with p \u2014 far above a rung the tracks barely bend.',
-  c:'\u2717 Compare a pair parked exactly on a rung (T = 0, born at rest) with one well above it: r = p/qB grows with the surplus.'
-},function(){
-  show('rowKE'); show('panelC'); updateReadouts();
-});
-
-/* Q3 — apply the 2mc^2 rule to a species the student has not yet reached. */
-wireQuiz('.sim-qc','fbC','c',{
-  a:'\u2717 The bill doubles, it does not halve. Two \u03c4 masses are needed, not half of one.',
-  b:'\u2717 That is mc\u00b2 \u2014 one \u03c4. The \u03c4\u0304 must be paid for too.',
-  c:'\u2713 2mc\u00b2 = 2 \u00d7 1.777 = 3.554 GeV. Beam parked just below it \u2014 drive it up and watch the rung light.'
-},function(){
-  setEnergy(3.4);
-  show('rowNext'); show('panelD'); updateReadouts();
-});
-
-/* Q4 — explanation + real-world anchor (PET). */
-wireQuiz('.sim-qd','fbD','a',{
-  a:'\u2713 Creation costs 2mc\u00b2 = 1.022 MeV. Annihilation runs the same rung backwards: one e\u207Ae\u207B pair \u2192 two photons of 511 keV each. Same number, read in reverse.',
-  b:'\u2717 The heavy nucleus takes the recoil MOMENTUM but almost none of the energy. The doubling comes from the antiparticle: 2mc\u00b2.',
-  c:'\u2717 The detector measures what actually arrives: two real 511 keV photons, because the pair\u2019s 1.022 MeV is shared between them.'
-});
+  if(!state.photons.length){ state.photons.push({u:0}); state.spawnT=3.8; }
+  updateReadouts(); draw();
+}
+/* Card 1 gate: the student fired and the photon reached the nucleus (passing OR converting). */
+function inqSaw(){
+  if(typeof Shell!=='undefined' && Shell.totalSteps>0 && Shell.step===0) Shell.stepReady();
+}
 
 /* ---------- KaTeX (guarded, deferred-safe) ---------- */
 var ktry=0;
@@ -1324,7 +1324,39 @@ function renderFormal(){
 onResize();
 onReset();
 renderFormal();
-Shell.init({ onFrame:onFrame, onReset:onReset, onResize:onResize });
+/* ---------- guided-inquiry layer: choice feedback + data-build reveals ---------- */
+document.querySelectorAll('#inq-cards .inq-step').forEach(function(card){
+  var evalBox=card.querySelector('.predict-eval');
+  card.querySelectorAll('.choice').forEach(function(ch){ ch.addEventListener('click',function(){
+    if(card.dataset.answered) return; card.dataset.answered='1';
+    var correct=ch.hasAttribute('data-correct');
+    card.querySelectorAll('.choice').forEach(function(c){ c.disabled=true;
+      if(c.hasAttribute('data-correct')) c.classList.add('correct');
+      else if(c===ch) c.classList.add('wrong'); else c.classList.add('dim'); });
+    if(evalBox){ evalBox.innerHTML=ch.dataset.fb||''; evalBox.classList.add('show', correct?'correct':'wrong'); }
+    /* data-build — the commitment triggers the reveal via the sim's own setters. */
+    var spec=card.dataset.build;
+    if(spec==='goal-p'){
+      setEnergy(1.0);
+      state.events.length=0;
+      state.photons=[{u:0}];
+      state.beamOn=true;
+      state.spawnT=3.8;
+      state.highlight={t0:state.time};
+      reveal();
+      Shell.setPlaying(true);
+    }else if(spec==='show-T'){
+      show('rowKE'); updateReadouts();
+    }else if(spec==='show-next'){
+      show('rowNext'); updateReadouts();
+    }
+    if(typeof Shell!=='undefined' && Shell.refit) Shell.refit();
+    draw();
+  }); });
+});
+/* verification/debug handle (mirrors window.__audit; drives frames when rAF is throttled) */
+window.__inq={ frame:onFrame, state:state, applyStep:applyStep, setEnergy:setEnergy };
+Shell.init({ onFrame:onFrame, onReset:onReset, onResize:onResize, onStep:onStep, onComplete:onComplete });
 /* Prediction-first: the outcome-revealing run starts PAUSED. Play, Reset, the
    energy slider and every chip stay fully enabled. */
 Shell.setPlaying(false);
