@@ -1,0 +1,3214 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Michelson-Morley Interferometer Simulation — 3D</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body {
+  background: #0a0f1c;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  color: #e2e8f0;
+  overflow: hidden;
+}
+
+.top-bar {
+  position: fixed;
+  top: 0; left: 0; right: 0;
+  height: 64px;
+  background: rgba(10, 15, 28, 0.85);
+  backdrop-filter: blur(14px);
+  border-bottom: 1px solid rgba(148, 163, 184, 0.12);
+  display: flex;
+  align-items: center;
+  padding: 0 24px;
+  gap: 28px;
+  z-index: 100;
+}
+
+.title-area {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  position: relative;
+}
+
+.title {
+  font-size: 15px;
+  font-weight: 600;
+  color: #f1f5f9;
+  letter-spacing: 0.3px;
+}
+.subtitle {
+  font-size: 11px;
+  color: #94a3b8;
+  margin-top: 2px;
+}
+
+.info-icon {
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  background: rgba(96, 165, 250, 0.15);
+  border: 1px solid rgba(96, 165, 250, 0.4);
+  color: #60a5fa;
+  font-size: 13px;
+  font-weight: 700;
+  font-style: italic;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.2s;
+  font-family: Georgia, serif;
+  flex-shrink: 0;
+}
+.info-icon:hover {
+  background: rgba(96, 165, 250, 0.3);
+  box-shadow: 0 0 10px rgba(96,165,250,0.3);
+}
+
+.info-tooltip {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  margin-top: 10px;
+  width: 420px;
+  background: rgba(15, 23, 42, 0.97);
+  backdrop-filter: blur(16px);
+  border: 1px solid rgba(148, 163, 184, 0.2);
+  border-radius: 10px;
+  padding: 16px 18px;
+  font-size: 12px;
+  line-height: 1.7;
+  color: #cbd5e1;
+  z-index: 200;
+  box-shadow: 0 12px 40px rgba(0,0,0,0.5);
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(-6px);
+  transition: all 0.25s ease;
+  pointer-events: none;
+}
+.info-tooltip h3 {
+  font-size: 13px;
+  color: #f1f5f9;
+  margin-bottom: 8px;
+  font-weight: 600;
+}
+.info-tooltip p {
+  margin-bottom: 8px;
+}
+.info-tooltip em {
+  color: #fbbf24;
+}
+.info-tooltip .tip-note {
+  font-size: 10px;
+  color: #64748b;
+  margin-top: 6px;
+  padding-top: 8px;
+  border-top: 1px solid rgba(148,163,184,0.1);
+}
+
+.info-icon:hover + .info-tooltip,
+.info-tooltip:hover {
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(0);
+  pointer-events: auto;
+}
+
+.top-bar-spacer {
+  flex: 1;
+}
+
+.sidebar {
+  position: fixed;
+  top: 62px;
+  right: 0;
+  bottom: 0;
+  width: 280px;
+  background: rgba(10, 15, 28, 0.82);
+  backdrop-filter: blur(14px);
+  border-left: 1px solid rgba(148, 163, 184, 0.12);
+  padding: 20px;
+  overflow-y: auto;
+  z-index: 50;
+}
+.panel-title {
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.8px;
+  color: #64748b;
+  margin-bottom: 12px;
+  font-weight: 600;
+}
+.control-row { margin-bottom: 16px; }
+.control-label {
+  display: flex;
+  justify-content: space-between;
+  font-size: 12px;
+  color: #cbd5e1;
+  margin-bottom: 6px;
+}
+.control-label .val { color: #60a5fa; font-weight: 600; font-variant-numeric: tabular-nums; }
+.slider {
+  width: 100%;
+  height: 4px;
+  -webkit-appearance: none;
+  appearance: none;
+  background: rgba(148, 163, 184, 0.18);
+  border-radius: 2px;
+  outline: none;
+}
+.slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 14px; height: 14px;
+  background: #60a5fa;
+  border-radius: 50%;
+  cursor: pointer;
+  box-shadow: 0 0 8px rgba(96,165,250,0.5);
+}
+.slider::-moz-range-thumb {
+  width: 14px; height: 14px;
+  background: #60a5fa;
+  border-radius: 50%;
+  cursor: pointer;
+  border: none;
+}
+
+.divider {
+  height: 1px;
+  background: rgba(148,163,184,0.1);
+  margin: 18px 0;
+}
+
+.btn {
+  width: 100%;
+  padding: 9px;
+  background: rgba(59, 130, 246, 0.15);
+  border: 1px solid rgba(59, 130, 246, 0.3);
+  color: #93c5fd;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 12px;
+  font-weight: 500;
+  transition: all 0.2s;
+}
+.btn:hover { background: rgba(59, 130, 246, 0.25); }
+
+.top-bar .top-reset-btn {
+  width: auto;
+  min-width: 132px;
+  padding: 9px 16px;
+  flex-shrink: 0;
+}
+
+.top-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-shrink: 0;
+}
+
+.top-actions .btn {
+  width: auto;
+  min-width: 132px;
+  padding: 9px 16px;
+}
+
+#canvas-area {
+  position: fixed;
+  top: 64px;
+  left: 0;
+  right: 280px;
+  bottom: 0;
+}
+#mainCanvas { display: block; width: 100%; height: 100%; touch-action: none; cursor: grab; }
+#mainCanvas:active { cursor: grabbing; }
+
+/* HTML label overlay for the 3D scene */
+#labels3d {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+  z-index: 30;
+}
+.lbl3d {
+  position: absolute;
+  left: 0;
+  top: 0;
+  visibility: hidden;
+  transform: translate(-50%, -130%);
+  will-change: transform;
+  backface-visibility: hidden;
+  padding: 2px 8px;
+  border-radius: 5px;
+  background: rgba(6, 14, 17, 0.72);
+  border: 1px solid rgba(148, 163, 184, 0.22);
+  color: #cbd5e1;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.3px;
+  white-space: nowrap;
+}
+.lbl3d.accent  { color: #fde68a; border-color: rgba(253, 230, 138, 0.35); }
+.lbl3d.source  { color: #bae6fd; border-color: rgba(186, 230, 253, 0.30); }
+.lbl3d.det     { color: #a7f3d0; border-color: rgba(167, 243, 208, 0.30); }
+.lbl3d.faint   { color: #7d8ea3; font-weight: 500; background: rgba(6,14,17,0.55); }
+
+.overlay-chip {
+  position: absolute;
+  left: 16px;
+  bottom: 16px;
+  z-index: 35;
+  padding: 7px 14px;
+  border-radius: 8px;
+  background: rgba(6, 14, 17, 0.82);
+  border: 1px solid rgba(19, 49, 49, 0.5);
+  color: #60a5fa;
+  font-size: 13px;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  pointer-events: none;
+}
+.overlay-hint {
+  position: absolute;
+  right: 16px;
+  bottom: 16px;
+  z-index: 35;
+  padding: 5px 12px;
+  border-radius: 8px;
+  background: rgba(6, 14, 17, 0.6);
+  border: 1px solid rgba(19, 49, 49, 0.4);
+  color: #64748b;
+  font-size: 11px;
+  pointer-events: none;
+}
+.overlay-legend {
+  position: absolute;
+  left: 16px;
+  top: 60px;
+  z-index: 35;
+  width: 190px;
+  padding: 10px 12px;
+  border-radius: 8px;
+  background: rgba(6, 14, 17, 0.78);
+  border: 1px solid rgba(148, 163, 184, 0.18);
+  pointer-events: none;
+}
+.overlay-legend .l-title { font-size: 10px; letter-spacing: 1px; color: #94a3b8; text-transform: uppercase; }
+.overlay-legend .l-beta  { font-size: 12px; font-weight: 700; color: #f87171; margin-top: 6px; }
+.overlay-legend .l-arrow { display: inline-block; color: #f87171; font-size: 14px; margin-left: 6px; }
+.overlay-legend .l-note  { font-size: 9px; color: #64748b; margin-top: 6px; }
+
+.mode-banner {
+  position: fixed;
+  top: 80px;
+  left: 50%;
+  transform: translateX(calc(-50% - 140px));
+  padding: 10px 22px;
+  border-radius: 8px;
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+  z-index: 40;
+  backdrop-filter: blur(10px);
+  transition: all 0.3s;
+}
+.mode-banner.aether {
+  background: rgba(127, 29, 29, 0.6);
+  color: #fecaca;
+  border: 1px solid rgba(239,68,68,0.5);
+  box-shadow: 0 0 24px rgba(239,68,68,0.2);
+}
+.mode-banner.relativity {
+  left: 24px;
+  transform: none;
+  box-sizing: border-box;
+  width: 180px;
+  padding: 10px 16px;
+  white-space: nowrap;
+  overflow: hidden;
+  background: rgba(30, 64, 175, 0.55);
+  color: #dbeafe;
+  border: 1px solid rgba(59,130,246,0.5);
+  box-shadow: 0 0 24px rgba(59,130,246,0.2);
+}
+
+.detector-panel {
+  position: fixed;
+  top: 82px;
+  right: 298px;
+  width: 340px;
+  background: rgba(10, 15, 28, 0.88);
+  backdrop-filter: blur(12px);
+  border: 1px solid rgba(148, 163, 184, 0.15);
+  border-radius: 10px;
+  padding: 12px;
+  margin-bottom: 0;
+  z-index: 45;
+}
+.detector-title {
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  color: #94a3b8;
+  margin-bottom: 8px;
+  display: flex;
+  justify-content: space-between;
+}
+/* Legacy telescope/fringe surfaces — replaced by the round-trip readout.
+   Kept in the DOM (hidden) so the untouched 2D drawing code early-returns. */
+#detectorCanvas,
+#fringePlot,
+.detector-meta {
+  display: none;
+}
+
+/* Round-trip time readout */
+#rtReadout {
+  margin-top: 2px;
+}
+.rt-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 12px;
+  padding: 7px 0;
+  border-bottom: 1px solid rgba(148, 163, 184, 0.12);
+}
+.rt-row:last-child {
+  border-bottom: none;
+  padding-bottom: 2px;
+}
+.rt-row span {
+  font-size: 11px;
+  color: #94a3b8;
+  line-height: 1.35;
+}
+.rt-row b {
+  font-family: var(--font-nums);
+  font-variant-numeric: tabular-nums;
+  font-size: 12.5px;
+  font-weight: 600;
+  color: #e2e8f0;
+  white-space: nowrap;
+}
+
+
+/* Mode switch in sidebar */
+.mode-switch-sidebar {
+  display: flex;
+  background: rgba(30, 41, 59, 0.6);
+  border-radius: 8px;
+  padding: 3px;
+  border: 1px solid rgba(148, 163, 184, 0.15);
+  margin-bottom: 16px;
+}
+.mode-btn {
+  padding: 7px 10px;
+  font-size: 11px;
+  border: none;
+  background: transparent;
+  color: #94a3b8;
+  cursor: pointer;
+  border-radius: 6px;
+  font-weight: 500;
+  transition: all 0.2s;
+  white-space: nowrap;
+  flex: 1;
+  text-align: center;
+}
+.mode-btn.active.aether {
+  background: #7f1d1d;
+  color: #fecaca;
+  box-shadow: 0 0 12px rgba(239,68,68,0.3);
+}
+.mode-btn.active.relativity {
+  background: #1e40af;
+  color: #dbeafe;
+  box-shadow: 0 0 12px rgba(59,130,246,0.3);
+}
+/* Neutral active state for the Simplified/Experiment view toggle */
+.mode-btn.active:not(.aether):not(.relativity) {
+  background: #334155;
+  color: #f1f5f9;
+  box-shadow: 0 0 12px rgba(148,163,184,0.25);
+}
+
+/* Stats in sidebar */
+.stats-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-bottom: 16px;
+}
+.stat-card {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 0 0 10px;
+  border-bottom: 1px solid rgba(148, 163, 184, 0.1);
+}
+.stat-card:last-child {
+  border-bottom: none;
+  padding-bottom: 0;
+}
+.stat-card .stat-label {
+  color: #64748b;
+  font-size: 9px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+.stat-card .stat-value {
+  color: #f1f5f9;
+  font-weight: 600;
+  font-size: 13px;
+  font-variant-numeric: tabular-nums;
+}
+
+/* Shared simulation design system inlined so this standalone HTML matches the
+   rest of the Capacity simulations without depending on an external CSS file. */
+:root {
+  --bg:           #060E11;
+  --surface:      rgba(6, 14, 17, 0.95);
+  --surface-soft: rgba(6, 14, 17, 0.92);
+  --panel-bg:     #060E11;
+  --text:       #e2e8f0;
+  --muted:      #cbd5e1;
+  --text-muted: #9ca3af;
+  --border: rgba(19, 49, 49, 0.45);
+  --accent:      #3b9b8f;
+  --accent-soft: rgba(59, 155, 143, 0.35);
+  --ctrl-bg:     rgba(30, 77, 58, 0.15);
+  --ctrl-border: rgba(30, 77, 58, 0.50);
+  --track-bg:    rgba(30, 77, 58, 0.35);
+  --topbar-bg:        #FAF8F4;
+  --topbar-text:      #0f172a;
+  --topbar-border:    rgba(19, 49, 49, 0.25);
+  --btn-play-bg:      #1E4D3A;
+  --btn-play-hover:   #2D6E52;
+  --btn-play-text:    #ffffff;
+  --btn-paused-bg:    #ffffff;
+  --btn-paused-text:  #1E4D3A;
+  --btn-paused-border:#1E4D3A;
+  --btn-reset-bg:     #FAF8F4;
+  --btn-reset-hover:  #F5EAC4;
+  --btn-reset-text:   #B6820C;
+  --btn-reset-border: #B6820C;
+  --font-sans: 'DMSansUser', 'DM Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  --font-nums: 'JetBrainsMonoNums', 'JetBrains Mono', ui-monospace, monospace;
+}
+
+body {
+  background: var(--bg);
+  font-family: var(--font-sans);
+  color: var(--text);
+}
+
+.top-bar {
+  height: 62px;
+  background: var(--topbar-bg);
+  border-bottom: 1px solid var(--topbar-border);
+  padding: 0 18px;
+  gap: 12px;
+  z-index: 3000;
+}
+
+.title {
+  font-size: 18px;
+  font-weight: 600;
+  font-family: var(--font-sans);
+  color: var(--topbar-text);
+  letter-spacing: 0.5px;
+}
+
+.subtitle {
+  color: #475569;
+  font-size: 11px;
+  margin-top: 2px;
+}
+
+.info-icon {
+  width: 20px;
+  height: 20px;
+  border: 1.5px solid rgba(100, 116, 139, 0.35);
+  background: rgba(100, 116, 139, 0.10);
+  color: #64748b;
+  font-family: var(--font-sans);
+  font-size: 12px;
+  font-style: normal;
+  font-weight: 600;
+}
+
+.info-icon:hover {
+  border-color: rgba(59, 130, 246, 0.40);
+  color: #2563eb;
+  background: rgba(59, 130, 246, 0.12);
+  box-shadow: none;
+}
+
+.info-tooltip {
+  top: calc(100% + 8px);
+  margin-top: 0;
+  width: 420px;
+  background: rgba(6, 14, 17, 0.98);
+  border: 1px solid rgba(19, 49, 49, 0.50);
+  border-radius: 8px;
+  color: #94a3b8;
+  z-index: 4000;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
+}
+
+.info-tooltip h3 {
+  color: var(--accent);
+  font-size: 13px;
+}
+
+.info-tooltip strong { color: #e2e8f0; }
+.info-tooltip em { color: #cbd5e1; }
+.info-tooltip .tip-note {
+  color: var(--text-muted);
+  border-top-color: var(--border);
+}
+
+.top-actions {
+  gap: 8px;
+  width: 236px;
+  height: 36px;
+}
+
+.top-actions .btn,
+.top-bar .top-reset-btn {
+  flex: 1 1 0;
+  min-width: 0;
+  height: 36px;
+  padding: 0 8px;
+  border-radius: 6px;
+  font-size: 14px;
+  font-family: var(--font-sans);
+  font-weight: 400;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  white-space: nowrap;
+}
+
+.top-bar .top-reset-btn {
+  background: var(--btn-reset-bg);
+  border: 1px solid var(--btn-reset-border);
+  color: var(--btn-reset-text);
+}
+
+.top-bar .top-reset-btn:hover {
+  background: var(--btn-reset-hover);
+  border-color: var(--btn-reset-border);
+  color: var(--btn-reset-text);
+}
+
+/* Auto-rotate off → green "Auto Rotate"; rotation on → white "Pause". */
+.top-actions .btn.btn-topbar-playpause.paused {
+  background: var(--btn-play-bg);
+  border: 1px solid var(--btn-play-bg);
+  color: var(--btn-play-text);
+}
+
+.top-actions .btn.btn-topbar-playpause.paused:hover {
+  background: var(--btn-play-hover);
+  border-color: var(--btn-play-hover);
+  color: var(--btn-play-text);
+}
+
+.top-actions .btn.btn-topbar-playpause:not(.paused) {
+  background: var(--btn-paused-bg);
+  border: 1px solid var(--btn-paused-border);
+  color: var(--btn-paused-text);
+}
+
+.top-actions .btn.btn-topbar-playpause:not(.paused):hover {
+  background: var(--btn-paused-bg);
+  border-color: var(--btn-paused-border);
+  color: var(--btn-paused-text);
+}
+
+#canvas-area {
+  top: 62px;
+  left: 0;
+  right: 300px;
+  background: #060E11;
+}
+
+.sidebar {
+  top: 62px;
+  width: 300px;
+  background: #060E11;
+  border-left: 1px solid rgba(148, 163, 184, 0.12);
+  padding: 20px;
+  z-index: 1001;
+}
+
+.panel-title {
+  font-size: 14px;
+  font-weight: 700;
+  font-family: var(--font-sans);
+  color: var(--muted);
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  margin: 0 0 14px 0;
+  padding: 0 0 10px 0;
+  line-height: 1.2;
+  border-bottom: 1px solid var(--border);
+}
+
+.control-row {
+  background: var(--ctrl-bg);
+  border: 1px solid var(--ctrl-border);
+  border-radius: 5px;
+  padding: 12px;
+  min-height: 73px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  margin-bottom: 8px;
+}
+
+.control-label {
+  align-items: baseline;
+  gap: 10px;
+  margin-bottom: 8px;
+  color: var(--text);
+  font-size: 13px;
+  font-family: var(--font-sans);
+  font-weight: 600;
+}
+
+.control-label .val {
+  min-width: 54px;
+  text-align: right;
+  color: var(--accent);
+  font-family: var(--font-nums);
+  font-size: 15px;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+}
+
+.slider {
+  height: 6px;
+  background: var(--track-bg);
+  border-radius: 3px;
+  cursor: pointer;
+}
+
+.slider::-webkit-slider-thumb {
+  width: 16px;
+  height: 16px;
+  background: var(--accent);
+  box-shadow: 0 0 8px var(--accent-soft);
+}
+
+.slider::-moz-range-thumb {
+  width: 16px;
+  height: 16px;
+  background: var(--accent);
+  box-shadow: 0 0 8px var(--accent-soft);
+}
+
+.divider {
+  background: var(--border);
+  margin: 22px 0;
+}
+
+.mode-switch-sidebar {
+  background: var(--ctrl-bg);
+  border: 1px solid var(--ctrl-border);
+  border-radius: 5px;
+  padding: 6px;
+}
+
+.mode-btn {
+  font-size: 12px;
+  font-family: var(--font-sans);
+  color: var(--muted);
+  border-radius: 5px;
+  padding: 8px 10px;
+}
+
+.mode-btn.active.aether {
+  background: rgba(127, 29, 29, 0.92);
+  color: #fecaca;
+  box-shadow: 0 0 12px rgba(239,68,68,0.28);
+}
+
+.mode-btn.active.relativity {
+  background: #1e40af;
+  color: #dbeafe;
+  box-shadow: 0 0 12px rgba(59,130,246,0.30);
+}
+
+.stats-grid {
+  gap: 0;
+  margin-bottom: 0;
+}
+
+.stat-card {
+  padding: 8px 0;
+  border-bottom: 1px solid var(--border);
+}
+
+.stat-card .stat-label {
+  color: #d7dee9;
+  font-size: 12px;
+  font-family: var(--font-sans);
+  font-weight: 600;
+}
+
+.stat-card .stat-value {
+  color: #f8fafc;
+  font-size: 15px;
+  font-family: var(--font-nums);
+  font-weight: 600;
+}
+
+.detector-panel {
+  right: 344px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.18);
+}
+
+.detector-panel {
+  top: 78px;
+}
+
+.detector-title {
+  color: var(--muted);
+  font-family: var(--font-sans);
+  font-weight: 600;
+  letter-spacing: 1.2px;
+}
+
+.detector-meta {
+  color: var(--muted);
+  font-family: var(--font-sans);
+  font-weight: 600;
+}
+
+.mode-banner {
+  top: 78px;
+  left: 24px;
+  transform: none;
+  max-width: 240px;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  border-radius: 8px;
+  font-family: var(--font-sans);
+  font-size: 12px;
+  z-index: 45;
+}
+
+.mode-banner.relativity {
+  width: 180px;
+}
+
+/* Final layout guardrails: keep diagnostics visually continuous with the canvas
+   while constraining only the apparatus drawing away from those panels. */
+#canvas-area {
+  right: 300px;
+  background: #060E11;
+}
+
+.sidebar {
+  width: 300px;
+  background: var(--panel-bg);
+}
+
+.detector-panel {
+  right: 316px;
+  width: 280px;
+  background: rgba(6, 14, 17, 0.88);
+}
+
+@media (max-width: 900px) {
+  .sidebar { width: 260px; padding: 16px; }
+  #canvas-area { right: 260px; }
+  .detector-panel { right: 276px; width: 260px; }
+  .beam-legend { right: 258px; width: 230px; }
+}
+
+.dropdown-toggle {
+  cursor: pointer;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  user-select: none;
+  transition: color 0.2s;
+}
+
+.dropdown-toggle:hover {
+  color: var(--accent);
+}
+
+.dropdown-arrow {
+  font-size: 10px;
+  transition: transform 0.2s ease;
+  color: #64748b;
+}
+
+.dropdown-toggle.open .dropdown-arrow {
+  transform: rotate(90deg);
+}
+
+.control-note {
+  margin-top: 10px;
+  font-size: 11px;
+  line-height: 1.55;
+  color: var(--text-muted);
+  font-family: var(--font-sans);
+  font-weight: 400;
+}
+@font-face{
+  font-family:'JetBrainsMonoNums';
+  src:url('JetBrainsMono-SemiBold.ttf') format('truetype');
+  font-weight:600; font-style:normal; font-display:swap;
+}
+
+/* ============================================================================
+   SHELL CSS — the design system, layout, dynamic sidebar, stepper, components.
+   (Verbatim from the engine shell template; keep in sync with it.)
+   ========================================================================== */
+:root{
+  /* Surfaces (design system) */
+  --bg:#060E11; --surface:rgba(6,14,17,.95); --surface-soft:rgba(6,14,17,.92); --panel-bg:#060E11;
+  /* Back-compat aliases for the shell's older --panel / --panel-2 / --line names */
+  --panel:var(--surface); --panel-2:#0f1a1d; --line:var(--border);
+  /* Text */
+  --ink:#e2e8f0; --ink-mid:#cbd5e1; --ink-mute:#9ca3af;
+  --text:#e2e8f0; --muted:#cbd5e1; --text-muted:#9ca3af;
+  /* Borders */
+  --border:rgba(19,49,49,.45);
+  /* Accent (teal) */
+  --accent:#3b9b8f; --accent-soft:rgba(59,155,143,.35);
+  /* Control-box (Figma green) */
+  --ctrl-bg:rgba(30,77,58,.15); --ctrl-border:rgba(30,77,58,.50); --track-bg:rgba(30,77,58,.35);
+  /* Top bar — theme-INDEPENDENT cream (stays the same in light/dark) */
+  --topbar-bg:#FAF8F4; --topbar-text:#0f172a; --topbar-border:rgba(19,49,49,.25);
+  --btn-play-bg:#1E4D3A; --btn-play-hover:#2D6E52; --btn-play-text:#fff;
+  --btn-paused-bg:#fff; --btn-paused-text:#1E4D3A; --btn-paused-border:#1E4D3A;
+  --btn-reset-bg:#FAF8F4; --btn-reset-hover:#F5EAC4; --btn-reset-text:#B6820C; --btn-reset-border:#B6820C;
+  /* SR frame-coding colours (preserved — used by sim canvas drawing) */
+  --rest:#06b6d4; --moving:#f59e0b; --photon:#fef3c7;
+  --danger:#f43f5e; --ok:#34d399; --warn:#fbbf24;
+  /* Fonts (embedded at final-assembly time — see simFonts.ts) */
+  --font-sans:'DMSansUser','DM Sans',-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;
+  --font-nums:'JetBrainsMonoNums','JetBrains Mono',ui-monospace,monospace;
+  --r:8px;
+}
+/* Light theme — toggled by body.light-theme (shell theme button) or html[data-theme=light] */
+body.light-theme,html[data-theme="light"]{
+  --bg:#e2e8f0; --surface:rgba(248,250,252,.96); --surface-soft:rgba(241,245,249,.96); --panel-bg:#e5e7eb;
+  --panel-2:#e5e7eb;
+  --ink:#0f172a; --ink-mid:#334155; --ink-mute:#6b7280;
+  --text:#0f172a; --muted:#334155; --text-muted:#6b7280;
+  --border:rgba(51,65,85,.18);
+  --accent:#2a8a7e; --accent-soft:rgba(42,138,126,.35);
+  --ctrl-bg:rgba(30,77,58,.08); --ctrl-border:rgba(30,77,58,.35); --track-bg:rgba(30,77,58,.20);
+  --topbar-border:rgba(19,49,49,.20);
+}
+*,*::before,*::after{box-sizing:border-box;}
+html,body{margin:0;height:100%;}
+body{background:var(--bg);color:var(--ink);font-family:var(--font-sans);overflow:hidden;}
+
+#shell{
+  display:grid;
+  grid-template-areas:"header header" "hero aside" "formal formal";
+  grid-template-columns:1fr 320px;
+  grid-template-rows:auto minmax(0,1fr) auto;
+  height:100vh;
+  gap:0;
+}
+#shell.hide-aside{grid-template-areas:"header header" "hero hero" "formal formal";}
+#shell.hide-aside .shell-aside{display:none;}
+#shell.hide-formal .shell-formal{display:none;}
+/* Maximize keeps the cream top bar visible (so the Maximize→Minimize button is
+   always reachable) and collapses only the sidebar + formal; the hero fills the
+   rest. This retires the floating restore button that used to overlap a sim's
+   top-right legend/readout. !important so a stray SIM rule can't re-show them. */
+#shell.shell-max{grid-template-areas:"header" "hero";grid-template-columns:1fr;grid-template-rows:auto minmax(0,1fr);}
+#shell.shell-max .shell-aside,#shell.shell-max .shell-formal{display:none !important;}
+/* Floating restore is retired — the always-visible header button restores. */
+.shell-exit-max{display:none !important;}
+
+.shell-header{
+  grid-area:header;display:flex;align-items:center;gap:12px;flex-wrap:nowrap;
+  height:62px;min-height:62px;padding:0 18px;background:var(--topbar-bg);
+  border-bottom:1px solid var(--topbar-border);position:relative;z-index:3000;overflow:visible;
+}
+.shell-title{font-size:18px;font-weight:600;color:var(--topbar-text);white-space:nowrap;letter-spacing:.5px;}
+.shell-title span{font-weight:400;color:#475569;font-size:13px;letter-spacing:0;}
+.shell-controls{display:flex;align-items:center;gap:8px;flex-wrap:nowrap;margin-left:auto;}
+.shell-group{display:flex;align-items:center;gap:8px;padding:0 2px;}
+.shell-sep{width:1px;height:24px;background:var(--topbar-border);}
+/* Speed label sits on the cream bar — force a dark colour regardless of theme. */
+.shell-header label{color:#475569;font-family:var(--font-sans);}
+
+/* Base button — used on dark surfaces (aside Skip/restore etc.). */
+.shell-btn{
+  background:var(--ctrl-bg);border:1px solid var(--ctrl-border);color:var(--text);
+  font:inherit;font-family:var(--font-sans);font-size:13px;padding:6px 11px;border-radius:6px;cursor:pointer;
+  display:inline-flex;align-items:center;gap:6px;white-space:nowrap;transition:background .15s,border-color .15s,color .15s;
+}
+.shell-btn:hover{background:rgba(30,77,58,.28);border-color:var(--accent-soft);}
+.shell-btn.primary{background:var(--ctrl-bg);border-color:var(--accent-soft);color:var(--accent);}
+.shell-btn.active{background:rgba(59,155,143,.16);border-color:var(--accent-soft);color:var(--accent);}
+.shell-btn:disabled{opacity:.4;cursor:not-allowed;}
+.shell-select{
+  background:var(--ctrl-bg);border:1px solid var(--ctrl-border);color:var(--text);
+  font:inherit;font-family:var(--font-sans);font-size:13px;padding:6px 8px;border-radius:6px;cursor:pointer;
+}
+/* Cream top-bar overrides — header buttons read on the light parchment bar. */
+.shell-header .shell-btn{background:#fff;border:1px solid var(--topbar-border);color:#334155;height:36px;padding:0 12px;}
+.shell-header .shell-btn:hover{background:var(--btn-reset-hover);border-color:var(--topbar-border);color:#0f172a;}
+.shell-header .shell-btn.active{background:var(--btn-play-bg);border-color:var(--btn-play-bg);color:#fff;}
+.shell-header .shell-select{background:#fff;border:1px solid var(--topbar-border);color:#334155;height:36px;}
+/* Play/Pause — green when playing, white-outline when paused (.paused set by runtime). */
+.shell-header #shell-play{background:var(--btn-play-bg);border-color:var(--btn-play-bg);color:var(--btn-play-text);}
+.shell-header #shell-play:hover{background:var(--btn-play-hover);border-color:var(--btn-play-hover);color:#fff;}
+.shell-header #shell-play.paused{background:var(--btn-paused-bg);border-color:var(--btn-paused-border);color:var(--btn-paused-text);}
+.shell-header #shell-play.paused:hover{background:var(--btn-play-hover);border-color:var(--btn-play-hover);color:#fff;}
+/* Reset — cream fill, gold border + gold text. */
+.shell-header #shell-reset{background:var(--btn-reset-bg);border-color:var(--btn-reset-border);color:var(--btn-reset-text);}
+.shell-header #shell-reset:hover{background:var(--btn-reset-hover);border-color:var(--btn-reset-border);color:var(--btn-reset-text);}
+.shell-readout{font-family:var(--font-nums);font-variant-numeric:tabular-nums;font-size:14px;font-weight:600;color:var(--accent);
+  background:var(--ctrl-bg);border:1px solid var(--ctrl-border);padding:4px 9px;border-radius:5px;white-space:nowrap;}
+.shell-readout.danger{color:#fda4af;background:rgba(244,63,94,.1);border-color:rgba(244,63,94,.35);animation:shellPulse 1s infinite;}
+@keyframes shellPulse{0%,100%{opacity:1}50%{opacity:.6}}
+
+.shell-range{-webkit-appearance:none;appearance:none;height:6px;border-radius:3px;outline:none;
+  background:var(--track-bg);width:150px;cursor:pointer;}
+.shell-range::-webkit-slider-thumb{-webkit-appearance:none;width:16px;height:16px;border-radius:50%;
+  background:var(--accent);border:none;cursor:pointer;box-shadow:0 0 8px var(--accent-soft);}
+.shell-range::-moz-range-thumb{width:16px;height:16px;border-radius:50%;background:var(--accent);border:none;cursor:pointer;box-shadow:0 0 8px var(--accent-soft);}
+
+.shell-hero{grid-area:hero;min-height:0;min-width:0;padding:14px;overflow:hidden;display:flex;flex-direction:column;gap:14px;}
+
+.shell-aside{grid-area:aside;min-height:0;display:flex;flex-direction:column;gap:16px;
+  padding:18px;overflow-y:auto;overflow-x:hidden;background:var(--surface-soft);
+  backdrop-filter:blur(12px);border-left:1px solid rgba(148,163,184,.18);}
+.shell-formal{grid-area:formal;min-height:0;max-height:34vh;overflow-y:auto;
+  padding:14px 18px;background:var(--surface-soft);border-top:1px solid var(--border);}
+
+/* Plot-box card for hero canvases (design system). One global maximize only
+   (#shell-maximize) — do NOT add per-plot maximize buttons. */
+.plot-box{flex:1;min-height:0;background:var(--surface);border:1px solid var(--border);border-radius:12px;
+  position:relative;overflow:hidden;display:flex;box-shadow:0 1px 3px rgba(0,0,0,.18);}
+.plot-box canvas{display:block;width:100%;height:100%;}
+.plot-title{position:absolute;top:12px;left:16px;font-size:11px;font-weight:600;color:var(--muted);
+  letter-spacing:1.2px;text-transform:uppercase;z-index:2;pointer-events:none;}
+.plot-title .plot-inline{font-size:11px;font-weight:600;letter-spacing:0;color:var(--text);text-transform:none;margin-left:6px;}
+.legend{position:absolute;top:42px;right:16px;display:flex;flex-wrap:wrap;justify-content:flex-end;gap:14px;
+  font-size:11px;font-weight:600;color:var(--text);z-index:2;pointer-events:none;background:rgba(6,14,17,.72);
+  border:1px solid var(--border);border-radius:999px;padding:8px 12px;backdrop-filter:blur(6px);}
+.legend-item{display:flex;align-items:center;gap:6px;}
+.legend-dot{width:10px;height:10px;border-radius:999px;}
+
+.shell-panel{flex-shrink:0;box-sizing:border-box;background:var(--surface);
+  border:1px solid var(--border);border-radius:8px;overflow:hidden;}
+.shell-panel-head{display:flex;align-items:center;gap:8px;padding:10px 12px;cursor:pointer;user-select:none;}
+.shell-panel-head h3{margin:0;font-size:11px;letter-spacing:1.2px;text-transform:uppercase;color:var(--ink-mid);font-weight:600;flex:1;}
+.shell-caret{color:var(--ink-mute);font-size:11px;transition:transform .15s;}
+.shell-panel.collapsed .shell-caret{transform:rotate(-90deg);}
+.shell-panel.collapsed .shell-panel-body{display:none;}
+.shell-panel-body{padding:0 12px 12px;font-size:13px;color:var(--muted);line-height:1.6;overflow-wrap:anywhere;font-family:var(--font-sans);}
+
+/* Design-system control + stat components (use INSIDE panels for sliders/stats). */
+.ctrl-box{background:var(--ctrl-bg);border:1px solid var(--ctrl-border);border-radius:5px;padding:12px;margin-bottom:8px;box-sizing:border-box;}
+.ctrl-box:last-child{margin-bottom:0;}
+.ctrl-box--slider{min-height:73px;display:flex;flex-direction:column;justify-content:center;}
+.ctrl-box-label{display:block;font-size:13px;font-weight:600;color:var(--text);line-height:1.2;}
+.ctrl-box-head{display:flex;align-items:baseline;justify-content:space-between;gap:10px;margin-bottom:8px;}
+.ctrl-box-head .ctrl-box-label{flex:1;min-width:0;}
+.ctrl-slider-row{display:flex;align-items:center;gap:10px;width:100%;}
+.ctrl-slider-row input[type=range]{flex:1;min-width:0;-webkit-appearance:none;appearance:none;height:6px;background:var(--track-bg);border-radius:3px;outline:none;cursor:pointer;}
+.ctrl-slider-row input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:16px;height:16px;background:var(--accent);border-radius:50%;cursor:pointer;box-shadow:0 0 8px var(--accent-soft);border:none;}
+.ctrl-slider-row input[type=range]::-moz-range-thumb{width:16px;height:16px;background:var(--accent);border-radius:50%;cursor:pointer;border:none;box-shadow:0 0 8px var(--accent-soft);}
+.slider-val,.control-value{min-width:30px;text-align:right;font-weight:600;font-size:15px;font-family:var(--font-nums);font-variant-numeric:tabular-nums;color:var(--accent);}
+.control-range{font-size:.75rem;font-family:var(--font-nums);font-variant-numeric:tabular-nums;color:var(--text-muted);margin-top:4px;display:flex;justify-content:space-between;}
+.stat-row{display:flex;justify-content:space-between;align-items:center;font-size:14px;padding:6px 0;font-family:var(--font-sans);}
+.ctrl-box .stat-row:first-child{padding-top:0;}
+.ctrl-box .stat-row:last-child{padding-bottom:0;}
+.stat-label{color:var(--muted);display:flex;align-items:center;font-weight:600;}
+.stat-value{color:var(--text);font-weight:600;font-family:var(--font-nums);font-variant-numeric:tabular-nums;}
+.stat-value.highlight{font-size:18px;}
+.divider{height:1px;background:var(--border);}
+.note-text{font-size:13px;line-height:1.6;color:var(--muted);font-family:var(--font-sans);}
+.shell-aside .katex,.shell-formal .katex{color:inherit;font-weight:600;}
+
+/* Prediction choices + feedback (guided inquiry). Deliberately NOT green-tinted
+   like the control boxes, so the correct=green / wrong=red states stay high
+   contrast in both themes. The correct answer always pops green — even inside a
+   "Not quite" (wrong) feedback box. */
+.choice{display:block;width:100%;text-align:left;background:var(--surface);border:1px solid var(--border);
+  color:var(--text);font:inherit;font-family:var(--font-sans);font-size:13px;line-height:1.5;
+  padding:10px 12px;border-radius:8px;margin-bottom:8px;cursor:pointer;transition:background .15s,border-color .15s,color .15s;}
+.choice:hover{border-color:var(--accent-soft);}
+.choice:disabled{cursor:default;}
+.choice.correct{background:rgba(52,211,153,.18);border:1px solid #34d399;color:#d1fae5;}
+.choice.wrong{background:rgba(244,63,94,.16);border:1px solid #f43f5e;color:#ffe4e6;}
+.choice.dim{opacity:.55;}
+.predict-eval{margin-top:10px;padding:12px;border-radius:8px;border:1px solid var(--border);
+  background:var(--surface);font-size:13px;line-height:1.6;color:var(--text);}
+.predict-eval.correct{background:rgba(52,211,153,.14);border-color:#34d399;}
+.predict-eval.wrong{background:rgba(244,63,94,.12);border-color:#f43f5e;}
+.predict-eval .answer,.predict-eval strong{color:#6ee7b7;font-weight:700;}
+body.light-theme .choice.correct,html[data-theme="light"] .choice.correct{background:rgba(16,185,129,.16);border-color:#059669;color:#065f46;}
+body.light-theme .choice.wrong,html[data-theme="light"] .choice.wrong{background:rgba(244,63,94,.12);border-color:#e11d48;color:#9f1239;}
+body.light-theme .predict-eval .answer,body.light-theme .predict-eval strong,html[data-theme="light"] .predict-eval .answer,html[data-theme="light"] .predict-eval strong{color:#047857;}
+
+/* Dynamic sidebar — two zones: guided-inquiry (collapses after answer/skip) + controls/stats. */
+.aside-zone{flex-shrink:0;display:flex;flex-direction:column;gap:10px;}
+#aside-controls{flex:1 1 auto;}
+.aside-zone-head{display:flex;align-items:center;gap:8px;padding:0 2px;}
+.aside-zone-head h3{margin:0;font-size:11px;letter-spacing:.07em;text-transform:uppercase;color:var(--ink-mid);font-weight:600;flex:1;}
+.aside-skip{font-size:11px;padding:4px 9px;color:var(--ink-mid);}
+/* Stepper dots — one per inquiry step; shell marks active / done. */
+.inq-dots{display:flex;gap:6px;flex-shrink:0;}
+.inq-dots .inq-dot{flex:1;height:4px;border-radius:2px;background:var(--ctrl-border);transition:background .2s;}
+.inq-dots .inq-dot.active{background:var(--accent);}
+.inq-dots .inq-dot.done{background:var(--accent-soft);}
+/* Inquiry step cards — shell shows ONLY the active one (F3). */
+#inq-cards{flex:1 1 auto;min-height:0;}
+.inq-step{display:none;}
+.inq-step.active{display:block;}
+.inq-nav{display:flex;justify-content:flex-end;flex-shrink:0;}
+#inq-next{min-width:96px;justify-content:center;}
+.aside-restore{display:none;width:100%;text-align:left;background:var(--panel-2);border:1px solid var(--line);
+  color:var(--ink-mid);font:inherit;font-size:11px;letter-spacing:.06em;text-transform:uppercase;
+  padding:8px 12px;border-radius:6px;cursor:pointer;flex-shrink:0;transition:background .15s,color .15s;}
+.aside-restore:hover{background:rgba(30,77,58,.28);color:var(--text);}
+#shell.inquiry-collapsed #aside-inquiry{display:none;}
+#shell.inquiry-collapsed #aside-inquiry-restore{display:block;}
+#shell.no-inquiry #aside-inquiry,#shell.no-inquiry #aside-inquiry-restore{display:none !important;}
+
+/* Info modal — source-row context + principles-applied table (shell-owned). */
+.shell-modal-backdrop{position:fixed;inset:0;background:rgba(4,6,10,.74);backdrop-filter:blur(2px);
+  z-index:200;display:none;align-items:center;justify-content:center;padding:24px;}
+.shell-modal-backdrop.open{display:flex;}
+.shell-modal{background:var(--panel-2);border:1px solid var(--line);border-radius:12px;
+  max-width:720px;width:100%;max-height:84vh;display:flex;flex-direction:column;
+  box-shadow:0 24px 64px rgba(0,0,0,.55);}
+.shell-modal-head{display:flex;align-items:center;justify-content:space-between;gap:12px;
+  padding:14px 18px;border-bottom:1px solid var(--line);flex-shrink:0;}
+.shell-modal-head h2{margin:0;font-size:14px;font-weight:700;color:var(--text);}
+.shell-modal-body{padding:16px 18px;overflow-y:auto;font-size:13px;line-height:1.55;color:var(--ink);}
+.shell-modal-body h3{font-size:10.5px;text-transform:uppercase;letter-spacing:.07em;
+  color:var(--ink-mute);margin:18px 0 8px;font-weight:600;}
+.shell-modal-body h3:first-child{margin-top:0;}
+.shell-modal-body p{margin:0 0 8px;}
+.shell-info-table{width:100%;border-collapse:collapse;font-size:12.5px;margin:2px 0 4px;}
+.shell-info-table th,.shell-info-table td{text-align:left;vertical-align:top;padding:6px 8px;
+  border-bottom:1px solid var(--line);}
+.shell-info-table thead th{color:var(--ink-mid);font-weight:600;white-space:nowrap;
+  text-transform:uppercase;letter-spacing:.04em;font-size:10.5px;}
+.shell-info-table td.pid{font-family:'JetBrains Mono',ui-monospace,monospace;color:var(--accent);white-space:nowrap;}
+.shell-info-dl{display:grid;grid-template-columns:auto 1fr;gap:4px 14px;margin:0;}
+.shell-info-dl dt{color:var(--ink-mid);font-weight:600;}
+.shell-info-dl dd{margin:0;}
+
+@media(max-width:1000px){
+  body{overflow:auto;}
+  #shell,#shell.hide-aside{grid-template-areas:"header" "hero" "aside" "formal";grid-template-columns:1fr;
+    grid-template-rows:auto 62vh auto auto;height:auto;min-height:100vh;}
+  .shell-header{flex-wrap:wrap;height:auto;min-height:62px;padding:8px 14px;}
+  .shell-aside{border-left:none;border-top:1px solid var(--border);}
+}
+
+
+/* ============================================================================
+   SIM CSS
+   ========================================================================== */
+
+#heroRoot{display:flex;flex-direction:column;height:100%;min-height:0;gap:6px;}
+.canvas-title{font-size:12.5px;color:var(--ink-mid);letter-spacing:.04em;padding:2px 4px;flex:0 0 auto;}
+#cvWrap{flex:1;min-height:0;position:relative;background:#0a0c11;border:1px solid var(--line);border-radius:8px;overflow:hidden;}
+#cv{width:100%;height:100%;display:block;}
+
+.mode-toggle{display:inline-flex;border:1px solid var(--line);border-radius:6px;overflow:hidden;}
+.mode-toggle button{background:var(--panel-2);border:none;color:var(--ink-mid);font:inherit;font-size:12px;padding:6px 10px;cursor:pointer;white-space:nowrap;}
+#btnAether.active{background:rgba(245,158,11,.2);color:#fbbf24;font-weight:600;}
+#btnActual.active{background:rgba(52,211,153,.2);color:#6ee7b7;font-weight:600;}
+
+.shell-group.hl{outline:2px solid rgba(96,165,250,.7);outline-offset:3px;border-radius:8px;animation:hlpulse 1.4s infinite;}
+@keyframes hlpulse{0%,100%{outline-color:rgba(96,165,250,.7);}50%{outline-color:rgba(96,165,250,.18);}}
+
+.persona .quote{border-left:3px solid var(--moving);padding:7px 10px;background:rgba(245,158,11,.06);border-radius:0 6px 6px 0;font-style:italic;color:#fcd9a6;}
+
+.formal-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px 18px;}
+@media(max-width:1000px){.formal-grid{grid-template-columns:1fr;}}
+.eq-row{background:rgba(15,23,42,.5);border:1px solid var(--line);border-radius:8px;padding:8px 10px;}
+.eq-row .lbl{font-size:11px;color:var(--ink-mid);margin-bottom:4px;}
+.eq-row .eq{font-size:14px;overflow-x:auto;}
+
+
+/* === 3D MM shell layout — inquiry lives in right .sidebar; no left offset === */
+#shell.mm-3d-shell{display:block;height:100vh;position:relative;}
+#shell.mm-3d-shell .shell-header{position:fixed;top:0;left:0;right:0;z-index:3000;}
+#shell.mm-3d-shell .shell-formal{
+  position:fixed;left:0;right:300px;bottom:0;z-index:48;max-height:34vh;overflow-y:auto;
+  padding:14px 18px;background:rgba(10,15,28,0.95);border-top:1px solid rgba(148,163,184,0.12);
+}
+#shell.mm-3d-shell.hide-formal .shell-formal{display:none !important;}
+#shell.mm-3d-shell:not(.hide-formal).formal-open #canvas-area{bottom:min(34vh,260px);}
+#shell.mm-3d-shell.shell-max .shell-formal{display:none !important;}
+#shell.mm-3d-shell.shell-max .sidebar{display:none !important;}
+#shell.mm-3d-shell.shell-max .detector-panel{display:none !important;}
+#shell.mm-3d-shell #canvas-area{top:62px;left:0;right:300px;}
+#shell.mm-3d-shell.shell-max #canvas-area{left:0 !important;right:0 !important;}
+#shell.mm-3d-shell .mode-banner{top:74px;}
+#shell.mm-3d-shell .detector-panel{top:74px;}
+
+/* Inquiry stacked at top of the existing dark right sidebar */
+.sidebar #aside-inquiry{margin-bottom:16px;}
+.sidebar #aside-inquiry .aside-zone-head h3{color:#cbd5e1;}
+.sidebar .inq-step h4{margin:0 0 8px;font-size:13px;color:#f1f5f9;}
+.sidebar .inq-step p{margin:0 0 10px;font-size:12px;line-height:1.6;color:#cbd5e1;}
+.sidebar .inq-step .predict-eval{display:none;}
+.sidebar .inq-step .predict-eval.show{display:block;}
+.sidebar .aside-restore{margin-bottom:16px;}
+.sidebar .inq-nav{margin-top:8px;}
+#theta.control-highlight{outline:2px solid rgba(96,165,250,0.75);outline-offset:4px;border-radius:4px;animation:thetaPulse 1.4s infinite;}
+@keyframes thetaPulse{0%,100%{outline-color:rgba(96,165,250,0.75);}50%{outline-color:rgba(96,165,250,0.2);}}
+
+/* Preserve the 3D sim's original button colors inside the shell header */
+.shell-header .mm-top-actions{display:flex;align-items:center;gap:8px;}
+.shell-header .mm-top-actions .btn { width:auto; min-width:132px; height:36px; padding:0 14px; border-radius:6px; cursor:pointer; font-size:14px;
+font-family:var(--font-sans); display:inline-flex; align-items:center; justify-content:center; }
+.shell-header .mm-top-actions .top-reset-btn { background:var(--btn-reset-bg); border:1px solid var(--btn-reset-border); color:var(--btn-reset-text); }
+.shell-header .mm-top-actions .top-reset-btn:hover { background:var(--btn-reset-hover); border-color:var(--btn-reset-border); color:var(--btn-reset-text); }
+.shell-header .mm-top-actions .btn-topbar-playpause.paused { background:var(--btn-play-bg); border:1px solid var(--btn-play-bg); color:var(--btn-play-text); }
+.shell-header .mm-top-actions .btn-topbar-playpause.paused:hover { background:var(--btn-play-hover); border-color:var(--btn-play-hover); color:var(--btn-play-text); }
+.shell-header .mm-top-actions .btn-topbar-playpause:not(.paused) { background:var(--btn-paused-bg); border:1px solid var(--btn-paused-border); color:var(--btn-paused-text); }
+.shell-header .mm-top-actions .btn-topbar-playpause:not(.paused):hover { background:var(--btn-play-hover); border-color:var(--btn-play-hover); color:var(--btn-play-text); }
+
+/* Light theme — chrome only (never WebGL / canvas / detector surfaces) */
+body.light-theme #shell.mm-3d-shell .shell-formal{background:rgba(241,245,249,0.98);border-top-color:rgba(51,65,85,0.15);}
+body.light-theme .sidebar #aside-inquiry .aside-zone-head h3{color:#334155;}
+body.light-theme .sidebar .inq-step h4{color:#0f172a;}
+body.light-theme .sidebar .inq-step p{color:#334155;}
+body.light-theme #canvas-area,
+body.light-theme #mainCanvas,
+body.light-theme .detector-panel{background:#060E11 !important;}
+body.light-theme .detector-panel{background:rgba(6,14,17,0.88) !important;}
+
+@media (max-width:900px){
+  #shell.mm-3d-shell #canvas-area{right:260px;}
+  #shell.mm-3d-shell .shell-formal{right:260px;}
+}
+
+</style>
+</head>
+<body>
+
+<div id="shell" class="mm-3d-shell hide-formal">
+  <div id="shell-info-modal" class="shell-modal-backdrop">
+    <div class="shell-modal" role="dialog" aria-modal="true" aria-label="About this simulation">
+      <div class="shell-modal-head">
+        <h2>About: Michelson–Morley Interferometer (3D)</h2>
+        <button id="shell-info-close" class="shell-btn shell-modal-close" title="Close (Esc)">✕</button>
+      </div>
+      <div class="shell-modal-body">
+        <h3>About This Simulation</h3>
+      <p>This interactive 3D simulation reproduces the <strong>Michelson–Morley experiment</strong> (1887) as it was actually built: the optics are bolted to a massive <em>stone slab</em> that floats on liquid <em>mercury</em> in an annular cast-iron trough on a brick pier, so the whole apparatus can be rotated smoothly.</p>
+      <p>Light from the source is split by a <strong>half-silvered mirror at 45°</strong> (the beam splitter, BS). One beam passes through a <em>compensating plate</em> to mirror M₁; the other reflects to mirror M₂. The compensator is an identical, unsilvered copy of the splitter, so both beams traverse the same thickness of glass — without it, white-light fringes could not be seen. The returning beams recombine at BS and interfere in the <strong>telescope detector</strong>.</p>
+      <p>In the 19th century, physicists believed light traveled through a medium called the <em>“luminiferous aether.”</em> If so, the Earth’s motion through this aether would create a “wind” that changes the effective speed of light differently in each arm, producing a measurable <em>fringe shift</em> when the slab is rotated.</p>
+      <p><strong>Aether Prediction mode</strong> shows the expected fringe shift using Galilean velocity addition — <em>this prediction is wrong.</em></p>
+      <p><strong>Actual (Relativity) mode</strong> shows the real result: <em>no fringe shift at any angle</em>. FitzGerald and Lorentz first explained this with an ad-hoc length contraction of the arm along the motion; Einstein’s Special Relativity (1905) explained it fundamentally — the speed of light is the same in all directions for every inertial observer.</p>
+      <div class="tip-note">β (v/c) is fixed at Earth’s real orbital speed (β ≈ 9.93×10⁻⁵). The effect is minuscule: with ~11 m arms the predicted round-trip difference is only a few hundred attoseconds, so the readout shows it in scientific notation / attoseconds (and it is exactly 0 in Actual mode — the null result). Drag the 3D view to orbit; scroll to zoom.</div>
+      </div>
+    </div>
+  </div>
+  <header class="shell-header">
+    <div class="shell-title">Michelson–Morley</div>
+    <div class="shell-group">
+      <button id="shell-info" class="shell-btn" title="About this simulation">ⓘ Info</button>
+      <button id="shell-theme" class="shell-btn" title="Toggle light / dark theme">☾</button>
+      <button id="shell-lecture" class="shell-btn" title="Lecture display mode — hide the guided inquiry, show the full simulation">🎓 Lecture</button>
+    </div>
+    <div class="shell-controls">
+      <div class="shell-group">
+        <button id="shell-maximize" class="shell-btn">⛶ Maximize</button>
+        <button id="toggle-formal" class="shell-btn">∑ Formal</button>
+        <label style="font-size:11px;">Speed</label>
+        <select id="shell-speed" class="shell-select">
+          <option value="0.25">0.25×</option><option value="0.5">0.5×</option>
+          <option value="1" selected>1×</option><option value="2">2×</option><option value="4">4×</option>
+        </select>
+      </div>
+      <div class="shell-sep"></div>
+      <div class="shell-group mm-top-actions">
+        <button class="btn top-reset-btn" id="resetBtn">Reset θ = 0°</button>
+        <button class="btn btn-topbar-playpause paused" id="autoRotateBtn">Auto Rotate</button>
+      </div>
+    </div>
+  </header>
+
+<div class="mode-banner aether" id="banner">⚠ AETHER PREDICTION</div>
+
+<div id="canvas-area">
+  <canvas id="mainCanvas"></canvas>
+  <div id="labels3d"></div>
+  <div class="overlay-chip" id="thetaChip">θ = 0°</div>
+  <div class="overlay-hint">drag to orbit · scroll to zoom</div>
+</div>
+
+<div class="detector-panel">
+  <div class="detector-title"><span>Round-trip times</span><span id="detMode">Aether mode</span></div>
+  <div id="rtReadout"></div>
+  <canvas id="detectorCanvas"></canvas>
+  <canvas id="fringePlot"></canvas>
+  <div class="detector-meta">
+    <span id="detMag">magnified view</span>
+    <span>Fringe shift ΔN vs θ</span>
+  </div>
+</div>
+
+<div class="sidebar">
+    <div id="aside-inquiry" class="aside-zone">
+      <div class="aside-zone-head"><h3>Guided Inquiry</h3></div>
+      <div id="inq-dots" class="inq-dots"></div>
+      <div id="inq-cards" class="aside-zone-body">
+        <div class="inq-step">
+          <h4>1 · Meet the apparatus</h4>
+          <p>Light from the <b>source</b> hits the <b>beam splitter</b> and runs down two perpendicular arms to mirrors <b>A</b> and <b>B</b>, then returns. In <b>Experiment</b> view you read each arm's <b>round-trip time</b>; in <b>Simplified</b> view a single beam goes out to one mirror and back. The red arrows are the hypothetical <b>aether wind</b>.</p>
+          <p style="color:var(--text-muted)">Drag to orbit · scroll to zoom.</p>
+        </div>
+        <div class="inq-step" data-gate>
+          <h4>2 · Predict</h4>
+          <p>As the apparatus turns, each arm's angle to the wind changes, so the along-wind and cross-wind light speeds trade places. In <b style="color:#f87171">Aether</b> mode, what should the two arms' <b>round-trip times</b> do as you rotate θ?</p>
+          <button class="choice" data-c="shift" data-correct="1" data-fb="&lt;b&gt;Correct.&lt;/b&gt; The changing arm asymmetry makes the round-trip times unequal, so the &lt;b&gt;A−B difference&lt;/b&gt; is nonzero and traces cos 2θ — zero at 45°, largest along and across the wind. Rotate next and watch it swing.">A and B become unequal — the A−B difference swings with θ.</button>
+          <button class="choice" data-c="fixed" data-correct="0" data-fb="That's the &lt;b&gt;actual&lt;/b&gt; (relativity) result — but not what the aether model predicts. In Aether mode the shifting asymmetry should make A and B unequal; you'll compare this against the real experiment.">They stay equal — A−B is always zero.</button>
+          <button class="choice" data-c="random" data-correct="0" data-fb="&lt;b&gt;No.&lt;/b&gt; The predicted difference is smooth and periodic — it follows cos 2θ, not random flicker.">A−B jumps around unpredictably.</button>
+          <div class="predict-eval"></div>
+        </div>
+        <div class="inq-step" data-gate>
+          <h4>3 · See the predicted difference</h4>
+          <p>In <b style="color:#f87171">Aether</b> mode, drag the <b>Rotation θ</b> slider (highlighted) — or press <b>Auto Rotate</b>. In the readout, the predicted <b>A</b> and <b>B</b> round-trip times differ, and the <b>A − B difference</b> (in attoseconds) traces <b>cos 2θ</b>: zero at 45°, peaking at ≈ ±362 as along and across the wind. The two times differ only in their 8th digit — which is exactly why the effect was so hard to detect.</p>
+          <p style="color:var(--text-muted)">Optional: change <b>Arm length L</b> — the round-trip times and their A−B difference scale with it.</p>
+        </div>
+        <div class="inq-step">
+          <h4>4 · The null result</h4>
+          <p>The sim has switched to <b style="color:#60a5fa">Actual (Relativity)</b> mode. Rotate again — or Auto Rotate — and the two round-trip times stay <b>exactly equal</b>: <b>A − B = 0</b> at every angle. Both arms always take 2L/c, because light's speed doesn't depend on motion through any medium.</p>
+        </div>
+        <div class="inq-step" data-gate>
+          <h4>5 · A friend says…</h4>
+          <div class="persona"><div class="quote">"Light must travel faster relative to an observer moving toward it — just like sound does."</div></div>
+          <p><b>Your turn:</b> Does the experiment support this?</p>
+          <button class="choice" data-c="agree" data-correct="0" data-fb="If light behaved like sound, rotating the apparatus would make the arms' round-trip times differ — the Aether prediction. But the real experiment shows &lt;b&gt;A − B = 0&lt;/b&gt; at every angle and speed. Light has no medium, so the sound analogy fails.">My friend is right — light should behave like sound.</button>
+          <button class="choice" data-c="disagree" data-correct="1" data-fb="&lt;b&gt;Right.&lt;/b&gt; Sound's speed depends on motion through air, so Galilean addition works for it. The null result — &lt;b&gt;A − B = 0&lt;/b&gt; at every angle — shows light does not: its speed is the same for every observer, which Galilean relativity can't explain but Special Relativity does.">My friend is wrong — the experiment contradicts this.</button>
+          <div class="predict-eval"></div>
+        </div>
+      </div>
+      <div class="inq-nav"><button id="inq-next" class="shell-btn primary">Next →</button></div>
+    </div>
+    <button id="aside-inquiry-restore" class="aside-restore" title="Revisit the guided inquiry">▸ Guided inquiry</button>
+
+    <div class="divider"></div>
+
+  <div class="panel-title">View</div>
+  <div class="mode-switch-sidebar">
+    <button class="mode-btn" id="viewSimplified">Simplified</button>
+    <button class="mode-btn active" id="viewExperiment">Experiment</button>
+  </div>
+  <div class="divider"></div>
+
+  <div class="panel-title">Mode</div>
+  <div class="mode-switch-sidebar">
+    <button class="mode-btn active aether" id="modeAether">⚠ Aether</button>
+    <button class="mode-btn relativity" id="modeRel">✓ Actual (Relativity)</button>
+  </div>
+
+  <div class="divider"></div>
+  <div class="panel-title">Rotation</div>
+  <div class="control-row">
+    <div class="control-label"><span>Rotation θ</span><span class="val" id="vTheta">0°</span></div>
+    <input type="range" class="slider" id="theta" min="0" max="360" value="0" step="0.5">
+  </div>
+  <div class="control-row">
+    <div class="control-label"><span>Auto-rotate speed</span><span class="val" id="vSpd">0.5</span></div>
+    <input type="range" class="slider" id="spd" min="0" max="3" value="0.5" step="0.05">
+  </div>
+
+  <div class="divider"></div>
+  <div class="panel-title">Parameters</div>
+  <div class="control-row">
+    <div class="control-label"><span>Arm length L</span><span class="val" id="vL">11.0 m</span></div>
+    <input type="range" class="slider" id="L" min="1" max="20" value="11" step="0.1">
+  </div>
+  <div class="control-row">
+    <div class="control-label"><span>Wavelength λ</span><span class="val" id="vLam">550 nm</span></div>
+    <input type="range" class="slider" id="lam" min="400" max="700" value="550" step="1">
+  </div>
+
+  <div class="divider"></div>
+  <div class="panel-title dropdown-toggle" id="statsToggle">
+    Statistics
+    <span class="dropdown-arrow">▶</span>
+  </div>
+  <div class="stats-grid" id="statsContent" style="display: none;">
+    <div class="stat-card"><div class="stat-label">Δℓ (rel. θ = 0)</div><div class="stat-value" id="sDl">0.00 nm</div></div>
+    <div class="stat-card"><div class="stat-label">Fringe shift ΔN</div><div class="stat-value" id="sDN">0.000</div></div>
+  </div>
+</div>
+
+  <section class="shell-formal">
+    <div class="formal-grid">
+      <div class="eq-row"><div class="lbl">Parallel arm (along the wind)</div><div class="eq" id="eq1"></div></div>
+      <div class="eq-row"><div class="lbl">Perpendicular arm</div><div class="eq" id="eq2"></div></div>
+      <div class="eq-row"><div class="lbl">General arm at angle φ to the wind</div><div class="eq" id="eq3"></div></div>
+      <div class="eq-row"><div class="lbl">Path difference (wavelengths)</div><div class="eq" id="eq4"></div></div>
+      <div class="eq-row"><div class="lbl">Angular dependence (leading order)</div><div class="eq" id="eq5"></div></div>
+      <div class="eq-row"><div class="lbl">Actual experiment (observed)</div><div class="eq" id="eq6"></div></div>
+    </div>
+    <p style="font-size:11.5px;color:#9ca3af;margin-top:8px;">β ≡ v/c. Earth's orbital β ≈ 9.93×10⁻⁵. ΔN varies as cos 2θ under the classical aether prediction; Actual mode enforces c constant → Δ = 0.</p>
+  </section>
+</div>
+
+<script>
+const Shell = (function(){
+  const root = document.getElementById('shell');
+  let onFrame=()=>{}, onReset=()=>{}, onResize=()=>{}, onStep=()=>{};
+  let playing=true, speed=1, last=performance.now(), started=false;
+  let inqStep=0, inqTotal=0;
+
+  function loop(now){
+    let dt=(now-last)/1000; if(dt>0.1)dt=0.1; last=now;
+    if(playing) onFrame(dt*speed);
+    requestAnimationFrame(loop);
+  }
+  function refit(){ onResize(); last=performance.now(); }
+
+  function setPlaying(p){
+    playing=p; last=performance.now();
+  }
+  function setMaximized(on){
+    root.classList.toggle('shell-max', on);
+    const maxBtn=document.getElementById('shell-maximize');
+    if(maxBtn){
+      maxBtn.classList.toggle('active', on);
+      maxBtn.textContent = on ? '⤡ Minimize' : '⛶ Maximize';
+    }
+    requestAnimationFrame(refit);
+  }
+  function setInquiryCollapsed(on){
+    root.classList.toggle('inquiry-collapsed', on);
+    requestAnimationFrame(refit);
+  }
+  function setLectureMode(on){
+    root.classList.toggle('lecture-mode', on);
+    const b = document.getElementById('shell-lecture');
+    if(b) b.classList.toggle('active', on);
+    if(on){
+      const cards = inqCards();
+      if(cards.length) inqShow(cards.length - 1);
+      setInquiryCollapsed(true);
+    } else {
+      setInquiryCollapsed(false);
+      inqShow(0);
+    }
+    requestAnimationFrame(refit);
+  }
+
+  function inqCards(){ return root.querySelectorAll('#inq-cards .inq-step'); }
+  function inqShow(n){
+    const cards=inqCards();
+    if(!cards.length) return;
+    inqStep=Math.max(0,Math.min(n,cards.length-1));
+    cards.forEach((c,i)=>c.classList.toggle('active',i===inqStep));
+    root.querySelectorAll('#inq-dots .inq-dot').forEach((d,i)=>{
+      d.classList.toggle('active',i===inqStep);
+      d.classList.toggle('done',i<inqStep);
+    });
+    const next=document.getElementById('inq-next');
+    if(next){
+      const card=cards[inqStep];
+      const gated = card && card.hasAttribute('data-gate') && !card.hasAttribute('data-ready');
+      next.disabled = gated;
+      next.textContent = (inqStep>=cards.length-1) ? 'Finish' : 'Next →';
+    }
+    onStep(inqStep);
+    requestAnimationFrame(refit);
+  }
+  function inqNext(){
+    const cards=inqCards();
+    if(inqStep>=cards.length-1) setInquiryCollapsed(true);
+    else inqShow(inqStep+1);
+  }
+  function stepReady(){
+    const card=inqCards()[inqStep];
+    if(card) card.setAttribute('data-ready','');
+    const next=document.getElementById('inq-next'); if(next) next.disabled=false;
+  }
+
+  function wire(){
+    const spd=document.getElementById('shell-speed');
+    const maxBtn=document.getElementById('shell-maximize');
+    const restore=document.getElementById('aside-inquiry-restore');
+    const tFormal=document.getElementById('toggle-formal');
+
+    if(spd) spd.addEventListener('change',e=>{ speed=parseFloat(e.target.value)||1; });
+    if(maxBtn) maxBtn.addEventListener('click',()=>setMaximized(!root.classList.contains('shell-max')));
+
+    const infoBtn=document.getElementById('shell-info');
+    const infoModal=document.getElementById('shell-info-modal');
+    const infoClose=document.getElementById('shell-info-close');
+    function setInfo(open){ if(infoModal) infoModal.classList.toggle('open',open); }
+    if(infoBtn) infoBtn.addEventListener('click',()=>setInfo(true));
+    if(infoClose) infoClose.addEventListener('click',()=>setInfo(false));
+    if(infoModal) infoModal.addEventListener('click',e=>{ if(e.target===infoModal) setInfo(false); });
+
+    const themeBtn=document.getElementById('shell-theme');
+    if(themeBtn) themeBtn.addEventListener('click',()=>{
+      const light=document.body.classList.toggle('light-theme');
+      themeBtn.textContent = light ? '☀' : '☾';
+      requestAnimationFrame(refit);
+    });
+
+    const lecture = document.getElementById('shell-lecture');
+    if(lecture) lecture.addEventListener('click', ()=> setLectureMode(!root.classList.contains('lecture-mode')));
+
+    document.addEventListener('keydown',e=>{
+      if(e.key!=='Escape') return;
+      if(infoModal && infoModal.classList.contains('open')) setInfo(false);
+      else if(root.classList.contains('shell-max')) setMaximized(false);
+    });
+
+    if(restore) restore.addEventListener('click', ()=> setLectureMode(false));
+    const inqNextBtn=document.getElementById('inq-next');
+    if(inqNextBtn) inqNextBtn.addEventListener('click',inqNext);
+    const cardsHost=document.getElementById('inq-cards');
+    if(cardsHost) cardsHost.addEventListener('click',e=>{
+      const ch=e.target.closest('.choice'); if(!ch) return;
+      const card=ch.closest('.inq-step');
+      if(card && card.classList.contains('active')) stepReady();
+    });
+    if(tFormal) tFormal.addEventListener('click',()=>{
+      const hidden=root.classList.toggle('hide-formal');
+      root.classList.toggle('formal-open', !hidden);
+      tFormal.classList.toggle('active',!hidden);
+      requestAnimationFrame(refit);
+    });
+
+    let rt; window.addEventListener('resize',()=>{ clearTimeout(rt); rt=setTimeout(refit,80); });
+  }
+
+  return {
+    init(opts){
+      onFrame=opts.onFrame||onFrame; onReset=opts.onReset||onReset; onResize=opts.onResize||onResize; onStep=opts.onStep||onStep;
+      wire();
+      const cards=inqCards();
+      inqTotal=cards.length;
+      if(inqTotal>0){
+        const dots=document.getElementById('inq-dots');
+        if(dots){ dots.innerHTML=''; for(let i=0;i<inqTotal;i++){ const d=document.createElement('span'); d.className='inq-dot'; dots.appendChild(d); } }
+        inqShow(0);
+      } else {
+        root.classList.add('no-inquiry');
+      }
+      onResize(); onReset();
+      last=performance.now();
+      if(!started){ started=true; requestAnimationFrame(loop); }
+    },
+    get speed(){return speed;}, get playing(){return playing;},
+    get step(){return inqStep;}, get totalSteps(){return inqTotal;},
+    stepReady, setPlaying, refit, setLectureMode
+  };
+})();
+
+function renderMath(){
+  if(!window.katex){ setTimeout(renderMath,120); return; }
+  const E=[
+    ['eq1','t_{\\parallel} = \\dfrac{2L}{c}\\cdot\\dfrac{1}{1-\\beta^{2}}'],
+    ['eq2','t_{\\perp} = \\dfrac{2L}{c}\\cdot\\dfrac{1}{\\sqrt{1-\\beta^{2}}}'],
+    ['eq3','t(\\varphi) = \\dfrac{2L}{c}\\cdot\\dfrac{\\sqrt{1-\\beta^{2}\\sin^{2}\\varphi}}{1-\\beta^{2}}'],
+    ['eq4','\\Delta = \\dfrac{c}{\\lambda}\\,(t_{1}-t_{2})'],
+    ['eq5','\\Delta(\\theta)\\approx \\Delta_{\\max}\\cos 2\\theta,\\quad \\Delta_{\\max}=\\dfrac{2L}{\\lambda}\\!\\left(\\dfrac{1}{1-\\beta^{2}}-\\dfrac{1}{\\sqrt{1-\\beta^{2}}}\\right)'],
+    ['eq6','\\Delta = 0 \\quad \\text{for all } \\theta,\\,v \\quad (c=\\text{const})']
+  ];
+  E.forEach(([id,tex])=>{ try{ katex.render(tex, document.getElementById(id), {displayMode:false, throwOnError:false}); }catch(e){} });
+}
+window.addEventListener('load', renderMath);
+</script>
+
+<script>
+(function(){
+const canvas = document.getElementById('mainCanvas');
+const detC = document.getElementById('detectorCanvas');
+const detX = detC.getContext('2d');
+const plotC = document.getElementById('fringePlot');
+const plotX = plotC.getContext('2d');
+const canvasArea = document.getElementById('canvas-area');
+const labelsRoot = document.getElementById('labels3d');
+
+let W=0, H=0;
+let detW=0, detH=0;
+let plotW=0, plotH=0;
+let dpr = 1;
+
+// Earth's orbital speed through space: v ≈ 29.78 km/s, so β = v/c ≈ 9.93×10⁻⁵.
+// This is the real value the 1887 experiment was sensitive to (not exaggerated).
+const EARTH_ORBITAL_BETA = 9.93e-5;
+
+const state = {
+  mode: 'aether',
+  view: 'experiment',
+  theta: 0,
+  L: 11,
+  lam: 550,
+  spd: 0.5,
+  autoRotate: false,
+  phase: 0,
+  windPhase: 0
+};
+
+function wavelengthToRGB(wl){
+  let r=0,g=0,b=0;
+  if (wl>=380 && wl<440){ r=-(wl-440)/(440-380); g=0; b=1; }
+  else if (wl<490){ r=0; g=(wl-440)/(490-440); b=1; }
+  else if (wl<510){ r=0; g=1; b=-(wl-510)/(510-490); }
+  else if (wl<580){ r=(wl-510)/(580-510); g=1; b=0; }
+  else if (wl<645){ r=1; g=-(wl-645)/(645-580); b=0; }
+  else if (wl<=780){ r=1; g=0; b=0; }
+  let f=1;
+  if (wl<420) f = 0.3 + 0.7*(wl-380)/40;
+  else if (wl>700) f = 0.3 + 0.7*(780-wl)/80;
+  return { r: Math.round(255*Math.pow(r*f,0.8)), g: Math.round(255*Math.pow(g*f,0.8)), b: Math.round(255*Math.pow(b*f,0.8)) };
+}
+
+function aetherPathDiffFor(thetaDeg, beta, L){
+  const th = thetaDeg * Math.PI/180;
+  const b2 = Math.min(beta*beta, 1 - 1e-12);
+  const costh = Math.cos(th);
+  const sinth = Math.sin(th);
+  // Classical aether prediction. The round-trip optical path for an arm at
+  // angle alpha to the wind is c*t = 2L*sqrt(1 - beta^2*sin^2(alpha))/(1-beta^2).
+  // The perpendicular arm has alpha + 90deg, swapping sin^2 and cos^2.
+  const scale = 2 * L / Math.max(1e-12, 1 - b2);
+  const path1 = scale * Math.sqrt(Math.max(0, 1 - b2 * sinth * sinth));
+  const path2 = scale * Math.sqrt(Math.max(0, 1 - b2 * costh * costh));
+  return path1 - path2;
+}
+
+function aetherPathDiff(thetaDeg){
+  return aetherPathDiffFor(thetaDeg, EARTH_ORBITAL_BETA, state.L);
+}
+
+// Rotation-induced change in optical path difference, in METERS, referenced to
+// θ = 0. Only this change is observable — the absolute arm asymmetry is
+// swallowed by the (never perfectly equal) arm lengths of the real apparatus.
+// Divide by λ to obtain the fringe shift ΔN, so ΔN = Δℓ/λ holds exactly for
+// the two quantities shown in the Statistics panel.
+function aetherPathShift(thetaDeg){
+  return aetherPathDiff(thetaDeg) - aetherPathDiff(0);
+}
+
+function pathShift(thetaDeg){
+  return state.mode === 'relativity' ? 0 : aetherPathShift(thetaDeg);
+}
+
+const C_LIGHT = 299792458; // m/s
+// Galilean/aether round-trip time for one arm at angle alpha (deg) to the wind:
+// t = 2L*sqrt(1 - beta^2 sin^2 alpha) / (c (1 - beta^2)).
+function armRoundTripTime(alphaDeg, beta, L){
+  const a = alphaDeg*Math.PI/180, b2 = Math.min(beta*beta, 1-1e-12);
+  return 2*L*Math.sqrt(Math.max(0, 1 - b2*Math.sin(a)*Math.sin(a))) / (C_LIGHT*(1-b2));
+}
+// Two perpendicular arms: A at theta, B at theta+90. Actual (relativity) = 2L/c, constant.
+function armTimes(){
+  const beta = EARTH_ORBITAL_BETA, L = state.L, base = 2*L/C_LIGHT;
+  if(state.mode === 'relativity') return { tA: base, tB: base, base };
+  return { tA: armRoundTripTime(state.theta, beta, L),
+           tB: armRoundTripTime(state.theta+90, beta, L), base };
+}
+
+const _SUP={'-':'⁻','0':'⁰','1':'¹','2':'²','3':'³','4':'⁴','5':'⁵','6':'⁶','7':'⁷','8':'⁸','9':'⁹'};
+const _sup=s=>String(s).split('').map(c=>_SUP[c]||c).join('');
+function sciSeconds(t, sig=8){                        // "7.33841017×10⁻⁸ s"
+  if(!t) return '0 s';
+  const [m,e]=t.toExponential(sig).split('e');
+  return m+' ×10'+_sup(parseInt(e,10))+' s';
+}
+function diffSeconds(dt){                             // "3.62×10⁻¹⁶ s (362 as)"
+  if(Math.abs(dt) < 1e-30) return '0 s';
+  const [m,e]=dt.toExponential(2).split('e');
+  return m+' ×10'+_sup(parseInt(e,10))+' s  ('+Math.round(dt*1e18)+' as)';
+}
+
+/* ===========================================================================
+   3D SCENE — realistic 1887 apparatus
+   Sandstone slab on a wooden float, turning in an annular mercury trough on a
+   brick pier. Brass-mounted optics: lamp source → half-silvered beam splitter
+   at 45° (+ compensating plate) → mirrors M1 / M2 → telescope detector.
+   =========================================================================== */
+
+const renderer = new THREE.WebGLRenderer({ canvas: canvas, antialias: true });
+renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
+renderer.shadowMap.enabled = true;
+renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+renderer.outputEncoding = THREE.sRGBEncoding;
+renderer.toneMapping = THREE.ACESFilmicToneMapping;
+renderer.toneMappingExposure = 1.05;
+
+const scene = new THREE.Scene();
+scene.background = new THREE.Color(0x060e11);
+scene.fog = new THREE.Fog(0x0a1014, 14, 42);
+
+const camera = new THREE.PerspectiveCamera(40, 1, 0.05, 120);
+
+// ---- simple environment for metal/mercury reflections ----
+(function buildEnvironment(){
+  const envScene = new THREE.Scene();
+  envScene.background = new THREE.Color(0x11181f);
+  const mk = (c, i, w, h, x, y, z, rx, ry) => {
+    const m = new THREE.Mesh(
+      new THREE.PlaneGeometry(w, h),
+      new THREE.MeshBasicMaterial({ color: c })
+    );
+    m.material.color.multiplyScalar(i);
+    m.position.set(x, y, z);
+    m.rotation.set(rx, ry, 0);
+    envScene.add(m);
+  };
+  mk(0xfff4dd, 5.5, 6, 3, 0, 8, 0, Math.PI/2, 0);      // warm skylight above
+  mk(0xbcd4e6, 2.2, 8, 4, -9, 4, 0, 0, Math.PI/2);     // cool window, left
+  mk(0x8fa8bd, 1.4, 8, 4, 9, 3, -2, 0, -Math.PI/2);    // dimmer window, right
+  mk(0x3a2f22, 0.8, 10, 4, 0, 3, -10, 0, 0);           // dark wall behind
+  const pmrem = new THREE.PMREMGenerator(renderer);
+  scene.environment = pmrem.fromScene(envScene, 0.04).texture;
+  pmrem.dispose();
+})();
+
+// ---- lights: cool daylight keys from the window wall; pendants add warmth ----
+const hemi = new THREE.HemisphereLight(0xb9c9d6, 0x2a231b, 0.42);
+scene.add(hemi);
+
+const key = new THREE.DirectionalLight(0xdfeaf5, 1.0);
+key.position.set(-7, 5.2, 1.4);
+key.castShadow = true;
+key.shadow.mapSize.set(2048, 2048);
+key.shadow.camera.left = -7; key.shadow.camera.right = 7;
+key.shadow.camera.top = 7;   key.shadow.camera.bottom = -7;
+key.shadow.camera.near = 1;  key.shadow.camera.far = 26;
+key.shadow.bias = -0.0006;
+scene.add(key);
+
+const fill = new THREE.DirectionalLight(0xffe3c0, 0.22);
+fill.position.set(6, 3.5, -4);
+scene.add(fill);
+
+const lampGlowLight = new THREE.PointLight(0xffd9a0, 0.55, 3.2, 2);
+scene.add(lampGlowLight); // repositioned each frame to sit at the lamp
+
+// ---- procedural textures ----
+function canvasTexture(size, draw, repeatX, repeatY){
+  const c = document.createElement('canvas');
+  c.width = c.height = size;
+  draw(c.getContext('2d'), size);
+  const t = new THREE.CanvasTexture(c);
+  t.wrapS = t.wrapT = THREE.RepeatWrapping;
+  if (repeatX) t.repeat.set(repeatX, repeatY || repeatX);
+  t.anisotropy = 4;
+  return t;
+}
+
+// wooden plank floor — boards run along X with per-board tone, grain and joints
+const floorTex = canvasTexture(512, (g, s) => {
+  const rows = 12, rh = s / rows;
+  for (let r = 0; r < rows; r++){
+    const y = r * rh;
+    const base = 96 + Math.random()*30;
+    g.fillStyle = 'rgb(' + (base|0) + ',' + (base*0.68|0) + ',' + (base*0.44|0) + ')';
+    g.fillRect(0, y, s, rh);
+    // grain streaks
+    for (let i = 0; i < 7; i++){
+      const gy = y + 3 + Math.random()*(rh-6);
+      g.strokeStyle = 'rgba(' + (base*0.5|0) + ',' + (base*0.34|0) + ',' + (base*0.2|0) + ',' + (0.25+Math.random()*0.3) + ')';
+      g.lineWidth = 0.8 + Math.random()*1.4;
+      g.beginPath();
+      g.moveTo(0, gy);
+      for (let x = 0; x <= s; x += 48) g.lineTo(x, gy + Math.sin(x*0.03 + r*7 + i)*1.6);
+      g.stroke();
+    }
+    // occasional knot
+    if (Math.random() < 0.5){
+      const kx = Math.random()*s, ky = y + rh*0.5;
+      g.fillStyle = 'rgba(60,38,20,0.55)';
+      g.beginPath(); g.ellipse(kx, ky, 4+Math.random()*3, 2.5, 0.3, 0, Math.PI*2); g.fill();
+    }
+    // butt joints staggered along the board
+    let jx = 60 + Math.random()*140;
+    g.strokeStyle = 'rgba(28,18,10,0.85)';
+    g.lineWidth = 2;
+    while (jx < s){
+      g.beginPath(); g.moveTo(jx, y); g.lineTo(jx, y+rh); g.stroke();
+      jx += 170 + Math.random()*180;
+    }
+    // gap between boards + top highlight
+    g.fillStyle = 'rgba(20,12,6,0.9)';
+    g.fillRect(0, y + rh - 2, s, 2);
+    g.fillStyle = 'rgba(255,235,200,0.07)';
+    g.fillRect(0, y, s, 2);
+  }
+}, 4, 3);
+
+const sandstoneTex = canvasTexture(512, (g, s) => {
+  g.fillStyle = '#c9b68f';
+  g.fillRect(0, 0, s, s);
+  // soft strata
+  for (let y = 0; y < s; y += 6 + Math.random()*10){
+    g.fillStyle = 'rgba(' + (150+Math.random()*40|0) + ',' + (130+Math.random()*35|0) + ',' + (95+Math.random()*30|0) + ',0.16)';
+    g.fillRect(0, y, s, 4 + Math.random()*8);
+  }
+  // speckle
+  for (let i = 0; i < 5200; i++){
+    const d = Math.random();
+    g.fillStyle = d < 0.5
+      ? 'rgba(120,100,70,' + (0.10+Math.random()*0.22) + ')'
+      : 'rgba(235,222,190,' + (0.10+Math.random()*0.20) + ')';
+    g.fillRect(Math.random()*s, Math.random()*s, 1+Math.random()*2, 1+Math.random()*2);
+  }
+}, 1.6, 1.6);
+
+// dark slate for the turntable slab — matches the simulation's blue-charcoal
+// theme (#060E11 background / slate panels) and gives the brass optics and the
+// light beam strong contrast
+const slateTex = canvasTexture(512, (g, s) => {
+  g.fillStyle = '#242c35';
+  g.fillRect(0, 0, s, s);
+  // faint cool strata
+  for (let y = 0; y < s; y += 7 + Math.random()*11){
+    const v = 30 + Math.random()*22|0;
+    g.fillStyle = 'rgba(' + v + ',' + (v+8) + ',' + (v+16) + ',0.22)';
+    g.fillRect(0, y, s, 4 + Math.random()*9);
+  }
+  // mineral speckle: mostly darker flecks, a few pale glints
+  for (let i = 0; i < 5200; i++){
+    const d = Math.random();
+    g.fillStyle = d < 0.62
+      ? 'rgba(12,17,23,' + (0.14+Math.random()*0.26) + ')'
+      : 'rgba(126,142,158,' + (0.08+Math.random()*0.16) + ')';
+    g.fillRect(Math.random()*s, Math.random()*s, 1+Math.random()*2, 1+Math.random()*2);
+  }
+  // hairline veins
+  g.strokeStyle = 'rgba(140,155,170,0.10)';
+  g.lineWidth = 1;
+  for (let i = 0; i < 14; i++){
+    g.beginPath();
+    let x = Math.random()*s, y = Math.random()*s;
+    g.moveTo(x, y);
+    for (let k = 0; k < 6; k++){
+      x += (Math.random()-0.5)*140; y += (Math.random()-0.5)*140;
+      g.lineTo(x, y);
+    }
+    g.stroke();
+  }
+}, 1.6, 1.6);
+
+const brickTex = canvasTexture(512, (g, s) => {
+  g.fillStyle = '#4d4a45';                    // mortar
+  g.fillRect(0, 0, s, s);
+  const bh = 30, bw = 84, gap = 6;
+  for (let row = 0, y = 0; y < s; row++, y += bh + gap){
+    const off = (row % 2) * (bw/2);
+    for (let x = -bw; x < s + bw; x += bw + gap){
+      const r = 105 + Math.random()*38, gg = 55 + Math.random()*22, b = 42 + Math.random()*18;
+      g.fillStyle = 'rgb(' + (r|0) + ',' + (gg|0) + ',' + (b|0) + ')';
+      g.fillRect(x + off, y, bw, bh);
+      g.fillStyle = 'rgba(0,0,0,0.16)';
+      g.fillRect(x + off, y + bh - 4, bw, 4);
+    }
+  }
+}, 6, 1);
+
+const woodTex = canvasTexture(512, (g, s) => {
+  g.fillStyle = '#6f4f2e';
+  g.fillRect(0, 0, s, s);
+  for (let i = 0; i < 90; i++){
+    const y = Math.random()*s;
+    g.strokeStyle = 'rgba(' + (60+Math.random()*50|0) + ',' + (38+Math.random()*30|0) + ',' + (16+Math.random()*16|0) + ',' + (0.3+Math.random()*0.4) + ')';
+    g.lineWidth = 1 + Math.random()*3;
+    g.beginPath();
+    g.moveTo(0, y);
+    for (let x = 0; x <= s; x += 32) g.lineTo(x, y + Math.sin(x*0.02 + i)*4);
+    g.stroke();
+  }
+}, 2, 2);
+
+// darker walnut for the heavy workbench
+const benchWoodTex = canvasTexture(512, (g, s) => {
+  g.fillStyle = '#4a3120';
+  g.fillRect(0, 0, s, s);
+  for (let i = 0; i < 110; i++){
+    const y = Math.random()*s;
+    g.strokeStyle = 'rgba(' + (36+Math.random()*34|0) + ',' + (22+Math.random()*20|0) + ',' + (10+Math.random()*12|0) + ',' + (0.3+Math.random()*0.45) + ')';
+    g.lineWidth = 1 + Math.random()*2.6;
+    g.beginPath();
+    g.moveTo(0, y);
+    for (let x = 0; x <= s; x += 36) g.lineTo(x, y + Math.sin(x*0.025 + i)*3);
+    g.stroke();
+  }
+  g.fillStyle = 'rgba(255,224,180,0.05)';
+  for (let i = 0; i < 400; i++) g.fillRect(Math.random()*s, Math.random()*s, 2, 1);
+}, 2, 2);
+
+// aged plaster wall — mottled, faintly stained
+const plasterTex = canvasTexture(512, (g, s) => {
+  g.fillStyle = '#8f867a';
+  g.fillRect(0, 0, s, s);
+  for (let i = 0; i < 3800; i++){
+    const v = 118 + Math.random()*40;
+    g.fillStyle = 'rgba(' + (v|0) + ',' + (v*0.93|0) + ',' + (v*0.82|0) + ',' + (0.08+Math.random()*0.16) + ')';
+    g.fillRect(Math.random()*s, Math.random()*s, 2+Math.random()*4, 2+Math.random()*4);
+  }
+  // water stains / discoloration patches
+  for (let i = 0; i < 9; i++){
+    const x = Math.random()*s, y = Math.random()*s, r = 30+Math.random()*80;
+    const grad = g.createRadialGradient(x, y, 0, x, y, r);
+    grad.addColorStop(0, 'rgba(96,86,70,0.14)');
+    grad.addColorStop(1, 'rgba(96,86,70,0)');
+    g.fillStyle = grad;
+    g.fillRect(x-r, y-r, r*2, r*2);
+  }
+  // hairline cracks
+  g.strokeStyle = 'rgba(70,62,52,0.35)';
+  g.lineWidth = 1;
+  for (let i = 0; i < 6; i++){
+    g.beginPath();
+    let x = Math.random()*s, y = Math.random()*s;
+    g.moveTo(x, y);
+    for (let k = 0; k < 5; k++){ x += (Math.random()-0.5)*90; y += Math.random()*70; g.lineTo(x, y); }
+    g.stroke();
+  }
+}, 4, 2);
+
+// blackboard with the experiment's own chalk work
+const blackboardTex = canvasTexture(1024, (g, s) => {
+  g.fillStyle = '#26312b';
+  g.fillRect(0, 0, s, s);
+  // chalk haze and eraser smudges
+  for (let i = 0; i < 24; i++){
+    const x = Math.random()*s, y = Math.random()*s;
+    const grad = g.createRadialGradient(x, y, 0, x, y, 40+Math.random()*70);
+    grad.addColorStop(0, 'rgba(215,222,214,0.05)');
+    grad.addColorStop(1, 'rgba(215,222,214,0)');
+    g.fillStyle = grad;
+    g.fillRect(0, 0, s, s);
+  }
+  g.fillStyle = 'rgba(233,238,231,0.85)';
+  g.strokeStyle = 'rgba(233,238,231,0.8)';
+  g.font = 'italic 600 40px Georgia, serif';
+  g.fillText('Michelson – Morley  1887', 52, 96);
+  g.beginPath(); g.moveTo(52, 116); g.lineTo(520, 112); g.lineWidth = 3; g.stroke();
+  g.font = 'italic 24px Georgia, serif';
+  g.fillText('turn slab through 90°:', 52, 172);
+  g.font = 'italic 30px Georgia, serif';
+  g.fillText('ΔN = (4L/λ) · [ 1/(1−β²) − 1/√(1−β²) ]', 52, 214);
+  g.font = 'italic 32px Georgia, serif';
+  g.fillText('ΔN ≈ 2Lβ²/λ ,  β = v/c ≈ 9.9 × 10⁻⁵', 52, 268);
+  g.fillText('expected  ΔN ≈ 0.4 fringe', 52, 328);
+  g.fillText('observed  ΔN = 0  ?!', 52, 394);
+  g.beginPath(); g.moveTo(215, 404); g.lineTo(360, 404); g.lineWidth = 2.5; g.stroke();
+  // chalk sketch of the interferometer, lower right
+  g.lineWidth = 3;
+  const cx = 760, cy = 300;
+  g.beginPath(); g.arc(cx, cy, 130, 0, Math.PI*2); g.stroke();      // turntable
+  g.beginPath(); g.moveTo(cx-105, cy); g.lineTo(cx+105, cy); g.stroke();
+  g.beginPath(); g.moveTo(cx, cy-105); g.lineTo(cx, cy+105); g.stroke();
+  g.strokeRect(cx+98, cy-14, 14, 28);                               // M1
+  g.strokeRect(cx-14, cy-112, 28, 14);                              // M2
+  g.beginPath(); g.moveTo(cx-18, cy+18); g.lineTo(cx+18, cy-18); g.stroke(); // BS at 45°
+  g.font = 'italic 26px Georgia, serif';
+  g.fillText('M₁', cx+120, cy+8);
+  g.fillText('M₂', cx-16, cy-126);
+  g.fillText('θ', cx+34, cy-30);
+  // curved theta arrow
+  g.beginPath(); g.arc(cx, cy, 52, -0.9, -0.15); g.stroke();
+});
+
+// degree scale ring drawn on the floor around the trough.
+// IMPORTANT — direction: the table rotates by +θ about Y, which carries its
+// local +X axis to world (cos θ, 0, −sin θ). A mark for angle d is therefore
+// drawn at canvas angle −d, so the needle lands exactly on the printed value.
+const DEG_RING_OUTER = 2.30, DEG_RING_INNER = 1.60;
+const degreeTex = (function(){
+  const s = 1024;
+  const c = document.createElement('canvas');
+  c.width = c.height = s;
+  const g = c.getContext('2d');
+  g.translate(s/2, s/2);
+  const px = r => (r / DEG_RING_OUTER) * (s/2);   // world radius → canvas px
+
+  // faint rim circles bounding the tick band
+  g.strokeStyle = 'rgba(42,48,56,0.55)';
+  g.lineWidth = 2;
+  g.beginPath(); g.arc(0, 0, px(2.26), 0, Math.PI*2); g.stroke();
+  g.beginPath(); g.arc(0, 0, px(1.96), 0, Math.PI*2); g.stroke();
+
+  for (let d = 0; d < 360; d += 5){
+    const a = -d * Math.PI/180;                   // sign flip: match table sense
+    const cardinal = d % 90 === 0;
+    const major = d % 30 === 0;
+    const r1 = cardinal ? px(1.90) : major ? px(1.98) : px(2.10);
+    const r2 = cardinal ? px(2.28) : px(2.24);
+    g.strokeStyle = cardinal ? 'rgba(18,22,28,0.95)' : 'rgba(40,47,56,0.85)';
+    g.lineWidth = cardinal ? 8 : major ? 5 : 2.5;
+    g.beginPath();
+    g.moveTo(Math.cos(a)*r1, Math.sin(a)*r1);
+    g.lineTo(Math.cos(a)*r2, Math.sin(a)*r2);
+    g.stroke();
+    if (major){
+      g.save();
+      g.rotate(a);
+      g.translate(px(1.79), 0);
+      g.rotate(-Math.PI/2);   // top of each numeral points outward → reads from outside the dial
+      g.font = (cardinal ? '700 44px' : '600 30px') + ' -apple-system, sans-serif';
+      g.fillStyle = d === 0 ? 'rgba(150,28,28,0.95)'
+                  : cardinal ? 'rgba(18,22,28,0.95)'
+                  : 'rgba(40,47,56,0.9)';
+      g.textAlign = 'center';
+      g.textBaseline = 'middle';
+      g.fillText(String(d) + '°', 0, 0);
+      g.restore();
+    }
+  }
+  const t = new THREE.CanvasTexture(c);
+  t.anisotropy = 8;
+  return t;
+})();
+
+// ---- materials ----
+const matBrass  = new THREE.MeshStandardMaterial({ color: 0xb5893c, metalness: 0.88, roughness: 0.32 });
+const matBrassD = new THREE.MeshStandardMaterial({ color: 0x8a6a2e, metalness: 0.85, roughness: 0.45 });
+const matIron   = new THREE.MeshStandardMaterial({ color: 0x2e3238, metalness: 0.72, roughness: 0.46 });
+const matIronD  = new THREE.MeshStandardMaterial({ color: 0x1d2126, metalness: 0.6,  roughness: 0.6  });
+const matMercury= new THREE.MeshStandardMaterial({ color: 0xc4cdd4, metalness: 1.0,  roughness: 0.08, envMapIntensity: 1.6 });
+const matStone  = new THREE.MeshStandardMaterial({ map: sandstoneTex, roughness: 0.95, metalness: 0.0 });
+const matSlate  = new THREE.MeshStandardMaterial({ map: slateTex, roughness: 0.88, metalness: 0.06 });
+const matBrick  = new THREE.MeshStandardMaterial({ map: brickTex, roughness: 0.95, metalness: 0.0 });
+const matWood   = new THREE.MeshStandardMaterial({ map: woodTex, roughness: 0.8,  metalness: 0.0 });
+const matGlass  = new THREE.MeshPhysicalMaterial({
+  color: 0xdcecf5, metalness: 0, roughness: 0.06,
+  transparent: true, opacity: 0.32, envMapIntensity: 1.2,
+  clearcoat: 1, clearcoatRoughness: 0.1, side: THREE.DoubleSide
+});
+const matHalfSilver = new THREE.MeshStandardMaterial({
+  color: 0xd9dee3, metalness: 0.95, roughness: 0.12,
+  transparent: true, opacity: 0.55, side: THREE.DoubleSide
+});
+const matMirrorFace = new THREE.MeshStandardMaterial({
+  color: 0xe8eef2, metalness: 1.0, roughness: 0.04, envMapIntensity: 1.8
+});
+
+// ---- static room ----
+/* ---- the laboratory room ---- */
+const ROOM_X = 8, ROOM_Z = 6, ROOM_H = 4.6;     // half-width, half-depth, height
+const matPlaster = new THREE.MeshStandardMaterial({ map: plasterTex, roughness: 0.96, metalness: 0 });
+const matCeiling = new THREE.MeshStandardMaterial({ color: 0x57504a, roughness: 0.97, metalness: 0 });
+const matBenchWood = new THREE.MeshStandardMaterial({ map: benchWoodTex, roughness: 0.72, metalness: 0.02 });
+const matDarkWood = new THREE.MeshStandardMaterial({ color: 0x3a2817, roughness: 0.7, metalness: 0.02 });
+
+const floor = new THREE.Mesh(
+  new THREE.PlaneGeometry(ROOM_X*2, ROOM_Z*2),
+  new THREE.MeshStandardMaterial({ map: floorTex, roughness: 0.62, metalness: 0.04 })
+);
+floor.rotation.x = -Math.PI/2;
+floor.receiveShadow = true;
+scene.add(floor);
+
+function wall(w, h, x, y, z, ry){
+  const m = new THREE.Mesh(new THREE.PlaneGeometry(w, h), matPlaster);
+  m.position.set(x, y, z);
+  m.rotation.y = ry;
+  m.receiveShadow = true;
+  scene.add(m);
+  return m;
+}
+wall(ROOM_X*2, ROOM_H, 0, ROOM_H/2, -ROOM_Z, 0);            // back
+wall(ROOM_X*2, ROOM_H, 0, ROOM_H/2,  ROOM_Z, Math.PI);      // front
+wall(ROOM_Z*2, ROOM_H, -ROOM_X, ROOM_H/2, 0,  Math.PI/2);   // left (window wall)
+wall(ROOM_Z*2, ROOM_H,  ROOM_X, ROOM_H/2, 0, -Math.PI/2);   // right
+const ceiling = new THREE.Mesh(new THREE.PlaneGeometry(ROOM_X*2, ROOM_Z*2), matCeiling);
+ceiling.rotation.x = Math.PI/2;
+ceiling.position.y = ROOM_H;
+scene.add(ceiling);
+
+// brick wainscot + wooden chair rail and baseboard around the walls
+(function(){
+  const WH = 1.15;
+  const addBand = (w, d, x, z) => {
+    const brick = new THREE.Mesh(new THREE.BoxGeometry(w, WH, d), matBrick);
+    brick.position.set(x, WH/2, z);
+    brick.receiveShadow = true;
+    const rail = new THREE.Mesh(new THREE.BoxGeometry(w === 0.1 ? 0.12 : w, 0.05, d === 0.1 ? 0.12 : d), matDarkWood);
+    rail.position.set(x, WH + 0.025, z);
+    const base = new THREE.Mesh(new THREE.BoxGeometry(w === 0.1 ? 0.14 : w, 0.12, d === 0.1 ? 0.14 : d), matDarkWood);
+    base.position.set(x, 0.06, z);
+    scene.add(brick, rail, base);
+  };
+  addBand(ROOM_X*2, 0.1, 0, -ROOM_Z + 0.05);
+  addBand(ROOM_X*2, 0.1, 0,  ROOM_Z - 0.05);
+  addBand(0.1, ROOM_Z*2, -ROOM_X + 0.05, 0);
+  addBand(0.1, ROOM_Z*2,  ROOM_X - 0.05, 0);
+})();
+
+// tall daylight windows on the left wall — the room's key light source
+(function(){
+  const paneMat = new THREE.MeshBasicMaterial({ color: 0xdcecf8 });
+  const paneMat2 = new THREE.MeshBasicMaterial({ color: 0xc3d9ea });
+  for (let i = -1; i <= 1; i++){
+    const z = i * 3.4;
+    const grp = new THREE.Group();
+    const frame = new THREE.Mesh(new THREE.BoxGeometry(0.12, 2.3, 1.3), matDarkWood);
+    frame.position.set(0, 0, 0);
+    grp.add(frame);
+    const pane = new THREE.Mesh(new THREE.PlaneGeometry(1.1, 2.1), i === 0 ? paneMat : paneMat2);
+    pane.rotation.y = Math.PI/2;
+    pane.position.x = 0.07;
+    grp.add(pane);
+    // muntin bars over the glass
+    for (let k = -1; k <= 1; k++){
+      const mh = new THREE.Mesh(new THREE.BoxGeometry(0.05, 0.05, 1.2), matDarkWood);
+      mh.position.set(0.08, k * 0.7, 0);
+      grp.add(mh);
+    }
+    const mv = new THREE.Mesh(new THREE.BoxGeometry(0.05, 2.2, 0.05), matDarkWood);
+    mv.position.set(0.08, 0, 0);
+    grp.add(mv);
+    const sill = new THREE.Mesh(new THREE.BoxGeometry(0.24, 0.07, 1.5), matDarkWood);
+    sill.position.set(0.08, -1.2, 0);
+    grp.add(sill);
+    grp.position.set(-ROOM_X + 0.02, 2.55, z);
+    scene.add(grp);
+  }
+})();
+
+// blackboard on the back wall, carrying the experiment's chalk work
+(function(){
+  const board = new THREE.Mesh(
+    new THREE.PlaneGeometry(3.4, 1.7),
+    new THREE.MeshStandardMaterial({ map: blackboardTex, roughness: 0.92, metalness: 0 })
+  );
+  board.position.set(-1.6, 2.35, -ROOM_Z + 0.06);
+  const frameH = new THREE.Mesh(new THREE.BoxGeometry(3.56, 0.08, 0.06), matDarkWood);
+  const frameH2 = frameH.clone();
+  frameH.position.set(-1.6, 3.24, -ROOM_Z + 0.06);
+  frameH2.position.set(-1.6, 1.46, -ROOM_Z + 0.06);
+  const frameV = new THREE.Mesh(new THREE.BoxGeometry(0.08, 1.86, 0.06), matDarkWood);
+  const frameV2 = frameV.clone();
+  frameV.position.set(-3.34, 2.35, -ROOM_Z + 0.06);
+  frameV2.position.set(0.14, 2.35, -ROOM_Z + 0.06);
+  const tray = new THREE.Mesh(new THREE.BoxGeometry(3.56, 0.04, 0.14), matDarkWood);
+  tray.position.set(-1.6, 1.41, -ROOM_Z + 0.12);
+  const chalk = new THREE.Mesh(new THREE.CylinderGeometry(0.012, 0.012, 0.09, 8),
+    new THREE.MeshStandardMaterial({ color: 0xe9eee7, roughness: 0.9 }));
+  chalk.rotation.z = Math.PI/2;
+  chalk.position.set(-2.2, 1.445, -ROOM_Z + 0.13);
+  scene.add(board, frameH, frameH2, frameV, frameV2, tray, chalk);
+})();
+
+// shelves with reagent bottles and books on the right wall, plus a cabinet
+(function(){
+  const bottleMats = [0xa8641f, 0x2e5940, 0x3a5470, 0x8a8f94].map(c =>
+    new THREE.MeshPhysicalMaterial({ color: c, roughness: 0.15, metalness: 0, transparent: true, opacity: 0.72, clearcoat: 0.8 })
+  );
+  for (let lev = 0; lev < 2; lev++){
+    const y = 2.15 + lev * 0.62;
+    const shelfB = new THREE.Mesh(new THREE.BoxGeometry(0.32, 0.05, 2.2), matDarkWood);
+    shelfB.position.set(ROOM_X - 0.2, y, 1.6);
+    shelfB.castShadow = true;
+    scene.add(shelfB);
+    for (const dz of [-0.9, 0.9]){
+      const br = new THREE.Mesh(new THREE.BoxGeometry(0.26, 0.2, 0.05), matDarkWood);
+      br.position.set(ROOM_X - 0.17, y - 0.12, 1.6 + dz);
+      scene.add(br);
+    }
+  }
+  // bottles on the top shelf
+  for (let i = 0; i < 6; i++){
+    const h = 0.16 + Math.random()*0.14;
+    const b = new THREE.Mesh(new THREE.CylinderGeometry(0.045, 0.05, h, 12), bottleMats[i % bottleMats.length]);
+    b.position.set(ROOM_X - 0.2, 2.77 + 0.025 + h/2, 0.75 + i*0.34);
+    const cork = new THREE.Mesh(new THREE.CylinderGeometry(0.016, 0.02, 0.035, 8),
+      new THREE.MeshStandardMaterial({ color: 0x9c7a4e, roughness: 0.9 }));
+    cork.position.set(ROOM_X - 0.2, 2.795 + h + 0.017, 0.75 + i*0.34);
+    scene.add(b, cork);
+  }
+  // leaning books on the lower shelf
+  const bookCols = [0x5c3a2e, 0x33463c, 0x3c3c52, 0x6b5a34, 0x4a3040];
+  for (let i = 0; i < 5; i++){
+    const bk = new THREE.Mesh(new THREE.BoxGeometry(0.2, 0.3 + Math.random()*0.08, 0.055),
+      new THREE.MeshStandardMaterial({ color: bookCols[i], roughness: 0.85 }));
+    bk.position.set(ROOM_X - 0.2, 2.15 + 0.025 + 0.17, 0.8 + i*0.14);
+    bk.rotation.x = (i === 4 ? -0.22 : 0);
+    scene.add(bk);
+  }
+  // wooden cabinet in the right-back corner
+  const cab = new THREE.Mesh(new THREE.BoxGeometry(0.6, 1.05, 1.7), matBenchWood);
+  cab.position.set(ROOM_X - 0.45, 0.525, -ROOM_Z + 1.25);
+  cab.castShadow = true;
+  scene.add(cab);
+  for (const dz of [-0.42, 0.42]){
+    const panel = new THREE.Mesh(new THREE.BoxGeometry(0.03, 0.7, 0.6), matDarkWood);
+    panel.position.set(ROOM_X - 0.76, 0.58, -ROOM_Z + 1.25 + dz);
+    const knob = new THREE.Mesh(new THREE.SphereGeometry(0.022, 10, 8), matBrass);
+    knob.position.set(ROOM_X - 0.79, 0.58, -ROOM_Z + 1.25 + dz);
+    scene.add(panel, knob);
+  }
+})();
+
+// warm pendant lamps hanging over the bench
+(function(){
+  for (const lx of [-1.8, 1.8]){
+    const cord = new THREE.Mesh(new THREE.CylinderGeometry(0.008, 0.008, ROOM_H - 2.95, 6), matIronD);
+    cord.position.set(lx, (ROOM_H + 2.95)/2, 0);
+    const shade = new THREE.Mesh(new THREE.ConeGeometry(0.24, 0.18, 24, 1, true),
+      new THREE.MeshStandardMaterial({ color: 0x1f3a2e, roughness: 0.4, metalness: 0.35, side: THREE.DoubleSide }));
+    shade.position.set(lx, 2.95, 0);
+    const bulb = new THREE.Mesh(new THREE.SphereGeometry(0.035, 12, 10),
+      new THREE.MeshBasicMaterial({ color: 0xffe9b8 }));
+    bulb.position.set(lx, 2.88, 0);
+    const pl = new THREE.PointLight(0xffd9a0, 0.55, 7, 2);
+    pl.position.set(lx, 2.8, 0);
+    scene.add(cord, shade, bulb, pl);
+  }
+})();
+
+/* ---- massive low workbench carrying the whole turntable ---- */
+const BENCH_TOP = 0.5;
+(function(){
+  const top = new THREE.Mesh(new THREE.BoxGeometry(5.8, 0.14, 5.0), matBenchWood);
+  top.position.y = BENCH_TOP - 0.07;
+  top.castShadow = top.receiveShadow = true;
+  scene.add(top);
+  const edge = new THREE.Mesh(new THREE.BoxGeometry(5.9, 0.05, 5.1), matDarkWood);
+  edge.position.y = BENCH_TOP - 0.145;
+  scene.add(edge);
+  for (const [lx, lz] of [[-2.7,-2.3],[2.7,-2.3],[-2.7,2.3],[2.7,2.3],[0,-2.3],[0,2.3]]){
+    const leg = new THREE.Mesh(new THREE.BoxGeometry(0.18, BENCH_TOP - 0.14, 0.18), matBenchWood);
+    leg.position.set(lx, (BENCH_TOP - 0.14)/2, lz);
+    leg.castShadow = true;
+    scene.add(leg);
+  }
+  for (const lz of [-2.3, 2.3]){
+    const stretcher = new THREE.Mesh(new THREE.BoxGeometry(5.4, 0.1, 0.12), matBenchWood);
+    stretcher.position.set(0, 0.12, lz);
+    scene.add(stretcher);
+  }
+})();
+
+// everything below rides on the bench top
+const apparatusRoot = new THREE.Group();
+apparatusRoot.position.y = BENCH_TOP;
+scene.add(apparatusRoot);
+
+// brick pier
+const pier = new THREE.Mesh(new THREE.CylinderGeometry(1.55, 1.62, 0.5, 48), matBrick);
+pier.position.y = 0.25;
+pier.castShadow = pier.receiveShadow = true;
+apparatusRoot.add(pier);
+const pierCap = new THREE.Mesh(new THREE.CylinderGeometry(1.58, 1.58, 0.05, 48), matStone);
+pierCap.position.y = 0.525;
+pierCap.receiveShadow = true;
+apparatusRoot.add(pierCap);
+
+// annular cast-iron trough with mercury
+const troughOuter = new THREE.Mesh(new THREE.CylinderGeometry(1.55, 1.55, 0.24, 64, 1, true), matIron);
+troughOuter.position.y = 0.55 + 0.12;
+apparatusRoot.add(troughOuter);
+const troughRim = new THREE.Mesh(new THREE.TorusGeometry(1.55, 0.028, 12, 64), matIronD);
+troughRim.rotation.x = Math.PI/2;
+troughRim.position.y = 0.79;
+apparatusRoot.add(troughRim);
+const troughInner = new THREE.Mesh(new THREE.CylinderGeometry(1.12, 1.12, 0.24, 64, 1, true), matIron);
+troughInner.position.y = 0.67;
+apparatusRoot.add(troughInner);
+const mercury = new THREE.Mesh(new THREE.RingGeometry(1.12, 1.55, 96), matMercury);
+mercury.rotation.x = -Math.PI/2;
+mercury.position.y = 0.745;
+apparatusRoot.add(mercury);
+const troughFloorPlug = new THREE.Mesh(new THREE.CylinderGeometry(1.12, 1.12, 0.2, 48), matStone);
+troughFloorPlug.position.y = 0.65;
+apparatusRoot.add(troughFloorPlug);
+
+// engraved degree scale on the floor around the pier
+const degRing = new THREE.Mesh(
+  new THREE.RingGeometry(DEG_RING_INNER, DEG_RING_OUTER, 128),
+  new THREE.MeshBasicMaterial({ map: degreeTex, transparent: true, opacity: 0.95, depthWrite: false })
+);
+degRing.rotation.x = -Math.PI/2;
+degRing.position.y = 0.012;
+apparatusRoot.add(degRing);
+
+/* ---- rotating assembly: float + slab + optics ---- */
+const tableGroup = new THREE.Group();
+apparatusRoot.add(tableGroup);
+
+// wooden float sitting in the mercury
+const wooden = new THREE.Mesh(new THREE.CylinderGeometry(1.34, 1.30, 0.16, 64), matWood);
+wooden.position.y = 0.74;
+wooden.castShadow = true;
+tableGroup.add(wooden);
+
+// massive square stone slab — dark slate so the optics and beam stand out
+const SLAB_HALF = 1.06, SLAB_T = 0.30;
+const slabTopY = 0.82 + SLAB_T;             // 1.12
+const slab = new THREE.Mesh(new THREE.BoxGeometry(SLAB_HALF*2, SLAB_T, SLAB_HALF*2), matSlate);
+slab.position.y = 0.82 + SLAB_T/2;
+slab.castShadow = slab.receiveShadow = true;
+tableGroup.add(slab);
+// slight chamfer illusion: darker under-plate
+const slabBase = new THREE.Mesh(new THREE.BoxGeometry(SLAB_HALF*2.02, 0.03, SLAB_HALF*2.02), matIronD);
+slabBase.position.y = 0.825;
+tableGroup.add(slabBase);
+
+// L-shaped brass indicator riding with the turntable: a horizontal arm
+// reaches out over the trough, then a vertical rod drops a red needle to just
+// above the floor scale — so the needle tip reads θ directly on the printed
+// degrees with no parallax (the old high-mounted cone read wrong from above).
+const pointerGroup = new THREE.Group();
+(function(){
+  const mount = new THREE.Mesh(new THREE.BoxGeometry(0.14, 0.10, 0.09), matBrassD);
+  mount.position.set(1.26, 0.85, 0);
+  const horiz = new THREE.Mesh(new THREE.CylinderGeometry(0.016, 0.016, 0.82, 12), matBrass);
+  horiz.rotation.z = Math.PI/2;
+  horiz.position.set(1.59, 0.86, 0);
+  const elbow = new THREE.Mesh(new THREE.SphereGeometry(0.028, 12, 10), matBrassD);
+  elbow.position.set(2.0, 0.86, 0);
+  const vert = new THREE.Mesh(new THREE.CylinderGeometry(0.013, 0.013, 0.72, 12), matBrass);
+  vert.position.set(2.0, 0.50, 0);
+  const needle = new THREE.Mesh(
+    new THREE.ConeGeometry(0.028, 0.11, 12),
+    new THREE.MeshStandardMaterial({ color: 0xf87171, roughness: 0.4, metalness: 0.3, emissive: 0x7a1d1d, emissiveIntensity: 0.7 })
+  );
+  needle.rotation.x = Math.PI;          // point straight down
+  needle.position.set(2.0, 0.09, 0);    // tip ≈ 0.035, just above the scale
+  horiz.castShadow = vert.castShadow = true;
+  pointerGroup.add(mount, horiz, elbow, vert, needle);
+})();
+tableGroup.add(pointerGroup);
+
+/* ---- optics, mounted on the slab top ---- */
+const optics = new THREE.Group();
+optics.position.y = slabTopY;
+tableGroup.add(optics);
+
+const BEAM_Y = 0.17;                        // beam height above slab top
+const POST_H = BEAM_Y - 0.02;
+
+function post(x, z, group){
+  const base = new THREE.Mesh(new THREE.CylinderGeometry(0.055, 0.07, 0.025, 20), matIronD);
+  base.position.set(x, 0.0125, z);
+  base.castShadow = true;
+  const rod = new THREE.Mesh(new THREE.CylinderGeometry(0.016, 0.016, POST_H, 14), matBrass);
+  rod.position.set(x, 0.025 + POST_H/2, z);
+  rod.castShadow = true;
+  group.add(base, rod);
+}
+
+// -- light source: period lamp with brass collimating barrel, emitting +X --
+const sourceGroup = new THREE.Group();
+const apertureMat = new THREE.MeshBasicMaterial({ color: 0xfff2c8 });
+(function(){
+  const body = new THREE.Mesh(new THREE.BoxGeometry(0.24, 0.20, 0.18), matIron);
+  body.position.y = BEAM_Y;
+  body.castShadow = true;
+  const chimney = new THREE.Mesh(new THREE.CylinderGeometry(0.028, 0.036, 0.09, 16), matIronD);
+  chimney.position.set(-0.03, BEAM_Y + 0.14, 0);
+  const barrel = new THREE.Mesh(new THREE.CylinderGeometry(0.045, 0.045, 0.16, 20), matBrass);
+  barrel.rotation.z = Math.PI/2;
+  barrel.position.set(0.19, BEAM_Y, 0);
+  barrel.castShadow = true;
+  const ring = new THREE.Mesh(new THREE.CylinderGeometry(0.052, 0.052, 0.02, 20), matBrassD);
+  ring.rotation.z = Math.PI/2;
+  ring.position.set(0.265, BEAM_Y, 0);
+  const aperture = new THREE.Mesh(new THREE.CircleGeometry(0.034, 20), apertureMat);
+  aperture.rotation.y = Math.PI/2;
+  aperture.position.set(0.279, BEAM_Y, 0);
+  sourceGroup.add(body, chimney, barrel, ring, aperture);
+  const legL = new THREE.Mesh(new THREE.BoxGeometry(0.2, 0.07, 0.16), matIronD);
+  legL.position.set(0, 0.035, 0);
+  sourceGroup.add(legL);
+})();
+optics.add(sourceGroup);
+
+// -- generic mirror assembly: reflective face looks along local +Z --
+function makeMirror(){
+  const g = new THREE.Group();
+  post(0, 0, g);
+  const back = new THREE.Mesh(new THREE.BoxGeometry(0.20, 0.24, 0.03), matBrassD);
+  back.position.set(0, BEAM_Y, -0.02);
+  back.castShadow = true;
+  const face = new THREE.Mesh(new THREE.CylinderGeometry(0.085, 0.085, 0.012, 32), matMirrorFace);
+  face.rotation.x = Math.PI/2;
+  face.position.set(0, BEAM_Y, 0.002);
+  const bezel = new THREE.Mesh(new THREE.TorusGeometry(0.088, 0.009, 10, 32), matBrass);
+  bezel.position.set(0, BEAM_Y, 0.006);
+  g.add(back, face, bezel);
+  // adjustment screws on the back — the real mirrors were finely adjustable
+  for (const [sx, sy] of [[-0.07,-0.08],[0.07,-0.08],[0,0.09]]){
+    const knob = new THREE.Mesh(new THREE.CylinderGeometry(0.014, 0.014, 0.03, 10), matBrass);
+    knob.rotation.x = Math.PI/2;
+    knob.position.set(sx, BEAM_Y + sy, -0.045);
+    g.add(knob);
+  }
+  return g;
+}
+const mirror1 = makeMirror();  // at +X, faces −X (toward BS)
+const mirror2 = makeMirror();  // at −Z, faces +Z (toward BS)
+optics.add(mirror1, mirror2);
+
+// -- beam splitter: half-silvered glass plate at 45° in a brass fork --
+const bsGroup = new THREE.Group();
+(function(){
+  post(0, 0, bsGroup);
+  const holder = new THREE.Group();
+  holder.rotation.y = Math.PI/4;   // plate normal = (1,0,1)/√2
+  const plate = new THREE.Mesh(new THREE.BoxGeometry(0.26, 0.28, 0.016), matGlass);
+  plate.position.y = BEAM_Y;
+  const film = new THREE.Mesh(new THREE.PlaneGeometry(0.25, 0.27), matHalfSilver);
+  film.position.set(0, BEAM_Y, 0.0125);
+  const frameT = new THREE.Mesh(new THREE.BoxGeometry(0.28, 0.02, 0.03), matBrass);
+  frameT.position.y = BEAM_Y + 0.15;
+  const frameB = new THREE.Mesh(new THREE.BoxGeometry(0.28, 0.02, 0.03), matBrass);
+  frameB.position.y = BEAM_Y - 0.15;
+  const frameL = new THREE.Mesh(new THREE.BoxGeometry(0.02, 0.32, 0.03), matBrass);
+  frameL.position.set(-0.14, BEAM_Y, 0);
+  const frameR = new THREE.Mesh(new THREE.BoxGeometry(0.02, 0.32, 0.03), matBrass);
+  frameR.position.set(0.14, BEAM_Y, 0);
+  holder.add(plate, film, frameT, frameB, frameL, frameR);
+  bsGroup.add(holder);
+})();
+optics.add(bsGroup);
+
+// -- compensating plate: identical glass, no silvering, in the M1 arm --
+const compGroup = new THREE.Group();
+(function(){
+  post(0, 0, compGroup);
+  const holder = new THREE.Group();
+  holder.rotation.y = Math.PI/4;   // parallel to the beam splitter
+  const plate = new THREE.Mesh(new THREE.BoxGeometry(0.22, 0.24, 0.014), matGlass);
+  plate.position.y = BEAM_Y;
+  const clipT = new THREE.Mesh(new THREE.BoxGeometry(0.24, 0.016, 0.026), matBrass);
+  clipT.position.y = BEAM_Y + 0.128;
+  const clipB = new THREE.Mesh(new THREE.BoxGeometry(0.24, 0.016, 0.026), matBrass);
+  clipB.position.y = BEAM_Y - 0.128;
+  holder.add(plate, clipT, clipB);
+  compGroup.add(holder);
+})();
+compGroup.position.set(0.30, 0, 0);
+optics.add(compGroup);
+
+// -- telescope detector at +Z, looking back at the beam splitter --
+const detGroup = new THREE.Group();
+(function(){
+  post(0, 0.04, detGroup);
+  const tube = new THREE.Mesh(new THREE.CylinderGeometry(0.045, 0.05, 0.34, 24), matBrass);
+  tube.rotation.x = Math.PI/2;
+  tube.position.set(0, BEAM_Y, 0.03);
+  tube.castShadow = true;
+  const objective = new THREE.Mesh(new THREE.CylinderGeometry(0.056, 0.052, 0.06, 24), matBrassD);
+  objective.rotation.x = Math.PI/2;
+  objective.position.set(0, BEAM_Y, -0.16);
+  const lens = new THREE.Mesh(new THREE.CircleGeometry(0.042, 24), matGlass);
+  lens.position.set(0, BEAM_Y, -0.194);
+  const eyepiece = new THREE.Mesh(new THREE.CylinderGeometry(0.02, 0.032, 0.09, 20), matBrassD);
+  eyepiece.rotation.x = Math.PI/2;
+  eyepiece.position.set(0, BEAM_Y, 0.24);
+  const collar = new THREE.Mesh(new THREE.BoxGeometry(0.03, 0.05, 0.1), matIronD);
+  collar.position.set(0, BEAM_Y - 0.06, 0.03);
+  detGroup.add(tube, objective, lens, eyepiece, collar);
+})();
+optics.add(detGroup);
+
+/* ---- beams and photons ---- */
+const beamsGroup = new THREE.Group();
+optics.add(beamsGroup);
+
+function glowSpriteTexture(){
+  const c = document.createElement('canvas');
+  c.width = c.height = 64;
+  const g = c.getContext('2d');
+  const grad = g.createRadialGradient(32, 32, 0, 32, 32, 32);
+  grad.addColorStop(0, 'rgba(255,255,255,1)');
+  grad.addColorStop(0.3, 'rgba(255,255,255,0.85)');
+  grad.addColorStop(1, 'rgba(255,255,255,0)');
+  g.fillStyle = grad;
+  g.fillRect(0, 0, 64, 64);
+  return new THREE.CanvasTexture(c);
+}
+const glowTex = glowSpriteTexture();
+function tintableSprite(){
+  return new THREE.SpriteMaterial({ map: glowTex, blending: THREE.AdditiveBlending, depthWrite: false, transparent: true });
+}
+const sprOut = tintableSprite();   // outgoing pulses — tinted to λ
+const sprIn  = tintableSprite();   // returning pulses — tinted to λ (lighter)
+const sprDet = tintableSprite();   // toward detector — tinted to λ (lightest)
+
+const beamCoreMat = new THREE.MeshBasicMaterial({ transparent: true, opacity: 0.9,  blending: THREE.AdditiveBlending, depthWrite: false });
+const beamGlowMat = new THREE.MeshBasicMaterial({ transparent: true, opacity: 0.16, blending: THREE.AdditiveBlending, depthWrite: false });
+
+// dust motes drifting in the room's light — quiet atmosphere
+const dustGroup = new THREE.Group();
+scene.add(dustGroup);
+(function(){
+  const dustMat = new THREE.SpriteMaterial({ map: glowTex, transparent: true, opacity: 0.055, blending: THREE.AdditiveBlending, depthWrite: false });
+  for (let i = 0; i < 64; i++){
+    const d = new THREE.Sprite(dustMat);
+    const sc = 0.03 + Math.random()*0.05;
+    d.scale.set(sc, sc, 1);
+    d.position.set(-7 + Math.random()*14, 0.4 + Math.random()*3.8, -5 + Math.random()*10);
+    d.userData.ph = Math.random()*Math.PI*2;
+    d.userData.vy = 0.008 + Math.random()*0.02;
+    dustGroup.add(d);
+  }
+})();
+
+const UP = new THREE.Vector3(0, 1, 0);
+const segments = [];  // {from, to, core, glow, photons:[Sprite], dir:'out'|'in'|'det', offset}
+
+function makeSegment(dirKind, offset){
+  const core = new THREE.Mesh(new THREE.CylinderGeometry(0.007, 0.007, 1, 8, 1, true), beamCoreMat);
+  const glow = new THREE.Mesh(new THREE.CylinderGeometry(0.022, 0.022, 1, 8, 1, true), beamGlowMat);
+  beamsGroup.add(core, glow);
+  const photons = [];
+  const mat = dirKind === 'out' ? sprOut : dirKind === 'in' ? sprIn : sprDet;
+  for (let i = 0; i < 3; i++){
+    const s = new THREE.Sprite(mat);
+    s.scale.set(0.075, 0.075, 1);
+    beamsGroup.add(s);
+    photons.push(s);
+  }
+  const seg = { from: new THREE.Vector3(), to: new THREE.Vector3(), core, glow, photons, offset };
+  segments.push(seg);
+  return seg;
+}
+const segSrc  = makeSegment('out', 0);
+const segToM1 = makeSegment('out', 0.25);
+const segM1Bk = makeSegment('in',  0.5);
+const segToM2 = makeSegment('out', 0.25);
+const segM2Bk = makeSegment('in',  0.5);
+const segDet  = makeSegment('det', 0.75);
+
+function alignBeam(mesh, from, to){
+  const dir = new THREE.Vector3().subVectors(to, from);
+  const len = dir.length();
+  mesh.position.copy(from).addScaledVector(dir, 0.5);
+  mesh.scale.set(1, len, 1);
+  mesh.quaternion.setFromUnitVectors(UP, dir.normalize());
+}
+
+function updateBeams(){
+  const lengthT = Math.min(1, Math.max(0, (state.L - 1) / 19));
+  const D = 0.55 + 0.42 * lengthT;          // mirror distance on the slab
+  const y = BEAM_Y;
+  const simple = state.view === 'simplified';
+
+  if (simple){
+    // One out-and-back beam: source aperture → M1 → back. The source aperture
+    // and M1 are collinear on +X, so two overlapping segments suffice.
+    segSrc.from.set(-0.64, y, 0);      segSrc.to.set(D - 0.015, y, 0);
+    segM1Bk.from.set(D - 0.015, y, 0); segM1Bk.to.set(-0.64, y, 0);
+  } else {
+    segSrc.from.set(-0.64, y, 0);   segSrc.to.set(0, y, 0);
+    segToM1.from.set(0, y, 0);      segToM1.to.set(D - 0.015, y, 0);
+    segM1Bk.from.set(D - 0.015, y, 0); segM1Bk.to.set(0, y, 0);
+    segToM2.from.set(0, y, 0);      segToM2.to.set(0, y, -(D - 0.015));
+    segM2Bk.from.set(0, y, -(D - 0.015)); segM2Bk.to.set(0, y, 0);
+    segDet.from.set(0, y, 0);       segDet.to.set(0, y, 0.53);
+  }
+
+  const active = simple ? [segSrc, segM1Bk] : segments;
+  for (const s of segments){
+    const on = active.indexOf(s) !== -1;
+    s.core.visible = on;
+    s.glow.visible = on;
+    for (const p of s.photons) p.visible = on;
+    if (on){
+      alignBeam(s.core, s.from, s.to);
+      alignBeam(s.glow, s.from, s.to);
+    }
+  }
+}
+
+function layoutOptics(){
+  const lengthT = Math.min(1, Math.max(0, (state.L - 1) / 19));
+  const D = 0.55 + 0.42 * lengthT;          // mirror distance on the slab
+  mirror1.position.set(D, 0, 0);
+  mirror1.rotation.y = -Math.PI/2;          // face −X, toward BS
+  mirror2.position.set(0, 0, -D);
+  mirror2.rotation.y = 0;                   // face +Z, toward BS
+  sourceGroup.position.set(-0.92, 0, 0);
+  detGroup.position.set(0, 0, 0.72);
+  updateBeams();
+}
+
+function updateBeamColor(){
+  const rgb = wavelengthToRGB(state.lam);
+  const col = new THREE.Color(rgb.r/255, rgb.g/255, rgb.b/255);
+  beamCoreMat.color.copy(col);
+  beamGlowMat.color.copy(col);
+  // photon pulses follow the wavelength; returning/detector pulses are
+  // progressively lightened so beam direction stays distinguishable
+  sprOut.color.copy(col);
+  sprIn.color.copy(col).lerp(new THREE.Color(1, 1, 1), 0.45);
+  sprDet.color.copy(col).lerp(new THREE.Color(1, 1, 1), 0.7);
+  // lamp aperture and its warm glow light also take the source color
+  apertureMat.color.copy(col).lerp(new THREE.Color(1, 1, 1), 0.5);
+  lampGlowLight.color.copy(col).lerp(new THREE.Color(1, 1, 1), 0.35);
+}
+
+/* ---- aether wind: translucent arrows drifting in fixed world +X ---- */
+const windGroup = new THREE.Group();
+scene.add(windGroup);
+(function(){
+  const shaft = new THREE.CylinderGeometry(0.028, 0.028, 0.5, 8);
+  const tip = new THREE.ConeGeometry(0.085, 0.22, 10);
+  const m = new THREE.MeshBasicMaterial({ color: 0xff4d4d, transparent: true, opacity: 0.7, depthWrite: false });
+  for (let i = 0; i < 42; i++){
+    const a = new THREE.Group();
+    const sh = new THREE.Mesh(shaft, m);
+    sh.rotation.z = -Math.PI/2;
+    const tp = new THREE.Mesh(tip, m);
+    tp.rotation.z = -Math.PI/2;
+    tp.position.x = 0.36;
+    a.add(sh, tp);
+    a.position.set(
+      -6 + Math.random()*12,
+      1.0 + Math.random()*2.6,
+      -5 + Math.random()*10
+    );
+    // keep the arrows out of the apparatus itself
+    if (Math.hypot(a.position.x, a.position.z) < 2.6) a.position.z += a.position.z >= 0 ? 2.8 : -2.8;
+    windGroup.add(a);
+  }
+})();
+
+/* ---- HTML labels projected from 3D anchors ---- */
+function makeLabel(text, cls){
+  const el = document.createElement('div');
+  el.className = 'lbl3d' + (cls ? ' ' + cls : '');
+  el.textContent = text;
+  labelsRoot.appendChild(el);
+  return el;
+}
+const labels = [
+  { el: makeLabel('Source', 'source'),           obj: sourceGroup, off: new THREE.Vector3(0, 0.34, 0) },
+  { el: makeLabel('Beam splitter · 45°', 'accent'), obj: bsGroup,  off: new THREE.Vector3(0, 0.42, 0), experimentOnly: true },
+  { el: makeLabel('Compensator', 'faint'),       obj: compGroup,   off: new THREE.Vector3(0, 0.34, 0), experimentOnly: true },
+  { el: makeLabel('Mirror'),                     obj: mirror1,     off: new THREE.Vector3(0, 0.36, 0) },
+  { el: makeLabel('M₂'),                         obj: mirror2,     off: new THREE.Vector3(0, 0.36, 0), experimentOnly: true },
+  { el: makeLabel('Arm A', 'accent'),            obj: mirror1,     off: new THREE.Vector3(0, 0.56, 0), experimentOnly: true },
+  { el: makeLabel('Arm B', 'accent'),            obj: mirror2,     off: new THREE.Vector3(0, 0.56, 0), experimentOnly: true },
+  { el: makeLabel('Telescope detector', 'det'),  obj: detGroup,    off: new THREE.Vector3(0, 0.34, 0), experimentOnly: true },
+  { el: makeLabel('Stone slab', 'faint'),        obj: slab,        off: new THREE.Vector3(-0.85, 0.2, 0.85), experimentOnly: true },
+  { el: makeLabel('Mercury trough', 'faint'),    obj: mercury,     off: new THREE.Vector3(0.95, 0.06, 0.95), experimentOnly: true }
+];
+const sourceLabel = labels[0].el;
+const mirror1Label = labels[3].el;
+const _v = new THREE.Vector3();
+function updateLabels(){
+  // Project with THIS frame's matrices. Without this, labels use the previous
+  // frame's camera/world transforms and shimmer while orbiting, zooming, or
+  // rotating the slab.
+  camera.updateMatrixWorld();
+  tableGroup.updateMatrixWorld(true);
+  for (const L of labels){
+    if (L.experimentOnly && state.view !== 'experiment'){ L.el.style.visibility = 'hidden'; continue; }
+    L.obj.getWorldPosition(_v);
+    _v.add(L.off);
+    _v.project(camera);
+    if (_v.z > 1 || _v.z < -1){ L.el.style.visibility = 'hidden'; continue; }
+    L.el.style.visibility = 'visible';
+    // Whole-pixel, transform-only positioning: composited on the GPU with no
+    // layout/repaint, so the text stays crisp and does not flicker in motion.
+    const x = Math.round((_v.x * 0.5 + 0.5) * W);
+    const y = Math.round((-_v.y * 0.5 + 0.5) * H);
+    L.el.style.transform = 'translate3d(' + x + 'px,' + y + 'px,0) translate(-50%,-130%)';
+  }
+}
+
+/* ---- camera orbit controls (clamped inside the room) ---- */
+const orbit = { az: 0.85, pol: 1.02, dist: 6.6, target: new THREE.Vector3(0, 1.35, 0) };
+function applyCamera(){
+  const sp = Math.sin(orbit.pol), cp = Math.cos(orbit.pol);
+  camera.position.set(
+    orbit.target.x + orbit.dist * sp * Math.sin(orbit.az),
+    orbit.target.y + orbit.dist * cp,
+    orbit.target.z + orbit.dist * sp * Math.cos(orbit.az)
+  );
+  // keep the eye inside the laboratory so walls never get clipped through
+  camera.position.x = Math.max(-ROOM_X + 0.5, Math.min(ROOM_X - 0.5, camera.position.x));
+  camera.position.y = Math.max(0.35, Math.min(ROOM_H - 0.3, camera.position.y));
+  camera.position.z = Math.max(-ROOM_Z + 0.5, Math.min(ROOM_Z - 0.5, camera.position.z));
+  camera.lookAt(orbit.target);
+}
+(function wireOrbit(){
+  let dragging = false, px = 0, py = 0;
+  const start = (x, y) => { dragging = true; px = x; py = y; };
+  const move = (x, y) => {
+    if (!dragging) return;
+    orbit.az  -= (x - px) * 0.006;
+    orbit.pol -= (y - py) * 0.005;
+    orbit.pol = Math.max(0.18, Math.min(1.45, orbit.pol));
+    px = x; py = y;
+  };
+  canvas.addEventListener('mousedown', e => start(e.clientX, e.clientY));
+  window.addEventListener('mousemove', e => move(e.clientX, e.clientY));
+  window.addEventListener('mouseup', () => dragging = false);
+  canvas.addEventListener('touchstart', e => { if (e.touches[0]) start(e.touches[0].clientX, e.touches[0].clientY); }, { passive: true });
+  canvas.addEventListener('touchmove',  e => { if (e.touches[0]) move(e.touches[0].clientX, e.touches[0].clientY); }, { passive: true });
+  canvas.addEventListener('touchend', () => dragging = false);
+  canvas.addEventListener('wheel', e => {
+    e.preventDefault();
+    orbit.dist = Math.max(2.6, Math.min(10.5, orbit.dist * (1 + Math.sign(e.deltaY) * 0.08)));
+  }, { passive: false });
+})();
+
+/* ===========================================================================
+   RESIZE
+   =========================================================================== */
+function resize(){
+  dpr = window.devicePixelRatio || 1;
+  const r = canvas.getBoundingClientRect();
+  W = r.width; H = r.height;
+  renderer.setSize(W, H, false);
+  camera.aspect = W / Math.max(1, H);
+  camera.updateProjectionMatrix();
+
+  const dr = detC.getBoundingClientRect();
+  detW = dr.width;
+  detH = dr.height;
+  detC.width = Math.round(detW * dpr);
+  detC.height = Math.round(detH * dpr);
+  // detX's transform is (re)applied each frame inside drawDetectorPattern.
+
+  const pr = plotC.getBoundingClientRect();
+  plotW = pr.width;
+  plotH = pr.height;
+  plotC.width = Math.round(plotW * dpr);
+  plotC.height = Math.round(plotH * dpr);
+  plotX.setTransform(dpr,0,0,dpr,0,0);
+}
+window.addEventListener('resize', resize);
+
+/* ===========================================================================
+   TELESCOPE EYEPIECE + FRINGE-SHIFT PLOT (unchanged 2D diagnostics)
+   =========================================================================== */
+const TELESCOPE_FRINGE_SPAN = 1.2;   // fringes visible across the eyepiece diameter
+const BASELINE_FRINGES_ACROSS = 10;  // reference "unmagnified" fringe count
+
+function drawDetectorPattern(){
+  const w = detW, h = detH; // CSS pixels
+  if (w === 0 || h === 0) return;
+
+  detX.setTransform(dpr, 0, 0, dpr, 0, 0);
+  detX.clearRect(0, 0, w, h);
+  detX.fillStyle = '#04070b';
+  detX.fillRect(0, 0, w, h);
+
+  const cx = w / 2, cy = h / 2;
+  const R = Math.min(w, h) / 2 - 8;
+  const diameter = 2 * R;
+
+  // Physical fringe shift (in fringes). Zero in the relativity/null mode.
+  const lam_m = state.lam * 1e-9;
+  const deltaN = pathShift(state.theta) / lam_m;
+  const delta = 2 * Math.PI * deltaN;
+  const rgb = wavelengthToRGB(state.lam);
+
+  // Map screen x → fringe coordinate. At delta = 0 a maximum sits exactly on the
+  // central reticle, so any shift moves the bright bands off the crosshair.
+  const fringeAt = x => ((x - cx) / diameter) * TELESCOPE_FRINGE_SPAN;
+
+  detX.save();
+  detX.beginPath();
+  detX.arc(cx, cy, R, 0, Math.PI * 2);
+  detX.clip();
+
+  for (let x = 0; x <= w; x++) {
+    const f = fringeAt(x);
+    const I = 0.5 * (1 + Math.cos(2 * Math.PI * f + delta));
+    detX.fillStyle = 'rgb(' + Math.round(rgb.r * I) + ',' + Math.round(rgb.g * I) + ',' + Math.round(rgb.b * I) + ')';
+    detX.fillRect(x, cy - R, 2, diameter);
+  }
+
+  // Vignette so it reads like an eyepiece.
+  const vig = detX.createRadialGradient(cx, cy, R * 0.55, cx, cy, R);
+  vig.addColorStop(0, 'rgba(0,0,0,0)');
+  vig.addColorStop(1, 'rgba(0,0,0,0.55)');
+  detX.fillStyle = vig;
+  detX.fillRect(cx - R, cy - R, diameter, diameter);
+  detX.restore();
+
+  // Eyepiece bezel.
+  detX.strokeStyle = 'rgba(148,163,184,0.55)';
+  detX.lineWidth = 2;
+  detX.beginPath();
+  detX.arc(cx, cy, R, 0, Math.PI * 2);
+  detX.stroke();
+  detX.strokeStyle = 'rgba(148,163,184,0.18)';
+  detX.lineWidth = 1;
+  detX.beginPath();
+  detX.arc(cx, cy, R - 3, 0, Math.PI * 2);
+  detX.stroke();
+
+  // Fixed reticle (crosshair). The vertical hair marks the θ=0 fringe peak, so
+  // the visible offset of the bright band from this line IS the fringe shift.
+  detX.save();
+  detX.beginPath();
+  detX.arc(cx, cy, R - 4, 0, Math.PI * 2);
+  detX.clip();
+  detX.strokeStyle = 'rgba(255,255,255,0.5)';
+  detX.lineWidth = 1;
+  detX.beginPath();
+  detX.moveTo(cx, cy - R); detX.lineTo(cx, cy + R);
+  detX.moveTo(cx - R, cy); detX.lineTo(cx + R, cy);
+  detX.stroke();
+  // Small scale ticks along the horizontal hair, spaced 0.25 fringe apart.
+  detX.strokeStyle = 'rgba(255,255,255,0.4)';
+  for (let fk = -1; fk <= 1; fk += 0.25) {
+    const tx = cx + (fk / TELESCOPE_FRINGE_SPAN) * diameter;
+    if (Math.abs(tx - cx) > R - 4) continue;
+    const big = Math.abs(fk) < 1e-6;
+    detX.beginPath();
+    detX.moveTo(tx, cy - (big ? 7 : 4));
+    detX.lineTo(tx, cy + (big ? 7 : 4));
+    detX.stroke();
+  }
+  detX.restore();
+
+  // Live marker tracking the shifted central bright band.
+  // Intensity is I ∝ 1 + cos(2πf + δ) with δ = 2π·ΔN, so the central maximum
+  // sits at fringe coordinate f = −ΔN, i.e. at x = cx − ΔN·(diameter/SPAN).
+  const markerX = cx - deltaN * (diameter / TELESCOPE_FRINGE_SPAN);
+  if (Math.abs(markerX - cx) <= R - 4) {
+    detX.strokeStyle = '#fbbf24';
+    detX.lineWidth = 1.5;
+    detX.setLineDash([4, 3]);
+    detX.beginPath();
+    detX.moveTo(markerX, cy - R + 6);
+    detX.lineTo(markerX, cy + R - 6);
+    detX.stroke();
+    detX.setLineDash([]);
+  }
+
+  // Readout: ΔN and the magnification relative to the baseline strip.
+  const mag = Math.round(BASELINE_FRINGES_ACROSS / TELESCOPE_FRINGE_SPAN);
+  detX.fillStyle = 'rgba(226,232,240,0.92)';
+  detX.font = '600 11px -apple-system, sans-serif';
+  detX.textAlign = 'left';
+  detX.fillText('ΔN = ' + (Math.abs(deltaN) < 1e-4 ? '0.000' : deltaN.toFixed(3)), 8, 16);
+  detX.textAlign = 'right';
+  detX.fillStyle = state.mode === 'relativity' ? '#60a5fa' : '#f87171';
+  detX.fillText(state.mode === 'relativity' ? 'NULL' : 'shift', w - 8, 16);
+
+  const magEl = document.getElementById('detMag');
+  if (magEl) magEl.textContent = '×' + mag + ' magnified';
+}
+
+function drawFringePlot(){
+  // Use CSS dimensions for drawing (with transform handling scaling)
+  const w = plotW;
+  const h = plotH;
+
+  if (w === 0 || h === 0) return;
+
+  plotX.clearRect(0,0,w,h);
+  plotX.fillStyle = 'rgba(0,0,0,0.5)';
+  plotX.fillRect(0,0,w,h);
+
+  // Horizontal center line
+  plotX.strokeStyle = 'rgba(148,163,184,0.2)';
+  plotX.lineWidth = 1;
+  plotX.beginPath();
+  plotX.moveTo(0,h/2); plotX.lineTo(w,h/2);
+  plotX.stroke();
+
+  const N = 180;
+  const lam_m = state.lam * 1e-9;
+  const ampPx = h * 0.40; // pixels per full-scale (PLOT_FRINGE_FS) fringes
+  const vals = [];
+
+  // Always compute the aether prediction (in true fringe units ΔN) for the
+  // dashed reference curve.
+  for (let i=0; i<=N; i++){
+    const th = (i/N)*360;
+    vals.push(aetherPathShift(th) / lam_m);
+  }
+
+  const yForN = dN => h/2 - (dN / PLOT_FRINGE_FS) * ampPx;
+
+  // Reference gridline at −0.4 fringe: the historical expected shift when the
+  // slab turns through 90°. ΔN is referenced to θ = 0 (a maximum of cos 2θ),
+  // so the predicted curve swings between 0 and −0.4 — it never goes positive,
+  // and drawing a +0.4 line would wrongly suggest a 0.8-fringe swing.
+  plotX.strokeStyle = 'rgba(148,163,184,0.18)';
+  plotX.lineWidth = 1;
+  plotX.setLineDash([2,3]);
+  [-0.4].forEach(tick => {
+    const y = yForN(tick);
+    if (y > 8 && y < h-2){
+      plotX.beginPath();
+      plotX.moveTo(0, y); plotX.lineTo(w, y);
+      plotX.stroke();
+    }
+  });
+  plotX.setLineDash([]);
+  plotX.fillStyle = '#64748b';
+  plotX.font = '8px -apple-system';
+  plotX.textAlign = 'left';
+  [-0.4].forEach(tick => {
+    const y = yForN(tick);
+    if (y > 8 && y < h-2) plotX.fillText(tick.toFixed(1) + ' (90° swing)', 2, y - 2);
+  });
+
+  // Draw aether prediction as dashed line (always visible as reference)
+  plotX.strokeStyle = 'rgba(248,113,113,0.5)';
+  plotX.lineWidth = 1.5;
+  plotX.setLineDash([4,3]);
+  plotX.beginPath();
+  for (let i=0; i<=N; i++){
+    const x = (i/N)*w;
+    const y = yForN(vals[i]);
+    if (i===0) plotX.moveTo(x,y); else plotX.lineTo(x,y);
+  }
+  plotX.stroke();
+  plotX.setLineDash([]);
+
+  // Draw the active mode curve (solid)
+  if (state.mode === 'relativity'){
+    // Actual result: flat line at zero
+    plotX.strokeStyle = '#60a5fa';
+    plotX.lineWidth = 2.5;
+    plotX.beginPath();
+    plotX.moveTo(0, h/2); plotX.lineTo(w, h/2);
+    plotX.stroke();
+  } else {
+    // Aether prediction (solid red)
+    plotX.strokeStyle = '#f87171';
+    plotX.lineWidth = 2;
+    plotX.beginPath();
+    for (let i=0; i<=N; i++){
+      const x = (i/N)*w;
+      const y = yForN(vals[i]);
+      if (i===0) plotX.moveTo(x,y); else plotX.lineTo(x,y);
+    }
+    plotX.stroke();
+  }
+
+  // Current angle indicator (vertical yellow line)
+  const xc = (state.theta/360)*w;
+  plotX.strokeStyle = '#fbbf24';
+  plotX.lineWidth = 1.5;
+  plotX.beginPath();
+  plotX.moveTo(xc, 0); plotX.lineTo(xc, h);
+  plotX.stroke();
+
+  // Labels
+  plotX.fillStyle = '#64748b';
+  plotX.font = '9px -apple-system';
+  plotX.textAlign = 'left';
+  plotX.fillText('0°', 2, h-2);
+  plotX.textAlign = 'right';
+  plotX.fillText('360°', w-2, h-2);
+  plotX.textAlign = 'left';
+  plotX.fillText('ΔN (fringes)', 4, 10);
+
+  if (state.mode === 'relativity'){
+    plotX.fillStyle = '#60a5fa';
+    plotX.textAlign = 'right';
+    plotX.fillText('NULL RESULT (actual)', w-4, 10);
+    // Also label the dashed line
+    plotX.fillStyle = 'rgba(248,113,113,0.6)';
+    plotX.fillText('predicted (wrong)', w-4, 22);
+  } else {
+    plotX.fillStyle = '#f87171';
+    plotX.textAlign = 'right';
+    plotX.fillText('predicted shift', w-4, 10);
+  }
+}
+
+/* ===========================================================================
+   ANIMATION LOOP
+   =========================================================================== */
+function formatLength(meters){
+  const abs = Math.abs(meters);
+  if (abs < 1e-6) return (meters*1e9).toFixed(2) + ' nm';
+  if (abs < 1e-3) return (meters*1e6).toFixed(2) + ' µm';
+  if (abs < 1)    return (meters*1e3).toFixed(2) + ' mm';
+  return meters.toFixed(3) + ' m';
+}
+
+const thetaChip = document.getElementById('thetaChip');
+const _wp = new THREE.Vector3();
+
+function update3D(dt){
+  // slab rotation: θ increases counterclockwise seen from above,
+  // starting with arm 1 (M1) aligned with the aether wind (world +X)
+  tableGroup.rotation.y = state.theta * Math.PI/180;
+
+  // photon pulses streaming along each beam segment (symbolic speed —
+  // at Earth's real β the arm-time asymmetry is far below visual scale)
+  for (const seg of segments){
+    for (let i = 0; i < seg.photons.length; i++){
+      const t = ((state.phase * 0.5 + seg.offset + i / seg.photons.length) % 1 + 1) % 1;
+      seg.photons[i].position.lerpVectors(seg.from, seg.to, t);
+    }
+  }
+
+  // aether wind drift (fixed world direction, +X)
+  const windVisible = state.mode === 'aether';
+  windGroup.visible = windVisible;
+  if (windVisible){
+    for (const a of windGroup.children){
+      a.position.x += dt * 1.35;
+      if (a.position.x > 6.5) a.position.x = -6.5;
+    }
+  }
+
+  // dust motes: slow rise with a gentle sway, wrapping within the room
+  for (const d of dustGroup.children){
+    d.position.y += d.userData.vy * dt * 4;
+    d.position.x += Math.sin(state.phase * 0.4 + d.userData.ph) * dt * 0.05;
+    if (d.position.y > 4.3) d.position.y = 0.35;
+  }
+
+  // keep the warm lamp light riding with the source (world position already
+  // includes bench + slab height; only the beam-height offset is added)
+  sourceGroup.getWorldPosition(_wp);
+  lampGlowLight.position.set(_wp.x, _wp.y + BEAM_Y, _wp.z);
+
+  applyCamera();
+  updateLabels();
+  renderer.render(scene, camera);
+}
+
+function onFrame(dt){
+  state.phase += dt;
+
+  if (state.autoRotate && state.spd > 0){
+    state.theta = (state.theta + state.spd * dt * 30) % 360;
+    document.getElementById('theta').value = state.theta;
+    document.getElementById('vTheta').textContent = state.theta.toFixed(0)+'°';
+    renderRoundTrip();
+  }
+
+  update3D(dt);
+  drawDetectorPattern();
+  drawFringePlot();
+
+  thetaChip.textContent = 'θ = ' + state.theta.toFixed(0) + '°';
+
+  const dl = pathShift(state.theta);
+  const lam_m = state.lam * 1e-9;
+  const dN = dl / lam_m;
+  document.getElementById('sDl').textContent = formatLength(dl);
+  document.getElementById('sDN').textContent = (Math.abs(dN) < 1e-4 ? '0.0000' : dN.toFixed(4));
+}
+
+/* ===========================================================================
+   ROUND-TRIP TIME READOUT (detector panel)
+   =========================================================================== */
+function rtRow(k,v){ return '<div class="rt-row"><span>'+k+'</span><b>'+v+'</b></div>'; }
+function renderRoundTrip(){
+  const {tA,tB,base}=armTimes(), aether = state.mode!=='relativity';
+  const title=document.querySelector('.detector-title span:first-child');
+  document.getElementById('detMode').textContent = aether?'Aether mode':'Actual (Relativity)';
+  const P=document.getElementById('rtReadout');
+  if(state.view==='simplified'){
+    title.textContent = aether?'Predicted round-trip time':'Actual round-trip time';
+    P.innerHTML = aether
+      ? rtRow('Predicted round-trip', sciSeconds(tA)) + rtRow('Excess over c-limit (2L/c)', diffSeconds(tA-base))
+      : rtRow('Actual round-trip', sciSeconds(base));
+  } else {
+    title.textContent = aether?'Predicted round-trip times':'Actual round-trip times';
+    P.innerHTML = rtRow(aether?'Predicted A round-trip':'Actual A round-trip', sciSeconds(tA))
+                + rtRow(aether?'Predicted B round-trip':'Actual B round-trip', sciSeconds(tB))
+                + rtRow('A − B<br>difference', diffSeconds(tA-tB));
+  }
+}
+
+/* ===========================================================================
+   UI BINDINGS (unchanged behavior)
+   =========================================================================== */
+function bind(id, key, fmt, onChange){
+  const el = document.getElementById(id);
+  const v = document.getElementById('v'+id.charAt(0).toUpperCase()+id.slice(1));
+  el.addEventListener('input', () => {
+    state[key] = parseFloat(el.value);
+    if (v) v.textContent = fmt(state[key]);
+    if (onChange) onChange();
+  });
+}
+bind('theta','theta', v=>v.toFixed(0)+'°', () => {
+  if (state.autoRotate){ state.autoRotate = false; updateAutoRotateButton(); }
+  renderRoundTrip();
+});
+bind('L','L', v=>v.toFixed(1)+' m', () => { layoutOptics(); renderRoundTrip(); });
+bind('lam','lam', v=>v.toFixed(0)+' nm', updateBeamColor);
+bind('spd','spd', v=>v.toFixed(2));
+
+// Vertical full-scale for the fringe-shift plot, expressed in true fringe units
+// (ΔN). Anchored to the worst case across the remaining sliders — largest arm
+// length and shortest wavelength — at Earth's real β, so the plotted curve and
+// the −0.4-fringe (90° swing) reference tick stay on a stable, physical axis.
+const L_MAX   = parseFloat(document.getElementById('L').max);
+const LAM_MIN = parseFloat(document.getElementById('lam').min);
+let PLOT_FRINGE_FS = 1e-6;
+for (let i=0; i<=180; i++){
+  const th = (i/180)*360;
+  const dl = aetherPathDiffFor(th, EARTH_ORBITAL_BETA, L_MAX) - aetherPathDiffFor(0, EARTH_ORBITAL_BETA, L_MAX);
+  const dN = Math.abs(dl) / (LAM_MIN * 1e-9);
+  if (dN > PLOT_FRINGE_FS) PLOT_FRINGE_FS = dN;
+}
+
+document.getElementById('resetBtn').addEventListener('click', () => {
+  state.theta = 0;
+  document.getElementById('theta').value = 0;
+  document.getElementById('vTheta').textContent = '0°';
+  renderRoundTrip();
+});
+
+const autoRotateBtn = document.getElementById('autoRotateBtn');
+
+function updateAutoRotateButton(){
+  autoRotateBtn.textContent = state.autoRotate ? 'Pause' : 'Auto Rotate';
+  autoRotateBtn.classList.toggle('paused', !state.autoRotate);
+}
+
+updateAutoRotateButton();
+
+autoRotateBtn.addEventListener('click', () => {
+  state.autoRotate = !state.autoRotate;
+  updateAutoRotateButton();
+});
+
+const banner = document.getElementById('banner');
+const detMode = document.getElementById('detMode');
+const btnA = document.getElementById('modeAether');
+const btnR = document.getElementById('modeRel');
+
+function setMode(m){
+  state.mode = m;
+  if (m === 'aether'){
+    btnA.classList.add('active'); btnA.classList.add('aether');
+    btnR.classList.remove('active'); btnR.classList.remove('relativity');
+    banner.className = 'mode-banner aether';
+    banner.textContent = '⚠ AETHER PREDICTION';
+    detMode.style.color = '#f87171';
+  } else {
+    btnR.classList.add('active'); btnR.classList.add('relativity');
+    btnA.classList.remove('active'); btnA.classList.remove('aether');
+    banner.className = 'mode-banner relativity';
+    banner.textContent = '✓ NULL RESULT';
+    detMode.style.color = '#60a5fa';
+  }
+  renderRoundTrip();
+}
+btnA.addEventListener('click', () => setMode('aether'));
+btnR.addEventListener('click', () => setMode('relativity'));
+
+function setView(view){
+  state.view = view;
+  const simple = (view==='simplified');
+  bsGroup.visible = !simple;
+  compGroup.visible = !simple;
+  detGroup.visible = !simple;
+  mirror2.visible = !simple;          // hide the perpendicular (B) arm
+  sourceLabel.textContent = simple ? 'Source+Detector' : 'Source';
+  mirror1Label.textContent = simple ? 'Mirror' : 'M₁';
+  document.getElementById('viewSimplified').classList.toggle('active', simple);
+  document.getElementById('viewExperiment').classList.toggle('active', !simple);
+  updateBeams();
+  renderRoundTrip();
+}
+document.getElementById('viewSimplified').addEventListener('click', () => setView('simplified'));
+document.getElementById('viewExperiment').addEventListener('click', () => setView('experiment'));
+
+const statsToggle = document.getElementById('statsToggle');
+const statsContent = document.getElementById('statsContent');
+
+statsToggle.addEventListener('click', () => {
+  const isOpen = statsToggle.classList.toggle('open');
+  statsContent.style.display = isOpen ? 'flex' : 'none';
+});
+
+layoutOptics();
+updateBeamColor();
+resize();
+setMode('aether');
+setView('experiment');
+
+function updateThetaHighlight(on){
+  const el = document.getElementById('theta');
+  if(el) el.classList.toggle('control-highlight', !!on);
+}
+
+function applyInquiryStep(i){
+  const lecture = document.getElementById('shell').classList.contains('lecture-mode');
+  // θ is the star of the two rotate cards; suppress the pulsing outline in a projected lecture demo
+  updateThetaHighlight(!lecture && (i === 2 || i === 3));
+  // Mode follows the card: cards 0–2 show the aether prediction, cards 3–4 the actual null result.
+  setMode(i < 3 ? 'aether' : 'relativity');
+  drawDetectorPattern();
+  drawFringePlot();
+}
+
+document.querySelectorAll('#inq-cards .inq-step').forEach(card => {
+  const evalBox = card.querySelector('.predict-eval');
+  const choices = card.querySelectorAll('.choice');
+  choices.forEach(ch => ch.addEventListener('click', () => {
+    if(card.dataset.answered) return;
+    card.dataset.answered = '1';
+    const correct = ch.dataset.correct === '1';
+    choices.forEach(c => {
+      c.disabled = true;
+      if(c.dataset.correct === '1') c.classList.add('correct');
+      else if(c === ch) c.classList.add('wrong');
+      else c.classList.add('dim');
+    });
+    if(evalBox){
+      evalBox.innerHTML = ch.dataset.fb || '';
+      evalBox.classList.add('show', correct ? 'correct' : 'wrong');
+    }
+  }));
+});
+
+document.getElementById('theta').addEventListener('input', () => {
+  if (Shell.step === 2) Shell.stepReady();
+});
+
+Shell.init({
+  onFrame,
+  onReset(){
+    state.theta = 0;
+    document.getElementById('theta').value = 0;
+    document.getElementById('vTheta').textContent = '0°';
+    applyInquiryStep(Shell.step);
+  },
+  onResize: resize,
+  onStep: applyInquiryStep
+});
+Shell.setLectureMode(true);
+setMode('aether');   // open on the Aether prediction, not the null result (Experiment view is already default)
+
+})();
+</script>
+</body>
+</html>

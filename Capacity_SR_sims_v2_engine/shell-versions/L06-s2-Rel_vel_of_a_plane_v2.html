@@ -230,6 +230,10 @@ body.light-theme .predict-eval .answer,body.light-theme .predict-eval strong,htm
 /* ============================================================================
    SIM CSS — Relative velocity of plane
    ========================================================================== */
+.control-stack{display:flex;flex-direction:column;gap:7px;}
+.toggle-row{display:flex;align-items:center;gap:8px;color:var(--text);font-weight:600;font-size:13px;cursor:pointer;}
+.toggle-row input{accent-color:var(--accent);}
+.plane-ui.hidden{display:none !important;}
 .frame-picker{display:flex;flex-direction:column;gap:6px;}
 .frame-picker button{display:flex;align-items:center;justify-content:space-between;gap:10px;
   background:var(--surface);border:1px solid var(--border);color:var(--text);
@@ -243,7 +247,8 @@ body.light-theme .predict-eval .answer,body.light-theme .predict-eval strong,htm
 .frame-picker.locked{opacity:.45;pointer-events:none;filter:grayscale(.3);}
 
 .vel-row{display:flex;flex-direction:column;gap:2px;padding:8px 0;border-bottom:1px dashed var(--border);}
-.vel-row:last-child{border-bottom:none;}
+.vel-row:last-child,
+.vel-row:has(+ .vel-row.hidden){border-bottom:none;}
 .vel-row .vr-top{display:flex;justify-content:space-between;align-items:center;gap:8px;}
 .vel-row .vr-name{font-weight:700;font-size:13px;display:flex;align-items:center;gap:6px;}
 .vel-row .vr-swatch{width:10px;height:10px;border-radius:50%;flex-shrink:0;}
@@ -316,7 +321,7 @@ body.light-theme .predict-eval .answer,body.light-theme .predict-eval strong,htm
       <div class="legend">
         <div class="legend-item"><span class="legend-dot" style="background:#06b6d4"></span>Alice</div>
         <div class="legend-item"><span class="legend-dot" style="background:#f59e0b"></span>Bella (train)</div>
-        <div class="legend-item"><span class="legend-dot" style="background:#fbbf24"></span>Plane</div>
+        <div class="legend-item plane-ui" id="legendPlane"><span class="legend-dot" style="background:#fbbf24"></span>Plane</div>
       </div>
       <canvas id="scene"></canvas>
     </div>
@@ -377,7 +382,7 @@ body.light-theme .predict-eval .answer,body.light-theme .predict-eval strong,htm
           <div class="frame-picker" id="framePicker">
             <button data-f="alice" class="on"><span>Alice's rest frame (ground S)</span><span class="fp-tag">W = 0</span></button>
             <button data-f="bob"><span>Bella's rest frame</span><span class="fp-tag" id="tagBob">W = V</span></button>
-            <button data-f="plane"><span>Plane's rest frame</span><span class="fp-tag" id="tagPlane">W = u</span></button>
+            <button data-f="plane" class="plane-ui" id="btnFramePlane"><span>Plane's rest frame</span><span class="fp-tag" id="tagPlane">W = u</span></button>
           </div>
           <div class="ctrl-box" style="margin-top:10px;">
             <div class="stat-row"><span class="stat-label">Active frame</span><span class="stat-value" id="statFrame">Ground S</span></div>
@@ -389,6 +394,9 @@ body.light-theme .predict-eval .answer,body.light-theme .predict-eval strong,htm
       <div class="shell-panel">
         <div class="shell-panel-head"><h3>Controls</h3><span class="shell-caret">▾</span></div>
         <div class="shell-panel-body">
+          <div class="ctrl-box control-stack">
+            <label class="toggle-row"><input id="chkShowPlane" type="checkbox" checked> Show plane</label>
+          </div>
           <div class="ctrl-box ctrl-box--slider">
             <div class="ctrl-box-head">
               <span class="ctrl-box-label">Train speed <span style="color:#f59e0b">V</span> (Bella, ground frame)</span>
@@ -399,7 +407,7 @@ body.light-theme .predict-eval .answer,body.light-theme .predict-eval strong,htm
             </div>
             <div class="control-range"><span>0 km/h</span><span>400 km/h</span></div>
           </div>
-          <div class="ctrl-box ctrl-box--slider">
+          <div class="ctrl-box ctrl-box--slider plane-ui" id="sliderPlane">
             <div class="ctrl-box-head">
               <span class="ctrl-box-label">Plane speed <span style="color:#fbbf24">u</span> (ground frame)</span>
               <span class="slider-val" id="valU">200</span>
@@ -429,7 +437,7 @@ body.light-theme .predict-eval .answer,body.light-theme .predict-eval strong,htm
             </div>
             <div class="vr-calc" id="cBob">V = +100 km/h</div>
           </div>
-          <div class="vel-row">
+          <div class="vel-row plane-ui" id="velRowPlane">
             <div class="vr-top">
               <span class="vr-name"><span class="vr-swatch" style="background:#fbbf24"></span>Plane</span>
               <span class="vr-val" id="vPlane">+200 km/h</span>
@@ -659,7 +667,8 @@ const Shell = (function(){
     frame: 'alice', // 'alice' | 'bob' | 'plane'
     xA: 0, xB: 0, xP: 0, // ground-frame positions (km, arbitrary origin)
     pickedFrame: false,  // for step 2 gating
-    animT: 0             // continuous clock for icon polish (wheels, walk, prop)
+    animT: 0,            // continuous clock for icon polish (wheels, walk, prop)
+    showPlane: true      // sidebar "Show plane" — hides all plane-related UI when false
   };
 
   // Colours
@@ -716,11 +725,13 @@ const Shell = (function(){
     S.xP += vP * dt * ANIM_TIME_SCALE;
     S.animT += dt;                       // cosmetic icon clock (wheels / walk / prop)
 
-    // Re-loop the WHOLE scene when any object reaches the edge (preserves relative spacing).
+    // Re-loop the WHOLE scene when any visible object reaches the edge (preserves relative spacing).
     if(W > 0){
       const pxPerKm = Math.min(W,900)/900;
       const edgeKm  = (W/2 - 10)/pxPerKm;                 // km at which an on-screen object reaches the edge
-      if(Math.abs(S.xA) > edgeKm || Math.abs(S.xB) > edgeKm || Math.abs(S.xP) > edgeKm){
+      const hitEdge = Math.abs(S.xA) > edgeKm || Math.abs(S.xB) > edgeKm ||
+                      (S.showPlane && Math.abs(S.xP) > edgeKm);
+      if(hitEdge){
         S.xA = 0; S.xB = 0; S.xP = 0;                     // re-loop the whole scene; relative spacing preserved
       }
     }
@@ -1088,7 +1099,7 @@ const Shell = (function(){
     const contactY = groundY + 3;
     drawActor(pxB, contactY - 12.3 * iconScale, 'Bella',   COL.bob,   vB, 'train', bobDy);  // train behind
     drawActor(pxA, contactY - 11.8 * iconScale, 'Alice', COL.alice, vA, 'person', 0);
-    drawActor(xRef + S.xP*pxPerKm, skyY, 'Plane', COL.plane, vP, 'plane');
+    if(S.showPlane) drawActor(xRef + S.xP*pxPerKm, skyY, 'Plane', COL.plane, vP, 'plane');
   }
 
   function shade(hex, f){
@@ -1267,10 +1278,13 @@ const Shell = (function(){
   }
 
   function drawTrainIcon(x, y, color, vel){
-    const moving = Math.abs(vel) > 0.5;
+    // Wheel motion is physical, not frame-dependent: Bella's engine drives the
+    // wheels forward at his true ground speed even when a frame reads vel=0
+    // or negative. Gate on S.V (ground truth) instead, matching heading's sign.
+    const moving = Math.abs(S.V) > 0.5;
     const heading = S.V >= 0 ? 1 : -1;
-    const spinDir = vel >= 0 ? 1 : -1;
-    const spin = moving ? S.animT * (3.5 + Math.min(Math.abs(vel)/60, 4)) * spinDir : 0;
+    const spinDir = heading;
+    const spin = moving ? S.animT * (3.5 + Math.min(Math.abs(S.V)/60, 4)) * spinDir : 0;
     const sway = moving ? Math.sin(S.animT * 9) * 0.35 : 0;
 
     ctx.save();
@@ -1464,7 +1478,10 @@ const Shell = (function(){
   }
 
   function drawPlaneIcon(x, y, color, vel){
-    const spinning = Math.abs(vel) > 0.5;
+    // Engine state is physical, not frame-dependent: the propeller keeps
+    // spinning even in the plane's own rest frame (where vel reads 0).
+    // Gate on the plane's true ground-frame speed instead.
+    const spinning = Math.abs(S.u) > 0.5;
     const t = S.animT;
     const prop = t * 6;
     const ink = planeInk();
@@ -1805,10 +1822,18 @@ const Shell = (function(){
   }
 
   function selectFrame(f){
+    if(f==='plane' && !S.showPlane) f = 'alice';
     document.querySelectorAll('#framePicker button').forEach(b=>b.classList.toggle('on', b.dataset.f===f));
     S.frame = f;
     S.xA = 0; S.xB = 0; S.xP = 0;   // fresh from origin, as the click handler already does
     refreshReadouts();
+  }
+
+  function applyShowPlane(){
+    document.querySelectorAll('.plane-ui').forEach(el=>el.classList.toggle('hidden', !S.showPlane));
+    if(!S.showPlane && S.frame==='plane') selectFrame('alice');
+    else refreshReadouts();
+    render();
   }
 
   // ==== Update sidebar readouts + formal ====
@@ -1878,8 +1903,10 @@ const Shell = (function(){
       const lines = [
         `\\text{Alice: } v_A' = 0 - ${fmt(Wf)} = ${fmtSigned(vA)}\\ \\text{km/h}`,
         `\\text{Bella: } v_B' = ${fmt(S.V)} - ${fmt(Wf)} = ${fmtSigned(vB)}\\ \\text{km/h}`,
-        `\\text{Plane: } v_P' = ${fmt(S.u)} - ${fmt(Wf)} = ${fmtSigned(vP)}\\ \\text{km/h}`,
       ];
+      if(S.showPlane){
+        lines.push(`\\text{Plane: } v_P' = ${fmt(S.u)} - ${fmt(Wf)} = ${fmtSigned(vP)}\\ \\text{km/h}`);
+      }
       eqApp.innerHTML = lines.map(l=>`<div></div>`).join('');
       const divs = eqApp.querySelectorAll('div');
       lines.forEach((l,i)=>katex.render(l, divs[i], {throwOnError:false,displayMode:false}));
@@ -1891,6 +1918,7 @@ const Shell = (function(){
   const slU = document.getElementById('slU');
   const valV = document.getElementById('valV');
   const valU = document.getElementById('valU');
+  const chkShowPlane = document.getElementById('chkShowPlane');
 
   slV.addEventListener('input', e=>{
     S.V = +e.target.value;
@@ -1905,6 +1933,10 @@ const Shell = (function(){
     reset();                          // restart from origin with new u
     refreshReadouts();
     Shell.setPlaying(true);
+  });
+  chkShowPlane.addEventListener('change', ()=>{
+    S.showPlane = chkShowPlane.checked;
+    applyShowPlane();
   });
 
   // Frame picker

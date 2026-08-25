@@ -333,6 +333,9 @@ body.light-theme .predict-eval .answer,body.light-theme .predict-eval strong,htm
 #shell.step-2 .boost-group{animation:bpulse 1.5s ease-in-out infinite;}
 @keyframes bpulse{0%,100%{box-shadow:0 0 0 0 rgba(167,139,250,0);}50%{box-shadow:0 0 0 4px rgba(167,139,250,.22);}}
 
+.ctrl-check{display:flex;align-items:center;gap:8px;cursor:pointer;font-size:13px;color:var(--text-muted,var(--ink-mid));user-select:none;padding:2px 2px 8px;}
+.ctrl-check input{accent-color:var(--accent);width:15px;height:15px;cursor:pointer;flex-shrink:0;}
+
 .hero-wrap{display:grid;grid-template-rows:1fr;gap:8px;height:100%;min-height:0;}
 .hero-wrap.dual{grid-template-rows:1fr 1fr;}
 .canvas-box{position:relative;min-height:0;background:#0a0c11;border:1px solid var(--line);border-radius:8px;overflow:hidden;}
@@ -631,6 +634,8 @@ body.light-theme .predict-eval .answer,body.light-theme .predict-eval strong,htm
           </div>
         </div>
       </div>
+
+      <label class="ctrl-check" id="hide-output-row"><input type="checkbox" id="hide-output"> Hide output text</label>
 
       <div class="shell-panel" data-panel="fourmom">
         <div class="shell-panel-head"><h3>Four-momentum (E, p)</h3><span class="shell-caret">▾</span></div>
@@ -940,6 +945,7 @@ function computePhysics(){
 /* ---- formatting ---- */
 function fmtV(v){ if(Math.abs(v)<0.005) return '0.00 c'; return (v<0?MINUS:'+')+Math.abs(v).toFixed(2)+' c'; }
 function fmtNum(x,d){ d=d===undefined?3:d; let s=x.toFixed(d); if(parseFloat(s)===0) s=(0).toFixed(d); return s.replace('-',MINUS); }
+let hideOutput=false;
 function frameName(vb){ return Math.abs(vb)<0.005 ? 'Frame S (lab)' : ('Frame S\u2032  (v\u2082 = '+fmtV(vb)+')'); }
 function sum(arr,key){ return arr.reduce((s,x)=>s+x[key],0); }
 
@@ -959,7 +965,7 @@ function clabel(ctx,s,x,y,color,font,w){
   const xx=Math.max(6+tw/2, Math.min(w-6-tw/2, x));
   ctx.fillText(s,xx,y);
 }
-function drawParticle(ctx,x,y,b,w){
+function drawParticle(ctx,x,y,b,w,isAfter){
   const r=discR(b.m);
   if(Math.abs(b.v)>0.02){
     const dir=Math.sign(b.v), len=18+30*Math.abs(b.v);
@@ -973,12 +979,14 @@ function drawParticle(ctx,x,y,b,w){
   ctx.lineWidth=2.5; ctx.strokeStyle=b.color; ctx.stroke();
   ctx.fillStyle='#f8fafc'; ctx.font='bold 13px Inter'; ctx.textAlign='center'; ctx.textBaseline='middle';
   ctx.fillText(b.name, x, y);
-  /* [physics] fix 2: use "M = …" for composite particles instead of "m = …" */
-  const massSymbol = (b.composite || b.name==='M') ? 'M' : 'm';
-  const l1=massSymbol+' = '+b.m.toFixed(2);
-  const l2=(Math.abs(b.v)<0.02)?'(at rest)':('v = '+fmtV(b.v));
-  clabel(ctx,l1,x,y+r+7,b.color,'12px ui-monospace, monospace',w);
-  clabel(ctx,l2,x,y+r+22,'#cbd5e1','12px ui-monospace, monospace',w);
+  if(!(hideOutput && isAfter)){
+    /* [physics] fix 2: use "M = …" for composite particles instead of "m = …" */
+    const massSymbol = (b.composite || b.name==='M') ? 'M' : 'm';
+    const l1=massSymbol+' = '+b.m.toFixed(2);
+    const l2=(Math.abs(b.v)<0.02)?'(at rest)':('v = '+fmtV(b.v));
+    clabel(ctx,l1,x,y+r+7,b.color,'12px ui-monospace, monospace',w);
+    clabel(ctx,l2,x,y+r+22,'#cbd5e1','12px ui-monospace, monospace',w);
+  }
 }
 function drawGhost(ctx,x,y,m,alpha,w){
   const r=discR(m);
@@ -1042,7 +1050,7 @@ function drawScene(canvas, ctx, phys, vb, fname){
       } else {
         x = xContact[i] + setAft[i].v * Scale * (S.progress - 1);
       }
-      drawParticle(ctx, clampX(x,b.m), midY, b, w);
+      drawParticle(ctx, clampX(x,b.m), midY, b, w, !showBefore);
     }
     /* Very brief collision flash at the contact point */
     const flash = 1 - Math.min(1, Math.abs(S.progress - 1) / 0.05);
@@ -1070,14 +1078,14 @@ function drawScene(canvas, ctx, phys, vb, fname){
     list.forEach(b=>{
       let x=cx + b.v*Scale*(S.progress-1);
       x=Math.max(44+discR(b.m), Math.min(w-44-discR(b.m), x));
-      drawParticle(ctx,x,midY,b,w);
+      drawParticle(ctx,x,midY,b,w,!showBefore);
     });
     if(!showBefore && phys.mode==='inelastic' && S.prediction==='A'){
       const real=setAft[0];
       let x=cx+real.v*Scale*(S.progress-1);
       x=Math.max(44+discR(real.m), Math.min(w-44-discR(real.m), x));
       const alpha=Math.max(0, Math.min(0.8,(1.85-S.progress)/0.5));
-      if(alpha>0.02) drawGhost(ctx,x,midY,(S.m1+S.m2),alpha,w);
+      if(alpha>0.02 && !hideOutput) drawGhost(ctx,x,midY,(S.m1+S.m2),alpha,w);
     }
   }
   ctx.textAlign='left'; ctx.fillStyle='#475569'; ctx.font='11px Inter, sans-serif';
@@ -1087,8 +1095,10 @@ function drawScene(canvas, ctx, phys, vb, fname){
     ctx.textAlign='center'; ctx.textBaseline='top';
     ctx.fillStyle='#f87171'; ctx.font='bold 16px Inter, sans-serif';
     ctx.fillText('✕ Decay forbidden', cx, 52);
-    ctx.fillStyle='#fca5a5'; ctx.font='13px ui-monospace, monospace';
-    ctx.fillText('M = '+S.Mparent.toFixed(2)+'  <  m_A + m_B = '+(S.m1+S.m2).toFixed(2), cx, 74);
+    if(!hideOutput){
+      ctx.fillStyle='#fca5a5'; ctx.font='13px ui-monospace, monospace';
+      ctx.fillText('M = '+S.Mparent.toFixed(2)+'  <  m_A + m_B = '+(S.m1+S.m2).toFixed(2), cx, 74);
+    }
     ctx.restore();
   }
   ctx.fillText(
@@ -1114,6 +1124,11 @@ function buildTable(beforeB, afterB, phys){
       +`<td>${b.m.toFixed(2)}</td>`
       +`<td>${fmtNum(b.E)}</td><td>${fmtNum(b.p)}</td></tr>`;
   }).join('');
+  const rowsAfter=list=>list.map(b=>{
+    return `<tr><td class="nm" style="color:${b.color}">${b.name}</td>`
+      +`<td>${hideOutput?'':b.m.toFixed(2)}</td>`
+      +`<td>${hideOutput?'':fmtNum(b.E)}</td><td>${hideOutput?'':fmtNum(b.p)}</td></tr>`;
+  }).join('');
   if(phys && phys.mode==='decay' && phys.valid===false){
     return `<table class="fm-table">
       <thead><tr><th></th><th>m</th><th>E</th><th>p</th></tr></thead>
@@ -1131,8 +1146,8 @@ function buildTable(beforeB, afterB, phys){
     <tbody>
       <tr class="sec"><td colspan="4">Before</td></tr>${rows(beforeB)}
       <tr class="tot"><td>Σ</td><td>${MB.toFixed(2)}</td><td>${fmtNum(EB)}</td><td>${fmtNum(PB)}</td></tr>
-      <tr class="sec"><td colspan="4">After</td></tr>${rows(afterB)}
-      <tr class="tot"><td>Σ</td><td>${MA.toFixed(2)}</td><td>${fmtNum(EA)}</td><td>${fmtNum(PA)}</td></tr>
+      <tr class="sec"><td colspan="4">After</td></tr>${rowsAfter(afterB)}
+      <tr class="tot"><td>Σ</td><td>${hideOutput?'':MA.toFixed(2)}</td><td>${hideOutput?'':fmtNum(EA)}</td><td>${hideOutput?'':fmtNum(PA)}</td></tr>
     </tbody></table>
     <div class="cons ${ok?'ok':'bad'}">${ok?'✓ ΣE and Σp conserved (before = after)':'⚠ not allowed in this configuration'}</div>
     <div class="units-note">m, E, p in arbitrary units (c = 1)</div>`;
@@ -1292,6 +1307,12 @@ document.querySelectorAll('#mode-seg .seg-btn').forEach(btn=>{
     replayCollision();
   });
 });
+
+(function(){
+  const el=document.getElementById('hide-output');
+  if(!el) return;
+  el.addEventListener('change',()=>{ hideOutput=el.checked; refresh(); });
+})();
 
 
 function clearPrediction(){

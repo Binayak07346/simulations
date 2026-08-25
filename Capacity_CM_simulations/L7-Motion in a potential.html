@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Motion in a Potential — Bound, Free, or Balanced on the Edge</title>
+<title>Motion in a Potential </title>
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
 <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
 <style>
@@ -438,6 +438,8 @@ body.light-theme .predict-eval .answer,body.light-theme .predict-eval strong,htm
      - [dom] fate emoji "🔵" — #fate-bound, ~L545
      - [dom] fate emoji "🔴" — #fate-esc, ~L547
      - [dom] scale icon "⚖" — #btn-edge Snap, ~L549
+     - [canvas] "v = 0" turning-point labels — tpDot() in drawHero, ~L1171
+     - [canvas] "start" text + triangle marker — start marker in drawHero, ~L1180
 -->
 <script>
 /* Hide Text toggle — empty registry; hides .ht-hide DOM nodes and gates HT() canvas labels. */
@@ -1130,7 +1132,7 @@ function drawHero(){
     cx.setLineDash([4,4]); cx.strokeStyle='#f59e0b'; cx.lineWidth=1.4;
     cx.beginPath(); cx.moveTo(geo.L,yB); cx.lineTo(xw(0.1),yB); cx.stroke(); cx.setLineDash([]);
     cx.font='12px Inter,sans-serif'; cx.fillStyle='#fbbf24'; cx.textAlign='left'; cx.textBaseline='top';
-    fillSub(cx,'barrier V_b = '+Vb().toFixed(3)+' J', geo.L+6, yB+5);
+    fillSub(cx, HT() ? 'V_b' : ('barrier V_b = '+Vb().toFixed(3)+' J'), geo.L+6, yB+5);
   }
 
   // equilibrium markers (Hide Text: both dots + labels; text also gated behind hasPlayed)
@@ -1163,26 +1165,30 @@ function drawHero(){
   cx.fillStyle='#22d3ee'; cx.textAlign='right'; cx.font='bold 12px Inter,sans-serif';
   cx.fillText('E',geo.R-36,yE-9<geo.T+8?yE+10:yE-9);
 
-  // turning points (v = 0 where V = E)
+  // turning points (v = 0 where V = E) — dots stay; labels gated by Hide Text
   function tpDot(x,side){
     const X=xw(x), Y=yw(E);
     cx.fillStyle='#f8fafc'; cx.beginPath(); cx.arc(X,Y,3.5,0,6.2832); cx.fill();
-    cx.font='12px Inter,sans-serif'; cx.fillStyle='#cbd5e1'; cx.textBaseline='bottom'; cx.textAlign='left';
-    const lab='v = 0', w0=cx.measureText(lab).width;
-    const lx=clamp(side<0?X-8-w0:X+8, geo.L+2, geo.R-w0-2);
-    cx.fillText(lab,lx,Y-5);
+    if(!HT()){
+      cx.font='12px Inter,sans-serif'; cx.fillStyle='#cbd5e1'; cx.textBaseline='bottom'; cx.textAlign='left';
+      const lab='v = 0', w0=cx.measureText(lab).width;
+      const lx=clamp(side<0?X-8-w0:X+8, geo.L+2, geo.R-w0-2);
+      cx.fillText(lab,lx,Y-5);
+    }
   }
   if(E>Vmn()+1e-12){
     tpDot(tp.xR,+1);
     if(tp.xL!=null && !tp.edge) tpDot(tp.xL,-1);
   }
 
-  // start marker
-  const sX=xw(B.start), sY=yw(V(B.start))-16;
-  cx.fillStyle='#94a3b8';
-  cx.beginPath(); cx.moveTo(sX-6,sY-6); cx.lineTo(sX+6,sY-6); cx.lineTo(sX,sY+2); cx.closePath(); cx.fill();
-  cx.font='12px Inter,sans-serif'; cx.textAlign='center'; cx.textBaseline='bottom';
-  cx.fillText('start',clamp(sX,geo.L+18,geo.R-18),sY-9);
+  // start marker — Hide Text gates label + triangle (user-requested)
+  if(!HT()){
+    const sX=xw(B.start), sY=yw(V(B.start))-16;
+    cx.fillStyle='#94a3b8';
+    cx.beginPath(); cx.moveTo(sX-6,sY-6); cx.lineTo(sX+6,sY-6); cx.lineTo(sX,sY+2); cx.closePath(); cx.fill();
+    cx.font='12px Inter,sans-serif'; cx.textAlign='center'; cx.textBaseline='bottom';
+    cx.fillText('start',clamp(sX,geo.L+18,geo.R-18),sY-9);
+  }
 
   // trail (dot spacing ∝ speed)
   const nT=B.trail.length;
@@ -1339,8 +1345,7 @@ function drawMap(){
 const roE=q('#ro-E');
 function updateHeader(){
   const E=Eeff(); let t='E = '+E.toFixed(3)+' J';
-  if(P.edgeExact) t+=' (= V<sub>b</sub>)';
-  else if(P.E<Vmn()-1e-9) t+=' (floor V<sub>min</sub>)';
+  if(!P.edgeExact && P.E<Vmn()-1e-9) t+=' (floor V<sub>min</sub>)';
   roE.innerHTML=t;
 }
 function updateMeas(){
