@@ -135,11 +135,25 @@ Draft the spine as a TABLE before writing any HTML — one row per card:
 7. **RESOLVE + EXTEND** — the takeaway stated once, the historical anchor (who/when),
    and ONE open question that hands off to free exploration (pairs with `onComplete`).
 
-Hard rules: **4–6 cards — the MINIMUM that covers the LO.** Reach that minimum by fusing
-beats: orient merges into the first ground card, and each predict card's ANSWER is its own
-observe — the correct/wrong feedback names what to watch, and (where the sim exposes a
-setter) the answer itself triggers the reveal via the handler's `data-build` hook, so no
-separate observe card is needed. **One new idea per card.** Predict-before-reveal, no
+### Card count is DERIVED, not chosen (hard ceiling: 6)
+Before drafting cards, derive the exact count the content flow needs — no fixed target:
+1. List the concepts the LO requires a student to COMMIT to (each → one gated card).
+2. Add one orient/ground card ONLY if the first commitment card can't carry the
+   orientation in a sentence; merge otherwise.
+3. Resolve/extend rides the final card's post-answer reveal (`.inq-after`) — never its
+   own card unless it introduces a new commitment.
+4. The derived count IS the card count. Beyond 6 the inquiry starts feeling lengthy —
+   6 is a HARD MAX: if the derivation exceeds it, merge the two most-related concepts
+   or move the least load-bearing one into a post-answer reveal / free exploration.
+   A thin sim may legitimately need only 3–4 — do not pad to reach a number.
+State the derivation (concepts → count) in the report.
+
+Fuse beats to keep the count honest: orient merges into the first ground card, and each
+predict card's ANSWER is its own observe — the correct/wrong feedback names what to
+watch, and (where the sim exposes a setter) the answer itself triggers the reveal via
+the handler's `data-build` hook, so no separate observe card is needed. A pure observe
+card is justified only when a reveal needs watching BEFORE the next question makes
+sense and the feedback line can't carry it. **One new idea per card.** Predict-before-reveal, no
 forward references, no standing-misconception text. Every card's prose must be TRUE OF THE
 SCREEN at that step — each claim checkable against the `onStep` state in the same row.
 Every action names its control/readout in **bold**, matching the on-screen label exactly.
@@ -154,9 +168,11 @@ Settle the spine with independent brains before implementing; this is where qual
 1. **Independent designer**: spawn a general-purpose agent with the fact sheet (Step 1)
    + the beats rubric above — NOT your draft — and ask for its best spine table.
    Prompt skeleton: *"You are a physics-education designer. Here is a sim's fact sheet:
-   [controls / scenes / physics spine / LO / misconceptions]. Design a 5–8 card
-   guided-inquiry spine as a table [columns as above] following these beats: [rubric].
-   Return only the table + one paragraph of rationale."*
+   [controls / scenes / physics spine / LO / misconceptions]. Derive the exact number of
+   cards this content flow needs (one gated card per concept requiring commitment; hard
+   max 6 — merge or demote to post-answer reveals if over) and design that spine as a
+   table [columns as above] following these beats + word budgets: [rubric]. State your
+   count derivation, return the table + one paragraph of rationale."*
 2. **Merge**: take the better ordering, the sharper predict questions, the more plausible
    distractors from either draft.
 3. **Adversarial pedagogy critic**: spawn a second agent with the MERGED spine + rubric:
@@ -289,10 +305,10 @@ company upstream; one commit per sim or one per batch as the user prefers.
 - [ ] Classification stated with evidence BEFORE editing; C-state sims left unrebuilt.
 - [ ] Spine passed the designer-merge-critic loop (or explicit self-passes); LO and every
       course-context inquiry affordance covered by a specific card.
-- [ ] 4–6 cards (the minimum covering the LO), dependency-ordered, one idea each; word
-      budgets respected (prose ≤ 45, labels ≤ 10, fb ≤ 25); most cards gated predicts
-      with misconception distractors; correct position varies; predict+observe fused via
-      feedback / `data-build`.
+- [ ] Card count DERIVED from the concept list (stated in the report), never more than 6,
+      never padded; dependency-ordered, one idea each; word budgets respected (prose ≤ 45,
+      labels ≤ 10, fb ≤ 25); gated predicts carry misconception distractors; correct
+      position varies; predict+observe fused via feedback / `data-build`.
 - [ ] Existing good card content recycled, not discarded; existing broken choices rebuilt;
       sim-side predict/inquiry widgets folded in and REMOVED (markup + JS + CSS, no
       dangling refs).
