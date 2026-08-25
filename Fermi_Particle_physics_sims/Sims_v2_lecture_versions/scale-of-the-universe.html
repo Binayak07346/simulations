@@ -373,7 +373,7 @@ body.light-theme .predict-eval .answer,body.light-theme .predict-eval strong,htm
       <button id="shell-theme" class="shell-btn" title="Toggle light / dark theme">☾</button>
       <button id="shell-lecture" class="shell-btn" title="Lecture display mode — hide the guided inquiry, show the full simulation">🎓 Lecture</button>
       <label id="ht-ctl" class="shell-btn" title="Hide Text — hides registered labels/readouts; registry is empty until items are added">
-        <input type="checkbox" id="ht-toggle"> Hide Text
+        <input type="checkbox" id="ht-toggle" checked> Hide Text
       </label>
     </div>
     <div class="shell-controls"><a id="shell-refine" class="shell-btn" style="display:none" target="_blank" rel="noopener" title="Refine this simulation (dev only)">✎ Refine</a>
@@ -398,7 +398,8 @@ body.light-theme .predict-eval .answer,body.light-theme .predict-eval strong,htm
      DOM items:    add class "ht-hide" to the element.
      Canvas items: wrap the draw call in  if(!HT()){ ... }
      Keep this list current when registering items:
-     (empty — nothing registered yet)
+     - [dom] "E_min is the smallest energy that can resolve d … target's rest frame." — ruler panel p.sim-note, ~L498
+     NOTE: default flipped — Hide Text boots CHECKED in this sim (curriculum request).
 -->
 <script>
 /* Hide Text toggle — empty registry; hides .ht-hide DOM nodes and gates HT() canvas labels. */
@@ -412,11 +413,13 @@ body.light-theme .predict-eval .answer,body.light-theme .predict-eval strong,htm
     window.dispatchEvent(new Event('resize')); /* forces a redraw via the shell's refit path, even while paused */
   }
   box.addEventListener('change', apply);
-  /* Default: follow lecture mode at boot. Inert in the PP sims (they boot into the
-     guided inquiry, so the class is absent and the box starts unchecked — correct). */
+  /* Curriculum default for this sim: registered text hidden at boot. The checkbox
+     ships with the `checked` attribute; apply synchronously so the default holds
+     even in background tabs where rAF/load callbacks are throttled. */
+  apply();
   window.addEventListener('load', function(){
     requestAnimationFrame(function(){ requestAnimationFrame(function(){
-      box.checked = shell.classList.contains('lecture-mode');
+      box.checked = true;
       apply();
     });});
   });
@@ -495,7 +498,7 @@ body.light-theme .predict-eval .answer,body.light-theme .predict-eval strong,htm
             <button class="sim-btn" id="sim-bigger" type="button">◀ bigger</button>
             <button class="sim-btn" id="sim-smaller" type="button">smaller ▶</button>
           </div>
-          <p class="sim-note"><b>E<sub>min</sub> is the smallest energy that can resolve d</b>, for a massless (photon-equivalent) probe: E<sub>min</sub> = pc. A matter probe of the same wavelength carries the same momentum but a different kinetic energy. Energies are quoted in the target's rest frame.</p>
+          <p class="sim-note ht-hide"><b>E<sub>min</sub> is the smallest energy that can resolve d</b>, for a massless (photon-equivalent) probe: E<sub>min</sub> = pc. A matter probe of the same wavelength carries the same momentum but a different kinetic energy. Energies are quoted in the target's rest frame.</p>
         </div>
       </div>
 
