@@ -310,14 +310,6 @@ body.light-theme .predict-eval .answer,body.light-theme .predict-eval strong,htm
 .sim-btn:hover{ border-color:var(--accent); }
 .sim-btn:active{ transform:translateY(1px); }
 .sim-dot{ width:10px; height:10px; border-radius:50%; flex:0 0 auto; }
-.sim-predict{ margin-top:12px; padding-top:10px; border-top:1px dashed var(--border); display:flex; flex-direction:column; gap:7px; min-width:0; }
-.sim-q{ font-size:14px; font-weight:600; color:var(--text); line-height:1.35; overflow-wrap:anywhere; }
-.sim-chiprow{ display:flex; gap:6px; flex-wrap:wrap; }
-.sim-chip{ border:1.5px solid var(--border); background:transparent; color:var(--text); border-radius:999px; padding:4px 11px; font-size:14px; cursor:pointer; }
-.sim-chip:hover{ border-color:var(--accent); }
-.sim-chip.sim-on{ border-color:var(--accent); color:var(--accent); font-weight:700; }
-.sim-fb{ display:none; font-size:14px; line-height:1.45; padding:7px 9px; border-radius:8px; border:1px solid var(--border); border-left:3px solid var(--accent); color:var(--text); overflow-wrap:anywhere; min-width:100px; }
-.sim-fb.sim-fb-on{ display:block; }
 .sim-table{ width:100%; border-collapse:collapse; font-size:14px; color:var(--muted); }
 .sim-table td{ padding:5px 2px; border-bottom:1px dashed var(--border); }
 .sim-table tr:last-child td{ border-bottom:none; }
@@ -332,16 +324,17 @@ body.light-theme .predict-eval .answer,body.light-theme .predict-eval strong,htm
 .sim-pad{ padding:12px; }
 .sim-defs{ font-size:13px; line-height:1.5; color:var(--muted); margin:2px 0 8px; }
 .sim-defs b{ color:var(--text); font-weight:700; }
-.sim-predict-top{ margin-top:0; padding-top:0; border-top:none; }
-.sim-fb-commit{ font-weight:700; color:var(--text); }
-.sim-fb-hint{ margin-top:5px; color:var(--muted); }
-.sim-fb-verdict{ margin-top:6px; padding-top:6px; border-top:1px solid var(--border); }
 .sim-warn{ color:var(--warn); }
 .sim-units{ margin-top:8px; font-size:13px; line-height:1.5; }
 .inq-step h4{margin:0 0 8px;font-size:14px;font-weight:600;color:var(--text);}
 .inq-step p{margin:0 0 12px;font-size:14px;line-height:1.55;color:var(--muted);}
 .inq-step .predict-eval{display:none;}
 .inq-step .predict-eval.show{display:block;}
+.inq-step .inq-after{display:none;}
+.inq-step[data-answered] .inq-after{display:block;}
+.inq-pager{display:flex;align-items:center;gap:8px;}
+.inq-pager-btn{min-width:36px;padding:6px 11px;justify-content:center;font-size:13px;line-height:1;}
+#inq-next{margin-left:auto;}
 </style>
 </head>
 <body>
@@ -361,13 +354,13 @@ body.light-theme .predict-eval .answer,body.light-theme .predict-eval strong,htm
   <dt>Serves</dt>
   <dd>Introductory particle physics / QFT: the spontaneous-symmetry-breaking unit, immediately before gauging the symmetry (Higgs mechanism). Also useful in condensed matter for superfluid phase modes.</dd>
   <dt>Inquiry</dt>
-  <dd>The scene opens paused with the field at rest in the valley. Students commit to a prediction about a push along the vacuum ring, then press Play / Ring push to test it — nothing is disabled, the reveal is simply withheld until the push has been watched. The radial-slice strip is the operational check: during a Goldstone coast the slice dot sits still (V never changes) while the 3-D ball circulates; during a radial kick the dot climbs the well walls. A second prompt asks which quantity survives a μ² sweep, and only then are the vacuum/mode numbers displayed.</dd>
+  <dd>A five-card guided inquiry drives the scene: symmetric bowl → gated hilltop prediction (the stage pauses, the answer releases it) → the massive radial kick → gated ring-push prediction (the answer fires the push) → gated μ²-sweep question that unmasks the mass table. The radial-slice strip is the operational check: during a Goldstone coast the slice dot sits still (V never changes) while the 3-D ball circulates; during a radial kick the dot climbs the well walls. Nothing is disabled — the reveals are withheld, not the controls.</dd>
   <dt>Misconception</dt>
-  <dd>"Anything displaced oscillates back." A restoring force requires curvature of V; along a symmetry direction the potential is exactly flat, so the mode has zero frequency and zero mass. The misconception is encoded in the "springs back" prediction chip; choosing it draws a dashed ghost marker that reverses at the push point while the real ball coasts straight past it.</dd>
+  <dd>"Anything displaced oscillates back." A restoring force requires curvature of V; along a symmetry direction the potential is exactly flat, so the mode has zero frequency and zero mass. The misconception is encoded in the "springs back" choice of the ring-push prediction card; choosing it draws a dashed ghost marker that reverses at the push point while the real ball coasts straight past it.</dd>
 </dl>
         <table class="shell-info-table">
   <tr><th>Principle</th><th>Where it lives here</th></tr>
-  <tr><td>Predict before reveal (order + pause, never disabling)</td><td>The stage opens paused with the prediction chips above the kick buttons; Play and every control stay live from the first frame.</td></tr>
+  <tr><td>Predict before reveal (order + pause, never disabling)</td><td>The gated inquiry cards pause the stage for each commitment and the answer itself triggers the reveal; Play and every control stay live from the first frame.</td></tr>
   <tr><td>Misconception targeted structurally</td><td>The "springs back" chip spawns a dashed ghost that oscillates back while the real field coasts on — the rebuttal is drawn, not asserted.</td></tr>
   <tr><td>Invariant made visible</td><td>Fixed V axes in both views: sweeping μ² visibly moves the depth, |φ|min and the radial m², while the ring m² row stays pinned at 0.</td></tr>
   <tr><td>Operational, not vibes</td><td>|φ|min, V_min, V″ and the period 2π/m reproduce the engine values exactly; the fixed-scale slice shows V constant during the Goldstone coast.</td></tr>
@@ -382,6 +375,7 @@ body.light-theme .predict-eval .answer,body.light-theme .predict-eval strong,htm
     <div class="shell-group">
       <button id="shell-info" class="shell-btn" title="About this simulation">ⓘ Info</button>
       <button id="shell-theme" class="shell-btn" title="Toggle light / dark theme">☾</button>
+      <button id="shell-lecture" class="shell-btn" title="Lecture display mode — hide the guided inquiry, show the full simulation">🎓 Lecture</button>
     </div>
     <div class="shell-controls"><a id="shell-refine" class="shell-btn" style="display:none" target="_blank" rel="noopener" title="Refine this simulation (dev only)">✎ Refine</a>
       <div class="shell-group">
@@ -412,32 +406,50 @@ body.light-theme .predict-eval .answer,body.light-theme .predict-eval strong,htm
     <div id="aside-inquiry" class="aside-zone">
       <div class="aside-zone-head">
         <h3>Guided Inquiry</h3>
-        <button id="aside-inquiry-skip" class="shell-btn aside-skip" title="Skip the guided inquiry">Skip ✕</button>
       </div>
       <div id="inq-dots" class="inq-dots"></div>
       <div id="inq-cards" class="aside-zone-body">
         <div class="inq-step" data-step="0">
-  <h4>1 · Symmetric bowl</h4>
-  <p>μ² &gt; 0: one vacuum at φ = 0. Every direction oscillates alike.</p>
+  <h4>1 · A symmetric vacuum</h4>
+  <p>Height is V(φ); the red ball is the field φ(t). With <strong>μ²</strong> = +1 there is one vacuum, φ = 0 — displaced, the ball just falls back and oscillates. Drag to orbit: every direction looks alike.</p>
 </div>
-<div class="inq-step" data-step="1">
-  <h4>2 · μ² goes negative</h4>
-  <p>The center turns hilltop. The field must pick a vacuum: symmetry breaks.</p>
+<div class="inq-step" data-step="1" data-gate data-reveal="play">
+  <h4>2 · Predict: μ² goes negative</h4>
+  <p>Now <strong>μ²</strong> = −2.00: the origin has become a hilltop, and the field sits balanced exactly there — paused. When time runs, it will…</p>
+  <button class="choice" data-fb="It is an equilibrium — but a maximum: curvature 2μ² &lt; 0, so the tiniest seed grows. Watch it accelerate away.">stay at φ = 0 — still an equilibrium</button>
+  <button class="choice" data-fb="Oscillation needs positive curvature; at the origin V now curves downward, so displacement grows instead of restoring.">oscillate gently about φ = 0</button>
+  <button class="choice" data-correct data-fb="φ = 0 is unstable — it rolls into the valley; which azimuth it took was an accident. The symmetry broke spontaneously.">roll off toward the ring of minima</button>
+  <div class="predict-eval"></div>
 </div>
 <div class="inq-step" data-step="2">
-  <h4>3 · Kick across the valley</h4>
-  <p>Radial curvature pushes back. Oscillation means a massive mode, m² = −4μ².</p>
+  <h4>3 · Across the valley: massive</h4>
+  <p>The field got a kick across the valley. Watch the bottom strip: the slice dot climbs both walls. Curvature pushes back — this oscillation is the massive radial mode, m² = V″ = −4μ² = 8.</p>
 </div>
-<div class="inq-step" data-step="3">
-  <h4>4 · Push along the ring</h4>
-  <p>Predict first, then push. Flat direction: no force, massless Goldstone.</p>
+<div class="inq-step" data-step="3" data-gate data-reveal="ring">
+  <h4>4 · Predict: push along the ring</h4>
+  <p>The field rests in the valley at |φ| = 1.00. Your answer fires the green <strong>Ring push</strong> — along the valley floor. The ball will…</p>
+  <button class="choice" data-ans="0" data-fb="Watch the dashed ghost do that while the real ball coasts past it: V is flat along the ring — no restoring force.">spring back and oscillate</button>
+  <button class="choice" data-correct data-ans="1" data-fb="The slice dot never climbs — V is constant along the ring: no force, m² = 0. The massless Goldstone mode.">coast round the valley freely</button>
+  <button class="choice" data-ans="2" data-fb="The slice dot stays on the valley floor — |φ| holds at 1.00; only the phase advances, and V ignores the phase.">spiral down and fall inward</button>
+  <div class="predict-eval"></div>
 </div>
-<div class="inq-step" data-step="4">
-  <h4>5 · The invariant</h4>
-  <p>Slide μ². Depth, radius, radial m² all change; ring m² stays 0.</p>
+<div class="inq-step" data-step="4" data-gate data-reveal="meter">
+  <h4>5 · What survives a μ² sweep?</h4>
+  <p>Every μ² &lt; 0 digs some valley. Your answer unmasks the mass table — then sweep <strong>μ²</strong> from −2 to −0.2. Which row will not move?</p>
+  <button class="choice" data-correct data-fb="Sweep and watch: |φ|min = √(−μ²/2) and radial m² = −4μ² both move; ring m² is pinned at 0.">ring mode m² (Goldstone)</button>
+  <button class="choice" data-fb="Radial m² = −4μ² tracks the sweep directly — the row frozen at 0 is the ring mode.">radial mode m²</button>
+  <button class="choice" data-fb="|φ|min = √(−μ²/2) shrinks toward 0 as μ² → 0 — the frozen row is ring m² = 0.">vacuum radius |φ|min</button>
+  <div class="predict-eval"></div>
+  <p class="inq-after">One massless Goldstone mode per broken continuous symmetry (Goldstone, 1961) — the same algebra gives superfluids their gapless sound mode. Gauge the U(1) and this flat direction is eaten: the Higgs mechanism. Explore: add damping <strong>γ</strong>, click the surface to place φ.</p>
 </div>
       </div>
-      <div class="inq-nav"><button id="inq-next" class="shell-btn primary">Next →</button></div>
+      <div class="inq-nav">
+        <div class="inq-pager">
+          <button id="inq-prev" class="shell-btn primary inq-pager-btn" title="Previous step" aria-label="Previous step" disabled>&lt;</button>
+          <button id="inq-pager-next" class="shell-btn primary inq-pager-btn" title="Next step" aria-label="Next step">&gt;</button>
+        </div>
+        <button id="inq-next" class="shell-btn primary">Next →</button>
+      </div>
     </div>
     <button id="aside-inquiry-restore" class="aside-restore" title="Revisit the guided inquiry">▸ Guided inquiry</button>
     <div id="aside-controls" class="aside-zone">
@@ -461,15 +473,6 @@ body.light-theme .predict-eval .answer,body.light-theme .predict-eval strong,htm
 
       <div class="shell-panel"><div class="sim-pad">
         <div class="sim-ptitle">Excite the field</div>
-        <div class="sim-predict sim-predict-top">
-          <div class="sim-q">Predict first — pushed <em>along</em> the ring (green arrow), the ball…</div>
-          <div class="sim-chiprow">
-            <button type="button" class="sim-chip" id="sim-p0">springs back</button>
-            <button type="button" class="sim-chip" id="sim-p1">coasts freely</button>
-            <button type="button" class="sim-chip" id="sim-p2">falls inward</button>
-          </div>
-          <div class="sim-fb" id="sim-predict-fb"></div>
-        </div>
         <div class="sim-btnrow">
           <button type="button" class="sim-btn" id="sim-kick-t"><span class="sim-dot" style="background:#2fd07f"></span>Ring push</button>
           <button type="button" class="sim-btn" id="sim-kick-r"><span class="sim-dot" style="background:#ff9430"></span>Radial kick</button>
@@ -483,15 +486,6 @@ body.light-theme .predict-eval .answer,body.light-theme .predict-eval strong,htm
 
       <div class="shell-panel"><div class="sim-pad">
         <div class="sim-ptitle">Vacuum and mode masses</div>
-        <div class="sim-predict sim-predict-top">
-          <div class="sim-q">Sweep μ² across the broken side (−2 … −0.2). Which quantity does <em>not</em> change?</div>
-          <div class="sim-chiprow">
-            <button type="button" class="sim-chip" id="sim-q2-0">vacuum radius |φ|min</button>
-            <button type="button" class="sim-chip" id="sim-q2-1">radial m²</button>
-            <button type="button" class="sim-chip" id="sim-q2-2">ring m²</button>
-          </div>
-          <div class="sim-fb" id="sim-q2-fb"></div>
-        </div>
         <table class="sim-table">
           <tr><td id="sim-lab-v">vacuum radius |φ|min</td><td id="sim-ro-v">—</td></tr>
           <tr><td>V at minimum <span class="sim-dim">(rel. to V(0) = 0)</span></td><td id="sim-ro-vmin">—</td></tr>
@@ -558,6 +552,16 @@ const Shell = (function(){
     root.classList.toggle('inquiry-collapsed', on);
     requestAnimationFrame(refit);
   }
+  // Lecture display mode: ON = the post-completion free-exploration state
+  // (finishInquiry fast-forwards, runs onComplete, collapses, resumes play);
+  // OFF (second click or the restore chip) = reopen the inquiry at card 1.
+  function setLectureMode(on){
+    root.classList.toggle('lecture-mode', on);
+    const b=document.getElementById('shell-lecture');
+    if(b) b.classList.toggle('active', on);
+    if(on){ finishInquiry(); }
+    else { setInquiryCollapsed(false); if(inqCards().length) inqShow(0); }
+  }
 
   // ---- Guided-inquiry stepper (shell-owned, so Next/Finish are always wired) ----
   // The SIM supplies sequential <div class="inq-step"> cards in #inq-cards. The
@@ -581,8 +585,23 @@ const Shell = (function(){
       next.disabled = gated;
       next.textContent = (inqStep>=cards.length-1) ? 'Finish' : 'Next →';
     }
+    inqUpdatePager();
     onStep(inqStep);
     requestAnimationFrame(refit);
+  }
+  function inqUpdatePager(){
+    const cards=inqCards();
+    const prev=document.getElementById('inq-prev');
+    const pnext=document.getElementById('inq-pager-next');
+    if(prev) prev.disabled = inqStep<=0;
+    if(pnext) pnext.disabled = inqStep>=cards.length-1;
+  }
+  function inqPrev(){
+    if(inqStep>0) inqShow(inqStep-1);
+  }
+  function inqPagerNext(){
+    const cards=inqCards();
+    if(inqStep<cards.length-1) inqShow(inqStep+1);
   }
   function inqNext(){
     const cards=inqCards();
@@ -619,7 +638,6 @@ const Shell = (function(){
     const reset=document.getElementById('shell-reset');
     const spd=document.getElementById('shell-speed');
     const maxBtn=document.getElementById('shell-maximize');
-    const skip=document.getElementById('aside-inquiry-skip');
     const restore=document.getElementById('aside-inquiry-restore');
     const tFormal=document.getElementById('toggle-formal');
 
@@ -652,12 +670,17 @@ const Shell = (function(){
       else if(root.classList.contains('shell-max')) setMaximized(false);
     });
 
-    // Skip ✕ jumps to the completed state (all controls live); restore reopens it.
-    if(skip) skip.addEventListener('click',finishInquiry);
-    if(restore) restore.addEventListener('click',()=>setInquiryCollapsed(false));
+    // 🎓 Lecture jumps to the completed state (all controls live); restore reopens at card 1.
+    const lecture=document.getElementById('shell-lecture');
+    if(lecture) lecture.addEventListener('click',()=>setLectureMode(!root.classList.contains('lecture-mode')));
+    if(restore) restore.addEventListener('click',()=>setLectureMode(false));
     // Next / Finish — shell-driven step advance (Finish collapses the inquiry).
     const inqNextBtn=document.getElementById('inq-next');
     if(inqNextBtn) inqNextBtn.addEventListener('click',inqNext);
+    const inqPrevBtn=document.getElementById('inq-prev');
+    if(inqPrevBtn) inqPrevBtn.addEventListener('click',inqPrev);
+    const inqPagerNextBtn=document.getElementById('inq-pager-next');
+    if(inqPagerNextBtn) inqPagerNextBtn.addEventListener('click',inqPagerNext);
     // Auto-gate: a .choice click inside the active gated card enables Next.
     const cardsHost=document.getElementById('inq-cards');
     if(cardsHost) cardsHost.addEventListener('click',e=>{
@@ -685,15 +708,25 @@ const Shell = (function(){
     init(opts){
       onFrame=opts.onFrame||onFrame; onReset=opts.onReset||onReset; onResize=opts.onResize||onResize; onStep=opts.onStep||onStep; onComplete=opts.onComplete||onComplete;
       wire();
-      // Guided inquiry is retired from the sidebar: hide the whole zone + restore bar,
-      // and open the sim directly in its COMPLETED state (as if the student had finished
-      // the inquiry) — every control live, every staged panel revealed.
+      // Guided inquiry RE-ENABLED (was retired in the raw lecture export): build the
+      // step dots and open on card 1. Sims that ship no cards still fall back to the
+      // retired behaviour — zone hidden, sim opened in its completed state.
       const cards=inqCards();
       inqTotal=cards.length;
-      root.classList.add('no-inquiry');
-      onResize(); onReset();
-      if(inqTotal>0){ for(let k=0;k<cards.length;k++) onStep(k); inqStep=cards.length-1; }
-      onComplete();
+      if(inqTotal>0){
+        const dotsHost=document.getElementById('inq-dots');
+        if(dotsHost&&!dotsHost.children.length){
+          for(let k=0;k<inqTotal;k++){const d=document.createElement('div');d.className='inq-dot';dotsHost.appendChild(d);}
+        }
+        onResize(); onReset();
+        inqShow(0);
+      }else{
+        root.classList.add('no-inquiry');
+        const lb=document.getElementById('shell-lecture');
+        if(lb) lb.style.display='none';
+        onResize(); onReset();
+        onComplete();
+      }
       setPlaying(true);
       last=performance.now();
       if(!started){ started=true; requestAnimationFrame(loop); }
@@ -739,8 +772,6 @@ const el = {
   mu2: $id('sim-mu2'), mu2v: $id('sim-mu2-val'),
   fric: $id('sim-fric'), fricv: $id('sim-fric-val'), fricNote: $id('sim-fric-note'),
   phase: $id('sim-phase'), kr: $id('sim-kick-r'), kt: $id('sim-kick-t'),
-  chips: [$id('sim-p0'), $id('sim-p1'), $id('sim-p2')], fb: $id('sim-predict-fb'),
-  q2: [$id('sim-q2-0'), $id('sim-q2-1'), $id('sim-q2-2')], q2fb: $id('sim-q2-fb'),
   rov: $id('sim-ro-v'), rovm: $id('sim-ro-vmin'),
   romr: $id('sim-ro-mr'), romt: $id('sim-ro-mt'), roT: $id('sim-ro-T'),
   labv: $id('sim-lab-v'), labmr: $id('sim-lab-mr'), labmt: $id('sim-lab-mt'), labT: $id('sim-lab-T'),
@@ -752,8 +783,8 @@ const S = {
   mu2: -2, fric: 0, x: 1, y: 0, vx: 0, vy: 0,
   v: 1, Vmin: -1, m2r: 8, m2a: 0, broken: true,
   yaw: -2.25, dragging: false, moved: false, dragX: 0, dragY: 0, yaw0: 0,
-  trail: [], kfx: null, judge: -1, pred: null, q2: null,
-  metered: false, revealed: false, verdictHTML: '', kicked: false,
+  trail: [], kfx: null, judge: -1, pred: null,
+  metered: false, revealed: false, kicked: false,
   ghost: null, ghostPx: null, note: null, wall: 0
 };
 const VIEW = { ok: false, cx: 0, cy: 0, sxy: 1, TILT: 0.3, zs: 1, cA: 1, sA: 0 };
@@ -822,7 +853,7 @@ function syncUI() {
     el.labT.textContent = 'period 2π/m';
     el.roT.textContent = (m && S.m2r > 1e-6) ? fmt(TWO_PI / Math.sqrt(S.m2r), 2) : '—';
   }
-  el.noteInv.style.display = (S.revealed || S.metered) ? '' : 'none';
+  el.noteInv.style.display = S.metered ? '' : 'none';
 
   const damped = S.fric > 0.001;
   el.fricNote.textContent = damped
@@ -1269,28 +1300,9 @@ function drawStrip(P, y0, h, compact) {
 }
 
 /* ---------- prediction / kicks ---------- */
-const PRED_NAMES = ['springs back', 'coasts freely', 'falls inward'];
-function chipsClear() { el.chips.forEach(c => c.classList.remove('sim-on')); }
-function renderFb() {
-  let html = '';
-  if (S.pred != null) html += '<div class="sim-fb-commit">Your prediction: ' + PRED_NAMES[S.pred] + ' · tap another chip to change</div>';
-  if (S.pred != null && !S.verdictHTML) html += '<div class="sim-fb-hint">Now press <b>Ring push</b> and watch the slice dot at the bottom.</div>';
-  if (S.verdictHTML) html += '<div class="sim-fb-verdict">' + S.verdictHTML + '</div>';
-  if (!html) { el.fb.className = 'sim-fb'; el.fb.innerHTML = ''; return; }
-  el.fb.className = 'sim-fb sim-fb-on'; el.fb.innerHTML = html;
-}
-function verdict() {
-  S.revealed = true;
-  let core;
-  if (S.pred === 0) core = 'Compare the two views: the ball travelled a long way round the valley, yet the slice dot never climbed. Nothing can push back where V does not rise — the curvature along the ring, and so its m², is 0.';
-  else if (S.pred === 2) core = 'The slice dot stayed on the valley floor: |φ| never changed. Only the phase advanced, and V does not depend on the phase at all.';
-  else if (S.pred === 1) core = 'The slice dot held its height for the whole trip: V is unchanged along the ring, so there is no force and no restoring frequency — m² = 0 along the ring.';
-  else core = 'The slice dot held its height while the ball circled: V does not change along the ring, so there is no force along it — m² = 0 there.';
-  if (S.fric > 0.001) core += ' <span class="sim-warn">Note: the slow-down you can see is the damping γ = ' + fmt(S.fric, 2) + ' you dialled in — added by hand, not part of V. Set γ = 0 to watch the true, undamped coast.</span>';
-  core += ' <span class="sim-dim">Why? Answer in terms of V\u2019s shape: force = −dV/d(arc length), and along the ring that derivative is exactly zero.</span>';
-  S.verdictHTML = core;
-  renderFb(); syncUI();
-}
+/* Reveal after a ring push has been WATCHED (judge timer): the canvas mode
+   pills gain their m² values and the ring-m² readout row shows 0. */
+function verdict() { S.revealed = true; syncUI(); }
 function play() { try { Shell.setPlaying(true); } catch (e) {} }
 function kickRadial() {
   S.kicked = true;
@@ -1350,13 +1362,13 @@ function placeField(px, py) {
   draw();
 }
 
-/* ---------- guided-inquiry step states ---------- */
+/* ---------- guided-inquiry step states (one per card, self-contained) ---------- */
 const PRE = [
-  { mu2:  1, fric: 0, x: 0.85, y: 0,     vx: 0,    vy: 0    },
-  { mu2: -2, fric: 0, x: 0.03, y: 0.018, vx: 0,    vy: 0    },
-  { mu2: -2, fric: 0, x: 1.00, y: 0,     vx: 0.90, vy: 0    },
-  { mu2: -2, fric: 0, x: 1.04, y: 0,     vx: 0,    vy: 0.55 },
-  { mu2: -2, fric: 0, x: 1.00, y: 0,     vx: 0,    vy: 0    }   // load state: AT REST in the valley
+  { mu2:  1, fric: 0, x: 0.85, y: 0,     vx: 0,    vy: 0                 },  // 1 symmetric bowl, oscillates about 0
+  { mu2: -2, fric: 0, x: 0.03, y: 0.018, vx: 0,    vy: 0,   pause: true  },  // 2 balanced on the hilltop, PAUSED (predict)
+  { mu2: -2, fric: 0, x: 1.00, y: 0,     vx: 0.90, vy: 0                 },  // 3 radial kick — massive mode
+  { mu2: -2, fric: 0, x: 1.00, y: 0,     vx: 0,    vy: 0                 },  // 4 at rest in the valley (ring-push predict)
+  { mu2: -2, fric: 0, x: 1.00, y: 0,     vx: 0,    vy: 0                 }   // 5 at rest (mu2-sweep predict) + load state
 ];
 function applyPre(p) {
   setMu2(p.mu2);
@@ -1364,6 +1376,7 @@ function applyPre(p) {
   S.x = p.x; S.y = p.y; S.vx = p.vx; S.vy = p.vy;
   S.trail.length = 0; S.kfx = null; S.judge = -1;
   S.ghost = null; S.note = null; S.wall = 0; S.kicked = false;
+  try { Shell.setPlaying(!p.pause); } catch (e) {}
   syncUI();
 }
 
@@ -1384,10 +1397,18 @@ function onStep(i) {
   draw();
 }
 function onReset() {
-  applyPre(PRE[4]);
-  S.yaw = -2.25; S.pred = null; S.verdictHTML = '';
-  chipsClear(); renderFb();
+  // Replay the CURRENT card's scene (load state PRE[4] when no inquiry is active),
+  // so Reset never leaves the stage contradicting the card beside it.
+  let k = 4;
+  try { if (Shell.totalSteps > 0) k = Shell.step; } catch (e) {}
+  applyPre(PRE[Math.max(0, Math.min(PRE.length - 1, k))]);
+  S.yaw = -2.25; S.pred = null;
   draw();
+}
+function onComplete() {
+  // Free exploration: every reveal open — mass table unmasked, mode pills labelled.
+  S.metered = true; S.revealed = true;
+  syncUI(); draw();
 }
 function onResize() {
   const r = cv.getBoundingClientRect();
@@ -1405,21 +1426,6 @@ el.mu2.addEventListener('input', () => { setMu2(parseFloat(el.mu2.value), true);
 el.fric.addEventListener('input', () => { S.fric = parseFloat(el.fric.value); syncUI(); draw(); });
 el.kr.addEventListener('click', kickRadial);
 el.kt.addEventListener('click', kickRing);
-el.chips.forEach((c, i) => c.addEventListener('click', () => {
-  S.pred = i; chipsClear(); c.classList.add('sim-on');
-  renderFb();
-}));
-el.q2.forEach((c, i) => c.addEventListener('click', () => {
-  S.q2 = i;
-  el.q2.forEach(b => b.classList.remove('sim-on')); c.classList.add('sim-on');
-  S.metered = true; S.revealed = true;
-  el.q2fb.className = 'sim-fb sim-fb-on';
-  el.q2fb.innerHTML = (i === 2
-    ? 'You chose <b>ring m²</b>. Sweep μ² now with the table open: |φ|min = √(−μ²/2) and radial m² = −4μ² both move, while ring m² sits at 0 for every μ² &lt; 0.'
-    : 'Sweep μ² with the table open: |φ|min = √(−μ²/2) and radial m² = −4μ² <em>both</em> change with μ². The row that never moves is <b>ring m² = 0</b>.')
-    + ' <span class="sim-dim">Transfer: the same algebra runs a superfluid — winding the condensate\u2019s phase costs no energy, giving a gapless (sound-like) mode, while the amplitude mode is massive.</span>';
-  syncUI(); draw();
-}));
 cv.addEventListener('pointerdown', e => {
   S.dragging = true; S.moved = false; S.dragX = e.clientX; S.dragY = e.clientY; S.yaw0 = S.yaw;
   cv.style.cursor = 'grabbing';
@@ -1457,10 +1463,26 @@ buildMesh();
 applyPre(PRE[4]);
 onResize();
 requestAnimationFrame(() => onResize());
-Shell.init({ onFrame, onReset, onResize, onStep });
-/* Prediction-first by ORDER + PAUSE: the outcome-revealing motion starts paused.
-   Nothing is disabled — Play, both kicks and every slider are live from frame one. */
-Shell.setPlaying(false);
+/* ---------- guided-inquiry layer: choice feedback + data-reveal hooks ---------- */
+document.querySelectorAll('#inq-cards .inq-step').forEach(card => {
+  const evalBox = card.querySelector('.predict-eval');
+  card.querySelectorAll('.choice').forEach(ch => ch.addEventListener('click', () => {
+    if (card.dataset.answered) return; card.dataset.answered = '1';
+    const correct = ch.hasAttribute('data-correct');
+    card.querySelectorAll('.choice').forEach(c => { c.disabled = true;
+      if (c.hasAttribute('data-correct')) c.classList.add('correct');
+      else if (c === ch) c.classList.add('wrong'); else c.classList.add('dim'); });
+    if (evalBox) { evalBox.innerHTML = ch.dataset.fb || ''; evalBox.classList.add('show', correct ? 'correct' : 'wrong'); }
+    /* data-reveal — the commitment triggers the reveal via the sim's own setters */
+    const r = card.dataset.reveal;
+    if (r === 'play') { play(); }
+    else if (r === 'ring') { S.pred = parseInt(ch.dataset.ans, 10); kickRing(); }
+    else if (r === 'meter') { S.metered = true; S.revealed = true; syncUI(); draw(); }
+  }));
+});
+Shell.init({ onFrame, onReset, onResize, onStep, onComplete });
+/* Prediction-first now lives in the guided-inquiry cards: card 2 enters PAUSED
+   (hilltop predict) via its step spec; every control stays live from frame one. */
 draw();
 </script>
 <script>/* dev-only reviewer affordance: link this sim to the refinement studio.

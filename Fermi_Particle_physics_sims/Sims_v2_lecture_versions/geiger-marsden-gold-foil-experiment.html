@@ -214,8 +214,10 @@ body.light-theme .predict-eval .answer,body.light-theme .predict-eval strong,htm
 #inq-cards{flex:1 1 auto;min-height:0;}
 .inq-step{display:none;}
 .inq-step.active{display:block;}
-.inq-nav{display:flex;justify-content:flex-end;flex-shrink:0;}
-#inq-next{min-width:96px;justify-content:center;}
+.inq-nav{display:flex;justify-content:space-between;flex-shrink:0;}
+.inq-pager{display:flex;align-items:center;gap:8px;}
+.inq-pager-btn{min-width:36px;padding:6px 11px;justify-content:center;font-size:13px;line-height:1;}
+#inq-next{min-width:96px;justify-content:center;margin-left:auto;}
 .aside-restore{display:none;width:100%;text-align:left;background:var(--panel-2);border:1px solid var(--line);
   color:var(--ink-mid);font:inherit;font-size:11px;letter-spacing:.06em;text-transform:uppercase;
   padding:8px 12px;border-radius:6px;cursor:pointer;flex-shrink:0;transition:background .15s,color .15s;}
@@ -268,6 +270,9 @@ body.light-theme .predict-eval .answer,body.light-theme .predict-eval strong,htm
 .inq-step p{margin:0 0 12px;font-size:14px;line-height:1.55;color:var(--muted);}
 .inq-step .predict-eval{display:none;}
 .inq-step .predict-eval.show{display:block;}
+/* Post-answer reveal: extension prose hidden until the card's predict is committed. */
+.inq-step .inq-after{display:none;}
+.inq-step[data-answered] .inq-after{display:block;}
 
 /* Formal region layout — two columns on wide screens. */
 .formal-grid{display:grid;grid-template-columns:1fr;gap:12px;}
@@ -294,15 +299,6 @@ body.light-theme .predict-eval .answer,body.light-theme .predict-eval strong,htm
 .sim-row b{color:var(--text);font-size:16px;font-variant-numeric:tabular-nums;text-align:right;overflow-wrap:anywhere}
 .sim-hot{color:#ff9078}
 body.light-theme .sim-hot,html[data-theme="light"] .sim-hot{color:#c2410c}
-.sim-q{font-size:14px;line-height:1.5;color:var(--text);font-weight:600}
-.sim-chips{display:flex;flex-wrap:wrap;gap:6px;margin-top:7px}
-.sim-chip{padding:6px 10px;border-radius:999px;border:1.5px solid var(--border);background:var(--surface);color:var(--text);font-size:13.5px;cursor:pointer;text-align:left}
-.sim-chip:hover{border-color:var(--accent)}
-.sim-chip.sim-on{border-color:var(--accent);background:color-mix(in srgb,var(--accent) 20%,var(--surface))}
-.sim-chip.sim-wide{width:100%;border-radius:8px}
-.sim-feedback{font-size:13px;line-height:1.55;color:var(--text);margin-top:8px;border-left:3px solid var(--accent);padding-left:8px;overflow-wrap:anywhere}
-.sim-prompt+.sim-prompt{margin-top:12px}
-.sim-prompt .divider{margin-bottom:10px}
 .sim-formal{display:flex;flex-wrap:wrap;gap:10px 26px;align-items:center}
 .sim-eq{font-size:15px;color:var(--text);max-width:100%;overflow-wrap:anywhere}
 .sim-eq .katex{white-space:normal}
@@ -355,6 +351,7 @@ body.light-theme .sim-hot,html[data-theme="light"] .sim-hot{color:#c2410c}
     <div class="shell-group">
       <button id="shell-info" class="shell-btn" title="About this simulation">ⓘ Info</button>
       <button id="shell-theme" class="shell-btn" title="Toggle light / dark theme">☾</button>
+      <button id="shell-lecture" class="shell-btn" title="Lecture display mode — hide the guided inquiry, show the full simulation">🎓 Lecture</button>
     </div>
     <div class="shell-controls"><a id="shell-refine" class="shell-btn" style="display:none" target="_blank" rel="noopener" title="Refine this simulation (dev only)">✎ Refine</a>
       <div class="shell-group">
@@ -385,99 +382,58 @@ body.light-theme .sim-hot,html[data-theme="light"] .sim-hot{color:#c2410c}
     <div id="aside-inquiry" class="aside-zone">
       <div class="aside-zone-head">
         <h3>Guided Inquiry</h3>
-        <button id="aside-inquiry-skip" class="shell-btn aside-skip" title="Skip the guided inquiry">Skip ✕</button>
       </div>
       <div id="inq-dots" class="inq-dots"></div>
       <div id="inq-cards" class="aside-zone-body">
-        <div class="inq-step"><h4>1 · Before you fire</h4><p>α particles are about to stream through gold foil. Where will they land?</p>
-          <button class="choice">All of them straight through</button>
-          <button class="choice">All smeared by a few degrees</button>
-          <button class="choice">Nearly all straight through, a few bounced back</button>
-          <div class="predict-eval">Commit, then run the beam and watch the θ&gt;90° counter.</div></div>
-<div class="inq-step"><h4>2 · How rare is "bounced back"?</h4><p>Out of every 10,000 α that hit the foil, how many do you expect past 90°?</p>
-          <button class="choice">None at all</button>
-          <button class="choice">Fewer than one</button>
-          <button class="choice">Hundreds</button>
-          <div class="predict-eval">Read the odds row after a long run.</div></div>
-<div class="inq-step"><h4>3 · What would spread-out charge predict?</h4><p>If the positive charge filled the whole atom, where would the counts stop?</p>
-          <button class="choice">Past 90°, same as measured</button>
-          <button class="choice">Within a few degrees of the beam</button>
-          <button class="choice">Exactly at 45°</button>
-          <div class="predict-eval">Overlay the plum-pudding prediction and compare.</div></div>
-<div class="inq-step"><h4>4 · Testing 1/sin⁴(θ/2)</h4><p>What happens if every measured point is multiplied by sin⁴(θ/2)?</p>
-          <button class="choice">They still fall steeply</button>
-          <button class="choice">They flatten onto one horizontal line</button>
-          <button class="choice">They rise steeply</button>
-          <div class="predict-eval">Tick the multiply box and look.</div></div>
-<div class="inq-step"><h4>5 · How big is the nucleus?</h4><p>Raise the α momentum. What tells you the α has reached the nuclear surface?</p>
-          <button class="choice">The forward beam spot widens</button>
-          <button class="choice">The large-angle counts sag below the Rutherford curve</button>
-          <button class="choice">The counts beyond 90° increase</button>
-          <div class="predict-eval">That sag point gives d_touch = R_Au + R_α.</div></div>
+        <div class="inq-step" data-gate data-run="p:0.193,N:20000,seed:6">
+          <h4>1 · Before you fire</h4>
+          <p>The <strong>α source</strong> fires 5 MeV α particles at a 0.40 µm <strong>gold foil</strong>; the ring of <strong>ZnS screen</strong> flashes wherever an α lands. Where will they land?</p>
+          <button class="choice" data-fb="Almost — but keep an eye on <strong>counts θ &gt; 90°</strong>: the biggest surprise of 1909 hides there.">All straight through, undeflected</button>
+          <button class="choice" data-fb="The foil is mostly empty space — about half the α are not deflected even 1° (see <strong>scattered ≥ 1°</strong>).">All smeared by a few degrees</button>
+          <button class="choice" data-correct data-fb="Committed — yet after 20,000 α, <strong>counts θ &gt; 90°</strong> still reads 0: how rare must “a few” be?">Nearly all straight through, a rare few bounced back</button>
+          <div class="predict-eval"></div></div>
+<div class="inq-step" data-gate data-run="p:0.193,N:3000000,seed:8">
+          <h4>2 · How rare is “bounced back”?</h4>
+          <p><strong>α fired</strong> reads 20.0 k, and <strong>counts θ &gt; 90°</strong> is still 0. Keep firing into the millions: out of every 10,000 incident α, how many will land beyond 90°?</p>
+          <button class="choice" data-fb="Not never — watch the counter climb past 100 as <strong>α fired</strong> reaches 3.00 M.">None — the counter stays at zero</button>
+          <button class="choice" data-correct data-fb="Yes — <strong>odds of θ &gt; 90°</strong> settles near 1 in 26,000; Geiger and Marsden logged about 1 in 20,000.">Fewer than one</button>
+          <button class="choice" data-fb="Far too many — read <strong>odds of θ &gt; 90°</strong>: about 1 in 26,000 incident α.">Several hundred</button>
+          <div class="predict-eval"></div>
+          <p class="inq-after">Press <strong>▶ Play</strong>: at 10 k α/s one flash lands past 90° every few seconds — Geiger and Marsden counted them by eye in a darkened room.</p></div>
+<div class="inq-step" data-gate data-run="plum:1">
+          <h4>3 · What would spread-out charge predict?</h4>
+          <p>Thomson's “plum pudding”: positive charge filling the whole atom, each α taking thousands of tiny kicks. Where would that atom's scattering stop?</p>
+          <button class="choice" data-correct data-fb="Yes — random ~0.02° kicks sum to a ~1° Gaussian: the dashed <strong>plum pudding</strong> curve dives off the plot before 10°.">Within a few degrees of the beam</button>
+          <button class="choice" data-fb="The kicks point in random directions — their sum (the dashed curve) dies out before 10°, nowhere near 90°.">Tiny kicks could add up past 90°</button>
+          <button class="choice" data-fb="Compare: the dashed plum-pudding prediction collapses before 10°, while the measured points keep arriving at 150°.">It would match the measured points</button>
+          <div class="predict-eval"></div>
+          <p class="inq-after">Counts at 150° are impossible with spread-out charge — gold's positive charge must sit in a tiny, massive <strong>nucleus</strong> (Rutherford, 1911).</p></div>
+<div class="inq-step" data-gate data-run="flat:1">
+          <h4>4 · Testing 1/sin⁴(θ/2)</h4>
+          <p>Rutherford's point-nucleus formula predicts counts ∝ 1/sin⁴(θ/2) — four decades of fall from 10° to 180°. If every measured point is multiplied by sin⁴(θ/2), what should appear?</p>
+          <button class="choice" data-fb="They cannot — the product lands on one flat line: 1/sin⁴(θ/2) carried all of the steepness.">They still fall steeply</button>
+          <button class="choice" data-correct data-fb="Exactly — one flat line across 10°–180°: the data carry the Rutherford angular shape at every angle.">They collapse onto one horizontal line</button>
+          <button class="choice" data-fb="A rise would mean the counts fall faster than 1/sin⁴(θ/2) — the flat line says the match is exact.">They rise steeply</button>
+          <div class="predict-eval"></div></div>
+<div class="inq-step" data-gate data-run="p:0.500,N:3000000,seed:2">
+          <h4>5 · How big is the nucleus?</h4>
+          <p>At 5 MeV, <strong>d_min</strong> reads 45.5 fm — the α never touches the nucleus. Suppose an accelerator raised the <strong>α momentum</strong> to 0.500 GeV/c (Eₖ = 33.5 MeV). What would signal first contact?</p>
+          <button class="choice" data-fb="Opposite — a faster α deflects less at every angle; contact shows up at the largest angles instead.">The forward beam spot widens</button>
+          <button class="choice" data-fb="They collapse — dσ/dΩ ∝ 1/Eₖ², and α that graze the nucleus are absorbed, emptying the tail.">The counts beyond 90° increase</button>
+          <button class="choice" data-correct data-fb="Yes — d_min = 6.8 fm &lt; d_touch ≈ 8.9 fm: the tail sinks below the dashed <strong>point Coulomb</strong> curve as grazing α are absorbed.">Large-angle counts sag below the point-charge curve</button>
+          <div class="predict-eval"></div>
+          <p class="inq-after">That sag sized the nucleus: d_touch = R_Au + R_α ≈ 8.9 fm ⇒ R_Au ≈ 7 fm. Explore freely — and try aluminium in your head: Z² means (13/79)² ≈ 37× fewer backscatters.</p></div>
       </div>
-      <div class="inq-nav"><button id="inq-next" class="shell-btn primary">Next →</button></div>
+      <div class="inq-nav">
+        <div class="inq-pager">
+          <button id="inq-prev" class="shell-btn primary inq-pager-btn" title="Previous step" aria-label="Previous step" disabled>&lt;</button>
+          <button id="inq-pager-next" class="shell-btn primary inq-pager-btn" title="Next step" aria-label="Next step">&gt;</button>
+        </div>
+        <button id="inq-next" class="shell-btn primary">Next →</button>
+      </div>
     </div>
     <button id="aside-inquiry-restore" class="aside-restore" title="Revisit the guided inquiry">▸ Guided inquiry</button>
     <div id="aside-controls" class="aside-zone">
-
-      <div class="shell-panel">
-        <div class="shell-panel-head"><h3>Predict &amp; explain</h3><span class="shell-caret">▾</span></div>
-        <div class="shell-panel-body">
-
-          <div class="sim-prompt" id="gmQ1">
-            <div class="sim-q">1 · Before you fire — where do the α particles end up?</div>
-            <div class="sim-chips">
-              <button type="button" class="sim-chip" id="gmP1">all straight through</button>
-              <button type="button" class="sim-chip" id="gmP2">smeared a few degrees</button>
-              <button type="button" class="sim-chip" id="gmP3">a few bounce back</button>
-            </div>
-            <div class="sim-feedback" id="gmPredictOut" hidden></div>
-          </div>
-
-          <div class="sim-prompt" id="gmQ2" hidden>
-            <div class="divider"></div>
-            <div class="sim-q">2 · Run the beam, then record what the screen actually shows.</div>
-            <div class="sim-chips">
-              <button type="button" class="sim-chip sim-wide" id="gmRecord">Record: <b id="gmRecVal">0</b> counts beyond 90°</button>
-            </div>
-            <div class="sim-feedback" id="gmRecordOut" hidden></div>
-          </div>
-
-          <div class="sim-prompt" id="gmQ3" hidden>
-            <div class="divider"></div>
-            <div class="sim-q">3 · The plum-pudding prediction dies out before 10°, yet counts keep arriving at 150°. What must be true of the gold atom?</div>
-            <div class="sim-chips">
-              <button type="button" class="sim-chip" id="gmW1">its positive charge is spread through the whole atom</button>
-              <button type="button" class="sim-chip" id="gmW2">its positive charge is packed into a tiny, massive core</button>
-              <button type="button" class="sim-chip" id="gmW3">α particles reverse on their own</button>
-            </div>
-            <div class="sim-feedback" id="gmWarrantOut" hidden></div>
-          </div>
-
-          <div class="sim-prompt" id="gmQ4" hidden>
-            <div class="divider"></div>
-            <div class="sim-q">4 · The counts fall steeply with angle. If they really follow 1/sin⁴(θ/2), what happens when every point is multiplied by sin⁴(θ/2)?</div>
-            <div class="sim-chips">
-              <button type="button" class="sim-chip" id="gmR1">they keep falling</button>
-              <button type="button" class="sim-chip" id="gmR2">they flatten onto one horizontal line</button>
-              <button type="button" class="sim-chip" id="gmR3">they rise steeply</button>
-            </div>
-            <div class="sim-feedback" id="gmRelOut" hidden></div>
-          </div>
-
-          <div class="sim-prompt" id="gmQ5" hidden>
-            <div class="divider"></div>
-            <div class="sim-q">5 · Transfer — same beam, same foil thickness, but aluminium (Z = 13) instead of gold (Z = 79). The counts beyond 90° would be…</div>
-            <div class="sim-chips">
-              <button type="button" class="sim-chip" id="gmT1">about the same</button>
-              <button type="button" class="sim-chip" id="gmT2">about 37× fewer</button>
-              <button type="button" class="sim-chip" id="gmT3">about 6× more</button>
-            </div>
-            <div class="sim-feedback" id="gmTransOut" hidden></div>
-          </div>
-
-        </div>
-      </div>
 
       <div class="shell-panel">
         <div class="shell-panel-head"><h3>Beam</h3><span class="shell-caret">▾</span></div>
@@ -513,14 +469,12 @@ body.light-theme .sim-hot,html[data-theme="light"] .sim-hot{color:#c2410c}
             <button type="button" id="gmModePlum" class="sim-seg-btn">+ plum pudding</button>
           </div>
           <label class="sim-check"><input type="checkbox" id="gmFlat"> Multiply counts by sin⁴(θ/2)</label>
-          <div class="sim-note">If the counts really follow 1/sin⁴(θ/2), this puts every point on one horizontal line.</div>
         </div>
       </div>
 
       <div class="shell-panel">
         <div class="shell-panel-head"><h3>Sub-question · how big is the nucleus?</h3><span class="shell-caret">▾</span></div>
         <div class="shell-panel-body">
-          <div class="sim-note">Settle the main question first. Then raise the α momentum: d_min shrinks, and when the large-angle points sag below the Rutherford curve the α is touching the nuclear surface.</div>
           <div class="sim-ctl">
             <label for="gmMomentum"><span>α momentum</span> <span class="sim-val" id="gmPVal">0.193 GeV/c</span></label>
             <input type="range" id="gmMomentum" min="0.185" max="0.500" step="0.001" value="0.193">
@@ -587,6 +541,16 @@ const Shell = (function(){
     root.classList.toggle('inquiry-collapsed', on);
     requestAnimationFrame(refit);
   }
+  // Lecture display mode: ON = the post-completion free-exploration state
+  // (finishInquiry fast-forwards, runs onComplete, collapses, resumes play);
+  // OFF (second click or the restore chip) = reopen the inquiry at card 1.
+  function setLectureMode(on){
+    root.classList.toggle('lecture-mode', on);
+    const b=document.getElementById('shell-lecture');
+    if(b) b.classList.toggle('active', on);
+    if(on){ finishInquiry(); }
+    else { setInquiryCollapsed(false); if(inqCards().length) inqShow(0); }
+  }
 
   // ---- Guided-inquiry stepper (shell-owned, so Next/Finish are always wired) ----
   // The SIM supplies sequential <div class="inq-step"> cards in #inq-cards. The
@@ -610,8 +574,23 @@ const Shell = (function(){
       next.disabled = gated;
       next.textContent = (inqStep>=cards.length-1) ? 'Finish' : 'Next →';
     }
+    inqUpdatePager();
     onStep(inqStep);
     requestAnimationFrame(refit);
+  }
+  function inqUpdatePager(){
+    const cards=inqCards();
+    const prev=document.getElementById('inq-prev');
+    const pnext=document.getElementById('inq-pager-next');
+    if(prev) prev.disabled = inqStep<=0;
+    if(pnext) pnext.disabled = inqStep>=cards.length-1;
+  }
+  function inqPrev(){
+    if(inqStep>0) inqShow(inqStep-1);
+  }
+  function inqPagerNext(){
+    const cards=inqCards();
+    if(inqStep<cards.length-1) inqShow(inqStep+1);
   }
   function inqNext(){
     const cards=inqCards();
@@ -648,7 +627,6 @@ const Shell = (function(){
     const reset=document.getElementById('shell-reset');
     const spd=document.getElementById('shell-speed');
     const maxBtn=document.getElementById('shell-maximize');
-    const skip=document.getElementById('aside-inquiry-skip');
     const restore=document.getElementById('aside-inquiry-restore');
     const tFormal=document.getElementById('toggle-formal');
 
@@ -681,12 +659,17 @@ const Shell = (function(){
       else if(root.classList.contains('shell-max')) setMaximized(false);
     });
 
-    // Skip ✕ jumps to the completed state (all controls live); restore reopens it.
-    if(skip) skip.addEventListener('click',finishInquiry);
-    if(restore) restore.addEventListener('click',()=>setInquiryCollapsed(false));
+    // 🎓 Lecture toggles the post-completion display state; restore reopens at card 1.
+    const lecture=document.getElementById('shell-lecture');
+    if(lecture) lecture.addEventListener('click',()=>setLectureMode(!root.classList.contains('lecture-mode')));
+    if(restore) restore.addEventListener('click',()=>setLectureMode(false));
     // Next / Finish — shell-driven step advance (Finish collapses the inquiry).
     const inqNextBtn=document.getElementById('inq-next');
     if(inqNextBtn) inqNextBtn.addEventListener('click',inqNext);
+    const inqPrevBtn=document.getElementById('inq-prev');
+    if(inqPrevBtn) inqPrevBtn.addEventListener('click',inqPrev);
+    const inqPagerNextBtn=document.getElementById('inq-pager-next');
+    if(inqPagerNextBtn) inqPagerNextBtn.addEventListener('click',inqPagerNext);
     // Auto-gate: a .choice click inside the active gated card enables Next.
     const cardsHost=document.getElementById('inq-cards');
     if(cardsHost) cardsHost.addEventListener('click',e=>{
@@ -714,15 +697,25 @@ const Shell = (function(){
     init(opts){
       onFrame=opts.onFrame||onFrame; onReset=opts.onReset||onReset; onResize=opts.onResize||onResize; onStep=opts.onStep||onStep; onComplete=opts.onComplete||onComplete;
       wire();
-      // Guided inquiry is retired from the sidebar: hide the whole zone + restore bar,
-      // and open the sim directly in its COMPLETED state (as if the student had finished
-      // the inquiry) — every control live, every staged panel revealed.
+      // Guided inquiry RE-ENABLED (was retired in the raw lecture export): build the
+      // step dots and open on card 1. Sims that ship no cards still fall back to the
+      // retired behaviour — zone hidden, sim opened in its completed state.
       const cards=inqCards();
       inqTotal=cards.length;
-      root.classList.add('no-inquiry');
-      onResize(); onReset();
-      if(inqTotal>0){ for(let k=0;k<cards.length;k++) onStep(k); inqStep=cards.length-1; }
-      onComplete();
+      if(inqTotal>0){
+        const dotsHost=document.getElementById('inq-dots');
+        if(dotsHost&&!dotsHost.children.length){
+          for(let k=0;k<inqTotal;k++){const d=document.createElement('div');d.className='inq-dot';dotsHost.appendChild(d);}
+        }
+        onResize(); onReset();
+        inqShow(0);
+      }else{
+        root.classList.add('no-inquiry');
+        const lb=document.getElementById('shell-lecture');
+        if(lb) lb.style.display='none';
+        onResize(); onReset();
+        onComplete();
+      }
       setPlaying(true);
       last=performance.now();
       if(!started){ started=true; requestAnimationFrame(loop); }
@@ -798,7 +791,7 @@ var DOMS=new Float64Array(NBINS), TEFF=new Float64Array(NBINS), TLO=new Float64A
 /* ---- state ---- */
 var st={p:0.193,flat:false,showPlum:false,rate:RSLOW,
         Nf:0,nScat:0,nBack:0,nAbs:0,acc:0,trAcc:0,uiT:0,t:0,
-        bins:new Float64Array(NBINS),pred:null};
+        bins:new Float64Array(NBINS)};
 var dots=[],dotPtr=0,tracers=[],flashes=[];
 var cssW=0,cssH=0,geo=null;
 var FAM='ui-sans-serif,system-ui,sans-serif';
@@ -873,7 +866,6 @@ function updateCounts(){
   txt('gmN',fmtN(st.Nf));
   txt('gmScat',fmtN(st.nScat));
   txt('gmBack',Math.round(st.nBack).toLocaleString('en-US'));
-  txt('gmRecVal',Math.round(st.nBack).toLocaleString('en-US'));
   txt('gmOdds',oddsStr());
 }
 function syncUI(){ var Ek=EkOf(st.p), n;
@@ -1168,66 +1160,21 @@ bind('gmRateSlow','click',function(){ st.rate=RSLOW; syncUI(); draw(); });
 bind('gmRateFast','click',function(){ st.rate=RFAST; syncUI(); draw(); });
 bind('gmFlat','change',function(){ st.flat=this.checked; draw(); });
 
-/* ---- staged prompts (reveal by ORDER; every sim control stays live) ---- */
-function reveal(id){ var n=el(id); if(n)n.hidden=false; }
-function pick(ids,id){ ids.forEach(function(j){ var n=el(j); if(n)n.classList.toggle('sim-on',j===id); }); }
-function say(id,html){ var o=el(id); if(o){ o.hidden=false; o.innerHTML=html; } }
-
-var PLABEL={gmP1:'all straight through',gmP2:'smeared a few degrees',gmP3:'a few bounce back'};
-['gmP1','gmP2','gmP3'].forEach(function(id){ bind(id,'click',function(){
-  st.pred=id; pick(['gmP1','gmP2','gmP3'],id);
-  say('gmPredictOut','<b>Your prediction:</b> '+PLABEL[id]+' — <i>click another chip to change it.</i><br>'+
-    'Now press <b>▶ Play</b> and watch the <b>counts θ &gt; 90°</b> row: '+
-    (id==='gmP3'?'how long until the first one arrives?':'does it stay at 0?'));
-  reveal('gmQ2'); }); });
-
-bind('gmRecord','click',function(){
-  if(st.Nf===0){ say('gmRecordOut','Nothing has been fired yet — press <b>▶ Play</b>, let the beam run for a few seconds, then record again.'); return; }
-  if(st.nBack===0){ say('gmRecordOut','After '+fmtN(st.Nf)+' α, still <b>0</b> beyond 90°. Let it run longer (or switch the beam to 100 k α/s) and record again.'); return; }
-  var matched=(st.pred==='gmP3');
-  say('gmRecordOut','<b>Recorded:</b> '+Math.round(st.nBack).toLocaleString('en-US')+' counts beyond 90° out of '+
-    fmtN(st.Nf)+' incident α — about <b>'+oddsStr()+'</b> at Eₖ = '+(EkOf(st.p)*1000).toFixed(1)+' MeV.'+
-    (st.pred?('<br>Your prediction (<i>'+PLABEL[st.pred]+'</i>) '+(matched?'matched what you measured.':'did not match: some α really do come back.')):'')+
-    '<br>Now switch the overlay to <b>+ plum pudding</b> and compare the two predictions.');
-  reveal('gmQ3'); });
-
-var WMSG={
- gmW1:'Not quite — that is the plum-pudding picture, and its dashed curve falls off the bottom of the plot before 10°. It cannot produce the counts you just recorded at 150°.',
- gmW2:'Yes. To turn an α through more than 90° the whole charge and mass must be concentrated in a target far smaller than the atom — a nucleus.',
- gmW3:'No — an α particle in flight has no way to reverse itself; something in the foil must push it back, and only a concentrated charge can push that hard.'};
-['gmW1','gmW2','gmW3'].forEach(function(id){ bind(id,'click',function(){
-  pick(['gmW1','gmW2','gmW3'],id); say('gmWarrantOut',WMSG[id]); reveal('gmQ4'); }); });
-
-var RMSG={
- gmR1:'Test it: tick <b>Multiply counts by sin⁴(θ/2)</b> in “Compare models”. If the data obey 1/sin⁴(θ/2), the product cannot keep falling.',
- gmR2:'That is the prediction to test — tick <b>Multiply counts by sin⁴(θ/2)</b> and see whether every point lands on one horizontal line, at any momentum.',
- gmR3:'Test it: tick <b>Multiply counts by sin⁴(θ/2)</b>. A rise would mean the counts fall faster than 1/sin⁴(θ/2).'};
-['gmR1','gmR2','gmR3'].forEach(function(id){ bind(id,'click',function(){
-  pick(['gmR1','gmR2','gmR3'],id); say('gmRelOut',RMSG[id]); reveal('gmQ5'); }); });
-
-var TMSG={
- gmT1:'Not quite — the cross-section carries Z², the charge of the target nucleus, so the element matters a lot.',
- gmT2:'Correct: dσ/dΩ ∝ Z², so (79/13)² ≈ 37× fewer counts beyond 90°. Geiger and Marsden checked exactly this Z-dependence across several foils.',
- gmT3:'Other way round — a smaller Z pushes less hard, so large-angle counts drop as Z²: (79/13)² ≈ 37× fewer.'};
-['gmT1','gmT2','gmT3'].forEach(function(id){ bind(id,'click',function(){
-  pick(['gmT1','gmT2','gmT3'],id); say('gmTransOut',TMSG[id]); }); });
-
-/* ---- inquiry steps (idempotent) ---- */
+/* ---- inquiry steps (deterministic + self-contained; each card's reveal rides the
+   answer hook below, so revisiting a card always restores its pre-answer scene) ---- */
 var STEPS=[
-  {p:0.193,N:20000,   plum:false},
-  {p:0.193,N:400000,  plum:false},
-  {p:0.193,N:3000000, plum:false},
-  {p:0.193,N:3000000, plum:true },
-  {p:0.430,N:3000000, plum:false}
+  {p:0.193,N:0,      plum:false,flat:false,seed:1},  /* 1 · empty apparatus — predict before firing */
+  {p:0.193,N:20000,  plum:false,flat:false,seed:6},  /* 2 · 20 k fired, none beyond 90° yet */
+  {p:0.193,N:3000000,plum:false,flat:false,seed:8},  /* 3 · 3 M run (answer overlays plum pudding) */
+  {p:0.193,N:3000000,plum:false,flat:false,seed:8},  /* 4 · same run (answer ticks the sin⁴ test) */
+  {p:0.193,N:3000000,plum:false,flat:false,seed:8}   /* 5 · same run (answer jumps to 0.500 GeV/c) */
 ];
 function onStep(i){ i=Math.max(0,Math.min(STEPS.length-1,i|0)); var s=STEPS[i];
-  st.showPlum=!!s.plum; applyRun(s.p,s.N,911+i*7919); syncUI(); updateCounts(); draw(); }
+  st.showPlum=!!s.plum; st.flat=!!s.flat; applyRun(s.p,s.N,s.seed); syncUI(); updateCounts(); draw(); }
 
-/* Completed / load state: empty screen, zeroed counters, PAUSED with Play enabled. */
+/* Completed / lecture state: the full 3 M measurement on screen, every control live. */
 function onComplete(){ st.showPlum=false; st.flat=false;
-  var f=el('gmFlat'); if(f)f.checked=false;
-  applyRun(0.193,0,1); syncUI(); updateCounts(); draw();
-  if(SH&&SH.setPlaying) SH.setPlaying(false); }
+  applyRun(0.193,3000000,8); syncUI(); updateCounts(); draw(); }
 function onReset(){ st.showPlum=false; st.flat=false; st.rate=RSLOW;
   var f=el('gmFlat'); if(f)f.checked=false;
   applyRun(0.193,0,1); syncUI(); updateCounts(); draw(); }
@@ -1250,6 +1197,28 @@ var kTries=0;
 applyRun(0.193,0,1);
 sizeCanvas(); syncUI(); updateCounts(); draw();
 if(window.ResizeObserver){ try{ new ResizeObserver(function(){ sizeCanvas(); draw(); }).observe(CV); }catch(e){} }
+
+/* ---------- guided-inquiry layer: choice feedback + answer-triggered reveals ---------- */
+document.querySelectorAll('#inq-cards .inq-step').forEach(function(card){
+  var evalBox=card.querySelector('.predict-eval');
+  card.querySelectorAll('.choice').forEach(function(ch){ ch.addEventListener('click',function(){
+    if(card.dataset.answered) return; card.dataset.answered='1';
+    var correct=ch.hasAttribute('data-correct');
+    card.querySelectorAll('.choice').forEach(function(c){ c.disabled=true;
+      if(c.hasAttribute('data-correct')) c.classList.add('correct');
+      else if(c===ch) c.classList.add('wrong'); else c.classList.add('dim'); });
+    if(evalBox){ evalBox.innerHTML=ch.dataset.fb||''; evalBox.classList.add('show', correct?'correct':'wrong'); }
+    /* data-run="p:…,N:…,seed:…" / "plum:1" / "flat:1" — the commitment triggers the
+       reveal through the sim's own setters (applyRun / st.showPlum / st.flat). */
+    var spec=card.dataset.run;
+    if(spec){ var m={}; spec.split(',').forEach(function(kv){ var a=kv.split(':'); m[a[0]]=a[1]; });
+      if('plum' in m) st.showPlum=(m.plum==='1');
+      if('flat' in m) st.flat=(m.flat==='1');
+      if('N' in m) applyRun(parseFloat(m.p)||st.p, parseInt(m.N,10)||0, parseInt(m.seed,10)||1);
+      syncUI(); updateCounts(); draw(); }
+  }); });
+});
+
 var hooks={onFrame:onFrame,onReset:onReset,onResize:onResize,onStep:onStep,onComplete:onComplete};
 if(SH){ SH.init(hooks); SH.setPlaying(false); }   /* opens PAUSED, empty, Play prominent + enabled */
 else{ var last=performance.now();
