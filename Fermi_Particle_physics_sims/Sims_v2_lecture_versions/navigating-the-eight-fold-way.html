@@ -213,8 +213,10 @@ body.light-theme .predict-eval .answer,body.light-theme .predict-eval strong,htm
 #inq-cards{flex:1 1 auto;min-height:0;}
 .inq-step{display:none;}
 .inq-step.active{display:block;}
-.inq-nav{display:flex;justify-content:flex-end;flex-shrink:0;}
-#inq-next{min-width:96px;justify-content:center;}
+.inq-nav{display:flex;justify-content:space-between;flex-shrink:0;}
+.inq-pager{display:flex;align-items:center;gap:8px;}
+.inq-pager-btn{min-width:36px;padding:6px 11px;justify-content:center;font-size:13px;line-height:1;}
+#inq-next{min-width:96px;justify-content:center;margin-left:auto;}
 .aside-restore{display:none;width:100%;text-align:left;background:var(--panel-2);border:1px solid var(--line);
   color:var(--ink-mid);font:inherit;font-size:11px;letter-spacing:.06em;text-transform:uppercase;
   padding:8px 12px;border-radius:6px;cursor:pointer;flex-shrink:0;transition:background .15s,color .15s;}
@@ -268,6 +270,9 @@ body.light-theme .predict-eval .answer,body.light-theme .predict-eval strong,htm
 .inq-step p{margin:0 0 12px;font-size:14px;line-height:1.55;color:var(--muted);}
 .inq-step .predict-eval{display:none;}
 .inq-step .predict-eval.show{display:block;}
+/* Post-answer reveal: extension prose hidden until the card's predict is committed. */
+.inq-step .inq-after{display:none;}
+.inq-step[data-answered] .inq-after{display:block;}
 
 /* Readout β/φ switch (a genuine sim control — not a shell duplicate). */
 .switch{display:inline-flex;border:1px solid var(--ctrl-border);border-radius:6px;overflow:hidden;}
@@ -298,16 +303,11 @@ body.light-theme .predict-eval .answer,body.light-theme .predict-eval strong,htm
 .sim-h{margin:0 0 8px;font-size:14px;font-weight:700;letter-spacing:.05em;text-transform:uppercase;color:var(--muted)}
 .sim-pbody{display:flex;flex-direction:column;gap:8px;min-width:0;box-sizing:border-box}
 .sim-row{display:flex;gap:6px;flex-wrap:wrap}
-.sim-btn,.sim-chip{flex:1 1 auto;min-width:0;padding:7px 8px;font-size:14px;font-weight:600;color:var(--text);background:transparent;border:1.5px solid var(--border);border-radius:8px;cursor:pointer;box-sizing:border-box;overflow-wrap:anywhere}
-.sim-btn:hover,.sim-chip:hover{border-color:var(--accent)}
+.sim-btn{flex:1 1 auto;min-width:0;padding:7px 8px;font-size:14px;font-weight:600;color:var(--text);background:transparent;border:1.5px solid var(--border);border-radius:8px;cursor:pointer;box-sizing:border-box;overflow-wrap:anywhere}
+.sim-btn:hover{border-color:var(--accent)}
 .sim-btn.is-on{background:var(--accent);border-color:var(--accent);color:var(--bg)}
 .sim-toggle{display:flex;align-items:center;gap:8px;font-size:14px;color:var(--text);cursor:pointer}
 .sim-toggle input{accent-color:var(--accent)}
-.sim-q{margin:0;font-size:14px;line-height:1.35;color:var(--text)}
-.sim-chip.is-picked{outline:2px solid var(--accent);outline-offset:1px}
-.sim-chip.is-right{background:var(--accent);border-color:var(--accent);color:var(--bg)}
-.sim-chip.is-wrong{opacity:.55;text-decoration:line-through}
-.sim-feedback{margin:0;min-height:38px;font-size:14px;line-height:1.35;color:var(--accent);overflow-wrap:anywhere}
 .sim-card-head{display:flex;align-items:baseline;gap:10px;flex-wrap:wrap;min-width:0}
 .sim-card-name{font-size:28px;line-height:1.05;font-weight:800;color:var(--text)}
 .sim-card-quarks{font-size:16px;color:var(--muted);letter-spacing:.18em}
@@ -347,12 +347,12 @@ body.light-theme .predict-eval .answer,body.light-theme .predict-eval strong,htm
   <dt>Inquiry</dt>
   <dd>Sort tiles onto the (I₃, S) chart; a symmetric pattern emerges; one corner stays empty. Students predict the missing particle's charge from the pattern, then click the gap to check against history.</dd>
   <dt>Misconception</dt>
-  <dd>"I₃ = 0 means electrically neutral." Charge is constant along diagonals, not columns: the I₃ = 0, S = −3 corner demands Q = −1. This wrong intuition is one of the prediction chips, rebutted only when chosen.</dd>
+  <dd>"I₃ = 0 means electrically neutral." Charge is constant along diagonals, not columns: the I₃ = 0, S = −3 corner demands Q = −1. This wrong intuition is one of the guided-inquiry choices, rebutted only when chosen.</dd>
 </dl>
         <table class="shell-info-table">
   <tr><th>Principle</th><th>Where it appears</th></tr>
-  <tr><td>Predict before reveal</td><td>Charge chips let students commit a guess before clicking the gap; feedback compares prediction to the 1964 measurement.</td></tr>
-  <tr><td>Misconception as a choice</td><td>The "Q = 0" chip encodes the column-equals-charge intuition; its rebuttal appears only when selected.</td></tr>
+  <tr><td>Predict before reveal</td><td>Gated inquiry cards make students commit the gap's charge and mass before the reveal; feedback compares prediction to the 1964 measurement.</td></tr>
+  <tr><td>Misconception as a choice</td><td>The "Q = 0" choice encodes the column-equals-charge intuition; its rebuttal appears only when selected.</td></tr>
   <tr><td>Invariants made visible</td><td>Rows share S (tile color), dashed diagonals share Q, and the mass ladder shares ≈147 MeV spacing.</td></tr>
   <tr><td>Operational quantities</td><td>Every tile carries Q, I₃, S computed from its quark content — readable in the particle card.</td></tr>
   <tr><td>Formal layer on demand</td><td>Gell-Mann–Nishijima and the equal-spacing mass rule live behind the formal toggle.</td></tr>
@@ -366,6 +366,7 @@ body.light-theme .predict-eval .answer,body.light-theme .predict-eval strong,htm
     <div class="shell-group">
       <button id="shell-info" class="shell-btn" title="About this simulation">ⓘ Info</button>
       <button id="shell-theme" class="shell-btn" title="Toggle light / dark theme">☾</button>
+      <button id="shell-lecture" class="shell-btn" title="Lecture display mode — hide the guided inquiry, show the full simulation">🎓 Lecture</button>
     </div>
     <div class="shell-controls"><a id="shell-refine" class="shell-btn" style="display:none" target="_blank" rel="noopener" title="Refine this simulation (dev only)">✎ Refine</a>
       <div class="shell-group">
@@ -398,18 +399,38 @@ body.light-theme .predict-eval .answer,body.light-theme .predict-eval strong,htm
     <div id="aside-inquiry" class="aside-zone">
       <div class="aside-zone-head">
         <h3>Guided Inquiry</h3>
-        <button id="aside-inquiry-skip" class="shell-btn aside-skip" title="Skip the guided inquiry">Skip ✕</button>
       </div>
       <div id="inq-dots" class="inq-dots"></div>
       <div id="inq-cards" class="aside-zone-body">
-        <div class="inq-step" data-step="0"><h4>Meet the octet</h4><p>Eight spin-½ baryons. Drag each tile to its (I₃, S).</p></div>
-<div class="inq-step" data-step="1"><h4>A pattern appears</h4><p>A hexagon with a doubled center — symmetry, not accident.</p></div>
-<div class="inq-step" data-step="2"><h4>Charge diagonals</h4><p>Q = I₃ + (B+S)/2 is constant along each diagonal.</p></div>
-<div class="inq-step" data-step="3"><h4>A heavier family</h4><p>The spin-3/2 decuplet forms a triangle — with a hole.</p></div>
-<div class="inq-step" data-step="4"><h4>Predict the gap</h4><p>What charge, strangeness, and mass must fill (0, −3)?</p></div>
-<div class="inq-step" data-step="5"><h4>The Ω⁻</h4><p>Predicted 1962, found 1964. Scatter tiles to replay.</p></div>
+        <div class="inq-step"><h4>1 · A map of baryons</h4>
+          <p>Eight spin-½ baryons, plotted by isospin projection <strong>I₃</strong> (across) and strangeness <strong>S</strong> (down): a hexagon with a doubled centre (Λ⁰ and Σ⁰). Colour tracks S. Click any tile — the <strong>Particle card</strong> shows its Q, I₃, S and mass.</p></div>
+<div class="inq-step" data-gate data-reveal="qlines"><h4>2 · Predict: charge down a column</h4>
+          <p>Selected: the proton — I₃ = +½, S = 0, <strong>Q = +1</strong>. The Ξ⁰ sits directly below it, at I₃ = +½, S = −2. Predict its charge.</p>
+          <button class="choice" data-fb="Columns don't keep Q: it drops with S. Ξ⁰ is neutral — watch the dashed constant-Q diagonals appear.">Q = +1 — same column, same charge</button>
+          <button class="choice" data-correct data-fb="Q = I₃ + (B+S)/2 = ½ + (1−2)/2 = <strong>0</strong> — charge is constant along the dashed diagonals now on screen, not down columns.">Q = 0</button>
+          <button class="choice" data-fb="That is Ξ⁻, one slot left. Follow the new dashed diagonal: n, Σ⁰ and Ξ⁰ all share Q = 0.">Q = −1</button>
+          <div class="predict-eval"></div></div>
+<div class="inq-step" data-gate data-reveal="qlines"><h4>3 · Predict: the empty corner</h4>
+          <p>The spin-3/2 decuplet: a triangle, complete except one pulsing corner at I₃ = 0, S = −3. The diagonal rule still holds. What charge must the missing particle carry?</p>
+          <button class="choice" data-fb="Trace Q = +1 from Δ⁺ through Σ*⁺ — by S = −3 that diagonal has left the chart entirely.">Q = +1</button>
+          <button class="choice" data-fb="I₃ = 0 isn't neutral: Q = 0 + (1−3)/2 = <strong>−1</strong>. Columns don't keep Q — diagonals do.">Q = 0 — I₃ = 0 means neutral</button>
+          <button class="choice" data-correct data-fb="The Δ⁻ → Σ*⁻ → Ξ*⁻ diagonal runs straight into the corner — watch it light up. Q = <strong>−1</strong>.">Q = −1</button>
+          <div class="predict-eval"></div></div>
+<div class="inq-step" data-gate data-reveal="omega"><h4>4 · Predict: its mass</h4>
+          <p>Symmetry also prices the gap. Click one tile per row: Δ 1232 → Σ* ≈1385 → Ξ* ≈1533 MeV — each strangeness step adds ≈150. Predict the missing mass.</p>
+          <button class="choice" data-correct data-fb="1533 + ≈147 → <strong>1680 MeV</strong>, published 1962. Watch the corner: the Ω⁻ appears — measured 1672 MeV.">≈1680 MeV — one more equal step</button>
+          <button class="choice" data-fb="Each added s quark has paid ≈150 MeV so far; row S = −3 pays too. Ω⁻: 1672 MeV.">≈1533 MeV — same as the Ξ* row</button>
+          <button class="choice" data-fb="It did: equal spacing gave 1680 MeV in 1962; the 1964 Ω⁻ measured 1672. Patterns predict.">A symmetry chart can't predict masses</button>
+          <div class="predict-eval"></div>
+          <p class="inq-after">Predicted 1962 (Gell-Mann), found 1964 at Brookhaven — symmetry's Mendeleev moment. <strong>Scatter tiles</strong> to rebuild the chart yourself, then click the ? gap to replay the discovery.</p></div>
       </div>
-      <div class="inq-nav"><button id="inq-next" class="shell-btn primary">Next →</button></div>
+      <div class="inq-nav">
+        <div class="inq-pager">
+          <button id="inq-prev" class="shell-btn primary inq-pager-btn" title="Previous step" aria-label="Previous step" disabled>&lt;</button>
+          <button id="inq-pager-next" class="shell-btn primary inq-pager-btn" title="Next step" aria-label="Next step">&gt;</button>
+        </div>
+        <button id="inq-next" class="shell-btn primary">Next →</button>
+      </div>
     </div>
     <button id="aside-inquiry-restore" class="aside-restore" title="Revisit the guided inquiry">▸ Guided inquiry</button>
     <div id="aside-controls" class="aside-zone">
@@ -425,18 +446,6 @@ body.light-theme .predict-eval .answer,body.light-theme .predict-eval strong,htm
       <button type="button" class="sim-btn" id="ewPlaceAll">Place all</button>
     </div>
     <label class="sim-toggle"><input type="checkbox" id="ewQlines" checked><span>Charge diagonals (constant Q)</span></label>
-  </div>
-</div>
-<div class="shell-panel">
-  <h3 class="sim-h">Predict the gap</h3>
-  <div class="sim-pbody">
-    <p class="sim-q">Decuplet corner I₃ = 0, S = −3: what charge?</p>
-    <div class="sim-row">
-      <button type="button" class="sim-chip" id="ewChipP" aria-pressed="false">Q = +1</button>
-      <button type="button" class="sim-chip" id="ewChipZ" aria-pressed="false">Q = 0</button>
-      <button type="button" class="sim-chip" id="ewChipM" aria-pressed="false">Q = −1</button>
-    </div>
-    <p class="sim-feedback" id="ewPredictOut">Optional — pick a charge, then click the gap.</p>
   </div>
 </div>
 <div class="shell-panel">
@@ -504,6 +513,16 @@ const Shell = (function(){
     root.classList.toggle('inquiry-collapsed', on);
     requestAnimationFrame(refit);
   }
+  // Lecture display mode: ON = the post-completion free-exploration state
+  // (finishInquiry fast-forwards, runs onComplete, collapses, resumes play);
+  // OFF (second click or the restore chip) = reopen the inquiry at card 1.
+  function setLectureMode(on){
+    root.classList.toggle('lecture-mode', on);
+    const b=document.getElementById('shell-lecture');
+    if(b) b.classList.toggle('active', on);
+    if(on){ finishInquiry(); }
+    else { setInquiryCollapsed(false); if(inqCards().length) inqShow(0); }
+  }
 
   // ---- Guided-inquiry stepper (shell-owned, so Next/Finish are always wired) ----
   // The SIM supplies sequential <div class="inq-step"> cards in #inq-cards. The
@@ -527,8 +546,23 @@ const Shell = (function(){
       next.disabled = gated;
       next.textContent = (inqStep>=cards.length-1) ? 'Finish' : 'Next →';
     }
+    inqUpdatePager();
     onStep(inqStep);
     requestAnimationFrame(refit);
+  }
+  function inqUpdatePager(){
+    const cards=inqCards();
+    const prev=document.getElementById('inq-prev');
+    const pnext=document.getElementById('inq-pager-next');
+    if(prev) prev.disabled = inqStep<=0;
+    if(pnext) pnext.disabled = inqStep>=cards.length-1;
+  }
+  function inqPrev(){
+    if(inqStep>0) inqShow(inqStep-1);
+  }
+  function inqPagerNext(){
+    const cards=inqCards();
+    if(inqStep<cards.length-1) inqShow(inqStep+1);
   }
   function inqNext(){
     const cards=inqCards();
@@ -565,7 +599,6 @@ const Shell = (function(){
     const reset=document.getElementById('shell-reset');
     const spd=document.getElementById('shell-speed');
     const maxBtn=document.getElementById('shell-maximize');
-    const skip=document.getElementById('aside-inquiry-skip');
     const restore=document.getElementById('aside-inquiry-restore');
     const tFormal=document.getElementById('toggle-formal');
 
@@ -598,12 +631,17 @@ const Shell = (function(){
       else if(root.classList.contains('shell-max')) setMaximized(false);
     });
 
-    // Skip ✕ jumps to the completed state (all controls live); restore reopens it.
-    if(skip) skip.addEventListener('click',finishInquiry);
-    if(restore) restore.addEventListener('click',()=>setInquiryCollapsed(false));
+    // 🎓 Lecture jumps to the completed state (all controls live); restore reopens at card 1.
+    const lecture=document.getElementById('shell-lecture');
+    if(lecture) lecture.addEventListener('click',()=>setLectureMode(!root.classList.contains('lecture-mode')));
+    if(restore) restore.addEventListener('click',()=>setLectureMode(false));
     // Next / Finish — shell-driven step advance (Finish collapses the inquiry).
     const inqNextBtn=document.getElementById('inq-next');
     if(inqNextBtn) inqNextBtn.addEventListener('click',inqNext);
+    const inqPrevBtn=document.getElementById('inq-prev');
+    if(inqPrevBtn) inqPrevBtn.addEventListener('click',inqPrev);
+    const inqPagerNextBtn=document.getElementById('inq-pager-next');
+    if(inqPagerNextBtn) inqPagerNextBtn.addEventListener('click',inqPagerNext);
     // Auto-gate: a .choice click inside the active gated card enables Next.
     const cardsHost=document.getElementById('inq-cards');
     if(cardsHost) cardsHost.addEventListener('click',e=>{
@@ -631,15 +669,25 @@ const Shell = (function(){
     init(opts){
       onFrame=opts.onFrame||onFrame; onReset=opts.onReset||onReset; onResize=opts.onResize||onResize; onStep=opts.onStep||onStep; onComplete=opts.onComplete||onComplete;
       wire();
-      // Guided inquiry is retired from the sidebar: hide the whole zone + restore bar,
-      // and open the sim directly in its COMPLETED state (as if the student had finished
-      // the inquiry) — every control live, every staged panel revealed.
+      // Guided inquiry RE-ENABLED (was retired in the raw lecture export): build the
+      // step dots and open on card 1. Sims that ship no cards still fall back to the
+      // retired behaviour — zone hidden, sim opened in its completed state.
       const cards=inqCards();
       inqTotal=cards.length;
-      root.classList.add('no-inquiry');
-      onResize(); onReset();
-      if(inqTotal>0){ for(let k=0;k<cards.length;k++) onStep(k); inqStep=cards.length-1; }
-      onComplete();
+      if(inqTotal>0){
+        const dotsHost=document.getElementById('inq-dots');
+        if(dotsHost&&!dotsHost.children.length){
+          for(let k=0;k<inqTotal;k++){const d=document.createElement('div');d.className='inq-dot';dotsHost.appendChild(d);}
+        }
+        onResize(); onReset();
+        inqShow(0);
+      }else{
+        root.classList.add('no-inquiry');
+        const lb=document.getElementById('shell-lecture');
+        if(lb) lb.style.display='none';
+        onResize(); onReset();
+        onComplete();
+      }
       setPlaying(true);
       last=performance.now();
       if(!started){ started=true; requestAnimationFrame(loop); }
@@ -706,7 +754,7 @@ var SUPU={'+':'\u207A','++':'\u207A\u207A','0':'\u2070','\u2212':'\u207B'};
 var SCOL={0:'#3f7fd4',1:'#1f9e8e',2:'#8f5fc9',3:'#d9931f'};
 
 /* ================= state ================= */
-var state={ mode:'dec', qlines:true, revealed:true, sel:'Om', predict:null,
+var state={ mode:'dec', qlines:true, revealed:true, sel:'Om',
             clock:0, revealAt:-9, seed:20240915 };
 var trayOrder={oct:[],dec:[]};
 var pulses=[];
@@ -720,7 +768,6 @@ var view={w:0,h:0};
 var $=function(id){return document.getElementById(id);};
 var elHint=$('ewHint'), elOct=$('ewModeOct'), elDec=$('ewModeDec'),
     elScatter=$('ewScatter'), elPlace=$('ewPlaceAll'), elQ=$('ewQlines'),
-    elChipP=$('ewChipP'), elChipZ=$('ewChipZ'), elChipM=$('ewChipM'), elOut=$('ewPredictOut'),
     elCN=$('ewCName'), elCK=$('ewCQuarks'), elCQ=$('ewCQ'), elCI=$('ewCI3'),
     elCS=$('ewCS'), elCM=$('ewCM'), elNote=$('ewCNote');
 
@@ -1047,7 +1094,7 @@ function maybeGapAppeared(){
 function scatterCurrent(){
   var m=state.mode, L=layout(), poss={};
   byMode(m).forEach(function(t){ poss[t.id]=tilePos(t,L); });
-  if(m==='dec'){ hideOmega(); state.predict=null; }
+  if(m==='dec'){ hideOmega(); }
   state.seed=(state.seed*1103515245+12345)>>>0;
   trayOrder[m]=shuffledIds(m,state.seed);
   byMode(m).forEach(function(t,i){
@@ -1080,14 +1127,19 @@ function placeMult(m,on){
 function stepState(i){
   drag.active=false; drag.tile=null; hoverId=null; pulses.length=0;
   TILES.forEach(function(t){t.ax=null;});
-  state.predict=null;
-  if(i<=0){ state.mode='oct'; placeMult('oct',false); placeMult('dec',false); hideOmega(); state.qlines=false; state.sel=null; }
-  else if(i===1){ state.mode='oct'; placeMult('oct',true); placeMult('dec',false); hideOmega(); state.qlines=false; state.sel=null; }
-  else if(i===2){ state.mode='oct'; placeMult('oct',true); placeMult('dec',false); hideOmega(); state.qlines=true; state.sel='S+'; }
-  else if(i===3){ state.mode='dec'; placeMult('oct',true); placeMult('dec',true); hideOmega(); state.qlines=true; state.sel=null; }
-  else if(i===4){ state.mode='dec'; placeMult('oct',true); placeMult('dec',true); hideOmega(); state.qlines=true; state.sel='gap'; }
-  else { state.mode='dec'; placeMult('oct',true); placeMult('dec',true);
-         state.revealed=true; OMEGA.loc='grid'; state.revealAt=state.clock; state.qlines=true; state.sel='Om'; }
+  if(i<=0){ state.mode='oct'; placeMult('oct',true); placeMult('dec',false); hideOmega(); state.qlines=false; state.sel='p'; }
+  else if(i===1){ state.mode='oct'; placeMult('oct',true); placeMult('dec',false); hideOmega(); state.qlines=false; state.sel='p'; }
+  else if(i===2){ state.mode='dec'; placeMult('oct',true); placeMult('dec',true); hideOmega(); state.qlines=false; state.sel='gap'; }
+  else { state.mode='dec'; placeMult('oct',true); placeMult('dec',true); hideOmega(); state.qlines=true; state.sel='gap'; }
+  updateCard(); syncUI(); draw();
+}
+/* Completed / free-exploration state: everything placed, Ω⁻ revealed and selected. */
+function completedState(){
+  drag.active=false; drag.tile=null; hoverId=null; pulses.length=0;
+  TILES.forEach(function(t){t.ax=null;});
+  state.mode='dec'; placeMult('oct',true); placeMult('dec',true);
+  state.revealed=true; OMEGA.loc='grid'; OMEGA.ax=null; state.revealAt=state.clock;
+  state.qlines=true; state.sel='Om';
   updateCard(); syncUI(); draw();
 }
 
@@ -1097,31 +1149,6 @@ function hintText(){
   if(gapVisible())return '\u00B7 click the \u201C?\u201D gap';
   return '\u00B7 click any tile for its story';
 }
-function feedbackText(){
-  var p=state.predict;
-  if(p===null){
-    return state.revealed?'\u03A9\u207B measured: Q = \u22121, S = \u22123, m = 1672 MeV.'
-                         :'Optional \u2014 pick a charge, then click the gap.';
-  }
-  if(!state.revealed){
-    if(p===-1)return 'Locked in: Q = \u22121. Click the gap to test it.';
-    if(p===0)return '\u03A3*\u2070 is 0 \u2014 but does Q stay fixed moving down?';
-    return 'Which diagonal reaches (0, \u22123)? Follow it.';
-  }
-  if(p===-1)return '\u2714 Predicted \u22121 \u2014 \u03A9\u207B agrees. Symmetry works.';
-  if(p===0)return '\u2718 Columns don\u2019t keep Q \u2014 diagonals do. \u03A9\u207B is \u22121.';
-  return '\u2718 The \u0394\u207B \u2192 \u03A3*\u207B \u2192 \u039E*\u207B diagonal gives \u22121.';
-}
-function syncChips(){
-  [[elChipP,1],[elChipZ,0],[elChipM,-1]].forEach(function(cq){
-    var el=cq[0], q=cq[1];
-    var picked=(state.predict===q);
-    el.classList.toggle('is-picked',picked);
-    el.classList.toggle('is-right',state.revealed&&q===-1);
-    el.classList.toggle('is-wrong',state.revealed&&picked&&q!==-1);
-    el.setAttribute('aria-pressed',String(picked));
-  });
-}
 function syncUI(){
   elOct.classList.toggle('is-on',state.mode==='oct');
   elDec.classList.toggle('is-on',state.mode==='dec');
@@ -1129,15 +1156,13 @@ function syncUI(){
   elDec.setAttribute('aria-pressed',String(state.mode==='dec'));
   elQ.checked=state.qlines;
   elHint.textContent=hintText();
-  elOut.textContent=feedbackText();
-  syncChips();
 }
 function updateCard(){
   var s=state.sel;
   if(s==='gap'){
     elCN.textContent='?'; elCK.textContent='\u00B7 \u00B7 \u00B7';
     elCQ.textContent='?'; elCI.textContent='0'; elCS.textContent='\u22123'; elCM.textContent='?';
-    elNote.textContent='Empty point. Predict its charge, then click it.';
+    elNote.textContent='Empty point — the pattern says a particle belongs here.';
     return;
   }
   var t=s?TID[s]:null;
@@ -1264,9 +1289,6 @@ elDec.addEventListener('click',function(){
 elScatter.addEventListener('click',scatterCurrent);
 elPlace.addEventListener('click',placeAllCurrent);
 elQ.addEventListener('change',function(){ state.qlines=elQ.checked; draw(); });
-[[elChipP,1],[elChipZ,0],[elChipM,-1]].forEach(function(cq){
-  cq[0].addEventListener('click',function(){ state.predict=cq[1]; syncUI(); draw(); });
-});
 
 /* ================= KaTeX (deferred-safe) ================= */
 var ktries=0;
@@ -1303,8 +1325,15 @@ function onFrame(dt){
   for(i=pulses.length-1;i>=0;i--) if(state.clock-pulses[i].t0>1.0)pulses.splice(i,1);
   draw();
 }
-function onReset(){ stepState(5); }
-function onStep(i){ stepState(Math.max(0,Math.min(5,i|0))); }
+function onReset(){
+  // Inquiry open → re-sync the scene to the current card; collapsed (finished /
+  // lecture mode) → re-arm the completed free-exploration state.
+  var shellEl=document.getElementById('shell');
+  if(shellEl&&shellEl.classList.contains('inquiry-collapsed')) completedState();
+  else stepState(Math.max(0,Math.min(3,Shell.step|0)));
+}
+function onStep(i){ stepState(Math.max(0,Math.min(3,i|0))); }
+function onComplete(){ completedState(); }
 
 if(window.ResizeObserver){
   var wrap=document.querySelector('.sim-canvaswrap');
@@ -1312,8 +1341,24 @@ if(window.ResizeObserver){
 }
 window.addEventListener('resize',function(){ sizeCanvas(); draw(); });
 
-stepState(5);
-Shell.init({ onFrame:onFrame, onReset:onReset, onResize:onResize, onStep:onStep });
+stepState(0);
+/* ---------- guided-inquiry layer: choice feedback + data-reveal hooks ---------- */
+document.querySelectorAll('#inq-cards .inq-step').forEach(function(card){
+  var evalBox=card.querySelector('.predict-eval');
+  card.querySelectorAll('.choice').forEach(function(ch){ ch.addEventListener('click',function(){
+    if(card.dataset.answered) return; card.dataset.answered='1';
+    var correct=ch.hasAttribute('data-correct');
+    card.querySelectorAll('.choice').forEach(function(c){ c.disabled=true;
+      if(c.hasAttribute('data-correct')) c.classList.add('correct');
+      else if(c===ch) c.classList.add('wrong'); else c.classList.add('dim'); });
+    if(evalBox){ evalBox.innerHTML=ch.dataset.fb||''; evalBox.classList.add('show', correct?'correct':'wrong'); }
+    /* data-reveal — the commitment triggers the reveal via the sim's own setters */
+    var r=card.dataset.reveal;
+    if(r==='qlines'){ state.qlines=true; syncUI(); draw(); }
+    else if(r==='omega'){ revealOmega(); }
+  }); });
+});
+Shell.init({ onFrame:onFrame, onReset:onReset, onResize:onResize, onStep:onStep, onComplete:onComplete });
 onResize();
 })();
 </script>
