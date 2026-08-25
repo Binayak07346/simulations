@@ -305,11 +305,6 @@ body.light-theme .predict-eval .answer,body.light-theme .predict-eval strong,htm
 .sim-btnrow{display:flex;gap:6px}
 .sim-btn{flex:1 1 auto;min-width:0;padding:8px 10px;border:1.5px solid var(--accent);border-radius:8px;background:var(--accent);color:var(--bg);font-size:14px;font-weight:700;cursor:pointer;box-sizing:border-box}
 .sim-btn.sim-ghost{background:transparent;color:var(--text);border-color:var(--border)}
-.sim-predq{margin:12px 0 6px;font-size:14px;font-weight:600;color:var(--text);overflow-wrap:anywhere}
-.sim-chips{display:flex;gap:6px;flex-wrap:wrap}
-.sim-chip{padding:6px 10px;border:1.5px solid var(--border);border-radius:999px;background:var(--surface);color:var(--text);font-size:14px;cursor:pointer}
-.sim-chip.sim-sel{border-color:var(--accent);background:var(--accent);color:var(--bg);font-weight:700}
-.sim-predmsg{margin-top:8px;font-size:14px;font-weight:600;color:var(--accent);min-height:20px;overflow-wrap:anywhere}
 .sim-ro{width:100%;border-collapse:collapse}
 .sim-ro td{padding:5px 2px;border-bottom:1px solid var(--border);font-size:14px;color:var(--muted)}
 .sim-ro tr:last-child td{border-bottom:none}
@@ -393,40 +388,31 @@ body.light-theme .predict-eval .answer,body.light-theme .predict-eval strong,htm
       <div id="inq-dots" class="inq-dots"></div>
       <div id="inq-cards" class="aside-zone-body">
         <div class="inq-step"><h4>1 · The hadron factory</h4>
-          <p>Every ball in the tray is a quark — click one and it drops into a slot; fill the slots and they fuse into a hadron. On screen now: u u d, the <strong>proton</strong>, Rutherford's hydrogen nucleus (1919).</p>
-          <p>The sidebar tallies the sums: <strong>Charge Q</strong> reads +1, and if you open <strong>∑ Formal</strong>, the Gell-Mann–Nishijima strip checks it live: Q = I₃ + ½(B + S + …) = ½ + ½ = +1 ✓. The question this sim asks: which combinations work, which don't — and why?</p></div>
-<div class="inq-step" data-gate data-widget-gate><h4>2 · Three of a kind?</h4>
-          <p>The proton bound two identical u quarks without complaint. But loading all three slots with u — three <em>identical fermions</em> crowding one ground state — was widely called forbidden in the early 1950s.</p>
-          <p>The sidebar <strong>Predict</strong> panel asks exactly this question. Commit with one of its chips, and the sim builds u u u before your eyes. (Answered it earlier? Your call is recorded and Next is open.)</p></div>
-<div class="inq-step"><h4>3 · Colour to the rescue</h4>
-          <p>The slots hold u u u — and a particle card appeared: <strong>Δ⁺⁺</strong>, 1232 MeV, spin 3⁄2, found by Fermi's group in 1952. It exists because each u carries a different <em>hidden</em> charge.</p>
-          <p>Check the claim on the sidebar colour line: <strong>colour: r g b → white ✓</strong>. Three distinct colours — so Pauli is satisfied — and "white" is the rule for binding. The strip agrees: Q = 3⁄2 + ½ = +2.</p></div>
-<div class="inq-step" data-gate><h4>4 · White with only two?</h4>
-          <p>Baryons need all three colours to make white. Yet nature also holds <em>two</em>-quark hadrons — pairs, with no room for an r g b triple. How could a pair ever be colour-neutral?</p>
-          <button class="choice" data-fb="No — r + g is itself a <strong>coloured</strong> state, and coloured states stay confined. Only the full r g b triple made white on the last card; a pair needs a different trick entirely.">Any two colours blend closely enough to white</button>
-          <button class="choice" data-correct data-fb="Right — an antiquark carries <strong>anticolour</strong>, and r + r̄ cancels to white exactly. The sidebar's two-slot mode, <strong>Meson qq̄</strong>, is built on this.">Pair a quark with an ANTIquark — colour + anticolour cancels</button>
-          <button class="choice" data-fb="Two-particle hadrons were photographed in cosmic-ray emulsions in 1947 — they exist. The question is how they manage white, and the answer is anticolour.">It can't be done — only three-quark states are ever white</button>
+          <p>Click quarks into the slots; full slots fuse into a hadron. On screen: u u d — the <strong>proton</strong> (1919). <strong>Charge Q</strong> = +1, checked live by Gell-Mann–Nishijima under <strong>∑ Formal</strong>.</p></div>
+<div class="inq-step" data-gate data-build="baryon:uuu"><h4>2 · Three of a kind?</h4>
+          <p>The proton bound two identical u. Can all three slots hold u — three identical fermions, one ground state? Commit, and the sim builds u u u.</p>
+          <button class="choice" data-fb="So thought 1951 — yet Δ⁺⁺ exists (Fermi, 1952): each u takes a different <strong>colour</strong>, r g b → white ✓.">No — Pauli forbids it</button>
+          <button class="choice" data-correct data-fb="Yes — each u takes a different <strong>colour</strong> (r g b → white ✓), so Pauli is satisfied: the Δ⁺⁺, found 1952.">Yes</button>
           <div class="predict-eval"></div></div>
-<div class="inq-step"><h4>5 · The pion's trick</h4>
-          <p>The sim has switched to <strong>Meson qq̄</strong>: the slots hold u d̄ — the <strong>π⁺</strong>, photographed by Powell's emulsion group in 1947. The colour line now reads <strong>colour: r + r̄ → white ✓</strong> — the second route to neutrality.</p>
-          <p>The antiquark flips its flavour numbers too: d̄ contributes +⅓ to the charge, and the strip checks Q = 1 + ½(0 + …) = +1 ✓.</p></div>
-<div class="inq-step" data-gate><h4>6 · The strangeness ladder</h4>
-          <p>Back to baryons: the slots hold d s s — the Ξ⁻ "cascade" (1952). Each s quark lowers the <strong>Strange S</strong> readout by one: the Λ⁰ (u d s, the first "V track" of 1950) sits at S = −1, this Ξ⁻ at S = −2.</p>
-          <p>By 1962 every rung of the ladder was filled — except S = −3, which would need s s s. Can an empty rung in a pattern <em>predict</em> a particle?</p>
-          <button class="choice" data-fb="That was a common view — but Gell-Mann took the gap seriously enough to publish the missing particle's mass, charge, and strangeness in 1962, before any experiment had seen it.">No — patterns only organise what is known; discovery belongs to experiments</button>
-          <button class="choice" data-fb="Same objection as u u u — and the same escape: the three s quarks take three <strong>different colours</strong>, exactly like the Δ⁺⁺ you built. The state is allowed.">No — s s s is three identical fermions, and Pauli forbids that</button>
-          <button class="choice" data-correct data-fb="Precisely what Gell-Mann did in 1962: he predicted the <strong>Ω⁻</strong> — its strangeness, its charge, and its mass. Next: see how it ended.">Yes — the empty rung predicts an s s s particle at S = −3</button>
+<div class="inq-step" data-gate data-build="meson:ud"><h4>3 · White with only two?</h4>
+          <p>White took all three colours — yet two-quark hadrons exist. How can a pair be white?</p>
+          <button class="choice" data-correct data-fb="Right — watch u d̄ fuse: <strong>r + r̄ → white ✓</strong>. The π⁺, Powell 1947.">Quark + antiquark — colour + anticolour cancels</button>
+          <button class="choice" data-fb="r + g is still coloured, hence confined. The trick is antiquarks: u d̄ = π⁺ (1947), r + r̄ → white ✓.">Any two colours blend to white</button>
+          <button class="choice" data-fb="They can — with an antiquark: u d̄ = π⁺ (1947), <strong>r + r̄ → white ✓</strong>.">Pairs can't be white</button>
           <div class="predict-eval"></div></div>
-<div class="inq-step"><h4>7 · Found as predicted</h4>
-          <p>s s s fused: the <strong>Ω⁻</strong> — S = −3, 1672 MeV, exactly where the ladder pointed. Predicted by Gell-Mann in 1962; found at Brookhaven in 1964, from a single bubble-chamber photograph, with the predicted properties.</p>
-          <p>This is the deep lesson of the quark model: symmetry does not just organise particles — it <em>predicts</em> them.</p></div>
-<div class="inq-step" data-gate><h4>8 · Not yet ≠ never</h4>
-          <p><strong>Heavy quarks c · b · t</strong> is on — charm has joined the tray (c c̄ is the J/ψ that set off the 1974 revolution). Now consider c c c. It passes every rule you have learned: three colours make white, and the strip would read Q = 0 + ½(1 + 3) = +2. Build it — click <strong>c</strong> three times — and predict what its card will say:</p>
-          <button class="choice" data-correct data-fb="The purple card: <strong>✧ predicted only</strong>, with its theory mass and the <strong>pair cost 2mc²</strong> line that prices the delay. Absence is a schedule problem — the Ω⁻ itself took two years from prediction to photograph.">"Not yet observed" — allowed by the rules, still missing from every detector</button>
-          <button class="choice" data-fb="Colour rescues c c c exactly as it rescued u u u and s s s — three different colours, no Pauli conflict. The rules allow it; only the production cost stands in the way.">"Impossible" — three identical c quarks break Pauli</button>
-          <button class="choice" data-fb="No detector has produced one yet — triple charm needs three cc̄ pairs in a single event. Its card is purple: <strong>✧ predicted only</strong>, with the 2mc² cost of making it.">A discovered baryon, with its year and place</button>
+<div class="inq-step" data-gate data-build="baryon:sss"><h4>4 · The strangeness ladder</h4>
+          <p>On screen: Ξ⁻ (d s s), <strong>Strange S</strong> = −2 — each s lowers S by one. By 1962 only S = −3 (s s s) was unfilled. Can a gap predict a particle?</p>
+          <button class="choice" data-fb="Gell-Mann published the missing particle's mass and charge in 1962 — watch s s s fuse into it.">No — patterns organise; experiments discover</button>
+          <button class="choice" data-fb="Colour rescues s s s exactly as it rescued u u u. Watch it fuse.">No — Pauli forbids s s s</button>
+          <button class="choice" data-correct data-fb="The <strong>Ω⁻</strong>: predicted 1962, found at Brookhaven 1964 with the predicted mass. Symmetry predicts particles.">Yes — the gap predicts s s s at S = −3</button>
+          <div class="predict-eval"></div></div>
+<div class="inq-step" data-gate><h4>5 · Not yet ≠ never</h4>
+          <p><strong>Heavy quarks</strong> unlocked c, b, t (c c̄ = the 1974 J/ψ). c c c passes every rule — white, Q = +2. Click <strong>c</strong> three times: what will its card say?</p>
+          <button class="choice" data-correct data-fb="Purple: <strong>✧ predicted only</strong>, priced by its <strong>pair cost 2mc²</strong> line — absence is a budget problem.">"Not yet observed" — allowed, still unseen</button>
+          <button class="choice" data-fb="Colour rescues c c c like u u u and s s s — allowed, just expensive.">"Impossible" — Pauli forbids c c c</button>
+          <button class="choice" data-fb="Triple charm needs three cc̄ pairs at once; no detector has managed it. Purple: ✧ predicted only.">Discovered — with year and place</button>
           <div class="predict-eval"></div>
-          <p class="inq-after">One thing money can never buy: put a <strong>t</strong> in any combo and the card turns red — the top decays in 5×10⁻²⁵ s, before binding (~10⁻²³ s) can even begin. <em>Not yet</em> is a budget; <em>never</em> is a law. Press <strong>Frontier combo ▶</strong> to cycle the twelve predicted-but-unseen baryons — which would you hunt first?</p></div>
+          <p class="inq-after">Put a <strong>t</strong> in any combo: red — top decays (5×10⁻²⁵ s) before binding (~10⁻²³ s). <em>Not yet</em> is a budget; <em>never</em> is a law. <strong>Frontier combo ▶</strong> cycles the twelve unseen.</p></div>
       </div>
       <div class="inq-nav"><button id="inq-next" class="shell-btn primary">Next →</button></div>
     </div>
@@ -446,12 +432,6 @@ body.light-theme .predict-eval .answer,body.light-theme .predict-eval strong,htm
     <button id="btnFrontier" class="sim-btn">Frontier combo ▶</button>
     <button id="btnClear" class="sim-btn sim-ghost">Clear</button>
   </div>
-  <div class="sim-predq">Predict: can uuu bind — three identical quarks?</div>
-  <div class="sim-chips">
-    <button id="predNo" class="sim-chip">No — Pauli forbids it</button>
-    <button id="predYes" class="sim-chip">Yes</button>
-  </div>
-  <div class="sim-predmsg" id="predMsg"></div>
 </div>
 <div class="shell-panel">
   <div class="sim-ptitle">Current build</div>
@@ -760,25 +740,22 @@ bb:MF('Υ(1S)',9460.3,'1','1.2×10⁻²⁰ s','e⁺e⁻ / μ⁺μ⁻',1977,'Lede
 
 const FRONTIER=['dcc','scc','ucb','dcb','scb','ccb','ubb','dbb','sbb','cbb','bbb','ccc'];
 const STEPS=[
- {m:'baryon',q:['u','u','d']},          /* 1 · factory: the proton            */
- {m:'baryon',q:null},                   /* 2 · uuu predict: empty slots — the sidebar widget builds it */
- {m:'baryon',q:['u','u','u']},          /* 3 · Δ⁺⁺: colour to the rescue      */
- {m:'baryon',q:['u','u','u']},          /* 4 · meson predict: uuu stays on screen (mode switch is the reveal) */
- {m:'meson', q:['u','d']},              /* 5 · π⁺: colour + anticolour        */
- {m:'baryon',q:['d','s','s']},          /* 6 · Ξ⁻: the strangeness ladder     */
- {m:'baryon',q:['s','s','s']},          /* 7 · Ω⁻: found as predicted         */
- {m:'baryon',q:null,heavy:true}];       /* 8 · frontier: student builds ccc   */
+ {m:'baryon',q:['u','u','d']},          /* 1 · factory: the proton                          */
+ {m:'baryon',q:null},                   /* 2 · uuu predict: empty slots; the answer builds it */
+ {m:'baryon',q:['u','u','u']},          /* 3 · meson predict: uuu on screen; the answer builds ud̄ */
+ {m:'baryon',q:['d','s','s']},          /* 4 · Ξ⁻ ladder predict; the answer builds sss     */
+ {m:'baryon',q:null,heavy:true}];       /* 5 · frontier: student builds ccc                 */
 
 /* ---------- dom + state ---------- */
 const stage=document.getElementById('simStage');
 const ctx=stage.getContext('2d');
 const el=id=>document.getElementById(id);
 const ui={mb:el('modeBaryon'),mm:el('modeMeson'),heavy:el('heavyTgl'),fr:el('btnFrontier'),
-  clr:el('btnClear'),pn:el('predNo'),py:el('predYes'),pm:el('predMsg'),
+  clr:el('btnClear'),
   roQ:el('roQ'),roI3:el('roI3'),roS:el('roS'),roC:el('roC'),roBb:el('roBb'),roCol:el('roColor'),
   fG:el('fEqGMN'),fC:el('fEqCol'),fL:el('fLive')};
 const state={W:0,H:0,t:0,mode:'baryon',heavy:true,slots:[null,null,null],fusing:false,fuseT:0,
-  resolved:null,lib:[],libKeys:new Set(),pred:null,frontI:0,toast:null,
+  resolved:null,lib:[],libKeys:new Set(),frontI:0,toast:null,
   katexDone:false,fallbackSet:false,completed:false};
 let hits=[];
 
@@ -830,10 +807,7 @@ function buildCombo(mode,letters,instant){setMode(mode);
 function startFuse(instant){state.resolved=resolveCurrent();if(!state.resolved)return;
   state.fusing=true;state.fuseT=instant?1:0;if(instant)finalize();}
 function finalize(){const r=state.resolved;if(!r)return;state.fusing=false;state.fuseT=1;
-  libAdd(r);updateReadout();updateFormal();
-  if(r.key==='uuu'&&state.pred&&ui.pm){
-    ui.pm.textContent=state.pred==='no'?'Δ⁺⁺ exists! Colour makes the three u distinct.'
-                                       :'Correct — colour makes the three u distinct.';}}
+  libAdd(r);updateReadout();updateFormal();}
 function libAdd(r){let key,sym,yr=null;
   if(r.kind==='imp'){key='TOPX';sym='⊘ top';}
   else{key=r.key;sym=r.anti?conjSym(r.e.sym):r.e.sym;yr=r.e.yr||null;}
@@ -1064,12 +1038,6 @@ ui.clr.addEventListener('click',()=>{setMode(state.mode);afterUi();});
 ui.fr.addEventListener('click',()=>{state.heavy=true;
   const k=FRONTIER[state.frontI%FRONTIER.length];state.frontI++;
   buildCombo('baryon',k.split(''),false);afterUi();});
-function predictGo(p){state.pred=p;
-  ui.pn.classList.toggle('sim-sel',p==='no');ui.py.classList.toggle('sim-sel',p==='yes');
-  ui.pm.textContent=p==='no'?'Most physicists agreed in 1951. Watch uuu…':'Bold — testing uuu…';
-  buildCombo('baryon',['u','u','u'],false);syncControls();updateReadout();updateFormal();draw();}
-ui.pn.addEventListener('click',()=>predictGo('no'));
-ui.py.addEventListener('click',()=>predictGo('yes'));
 stage.addEventListener('click',ev=>{const r=stage.getBoundingClientRect();
   const x=ev.clientX-r.left,y=ev.clientY-r.top;
   for(let i=hits.length-1;i>=0;i--){const h=hits[i];let inside;
@@ -1093,15 +1061,10 @@ function onStep(i){const s=STEPS[i];if(!s)return;
   if(s.heavy)state.heavy=true;
   if(s.q)buildCombo(s.m,s.q,true);
   else setMode(s.m);
-  syncControls();updateReadout();updateFormal();draw();
-  /* Widget-gated card: a Predict commitment made at any time satisfies its gate. */
-  const act=document.querySelector('#inq-cards .inq-step.active');
-  if(act&&act.hasAttribute('data-widget-gate')&&state.pred)Shell.stepReady();}
+  syncControls();updateReadout();updateFormal();draw();}
 function onComplete(){state.completed=true;draw();}
-function onReset(){state.lib=[];state.libKeys.clear();state.pred=null;state.frontI=0;
+function onReset(){state.lib=[];state.libKeys.clear();state.frontI=0;
   state.toast=null;state.t=0;state.heavy=true;
-  if(ui.pm)ui.pm.textContent='';
-  ui.pn.classList.remove('sim-sel');ui.py.classList.remove('sim-sel');
   for(let i=0;i<STEPS.length;i++)onStep(i);
   draw();}
 function onResize(){const cv=stage;const r=cv.getBoundingClientRect();
@@ -1114,7 +1077,7 @@ function onResize(){const cv=stage;const r=cv.getBoundingClientRect();
 tryKatex();
 onReset();
 onResize();
-/* ---------- guided-inquiry layer: choice feedback + widget-gate wiring ---------- */
+/* ---------- guided-inquiry layer: choice feedback + data-build reveals ---------- */
 document.querySelectorAll('#inq-cards .inq-step').forEach(card=>{
   const evalBox=card.querySelector('.predict-eval');
   card.querySelectorAll('.choice').forEach(ch=>ch.addEventListener('click',()=>{
@@ -1124,12 +1087,12 @@ document.querySelectorAll('#inq-cards .inq-step').forEach(card=>{
       if(c.hasAttribute('data-correct')) c.classList.add('correct');
       else if(c===ch) c.classList.add('wrong'); else c.classList.add('dim'); });
     if(evalBox){ evalBox.innerHTML=ch.dataset.fb||''; evalBox.classList.add('show', correct?'correct':'wrong'); }
+    /* data-build="mode:letters" — the commitment triggers the reveal. */
+    const spec=card.dataset.build;
+    if(spec){ const m=spec.split(':'); buildCombo(m[0], m[1].split(''), false);
+      syncControls(); updateReadout(); updateFormal(); draw(); }
   }));
 });
-[ui.pn,ui.py].forEach(b=>b&&b.addEventListener('click',()=>{
-  const act=document.querySelector('#inq-cards .inq-step.active');
-  if(act&&act.hasAttribute('data-widget-gate'))Shell.stepReady();
-}));
 
 Shell.init({onFrame,onReset,onResize,onStep,onComplete});
 </script>

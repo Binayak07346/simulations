@@ -34,9 +34,19 @@ Allowed to touch:
   ‹ › pager — Next/Skip/dots only — so verification substitutes Finish fast-forward +
   Reset for the pager round-trip.)
 
+ALSO allowed — the fold-and-remove rule for inquiry leftovers:
+- Sim-side PREDICT / quiz / teaching widgets (predict question + chips, step lists,
+  standing inquiry prose in the sidebar) are inquiry content in the wrong place. FOLD
+  their question, choices, and feedback into the cards, then REMOVE them from the
+  sidebar: markup, their JS wiring (builder fns, listeners, state fields like
+  `state.pred`), and CSS that styled only them. After the rebuild, the cards are the
+  ONLY place guided-inquiry/predict content lives — zero leftovers. Verify no dangling
+  references (the sim loads clean).
+
 NEVER touch (even if it looks wrong or redundant):
-- Sim controls, panels, buttons, sliders, readouts, legends — add nothing, remove nothing,
-  rename nothing. A redundant sim-side predict widget stays; integrate it (see Step 3).
+- Genuine sim controls: mode buttons, sliders, action buttons (Fire/Clear/Frontier…),
+  checkboxes, live readouts, legends — add nothing, remove nothing, rename nothing.
+  (Only inquiry-content widgets fall under fold-and-remove above.)
 - Physics: constants, equations, update loops, sampling, drawing code.
 - Visuals/layout/CSS outside the inquiry classes above. Shell runtime code and shell ids.
 - If a card would need a control or readout the sim doesn't have, redesign the card —
@@ -125,11 +135,19 @@ Draft the spine as a TABLE before writing any HTML — one row per card:
 7. **RESOLVE + EXTEND** — the takeaway stated once, the historical anchor (who/when),
    and ONE open question that hands off to free exploration (pairs with `onComplete`).
 
-Hard rules: **5–8 cards** (never more; a thin sim may collapse beats 1–2). **One new idea
-per card.** Predict-before-reveal, no forward references, no standing-misconception text.
-Every card's prose must be TRUE OF THE SCREEN at that step — each claim checkable against
-the `onStep` state in the same row. Every action names its control/readout in **bold**,
-matching the on-screen label exactly. Prose: 2–4 full sentences, ≥14px default styles.
+Hard rules: **4–6 cards — the MINIMUM that covers the LO.** Reach that minimum by fusing
+beats: orient merges into the first ground card, and each predict card's ANSWER is its own
+observe — the correct/wrong feedback names what to watch, and (where the sim exposes a
+setter) the answer itself triggers the reveal via the handler's `data-build` hook, so no
+separate observe card is needed. **One new idea per card.** Predict-before-reveal, no
+forward references, no standing-misconception text. Every card's prose must be TRUE OF THE
+SCREEN at that step — each claim checkable against the `onStep` state in the same row.
+Every action names its control/readout in **bold**, matching the on-screen label exactly.
+
+**Brevity is a hard budget, not a style note.** Card prose ≤ 45 words (1–2 sentences per
+beat); choice labels ≤ 10 words; each `data-fb` ONE sentence ≤ 25 words. Numbers beat
+adjectives; never restate what an earlier card or the current scene already shows. If a
+sentence survives deletion without losing a checkable fact, delete it.
 
 ### LLM calls (subagent design + critique — use when the Agent tool is available)
 Settle the spine with independent brains before implementing; this is where quality is won:
@@ -198,10 +216,20 @@ styles); add the block only if genuinely absent.
   modes reachable, nothing gated) — it already runs on Finish AND Skip.
 
 ### Sim-side predict widgets (e.g. a Predict yes/no in the controls panel)
-Do NOT remove or duplicate them. Either (a) the card directs the student to answer THERE
-("commit using **Predict** on the right"), gated via a listener on the widget that calls
-`Shell.stepReady()`, or (b) if the widget covers a different question than your card,
-leave it alone entirely. Never two versions of the same question on screen.
+Fold and remove (see the hard-boundary section): the widget's question and choices become
+a gated card's `.choice` buttons (reuse the author's wording), its reveal behaviour moves
+to the handler's `data-build` hook, and the widget itself — markup, listeners, builder
+fns, its state fields, its dead CSS — is deleted. No predict/inquiry content may remain
+outside the cards.
+
+### The `data-build` hook — answer-triggered reveal (fuses predict + observe)
+Put `data-build="mode:letters"` (e.g. `data-build="baryon:uuu"`, `data-build="meson:ud"`)
+on a gated card to have the FIRST choice click drive the sim to the reveal state via the
+sim's own builder/setter. Add to the feedback handler, after the styling block:
+    const spec=card.dataset.build;
+    if(spec){ const m=spec.split(':'); buildCombo(m[0], m[1].split(''), false);
+      syncControls(); updateReadout(); updateFormal(); draw(); }
+(Adapt the setter names to the sim. Only ever call setters the sim's own controls call.)
 
 ### Existing broken choices (gold-foil pattern: `.choice` with no data attrs, static
 `.predict-eval` text, no handler)
@@ -226,7 +254,10 @@ Serve the folder (`python3 -m http.server 8765 --directory <folder>`) and drive 
    Reset: replays to a sane default with the inquiry intact.
 6. Layout: no overflow/overlap in the cards zone at ~1280px; long feedback doesn't
    push the controls off-screen.
-7. Console clean at every stage.
+7. Leftovers sweep: the sidebar shows NO predict/inquiry content outside the cards —
+   grep the folded widget's ids/classes to prove markup, JS, and CSS are gone with no
+   dangling references.
+8. Console clean at every stage.
 
 ## STEP 5 — Report (per sim)
 
@@ -244,11 +275,13 @@ sheet; verify each in its own tab). Commit policy: personal-fork origin only, ne
 company upstream; one commit per sim or one per batch as the user prefers.
 
 ## Do NOT
-- Change sim controls, visuals, physics, readouts, layout, shell runtime, or shell ids.
-- Remove ANY panel or widget (this differs from the old SR .mdc rule — v2 sims have no
-  content dropdowns to fold; everything stands).
-- Exceed 8 cards; put two ideas in one card; reveal a payoff before its prerequisite;
-  write a standing-misconception card; use generic feedback ("Wrong, try again").
+- Change genuine sim controls, visuals, physics, readouts, layout, shell runtime (beyond
+  the sanctioned re-enablement), or shell ids.
+- Leave ANY predict/inquiry content outside the cards (sidebar predict widgets, quiz
+  prose, step lists — fold and remove). Never remove genuine controls or readouts.
+- Exceed 6 cards; blow the word budgets; put two ideas in one card; reveal a payoff
+  before its prerequisite; write a standing-misconception card; use generic feedback
+  ("Wrong, try again").
 - Build dots/Next/Skip/pager; gate the sim itself (inquiry gates only its own Next).
 - Ship without the browser verification pass, or claim scene≍card agreement untested.
 
@@ -256,9 +289,13 @@ company upstream; one commit per sim or one per batch as the user prefers.
 - [ ] Classification stated with evidence BEFORE editing; C-state sims left unrebuilt.
 - [ ] Spine passed the designer-merge-critic loop (or explicit self-passes); LO and every
       course-context inquiry affordance covered by a specific card.
-- [ ] 5–8 cards, dependency-ordered, one idea each; ≥1 gated predict with misconception
-      distractors and physics-specific `data-fb` on every choice; correct position varies.
-- [ ] Existing good card content recycled, not discarded; existing broken choices rebuilt.
+- [ ] 4–6 cards (the minimum covering the LO), dependency-ordered, one idea each; word
+      budgets respected (prose ≤ 45, labels ≤ 10, fb ≤ 25); most cards gated predicts
+      with misconception distractors; correct position varies; predict+observe fused via
+      feedback / `data-build`.
+- [ ] Existing good card content recycled, not discarded; existing broken choices rebuilt;
+      sim-side predict/inquiry widgets folded in and REMOVED (markup + JS + CSS, no
+      dangling refs).
 - [ ] Feedback handler present exactly once; CSS not duplicated.
 - [ ] `onStep` deterministic + self-contained; pager round-trip verified; Finish/Skip/
       Reset/restore verified; onComplete leaves free exploration open.
