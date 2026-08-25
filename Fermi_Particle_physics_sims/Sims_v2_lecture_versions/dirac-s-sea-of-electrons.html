@@ -214,8 +214,10 @@ body.light-theme .predict-eval .answer,body.light-theme .predict-eval strong,htm
 #inq-cards{flex:1 1 auto;min-height:0;}
 .inq-step{display:none;}
 .inq-step.active{display:block;}
-.inq-nav{display:flex;justify-content:flex-end;flex-shrink:0;}
-#inq-next{min-width:96px;justify-content:center;}
+.inq-nav{display:flex;justify-content:space-between;flex-shrink:0;}
+.inq-pager{display:flex;align-items:center;gap:8px;}
+.inq-pager-btn{min-width:36px;padding:6px 11px;justify-content:center;font-size:13px;line-height:1;}
+#inq-next{min-width:96px;justify-content:center;margin-left:auto;}
 .aside-restore{display:none;width:100%;text-align:left;background:var(--panel-2);border:1px solid var(--line);
   color:var(--ink-mid);font:inherit;font-size:11px;letter-spacing:.06em;text-transform:uppercase;
   padding:8px 12px;border-radius:6px;cursor:pointer;flex-shrink:0;transition:background .15s,color .15s;}
@@ -310,13 +312,6 @@ body.light-theme .predict-eval .answer,body.light-theme .predict-eval strong,htm
 .sim-btn{width:100%;box-sizing:border-box;padding:9px 10px;border-radius:9px;border:1.5px solid var(--accent);background:var(--accent);color:var(--bg);font-size:14px;font-weight:700;cursor:pointer}
 .sim-btn:active{transform:translateY(1px)}
 .sim-q{margin:0 0 8px;font-size:14px;line-height:1.5;color:var(--text);min-width:0}
-.sim-chips{display:flex;flex-wrap:wrap;gap:6px}
-.sim-chip{padding:5px 10px;border-radius:999px;border:1.5px solid var(--border);background:var(--surface);color:var(--text);font-size:14px;cursor:pointer;min-width:0}
-.sim-chip:hover{border-color:var(--accent)}
-.sim-chip.sel{border-color:var(--accent);font-weight:700}
-.sim-chip.dim{opacity:.5}
-.sim-verdict{display:none;margin-top:8px;font-size:13px;line-height:1.45;color:var(--text);border-top:1px solid var(--border);padding-top:8px;overflow-wrap:anywhere;min-width:0}
-.sim-verdict.on{display:block}
 .sim-table{width:100%;border-collapse:collapse;margin-bottom:10px}
 .sim-table td{padding:5px 2px;font-size:13px;color:var(--muted);border-top:1px solid var(--border);overflow-wrap:anywhere}
 .sim-table tr:first-child td{border-top:none}
@@ -331,6 +326,9 @@ body.light-theme .predict-eval .answer,body.light-theme .predict-eval strong,htm
 .inq-step p{margin:0 0 12px;font-size:14px;line-height:1.55;color:var(--muted);}
 .inq-step .predict-eval{display:none;}
 .inq-step .predict-eval.show{display:block;}
+/* Post-answer reveal: extension prose hidden until the card's predict is committed. */
+.inq-step .inq-after{display:none;}
+.inq-step[data-answered] .inq-after{display:block;}
 </style>
 </head>
 <body>
@@ -367,6 +365,7 @@ body.light-theme .predict-eval .answer,body.light-theme .predict-eval strong,htm
     <div class="shell-group">
       <button id="shell-info" class="shell-btn" title="About this simulation">ⓘ Info</button>
       <button id="shell-theme" class="shell-btn" title="Toggle light / dark theme">☾</button>
+      <button id="shell-lecture" class="shell-btn" title="Lecture display mode — hide the guided inquiry, show the full simulation">🎓 Lecture</button>
     </div>
     <div class="shell-controls"><a id="shell-refine" class="shell-btn" style="display:none" target="_blank" rel="noopener" title="Refine this simulation (dev only)">✎ Refine</a>
       <div class="shell-group">
@@ -408,32 +407,48 @@ body.light-theme .predict-eval .answer,body.light-theme .predict-eval strong,htm
     <div id="aside-inquiry" class="aside-zone">
       <div class="aside-zone-head">
         <h3>Guided Inquiry</h3>
-        <button id="aside-inquiry-skip" class="shell-btn aside-skip" title="Skip the guided inquiry">Skip ✕</button>
       </div>
       <div id="inq-dots" class="inq-dots"></div>
       <div id="inq-cards" class="aside-zone-body">
-        <div class="inq-step"><h4>1 · The vacuum is full</h4><p>Every negative-energy state already holds an electron.</p></div>
-<div class="inq-step"><h4>2 · The sea is bottomless</h4><p>Stretch the energy axis: states continue down forever.</p></div>
-<div class="inq-step"><h4>3 · Heat lifts electrons out</h4><p>Thermal kicks fire jumps across the gap.</p></div>
-<div class="inq-step"><h4>4 · Each jump has a price</h4><p>Cost 2E(p) ≥ 1.022 MeV; a hole h⁺ stays behind.</p></div>
-<div class="inq-step"><h4>5 · Holes are positrons</h4><p>Field ℰ on: e⁻ and h⁺ drift apart; net charge stays 0.</p></div>
+        <div class="inq-step"><h4>1 · A sea with no bottom</h4>
+          <p>Dirac's vacuum isn't empty: every negative-energy state already holds an electron. Drag <strong>Axis depth</strong> as deep as it goes — every state you uncover is already filled.</p></div>
+<div class="inq-step" data-gate data-reveal="pair0"><h4>2 · What does one pair cost?</h4>
+          <p>A thermal kick can lift one electron from the sea across the gap, leaving a hole h⁺ behind. The minimum price of that jump?</p>
+          <button class="choice" data-fb="The electron leaves −E and must arrive at +E — the jump spans the full gap: watch <strong>cost to make the last pair</strong>.">0.511 MeV — one electron mass</button>
+          <button class="choice" data-correct data-fb="ΔE = 2E(p) ≥ 2mc² = 1.022 MeV — watch <strong>cost to make the last pair</strong>, then click the sea yourself.">1.022 MeV — the full 2mc² gap</button>
+          <button class="choice" data-fb="Energy is conserved: the kick or photon must deliver the whole 2E(p) gap before the pair exists.">Free — the sea supplies the energy</button>
+          <div class="predict-eval"></div></div>
+<div class="inq-step" data-gate data-reveal="excite"><h4>3 · Costlier further out?</h4>
+          <p>One pair at p ≈ 0 cost 1.022 MeV. The <strong>⚡ Excite</strong> button makes the next pair at p = +1 MeV/c. That one costs…</p>
+          <button class="choice" data-fb="E(p) = √((pc)² + (mc²)²) rises with |p| — watch the readout jump past 2.2 MeV.">The same — the gap is the gap</button>
+          <button class="choice" data-fb="Both branches bend away from each other with |p|: the separation 2E(p) only grows.">Less — it skips the steepest part</button>
+          <button class="choice" data-correct data-fb="2E(p) ≈ 2.25 MeV at 1 MeV/c — see <strong>cost to make the last pair</strong> and <strong>net momentum (matter)</strong>.">More — the pair also carries kinetic energy</button>
+          <div class="predict-eval"></div></div>
+<div class="inq-step" data-gate data-reveal="seed5"><h4>4 · Charging up the vacuum?</h4>
+          <p>At <strong>Temperature kT</strong> = 0.80 MeV the sea fires pairs on its own. As they accumulate, <strong>net charge</strong> will…</p>
+          <button class="choice" data-correct data-fb="Every −e that leaves the sea exposes a +e vacancy — <strong>net charge</strong> holds at 0 e however hot it gets.">Stay exactly 0 e</button>
+          <button class="choice" data-fb="Each new −e electron exists only because a +e hole was left behind; the sum never moves.">Drift negative — electrons keep appearing</button>
+          <button class="choice" data-fb="Every +e hole is paired with a −e electron lifted out — creation is charge-neutral.">Drift positive — holes carry +e</button>
+          <div class="predict-eval"></div></div>
+<div class="inq-step" data-gate data-reveal="drift"><h4>5 · Which way does the hole go?</h4>
+          <p>A hole h⁺ is a missing electron in the filled sea. When <strong>Field ℰ</strong> switches on: which way does h⁺ move compared with the excited electrons e⁻?</p>
+          <button class="choice" data-ans="with" data-fb="Your prediction rides as the dashed ghost; the solid h⁺ separates — a hole carries +e: it is a positron.">Same way as e⁻</button>
+          <button class="choice" data-correct data-ans="opp" data-fb="h⁺ drifts opposite e⁻ — the vacancy carries charge +e, so ℰ pushes it the other way: exactly a positron.">Opposite to e⁻</button>
+          <button class="choice" data-ans="none" data-fb="Your ghost stays pinned; the solid h⁺ leaves it behind — a vacancy in the filled sea drifts: it is a positron.">h⁺ can't move</button>
+          <div class="predict-eval"></div>
+          <p class="inq-after">Dirac predicted the hole-as-positron in 1931; Anderson photographed it in 1932. Click anywhere on the sea to pay 2E(p) at a p you choose — annihilation flashes hand the momentum to photons.</p></div>
       </div>
-      <div class="inq-nav"><button id="inq-next" class="shell-btn primary">Next →</button></div>
+      <div class="inq-nav">
+        <div class="inq-pager">
+          <button id="inq-prev" class="shell-btn primary inq-pager-btn" title="Previous step" aria-label="Previous step" disabled>&lt;</button>
+          <button id="inq-pager-next" class="shell-btn primary inq-pager-btn" title="Next step" aria-label="Next step">&gt;</button>
+        </div>
+        <button id="inq-next" class="shell-btn primary">Next →</button>
+      </div>
     </div>
     <button id="aside-inquiry-restore" class="aside-restore" title="Revisit the guided inquiry">▸ Guided inquiry</button>
     <div id="aside-controls" class="aside-zone">
       <div class="shell-panel"><div class="sim-pad">
-  <h3 class="sim-h">Predict first</h3>
-  <p class="sim-q">A hole <b>h⁺</b> is a missing electron in the filled sea. Switch the field ℰ on: which way does h⁺ move compared with the excited electrons e⁻?</p>
-  <div class="sim-chips">
-    <button class="sim-chip" data-ans="with">Same way as e⁻</button>
-    <button class="sim-chip" data-ans="opp">Opposite to e⁻</button>
-    <button class="sim-chip" data-ans="none">h⁺ can't move</button>
-  </div>
-  <div class="sim-verdict" id="predVerdict" aria-live="polite"></div>
-  <p class="sim-sub" style="margin-top:10px">Commit to a chip first — the field switches on and the strip below the main plot answers you.</p>
-</div></div>
-<div class="shell-panel"><div class="sim-pad">
   <h3 class="sim-h">Controls</h3>
   <button class="sim-btn" id="exciteBtn">⚡ Excite a pair at p = +1 MeV/c</button>
   <div class="sim-sub" style="margin-top:8px">Sign alternates each click — or click any point on the sea to pick p yourself.</div>
@@ -518,6 +533,16 @@ const Shell = (function(){
     root.classList.toggle('inquiry-collapsed', on);
     requestAnimationFrame(refit);
   }
+  // Lecture display mode: ON = the post-completion free-exploration state
+  // (finishInquiry fast-forwards, runs onComplete, collapses, resumes play);
+  // OFF (second click or the restore chip) = reopen the inquiry at card 1.
+  function setLectureMode(on){
+    root.classList.toggle('lecture-mode', on);
+    const b=document.getElementById('shell-lecture');
+    if(b) b.classList.toggle('active', on);
+    if(on){ finishInquiry(); }
+    else { setInquiryCollapsed(false); if(inqCards().length) inqShow(0); }
+  }
 
   // ---- Guided-inquiry stepper (shell-owned, so Next/Finish are always wired) ----
   // The SIM supplies sequential <div class="inq-step"> cards in #inq-cards. The
@@ -541,8 +566,23 @@ const Shell = (function(){
       next.disabled = gated;
       next.textContent = (inqStep>=cards.length-1) ? 'Finish' : 'Next →';
     }
+    inqUpdatePager();
     onStep(inqStep);
     requestAnimationFrame(refit);
+  }
+  function inqUpdatePager(){
+    const cards=inqCards();
+    const prev=document.getElementById('inq-prev');
+    const pnext=document.getElementById('inq-pager-next');
+    if(prev) prev.disabled = inqStep<=0;
+    if(pnext) pnext.disabled = inqStep>=cards.length-1;
+  }
+  function inqPrev(){
+    if(inqStep>0) inqShow(inqStep-1);
+  }
+  function inqPagerNext(){
+    const cards=inqCards();
+    if(inqStep<cards.length-1) inqShow(inqStep+1);
   }
   function inqNext(){
     const cards=inqCards();
@@ -579,7 +619,6 @@ const Shell = (function(){
     const reset=document.getElementById('shell-reset');
     const spd=document.getElementById('shell-speed');
     const maxBtn=document.getElementById('shell-maximize');
-    const skip=document.getElementById('aside-inquiry-skip');
     const restore=document.getElementById('aside-inquiry-restore');
     const tFormal=document.getElementById('toggle-formal');
 
@@ -613,11 +652,16 @@ const Shell = (function(){
     });
 
     // Skip ✕ jumps to the completed state (all controls live); restore reopens it.
-    if(skip) skip.addEventListener('click',finishInquiry);
-    if(restore) restore.addEventListener('click',()=>setInquiryCollapsed(false));
+    const lecture=document.getElementById('shell-lecture');
+    if(lecture) lecture.addEventListener('click',()=>setLectureMode(!root.classList.contains('lecture-mode')));
+    if(restore) restore.addEventListener('click',()=>setLectureMode(false));
     // Next / Finish — shell-driven step advance (Finish collapses the inquiry).
     const inqNextBtn=document.getElementById('inq-next');
     if(inqNextBtn) inqNextBtn.addEventListener('click',inqNext);
+    const inqPrevBtn=document.getElementById('inq-prev');
+    if(inqPrevBtn) inqPrevBtn.addEventListener('click',inqPrev);
+    const inqPagerNextBtn=document.getElementById('inq-pager-next');
+    if(inqPagerNextBtn) inqPagerNextBtn.addEventListener('click',inqPagerNext);
     // Auto-gate: a .choice click inside the active gated card enables Next.
     const cardsHost=document.getElementById('inq-cards');
     if(cardsHost) cardsHost.addEventListener('click',e=>{
@@ -645,15 +689,25 @@ const Shell = (function(){
     init(opts){
       onFrame=opts.onFrame||onFrame; onReset=opts.onReset||onReset; onResize=opts.onResize||onResize; onStep=opts.onStep||onStep; onComplete=opts.onComplete||onComplete;
       wire();
-      // Guided inquiry is retired from the sidebar: hide the whole zone + restore bar,
-      // and open the sim directly in its COMPLETED state (as if the student had finished
-      // the inquiry) — every control live, every staged panel revealed.
+      // Guided inquiry RE-ENABLED (was retired in the raw lecture export): build the
+      // step dots and open on card 1. Sims that ship no cards still fall back to the
+      // retired behaviour — zone hidden, sim opened in its completed state.
       const cards=inqCards();
       inqTotal=cards.length;
-      root.classList.add('no-inquiry');
-      onResize(); onReset();
-      if(inqTotal>0){ for(let k=0;k<cards.length;k++) onStep(k); inqStep=cards.length-1; }
-      onComplete();
+      if(inqTotal>0){
+        const dotsHost=document.getElementById('inq-dots');
+        if(dotsHost&&!dotsHost.children.length){
+          for(let k=0;k<inqTotal;k++){const d=document.createElement('div');d.className='inq-dot';dotsHost.appendChild(d);}
+        }
+        onResize(); onReset();
+        inqShow(0);
+      }else{
+        root.classList.add('no-inquiry');
+        const lb=document.getElementById('shell-lecture');
+        if(lb) lb.style.display='none';
+        onResize(); onReset();
+        onComplete();
+      }
       setPlaying(true);
       last=performance.now();
       if(!started){ started=true; requestAnimationFrame(loop); }
@@ -697,7 +751,7 @@ const EL='#3f97ff', HO='#ff6257', GOLD='#ffc94d';
 const S = {
   ktMeV:0.25, field:0, depthMeV:3.0,
   electrons:[], holes:[], flights:[], flashes:[], chips:[], ghosts:[],
-  lastCostMeV:null, sign:1, chosen:null, map:null, t:0
+  lastCostMeV:null, sign:1, map:null, t:0
 };
 
 function g(id){ return document.getElementById(id); }
@@ -706,10 +760,9 @@ const els = {
   kt:g('ktRange'), ktVal:g('ktVal'), ktK:g('ktKelvin'),
   field:g('fieldRange'), fieldVal:g('fieldVal'),
   depth:g('depthRange'), depthVal:g('depthVal'),
-  excite:g('exciteBtn'), verdict:g('predVerdict'),
+  excite:g('exciteBtn'),
   roPairs:g('roPairs'), roCost:g('roCost'), roQ:g('roQ'), roP:g('roP'),
-  labPairs:g('labPairs'), labCost:g('labCost'), labMom:g('labMom'),
-  chips:Array.prototype.slice.call(document.querySelectorAll('.sim-chip'))
+  labPairs:g('labPairs'), labCost:g('labCost'), labMom:g('labMom')
 };
 
 /* ===== theme tokens ===== */
@@ -1196,22 +1249,15 @@ function syncUI(){
 function pauseScrub(){ try{ if(window.Shell&&Shell.setPlaying) Shell.setPlaying(false); }catch(e){} draw(); }
 function play(){ try{ if(window.Shell&&Shell.setPlaying) Shell.setPlaying(true); }catch(e){} }
 
-function answer(btn){
-  S.chosen=btn.dataset.ans;
-  els.chips.forEach(c=>{ c.classList.toggle('sel',c===btn); c.classList.toggle('dim',c!==btn); });
-  const v=els.verdict; v.classList.add('on');
-  v.innerHTML = S.chosen==='opp'
-    ? '<b>✔ Right.</b> h⁺ drifts opposite e⁻ — the vacancy carries charge +e, so ℰ pushes it the other way. That is exactly a positron.'
-    : S.chosen==='with'
-    ? '<b>✘ Watch the strip.</b> Your prediction is the dashed ghost riding along with the electrons; the solid h⁺ separates from it, because a hole carries +e (it is a positron).'
-    : '<b>✘ It does move.</b> Your prediction is the dashed ghost, pinned in place; the solid h⁺ leaves it behind. A vacancy in the filled sea carries +e and drifts: it is a positron.';
-  /* make sure there is something to watch, then switch ℰ on — the reveal */
+/* The drift reveal (was the sidebar widget's answer handler): make sure there is
+   something to watch, switch ℰ on, and render a wrong prediction as its ghost. */
+function revealDrift(ans){
   if(S.electrons.length+upCount()<3) seed(SEED3);
   if(Math.abs(S.field)<0.05) S.field=0.6;
   syncUI();
   S.ghosts=[];
-  if(S.chosen==='with'||S.chosen==='none')
-    S.holes.forEach(h=>S.ghosts.push({x:h.x,mode:S.chosen,t:0}));
+  if(ans==='with'||ans==='none')
+    S.holes.forEach(h=>S.ghosts.push({x:h.x,mode:ans,t:0}));
   draw(); play();
 }
 function bindUI(){
@@ -1227,7 +1273,6 @@ function bindUI(){
     const p=clampP((x-m.L-m.pw/2)/(m.pw/2)*m.Pmax);
     spawnPair(p,true); play();
   });
-  els.chips.forEach(c=>c.addEventListener('click',()=>answer(c)));
   const tf=document.getElementById('toggle-formal');
   if(tf) tf.addEventListener('click',()=>setTimeout(syncFormalLabels,0));
 }
@@ -1243,18 +1288,17 @@ const SEED3=[0.0004,-0.0009,0.0012];
 function applyOpening(){
   clearDyn();
   S.ktMeV=0.25; S.field=0; S.depthMeV=3.0;
-  S.lastCostMeV=null; S.sign=1; S.chosen=null;
-  els.chips.forEach(c=>c.classList.remove('sel','dim'));
-  if(els.verdict){ els.verdict.classList.remove('on'); els.verdict.innerHTML=''; }
+  S.lastCostMeV=null; S.sign=1;
   syncUI(); syncFormalLabels(); draw();
 }
 function applyStep(i){
   clearDyn();
+  /* One spec per card; ℰ stays 0 on the predict cards — the ANSWER switches it on. */
   if(i===0){ S.ktMeV=0.10; S.field=0; S.depthMeV=3.0; S.lastCostMeV=null; }
-  else if(i===1){ S.ktMeV=0.10; S.field=0; S.depthMeV=14.0; S.lastCostMeV=null; }
-  else if(i===2){ S.ktMeV=0.80; S.field=0; S.depthMeV=3.0; seed(SEED5.slice(0,4)); S.lastCostMeV=2*Epos(0.0011)*1000; }
-  else if(i===3){ S.ktMeV=0.80; S.field=0; S.depthMeV=3.0; seed(SEED5); S.lastCostMeV=2*Epos(0.001)*1000; }
-  else { S.ktMeV=0.60; S.field=0.60; S.depthMeV=3.0; seed(SEED5); S.lastCostMeV=2*Epos(0.001)*1000; }
+  else if(i===1){ S.ktMeV=0.10; S.field=0; S.depthMeV=3.0; S.lastCostMeV=null; }
+  else if(i===2){ S.ktMeV=0.10; S.field=0; S.depthMeV=3.0; seed([0]); S.lastCostMeV=2*Epos(0)*1000; }
+  else if(i===3){ S.ktMeV=0.80; S.field=0; S.depthMeV=3.0; S.lastCostMeV=null; }
+  else { S.ktMeV=0.25; S.field=0; S.depthMeV=3.0; seed(SEED3); S.lastCostMeV=null; }
   syncUI(); draw();
 }
 
@@ -1294,6 +1338,25 @@ bindUI();
 renderFormal(12);
 syncFormalLabels();
 try{ applyOpening(); onResize(); }catch(e){}
+/* ---------- guided-inquiry layer: choice feedback + data-reveal hooks ---------- */
+document.querySelectorAll('#inq-cards .inq-step').forEach(card=>{
+  const evalBox=card.querySelector('.predict-eval');
+  card.querySelectorAll('.choice').forEach(ch=>ch.addEventListener('click',()=>{
+    if(card.dataset.answered) return; card.dataset.answered='1';
+    const correct=ch.hasAttribute('data-correct');
+    card.querySelectorAll('.choice').forEach(c=>{ c.disabled=true;
+      if(c.hasAttribute('data-correct')) c.classList.add('correct');
+      else if(c===ch) c.classList.add('wrong'); else c.classList.add('dim'); });
+    if(evalBox){ evalBox.innerHTML=ch.dataset.fb||''; evalBox.classList.add('show', correct?'correct':'wrong'); }
+    /* data-reveal — the commitment triggers the reveal via the sim's own setters */
+    const r=card.dataset.reveal;
+    if(r==='pair0'){ spawnPair(0,true); play(); }
+    else if(r==='excite'){ if(els.excite) els.excite.click(); }
+    else if(r==='seed5'){ seed(SEED5); draw(); play(); }
+    else if(r==='drift'){ revealDrift(ch.dataset.ans); }
+  }));
+});
+
 Shell.init({ onFrame:onFrame, onReset:onReset, onResize:onResize, onStep:onStep, onComplete:onComplete });
 </script>
 <script>/* dev-only reviewer affordance: link this sim to the refinement studio.
