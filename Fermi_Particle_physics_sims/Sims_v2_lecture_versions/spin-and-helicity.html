@@ -214,7 +214,9 @@ body.light-theme .predict-eval .answer,body.light-theme .predict-eval strong,htm
 .inq-step{display:none;}
 .inq-step.active{display:block;}
 .inq-nav{display:flex;justify-content:flex-end;flex-shrink:0;}
-#inq-next{min-width:96px;justify-content:center;}
+.inq-pager{display:flex;align-items:center;gap:8px;}
+.inq-pager-btn{min-width:36px;padding:6px 11px;justify-content:center;font-size:13px;line-height:1;}
+#inq-next{min-width:96px;justify-content:center;margin-left:auto;}
 .aside-restore{display:none;width:100%;text-align:left;background:var(--panel-2);border:1px solid var(--line);
   color:var(--ink-mid);font:inherit;font-size:11px;letter-spacing:.06em;text-transform:uppercase;
   padding:8px 12px;border-radius:6px;cursor:pointer;flex-shrink:0;transition:background .15s,color .15s;}
@@ -295,14 +297,11 @@ body.light-theme .predict-eval .answer,body.light-theme .predict-eval strong,htm
 .sim-stage canvas{flex:1 1 auto;min-width:0;min-height:240px;width:100%;height:100%;display:block;}
 .sim-panel{box-sizing:border-box;flex-shrink:0;}
 .sim-h{font-size:14px;font-weight:700;letter-spacing:.04em;color:var(--muted);text-transform:uppercase;margin:0 0 6px;}
-.sim-q{font-size:14px;font-weight:600;color:var(--text);margin:0 0 8px;overflow-wrap:anywhere;}
 .sim-chiprow{display:flex;gap:6px;flex-wrap:wrap;}
 .sim-chip{flex:1 1 auto;min-width:72px;padding:6px 8px;font-size:14px;font-weight:600;border:1.5px solid var(--border);border-radius:8px;background:var(--surface);color:var(--text);cursor:pointer;box-sizing:border-box;overflow-wrap:anywhere;}
 .sim-chip:hover{border-color:var(--accent);}
 .sim-chip.sim-on{background:var(--accent);border-color:var(--accent);color:var(--bg);}
 .sim-chip.sim-mini{min-width:60px;padding:5px 6px;}
-.sim-fb{min-height:40px;margin-top:8px;font-size:14px;color:var(--muted);overflow-wrap:anywhere;}
-.sim-fb.sim-strong{color:var(--text);font-weight:650;}
 .sim-row{display:flex;justify-content:space-between;align-items:baseline;gap:8px;margin-top:6px;min-width:0;}
 .sim-lab{font-size:14px;color:var(--muted);min-width:0;overflow-wrap:anywhere;}
 .sim-val{font-size:15px;font-weight:700;color:var(--text);font-variant-numeric:tabular-nums;white-space:nowrap;}
@@ -326,6 +325,9 @@ body.light-theme .predict-eval .answer,body.light-theme .predict-eval strong,htm
 .inq-step p{margin:0 0 12px;font-size:14px;line-height:1.55;color:var(--muted);}
 .inq-step .predict-eval{display:none;}
 .inq-step .predict-eval.show{display:block;}
+/* Post-answer reveal: extension prose hidden until the card's predict is committed. */
+.inq-step .inq-after{display:none;}
+.inq-step[data-answered] .inq-after{display:block;}
 </style>
 </head>
 <body>
@@ -365,6 +367,7 @@ body.light-theme .predict-eval .answer,body.light-theme .predict-eval strong,htm
     <div class="shell-group">
       <button id="shell-info" class="shell-btn" title="About this simulation">ⓘ Info</button>
       <button id="shell-theme" class="shell-btn" title="Toggle light / dark theme">☾</button>
+      <button id="shell-lecture" class="shell-btn" title="Lecture display mode — hide the guided inquiry, show the full simulation">🎓 Lecture</button>
     </div>
     <div class="shell-controls"><a id="shell-refine" class="shell-btn" style="display:none" target="_blank" rel="noopener" title="Refine this simulation (dev only)">✎ Refine</a>
       <div class="shell-group">
@@ -392,51 +395,42 @@ body.light-theme .predict-eval .answer,body.light-theme .predict-eval strong,htm
     <div id="aside-inquiry" class="aside-zone">
       <div class="aside-zone-head">
         <h3>Guided Inquiry</h3>
-        <button id="aside-inquiry-skip" class="shell-btn aside-skip" title="Skip the guided inquiry">Skip ✕</button>
       </div>
       <div id="inq-dots" class="inq-dots"></div>
       <div id="inq-cards" class="aside-zone-body">
-        <div class="inq-step" data-step="0">
-  <h4>Lab frame</h4>
-  <p>A 1 MeV electron: spin and momentum aligned, h = +1.</p>
-</div>
-<div class="inq-step" data-step="1">
-  <h4>Chase it</h4>
-  <p>Boost β = 0.5: p′ shrinks, spin unchanged, h still +1.</p>
-</div>
-<div class="inq-step" data-step="2">
-  <h4>Overtake it</h4>
-  <p>Boost β = 0.9995: p′ reverses, spin does not — h flips.</p>
-</div>
-<div class="inq-step" data-step="3">
-  <h4>Chirality ≠ helicity</h4>
-  <p>Same electron: 94.5% R-chiral, 5.5% L-chiral. Mass mixes them.</p>
-</div>
-<div class="inq-step" data-step="4">
-  <h4>Massless limit</h4>
-  <p>At p = 20 MeV, β → 1: R-chiral → 100%.</p>
-</div>
-<div class="inq-step" data-step="5">
-  <h4>Explore</h4>
-  <p>Drag β across the flip point. Watch spin, p′, h.</p>
-</div>
+        <div class="inq-step"><h4>1 · One electron, two arrows</h4>
+          <p>An electron with momentum 1 MeV. The purple arrow is its spin <strong>S</strong>; the lower arrow is its momentum <strong>p′</strong> in your frame. Helicity h = S·p̂ compares them: aligned, so the badge reads <strong>h = +1</strong>.</p></div>
+<div class="inq-step" data-gate data-reveal="overtake"><h4>2 · Overtake it</h4>
+          <p>You chase it at <strong>observer boost β</strong> = 0.5: p′ shrank to +0.51 MeV, the spin arrow never moved, h is still +1. Past the flip mark at β = 0.890 you overtake it. Then h will…</p>
+          <button class="choice" data-fb="The spin didn't change — but p̂ did: overtaken, <strong>p′ momentum</strong> reads −24.5 keV, so h = S·p̂ = −1.">Stay +1 — spin never changes</button>
+          <button class="choice" data-correct data-fb="p′ reverses, S does not: h = −1. Drag <strong>β</strong> across 0.890 yourself — h jumps, it never fades.">Flip to −1</button>
+          <button class="choice" data-fb="No fade: +1, one undefined instant at p′ = 0, then −1 — drag <strong>β</strong> slowly across 0.890 and watch the badge.">Fade smoothly to 0</button>
+          <div class="predict-eval"></div></div>
+<div class="inq-step" data-gate data-reveal="raisep"><h4>3 · Chirality ≠ helicity</h4>
+          <p>Overtaken at β = 0.9, h = −1. Yet the bottom bar still reads <strong>R-chiral 94.5%</strong> — exactly what it read before the flip. Which slider can move that chirality bar?</p>
+          <button class="choice" data-fb="It has ignored every boost so far — chirality is frame-invariant: P_R = (1+β_e)/2 contains no observer.">observer boost β</button>
+          <button class="choice" data-fb="It isn't fixed: chirality tracks the electron's own speed β_e, and momentum sets that speed.">Neither — it is fixed for electrons</button>
+          <button class="choice" data-correct data-fb="P_R = (1+β_e)/2 knows only the electron's own speed — p just jumped to 20 MeV: watch R hit ≈100%.">electron momentum p</button>
+          <div class="predict-eval"></div></div>
+<div class="inq-step" data-gate data-reveal="maxboost"><h4>4 · The massless limit</h4>
+          <p>At p = 20 MeV the electron outruns even your β = 0.9 chase: h = +1 again, the bar ≈100% R, and <strong>h flips at β =</strong> 1.000. At the slider's maximum, β = 0.9995, h will…</p>
+          <button class="choice" data-correct data-fb="β_e = 0.99997 sits beyond the slider: p′ never reverses. As m/E → 0, helicity becomes invariant — and equals chirality.">Stay +1 — you can't overtake it</button>
+          <button class="choice" data-fb="The flip needs β &gt; β_e = 0.99997 — out of reach: <strong>p′ momentum</strong> bottoms out at +0.11 MeV.">Flip, as it did before</button>
+          <button class="choice" data-fb="p′ = 0 only at β = β_e ≈ 0.99997, past the slider's end — p′ stops at +0.11 MeV, h stays defined.">Go undefined — p′ reaches zero</button>
+          <div class="predict-eval"></div>
+          <p class="inq-after">A massless particle can never be overtaken: its helicity is absolute and equals its chirality — that is what "left-handed neutrino" means. Explore: drag <strong>β</strong> across the flip at any p, or tap <strong>ride along</strong> to park at p′ ≈ 0.</p></div>
       </div>
-      <div class="inq-nav"><button id="inq-next" class="shell-btn primary">Next →</button></div>
+      <div class="inq-nav">
+        <div class="inq-pager">
+          <button id="inq-prev" class="shell-btn primary inq-pager-btn" title="Previous step" aria-label="Previous step" disabled>&lt;</button>
+          <button id="inq-pager-next" class="shell-btn primary inq-pager-btn" title="Next step" aria-label="Next step">&gt;</button>
+        </div>
+        <button id="inq-next" class="shell-btn primary">Next →</button>
+      </div>
     </div>
     <button id="aside-inquiry-restore" class="aside-restore" title="Revisit the guided inquiry">▸ Guided inquiry</button>
     <div id="aside-controls" class="aside-zone">
       <div class="shell-panel sim-panel">
-  <div class="sim-h">Predict</div>
-  <div class="sim-q">Boost the observer past the electron — helicity h will…</div>
-  <div class="sim-chiprow">
-    <button class="sim-chip" id="pr0" type="button">stay +1</button>
-    <button class="sim-chip" id="pr1" type="button">flip to −1</button>
-    <button class="sim-chip" id="pr2" type="button">fade to 0</button>
-  </div>
-  <div class="sim-fb" id="predictFb">Optional — or just explore.</div>
-</div>
-
-<div class="shell-panel sim-panel">
   <div class="sim-h">Controls</div>
   <div class="sim-row"><label class="sim-lab" for="pSlider">electron momentum p</label><span class="sim-val" id="pVal">1.00 MeV</span></div>
   <input class="sim-range" id="pSlider" type="range" min="-1.31" max="1.31" step="0.01" value="0">
@@ -513,6 +507,16 @@ const Shell = (function(){
     root.classList.toggle('inquiry-collapsed', on);
     requestAnimationFrame(refit);
   }
+  // Lecture display mode: ON = the post-completion free-exploration state
+  // (finishInquiry fast-forwards, runs onComplete, collapses, resumes play);
+  // OFF (second click or the restore chip) = reopen the inquiry at card 1.
+  function setLectureMode(on){
+    root.classList.toggle('lecture-mode', on);
+    const b=document.getElementById('shell-lecture');
+    if(b) b.classList.toggle('active', on);
+    if(on){ finishInquiry(); }
+    else { setInquiryCollapsed(false); if(inqCards().length) inqShow(0); }
+  }
 
   // ---- Guided-inquiry stepper (shell-owned, so Next/Finish are always wired) ----
   // The SIM supplies sequential <div class="inq-step"> cards in #inq-cards. The
@@ -536,8 +540,23 @@ const Shell = (function(){
       next.disabled = gated;
       next.textContent = (inqStep>=cards.length-1) ? 'Finish' : 'Next →';
     }
+    inqUpdatePager();
     onStep(inqStep);
     requestAnimationFrame(refit);
+  }
+  function inqUpdatePager(){
+    const cards=inqCards();
+    const prev=document.getElementById('inq-prev');
+    const pnext=document.getElementById('inq-pager-next');
+    if(prev) prev.disabled = inqStep<=0;
+    if(pnext) pnext.disabled = inqStep>=cards.length-1;
+  }
+  function inqPrev(){
+    if(inqStep>0) inqShow(inqStep-1);
+  }
+  function inqPagerNext(){
+    const cards=inqCards();
+    if(inqStep<cards.length-1) inqShow(inqStep+1);
   }
   function inqNext(){
     const cards=inqCards();
@@ -574,7 +593,6 @@ const Shell = (function(){
     const reset=document.getElementById('shell-reset');
     const spd=document.getElementById('shell-speed');
     const maxBtn=document.getElementById('shell-maximize');
-    const skip=document.getElementById('aside-inquiry-skip');
     const restore=document.getElementById('aside-inquiry-restore');
     const tFormal=document.getElementById('toggle-formal');
 
@@ -607,12 +625,17 @@ const Shell = (function(){
       else if(root.classList.contains('shell-max')) setMaximized(false);
     });
 
-    // Skip ✕ jumps to the completed state (all controls live); restore reopens it.
-    if(skip) skip.addEventListener('click',finishInquiry);
-    if(restore) restore.addEventListener('click',()=>setInquiryCollapsed(false));
+    // Lecture mode jumps to the completed state (all controls live); restore reopens at card 1.
+    const lecture=document.getElementById('shell-lecture');
+    if(lecture) lecture.addEventListener('click',()=>setLectureMode(!root.classList.contains('lecture-mode')));
+    if(restore) restore.addEventListener('click',()=>setLectureMode(false));
     // Next / Finish — shell-driven step advance (Finish collapses the inquiry).
     const inqNextBtn=document.getElementById('inq-next');
     if(inqNextBtn) inqNextBtn.addEventListener('click',inqNext);
+    const inqPrevBtn=document.getElementById('inq-prev');
+    if(inqPrevBtn) inqPrevBtn.addEventListener('click',inqPrev);
+    const inqPagerNextBtn=document.getElementById('inq-pager-next');
+    if(inqPagerNextBtn) inqPagerNextBtn.addEventListener('click',inqPagerNext);
     // Auto-gate: a .choice click inside the active gated card enables Next.
     const cardsHost=document.getElementById('inq-cards');
     if(cardsHost) cardsHost.addEventListener('click',e=>{
@@ -640,15 +663,25 @@ const Shell = (function(){
     init(opts){
       onFrame=opts.onFrame||onFrame; onReset=opts.onReset||onReset; onResize=opts.onResize||onResize; onStep=opts.onStep||onStep; onComplete=opts.onComplete||onComplete;
       wire();
-      // Guided inquiry is retired from the sidebar: hide the whole zone + restore bar,
-      // and open the sim directly in its COMPLETED state (as if the student had finished
-      // the inquiry) — every control live, every staged panel revealed.
+      // Guided inquiry RE-ENABLED (was retired in the raw lecture export): build the
+      // step dots and open on card 1. Sims that ship no cards still fall back to the
+      // retired behaviour — zone hidden, sim opened in its completed state.
       const cards=inqCards();
       inqTotal=cards.length;
-      root.classList.add('no-inquiry');
-      onResize(); onReset();
-      if(inqTotal>0){ for(let k=0;k<cards.length;k++) onStep(k); inqStep=cards.length-1; }
-      onComplete();
+      if(inqTotal>0){
+        const dotsHost=document.getElementById('inq-dots');
+        if(dotsHost&&!dotsHost.children.length){
+          for(let k=0;k<inqTotal;k++){const d=document.createElement('div');d.className='inq-dot';dotsHost.appendChild(d);}
+        }
+        onResize(); onReset();
+        inqShow(0);
+      }else{
+        root.classList.add('no-inquiry');
+        const lb=document.getElementById('shell-lecture');
+        if(lb) lb.style.display='none';
+        onResize(); onReset();
+        onComplete();
+      }
       setPlaying(true);
       last=performance.now();
       if(!started){ started=true; requestAnimationFrame(loop); }
@@ -697,8 +730,7 @@ window.__audit = {
 
   var state = {
     pMeV: 1, betaObs: 0,
-    phase: 0, xe: 0.35, labOff: 0,
-    predict: null, verdictShown: false, lastSign: 1
+    phase: 0, xe: 0.35, labOff: 0
   };
 
   // ---------- DOM ----------
@@ -706,14 +738,6 @@ window.__audit = {
   var pSlider = $('pSlider'), bSlider = $('bSlider'), pVal = $('pVal'), bVal = $('bVal');
   var flipTick = $('flipTick'), flipLab = $('flipLab');
   var rE = $('rE'), rP = $('rP'), rH = $('rH'), rV = $('rV'), rC = $('rC');
-  var fb = $('predictFb');
-  var prBtns = [$('pr0'), $('pr1'), $('pr2')];
-  var VER = [
-    'It flipped! Spin is intrinsic — momentum direction is not.',
-    'Correct: p′ reversed, spin did not, so h = −1.',
-    'No fade — h jumps sign the instant p′ reverses.'
-  ];
-  var FB_DEFAULT = 'Optional — or just explore.';
 
   // ---------- physics (same formulas as the audit hook) ----------
   function phys() {
@@ -960,22 +984,10 @@ window.__audit = {
     if (rC) rC.textContent = pctS(d.fR) + ' · ' + pctS(d.fL);
   }
 
-  function showVerdict() {
-    state.verdictShown = true;
-    if (fb && state.predict !== null) { fb.textContent = VER[state.predict]; fb.classList.add('sim-strong'); }
-  }
-  function flipCheck(d) {
-    var s = d.pT >= 0 ? 1 : -1;
-    if (s !== state.lastSign) {
-      state.lastSign = s;
-      if (s < 0 && state.predict !== null && !state.verdictShown) showVerdict();
-    }
-  }
   function tick(d) {
     d = d || phys();
     draw(d);
     updateReadouts(d);
-    flipCheck(d);
   }
 
   // ---------- state setters ----------
@@ -986,7 +998,7 @@ window.__audit = {
     if (bSlider) bSlider.value = String(beta);
   }
   function pauseForScrub() {
-    try { if (window.Shell && Shell.setPlaying) Shell.setPlaying(false); } catch (e) { }
+    try { if (Shell && Shell.setPlaying) Shell.setPlaying(false); } catch (e) { }
   }
 
   // ---------- events ----------
@@ -1007,21 +1019,6 @@ window.__audit = {
   if (jLab) jLab.addEventListener('click', function () { setBeta(0); });
   if (jMatch) jMatch.addEventListener('click', function () { setBeta(Math.round(phys().bP / 0.0005) * 0.0005); });
   if (jOver) jOver.addEventListener('click', function () { setBeta(0.9995); });
-
-  prBtns.forEach(function (btn, i) {
-    if (!btn) return;
-    btn.addEventListener('click', function () {
-      state.predict = i;
-      prBtns.forEach(function (c, k) { if (c) c.classList.toggle('sim-on', k === i); });
-      var d = phys();
-      if (d.pT < 0) { showVerdict(); }
-      else if (fb) {
-        state.verdictShown = false;
-        fb.classList.remove('sim-strong');
-        fb.textContent = 'Now drag boost β past ' + d.bP.toFixed(3) + '.';
-      }
-    });
-  });
 
   // ---------- KaTeX (guarded, retried) ----------
   var mathTries = 0;
@@ -1049,10 +1046,7 @@ window.__audit = {
   }
   function onReset() {
     state.phase = 0; state.xe = 0.35; state.labOff = 0;
-    state.predict = null; state.verdictShown = false; state.lastSign = 1;
     apply(1, 0);
-    prBtns.forEach(function (c) { if (c) c.classList.remove('sim-on'); });
-    if (fb) { fb.textContent = FB_DEFAULT; fb.classList.remove('sim-strong'); }
     tick();
   }
   function onResize() {
@@ -1068,16 +1062,45 @@ window.__audit = {
   }
   function onStep(i) {
     state.phase = 0; state.xe = 0.35; state.labOff = 0;
-    var presets = [[1, 0], [1, 0.5], [1, 0.9995], [1, 0], [20, 0], [1, 0]];
+    // One entry per inquiry card — deterministic, self-contained scenes:
+    // 1 lab frame · 2 chase at β=0.5 · 3 overtaken at β=0.9 · 4 p=20 MeV, β=0.9.
+    var presets = [[1, 0], [1, 0.5], [1, 0.9], [20, 0.9]];
     var s = presets[Math.min(Math.max(i, 0), presets.length - 1)];
     apply(s[0], s[1]);
     tick();
   }
+  function onComplete() {
+    // Free exploration from the baseline: flip point reachable, all controls live.
+    state.phase = 0; state.xe = 0.35; state.labOff = 0;
+    apply(1, 0);
+    tick();
+  }
 
   onResize();
-  if (window.Shell && Shell.init) {
-    Shell.init({ onFrame: onFrame, onReset: onReset, onResize: onResize, onStep: onStep });
-  }
+
+  /* ---------- guided-inquiry layer: choice feedback + data-reveal hooks ---------- */
+  document.querySelectorAll('#inq-cards .inq-step').forEach(function (card) {
+    var evalBox = card.querySelector('.predict-eval');
+    card.querySelectorAll('.choice').forEach(function (ch) {
+      ch.addEventListener('click', function () {
+        if (card.dataset.answered) return; card.dataset.answered = '1';
+        var correct = ch.hasAttribute('data-correct');
+        card.querySelectorAll('.choice').forEach(function (c) {
+          c.disabled = true;
+          if (c.hasAttribute('data-correct')) c.classList.add('correct');
+          else if (c === ch) c.classList.add('wrong'); else c.classList.add('dim');
+        });
+        if (evalBox) { evalBox.innerHTML = ch.dataset.fb || ''; evalBox.classList.add('show', correct ? 'correct' : 'wrong'); }
+        /* data-reveal — the commitment drives the scene via the sim's own setters */
+        var r = card.dataset.reveal;
+        if (r === 'overtake') { setBeta(0.9); }
+        else if (r === 'raisep') { apply(20, state.betaObs); tick(); }
+        else if (r === 'maxboost') { setBeta(0.9995); }
+      });
+    });
+  });
+
+  Shell.init({ onFrame: onFrame, onReset: onReset, onResize: onResize, onStep: onStep, onComplete: onComplete });
 })();
 </script>
 <script>/* dev-only reviewer affordance: link this sim to the refinement studio.
