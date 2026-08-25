@@ -488,7 +488,7 @@ body.light-theme #canvas2d{background:#060E11 !important;}
         <p><strong style="color:#60a5fa">Train frame</strong> — the camera rides inside the glass compartment. The photon simply bounces straight up and down between the mirrors while the night landscape streams past the windows.</p>
         <p><strong style="color:#f472b6">Platform frame</strong> — the camera stands still on the station platform. The train (visibly <strong>length-contracted</strong> by 1/γ) rushes past, and the very same photon must now chase the moving mirrors, tracing a longer <strong>diagonal zigzag</strong> path.</p>
         <p>Rest-frame tick: T<sub>A</sub> = 2h / c · Platform-frame tick: T<sub>B</sub> = 2hγ / c = γ · T<sub>A</sub> · γ = 1 / √(1 − β²) , θ = arcsin β.</p>
-        <p>Because the speed of light <em>c</em> is the same in both frames, the longer diagonal path must take longer — so the moving clock ticks slowly. The digital readouts and the graph in the sidebar show t<sub>B</sub> = t<sub>A</sub>/γ falling behind in real time.</p>
+        <p>Because the speed of light <em>c</em> is the same in both frames, the longer diagonal path must take longer — so the moving clock ticks slowly. The digital readouts and the graph in the sidebar show the train clock t<sub>A</sub> = t<sub>B</sub>/γ falling behind in real time.</p>
         <p><em>Adjust β = v/c and the mirror separation h with the sliders. The run resets automatically when the train leaves the station scene.</em></p>
       </div>
     </div>
@@ -619,12 +619,12 @@ body.light-theme #canvas2d{background:#060E11 !important;}
             <span class="stat-value green" id="statGamma">1.155</span>
           </div>
           <div class="stat-row">
-            <span class="stat-label">t<sub>A</sub> (platform clock)</span>
-            <span class="stat-value blue" id="statTa">0.000</span>
+            <span class="stat-label">t<sub>A</sub> (train clock)</span>
+            <span class="stat-value pink" id="statTb">0.000</span>
           </div>
           <div class="stat-row">
-            <span class="stat-label">t<sub>B</sub> (train clock)</span>
-            <span class="stat-value pink" id="statTb">0.000</span>
+            <span class="stat-label">t<sub>B</sub> (platform clock)</span>
+            <span class="stat-value blue" id="statTa">0.000</span>
           </div>
           <div class="stat-row">
             <span class="stat-label">θ (beam from vertical)</span>
@@ -2245,11 +2245,11 @@ window.Sim2D = (function() {
       gctx.textAlign = 'left';
       gctx.fillStyle = '#60a5fa';
       fillTextWithSubscripts(gctx, padL + 8, padT + 12, [
-        { t: '● ', sub: false }, { t: 't', sub: false }, { t: 'A', sub: true }
+        { t: '● ', sub: false }, { t: 't', sub: false }, { t: 'B', sub: true }
       ], '10px -apple-system, sans-serif', '#60a5fa');
       gctx.fillStyle = '#f472b6';
       fillTextWithSubscripts(gctx, padL + 50, padT + 12, [
-        { t: '● ', sub: false }, { t: 't', sub: false }, { t: 'B', sub: true }
+        { t: '● ', sub: false }, { t: 't', sub: false }, { t: 'A', sub: true }
       ], '10px -apple-system, sans-serif', '#f472b6');
       return;
     }
@@ -2294,11 +2294,11 @@ window.Sim2D = (function() {
     gctx.textAlign = 'left';
     gctx.fillStyle = '#60a5fa';
     fillTextWithSubscripts(gctx, padL + 8, padT + 12, [
-      { t: '● ', sub: false }, { t: 't', sub: false }, { t: 'A', sub: true }
+      { t: '● ', sub: false }, { t: 't', sub: false }, { t: 'B', sub: true }
     ], '10px -apple-system, sans-serif', '#60a5fa');
     gctx.fillStyle = '#f472b6';
     fillTextWithSubscripts(gctx, padL + 50, padT + 12, [
-      { t: '● ', sub: false }, { t: 't', sub: false }, { t: 'B', sub: true }
+      { t: '● ', sub: false }, { t: 't', sub: false }, { t: 'A', sub: true }
     ], '10px -apple-system, sans-serif', '#f472b6');
   }
 
@@ -4655,10 +4655,10 @@ window.Sim2D = (function() {
 
     // legend
     fillTextWithSubscripts(gctx, padL + 8, padT + 11, [
-      { t: '\u25CF ', sub: false }, { t: 't', sub: false }, { t: 'A', sub: true }
+      { t: '\u25CF ', sub: false }, { t: 't', sub: false }, { t: 'B', sub: true }
     ], '10px -apple-system, sans-serif', '#60a5fa');
     fillTextWithSubscripts(gctx, padL + 46, padT + 11, [
-      { t: '\u25CF ', sub: false }, { t: 't', sub: false }, { t: 'B', sub: true }
+      { t: '\u25CF ', sub: false }, { t: 't', sub: false }, { t: 'A', sub: true }
     ], '10px -apple-system, sans-serif', '#f472b6');
 
     if (graphData.length < 2) return;

@@ -1511,6 +1511,37 @@
         });
 
         document.getElementById('resetBtn').addEventListener('click', function() {
+            // Restore first-load defaults (not only cleared collapse / time).
+            const INITIAL = {
+                posX: 0,
+                posY: 0,
+                width: 0.75,
+                speed: 0.2
+            };
+
+            initialPosX = INITIAL.posX;
+            initialPosY = INITIAL.posY;
+            measurementSigma = INITIAL.width;
+            initialWidth = INITIAL.width;
+            simulationSpeed = INITIAL.speed;
+            referenceMax = 1 / (2 * Math.PI * measurementSigma * measurementSigma);
+
+            document.getElementById('xPosSlider').value = INITIAL.posX;
+            document.getElementById('xPosValue').textContent = INITIAL.posX.toFixed(1);
+            document.getElementById('yPosSlider').value = INITIAL.posY;
+            document.getElementById('yPosValue').textContent = INITIAL.posY.toFixed(1);
+            document.getElementById('widthSlider').value = INITIAL.width;
+            document.getElementById('widthValue').textContent = INITIAL.width.toFixed(2);
+            document.getElementById('speedSlider').value = INITIAL.speed;
+            document.getElementById('speedValue').textContent = INITIAL.speed.toFixed(2) + 'x';
+
+            setViewMode('3d');
+            if (camera && controls) {
+                camera.position.set(15, 15, 15);
+                controls.target.set(0, 0, 0);
+                controls.update();
+            }
+
             resetSimulation();
         });
 

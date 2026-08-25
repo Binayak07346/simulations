@@ -1045,7 +1045,7 @@
         <div class="top-bar-actions">
             <button type="button" class="btn-topbar btn-topbar-toggle" id="classical-btn" data-explore="Enable which-path detectors at each slit. When on, the interference pattern is replaced by a sum of single-slit–like distributions (decoherence / loss of coherence between paths).">Enable Detectors</button>
             <div class="sim-playback-btn-group">
-                <button type="button" class="btn-topbar btn-topbar-reset" id="reset-btn" data-explore="Clears hit counts on the screen texture and rebuilds wavefronts; slider settings are kept.">Reset</button>
+                <button type="button" class="btn-topbar btn-topbar-reset" id="reset-btn" data-explore="Returns the simulation to its first-load defaults: detectors off, default slider values, cleared screen hits, and rebuilt wavefronts.">Reset</button>
                 <button type="button" class="btn-topbar btn-topbar-playpause" id="sim-play-pause-btn" aria-label="Pause simulation" data-explore="Pause or resume the 3D wave animation and particle hits on the screen.">Pause</button>
             </div>
         </div>
@@ -2655,7 +2655,6 @@
                 state.animationSpeed = parseFloat(e.target.value);
                 document.getElementById('rate-value').textContent = state.animationSpeed.toFixed(2) + 'x';
             };
-            document.getElementById('reset-btn').onclick = resetSim;
 
             const playPauseBtn = document.getElementById('sim-play-pause-btn');
             function updateSimPlayPauseButton() {
@@ -2678,6 +2677,50 @@
                 };
                 updateSimPlayPauseButton();
             }
+
+            // Full reset to first-load defaults (detectors off + default params), not just cleared hits.
+            document.getElementById('reset-btn').onclick = () => {
+                const INITIAL = {
+                    sep: 1600,
+                    slitWidth: 500,
+                    lambda: 480,
+                    screenDist: 4000,
+                    rate: 1
+                };
+
+                state.detectorsOn = false;
+                preDetectorParams = null;
+                detectorBtn.classList.remove('active');
+                detectorBtn.textContent = 'Enable Detectors';
+                if (detectorGroup) detectorGroup.visible = false;
+                detector1Flash = 0;
+                detector2Flash = 0;
+
+                setSlider('slit-sep', INITIAL.sep, 'slit-sep-value', Math.round(INITIAL.sep) + ' nm');
+                setSlider('slit-width', INITIAL.slitWidth, 'slit-width-value', Math.round(INITIAL.slitWidth) + ' nm');
+                setSlider('wavelength', INITIAL.lambda, 'wavelength-value', Math.round(INITIAL.lambda) + ' nm');
+                setSlider('screen-dist', INITIAL.screenDist, 'screen-dist-value', Math.round(INITIAL.screenDist) + ' nm');
+                document.getElementById('rate').value = INITIAL.rate;
+                document.getElementById('rate-value').textContent = INITIAL.rate.toFixed(2) + 'x';
+
+                state.sep = INITIAL.sep * NM_TO_SIM.sep;
+                state.slitWidth = INITIAL.slitWidth * NM_TO_SIM.width;
+                state.lambda = INITIAL.lambda * NM_TO_SIM.lambda;
+                state.screenDistance = INITIAL.screenDist * NM_TO_SIM.screenDist;
+                state.animationSpeed = INITIAL.rate;
+                if (screenMesh) screenMesh.position.z = -state.screenDistance;
+
+                const valEl = document.getElementById('wavelength-value');
+                valEl.style.color = wavelengthToColor(INITIAL.lambda);
+                createSourceMarker();
+
+                simPaused = false;
+                animate.lastTime = undefined;
+                updateSimPlayPauseButton();
+
+                updateSimParams();
+                updateChartForMode();
+            };
 
             setupExploreTooltip();
 
