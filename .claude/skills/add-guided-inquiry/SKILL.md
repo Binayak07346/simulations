@@ -1,6 +1,6 @@
 ---
 name: add-guided-inquiry
-description: Detect, rebuild, or create the GUIDED-INQUIRY card flow for a particle-physics sim in Fermi_Particle_physics_sims/Sims_v2_lecture_versions/ (or any sim on the v2 embedded shell). First CLASSIFIES the sim — no inquiry / weak-or-broken inquiry / well-formed — then either creates a card spine from scratch or reorganises the existing one into a gated, predict-before-reveal card structure with excellent pedagogy, driving the scene step by step via onStep. Uses subagent (LLM) design+critique loops to settle the best card spine before implementing. STRICTLY inquiry-layer only — never changes sim controls, visuals, physics, readouts, or layout. Triggers - "add guided inquiry", "structure the guided inquiry", "rebuild the inquiry cards", "guided inquiry for <sim>", "inquiry for all v2 sims". NOT the SR .mdc rule (Capacity_SR_sims_v2_engine) and NOT a review skill.
+description: Detect, rebuild, or create the GUIDED-INQUIRY card flow for a particle-physics sim in Fermi_Particle_physics_sims/Sims_v2_lecture_versions/ (or any sim on the v2 embedded shell). First CLASSIFIES the sim — no inquiry / weak-or-broken inquiry / well-formed — then either creates a card spine from scratch or reorganises the existing one into a gated, predict-before-reveal card structure with excellent pedagogy, driving the scene step by step via onStep. Also installs LECTURE MODE on every sim (header 🎓 Lecture button - hides the inquiry, jumps to the post-completion free-exploration state; restore chip reopens at card 1; replaces Skip; adds the ‹ › pager) so no separate lecture-mode pass is needed. Uses subagent (LLM) design+critique loops to settle the best card spine before implementing. STRICTLY inquiry-layer only — never changes sim controls, visuals, physics, readouts, or layout. Triggers - "add guided inquiry", "structure the guided inquiry", "rebuild the inquiry cards", "guided inquiry for <sim>", "inquiry for all v2 sims". NOT the SR .mdc rule (Capacity_SR_sims_v2_engine) and NOT a review skill.
 ---
 
 # Guided-inquiry: detect → design → build (v2 particle-physics sims)
@@ -253,6 +253,51 @@ That is inquiry-layer markup — you own it. Rewrite those cards to the conventi
 (add `data-gate`, `data-correct`, per-choice `data-fb`, empty `.predict-eval`), keeping
 the author's question and choice wording wherever it is good.
 
+## STEP 3½ — Lecture mode (merged from the old add-lecture-mode rule; apply to EVERY sim)
+
+Every sim gets a header **`🎓 Lecture`** button so the inquiry never needs a separate
+skill pass. Behaviour (this supersedes the old SR rule's jump-to-last-card):
+- **ON (every click that enters it):** hide the guided inquiry to the `▸ Guided inquiry`
+  restore chip AND put the sim in its **post-completion state with free exploration** —
+  exactly what Finish produces. In the v2 shell that is one call: `finishInquiry()`
+  (fast-forwards every remaining `onStep`, runs `onComplete()`, collapses the zone,
+  resumes play). Do NOT reimplement it.
+- **OFF (second click, or the restore chip):** reopen the inquiry **at card 1** via
+  `setInquiryCollapsed(false); inqShow(0);`. Answered cards stay answered (review walk,
+  not a fresh quiz) — a full wipe is a separate opt-in, never added by default.
+
+The five edits (surgical, anchor-based — never swap the runtime block):
+1. **Header button** after `#shell-theme`:
+   `<button id="shell-lecture" class="shell-btn" title="Lecture display mode — hide the guided inquiry, show the full simulation">🎓 Lecture</button>`
+2. **Runtime fn** next to `setInquiryCollapsed`:
+       function setLectureMode(on){
+         root.classList.toggle('lecture-mode', on);
+         const b=document.getElementById('shell-lecture');
+         if(b) b.classList.toggle('active', on);
+         if(on){ finishInquiry(); }
+         else { setInquiryCollapsed(false); if(inqCards().length) inqShow(0); }
+       }
+3. **Wiring** in `wire()`: lecture click → `setLectureMode(!root.classList.contains('lecture-mode'))`;
+   re-point the restore chip from `setInquiryCollapsed(false)` to `setLectureMode(false)`.
+4. **Remove the `Skip ✕` button** (markup + its lookup + listener) — the Lecture button
+   owns hiding now. Keep `finishInquiry`/`setInquiryCollapsed` themselves.
+5. **`‹ ›` pager** (v2 sims ship none — add unless `inq-prev` already exists): pager
+   markup before `#inq-next` inside `.inq-nav`; `inqUpdatePager`/`inqPrev`/`inqPagerNext`
+   helpers calling ONLY `inqShow(inqStep±1)`; one `inqUpdatePager();` call inside
+   `inqShow` right before `onStep(inqStep);`; wiring beside the `inq-next` listener; CSS
+   `.inq-pager{display:flex;align-items:center;gap:8px;}` and
+   `.inq-pager-btn{min-width:36px;padding:6px 11px;justify-content:center;font-size:13px;line-height:1;}`
+   next to `.inq-nav`, plus `margin-left:auto` on `#inq-next` if missing. The pager is
+   deliberately ungated free navigation; `Next →` gating is untouched. Because `inqShow`
+   calls `onStep`, back/forward restores each card's exact scene — add NO other state logic.
+6. **Zero-cards sims** (`no-inquiry` fallback): hide the Lecture button
+   (`style.display='none'`) in that init branch.
+
+Known interactions (checked, safe — do not "fix"): entering Lecture skips gates exactly
+like Skip did; Finish and Lecture converge on the same collapsed+completed state, and the
+restore chip reopens at card 1 from either path; repeated Lecture clicks are idempotent
+(`onStep` specs are self-contained, `onComplete` is a flag-set).
+
 ## STEP 4 — Verify in the browser (required; no sign-off without it)
 
 Serve the folder (`python3 -m http.server 8765 --directory <folder>`) and drive the sim
@@ -266,8 +311,13 @@ Serve the folder (`python3 -m http.server 8765 --directory <folder>`) and drive 
    + Next unlocks; reload and take the correct choice → correct styling + its feedback.
 4. Pager: step to the end, then ‹ back to each card — scene identical to the forward
    pass (proves onStep self-contained).
-5. Finish and Skip: end state = fully-revealed completed state; restore chip works.
+5. Finish: end state = fully-revealed completed state; restore chip reopens at card 1.
    Reset: replays to a sane default with the inquiry intact.
+5b. Lecture mode: `🎓 Lecture` from card 1 → collapsed + post-completion scene + all
+   controls live (compare against a manual full click-through); button shows `.active`;
+   second click AND the restore chip both reopen at card 1 with answers preserved; the
+   old `Skip ✕` is gone. Pager: `‹` disabled on card 1, `›` on the last; forward-back-
+   forward lands on identical scenes; gating unchanged.
 6. Layout: no overflow/overlap in the cards zone at ~1280px; long feedback doesn't
    push the controls off-screen.
 7. Leftovers sweep: the sidebar shows NO predict/inquiry content outside the cards —
@@ -315,6 +365,9 @@ company upstream; one commit per sim or one per batch as the user prefers.
 - [ ] Feedback handler present exactly once; CSS not duplicated.
 - [ ] `onStep` deterministic + self-contained; pager round-trip verified; Finish/Skip/
       Reset/restore verified; onComplete leaves free exploration open.
+- [ ] Lecture mode installed (button, setLectureMode→finishInquiry, restore re-pointed,
+      Skip removed, pager added-or-already-present, hidden on zero-cards sims) and
+      verified per 5b.
 - [ ] Sim body untouched — diff shows changes only in `#inq-cards`, the handler, onStep/
-      onComplete/STEPS, and stepReady wiring.
+      onComplete/STEPS, stepReady wiring, and the lecture-mode/pager edits.
 - [ ] Console clean; per-card screenshots confirm every on-card claim.
