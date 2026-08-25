@@ -213,8 +213,10 @@ body.light-theme .predict-eval .answer,body.light-theme .predict-eval strong,htm
 #inq-cards{flex:1 1 auto;min-height:0;}
 .inq-step{display:none;}
 .inq-step.active{display:block;}
-.inq-nav{display:flex;justify-content:flex-end;flex-shrink:0;}
-#inq-next{min-width:96px;justify-content:center;}
+.inq-nav{display:flex;justify-content:space-between;flex-shrink:0;}
+.inq-pager{display:flex;align-items:center;gap:8px;}
+.inq-pager-btn{min-width:36px;padding:6px 11px;justify-content:center;font-size:13px;line-height:1;}
+#inq-next{min-width:96px;justify-content:center;margin-left:auto;}
 .aside-restore{display:none;width:100%;text-align:left;background:var(--panel-2);border:1px solid var(--line);
   color:var(--ink-mid);font:inherit;font-size:11px;letter-spacing:.06em;text-transform:uppercase;
   padding:8px 12px;border-radius:6px;cursor:pointer;flex-shrink:0;transition:background .15s,color .15s;}
@@ -268,6 +270,9 @@ body.light-theme .predict-eval .answer,body.light-theme .predict-eval strong,htm
 .inq-step p{margin:0 0 12px;font-size:14px;line-height:1.55;color:var(--muted);}
 .inq-step .predict-eval{display:none;}
 .inq-step .predict-eval.show{display:block;}
+/* Post-answer reveal: extension prose hidden until the card's predict is committed. */
+.inq-step .inq-after{display:none;}
+.inq-step[data-answered] .inq-after{display:block;}
 
 /* Readout β/φ switch (a genuine sim control — not a shell duplicate). */
 .switch{display:inline-flex;border:1px solid var(--ctrl-border);border-radius:6px;overflow:hidden;}
@@ -309,10 +314,6 @@ body.light-theme .predict-eval .answer,body.light-theme .predict-eval strong,htm
 .sim-r{display:flex;justify-content:space-between;align-items:baseline;gap:10px;font-size:14px;color:var(--muted)}
 .sim-r span{white-space:nowrap}
 .sim-r b{font-size:16px;font-weight:700;color:var(--text);text-align:right;min-width:0;overflow-wrap:anywhere}
-.sim-q{font-size:14px;color:var(--text);margin:0 0 8px}
-.sim-predict{display:flex;flex-direction:column;gap:6px}
-.sim-pred{font-size:14px;text-align:left;padding:7px 10px}
-.sim-feedback{min-height:40px;margin-top:8px;font-size:14px;line-height:1.35;color:var(--text);min-width:0;overflow-wrap:anywhere}
 .sim-formal{display:flex;flex-wrap:wrap;gap:14px 28px;align-items:flex-start}
 .sim-eq{min-width:180px;box-sizing:border-box}
 .sim-eq-cap{font-size:14px;color:var(--muted);margin-bottom:3px}
@@ -348,8 +349,8 @@ body.light-theme .predict-eval .answer,body.light-theme .predict-eval strong,htm
 </dl>
         <table class="shell-info-table">
   <tr><th>Principle</th><th>Where it appears</th></tr>
-  <tr><td>Predict, then test</td><td>The prediction chips immediately fire the particle you chose, so the detector itself delivers the verdict.</td></tr>
-  <tr><td>Misconception targeted structurally</td><td>"Heaviest goes deepest" is one of the answer chips; choosing it fires a proton that visibly stops one layer short of the muon chambers.</td></tr>
+  <tr><td>Predict, then test</td><td>The guided-inquiry prediction cards immediately fire the particle you chose, so the detector itself delivers the verdict.</td></tr>
+  <tr><td>Misconception targeted structurally</td><td>"Heaviest goes deepest" is one of the answer choices; choosing it fires a proton that visibly stops one layer short of the muon chambers.</td></tr>
   <tr><td>Invariant vs. varying</td><td>All TOF racers share one momentum; only mass differs, so E, β and arrival time split while E² − p² = m² stays fixed.</td></tr>
   <tr><td>Operational quantities</td><td>E, β, γ, TOF delay and the Cherenkov state are computed live from the same relativistic formulas exposed to the audit hook.</td></tr>
   <tr><td>Formal layer on demand</td><td>Equations live behind the formal-tools toggle; the scene teaches without them.</td></tr>
@@ -363,6 +364,7 @@ body.light-theme .predict-eval .answer,body.light-theme .predict-eval strong,htm
     <div class="shell-group">
       <button id="shell-info" class="shell-btn" title="About this simulation">ⓘ Info</button>
       <button id="shell-theme" class="shell-btn" title="Toggle light / dark theme">☾</button>
+      <button id="shell-lecture" class="shell-btn" title="Lecture display mode — hide the guided inquiry, show the full simulation">🎓 Lecture</button>
     </div>
     <div class="shell-controls"><a id="shell-refine" class="shell-btn" style="display:none" target="_blank" rel="noopener" title="Refine this simulation (dev only)">✎ Refine</a>
       <div class="shell-group">
@@ -393,18 +395,50 @@ body.light-theme .predict-eval .answer,body.light-theme .predict-eval strong,htm
     <div id="aside-inquiry" class="aside-zone">
       <div class="aside-zone-head">
         <h3>Guided Inquiry</h3>
-        <button id="aside-inquiry-skip" class="shell-btn aside-skip" title="Skip the guided inquiry">Skip ✕</button>
       </div>
       <div id="inq-dots" class="inq-dots"></div>
       <div id="inq-cards" class="aside-zone-body">
-        <div class="inq-step"><h4>Electron</h4><p>Curved track, then an EM-calorimeter shower.</p></div>
-<div class="inq-step"><h4>Photon</h4><p>Same shower — but no track. Neutral.</p></div>
-<div class="inq-step"><h4>Proton</h4><p>Punches through to the hadronic calorimeter.</p></div>
-<div class="inq-step"><h4>Muon</h4><p>Ionizes only — crosses every layer.</p></div>
-<div class="inq-step"><h4>Neutrino</h4><p>No signal anywhere: missing momentum.</p></div>
-<div class="inq-step"><h4>Same p, different mass</h4><p>The TOF race splits π, K, p.</p></div>
+        <div class="inq-step"><h4>1 · Reading the layers</h4>
+          <p>Every collider discovery ends in a detector like this. An e⁻ enters from the left: curved track in the <strong>Tracker</strong>, then a shower in the <strong>EM calorimeter</strong>. Where a particle dumps its energy is its fingerprint.</p></div>
+<div class="inq-step" data-gate data-reveal="fire:ph"><h4>2 · Now fire a photon</h4>
+          <p>The e⁻ ionized its way through the Tracker. A photon carries no charge. Committing fires one — what will the detector record?</p>
+          <button class="choice" data-fb="Neutral kills only the track; the EM calorimeter still absorbs it — watch the shower appear with no track.">Nothing — neutral particles are invisible</button>
+          <button class="choice" data-correct data-fb="No charge, no ionization, no track — yet the <strong>EM calorimeter</strong> absorbs it: 'no track (neutral)' tags the empty Tracker.">Same EM shower — but no track</button>
+          <button class="choice" data-fb="Tracks come from ionization, and that needs charge — the Tracker stays empty.">A track like the e⁻ — it still moves</button>
+          <div class="predict-eval"></div></div>
+<div class="inq-step" data-gate data-reveal="choice"><h4>3 · Who reaches the muon chambers?</h4>
+          <p>Only one species crosses every layer to the outer <strong>Muon spectrometer</strong>. Your pick fires immediately — the detector delivers the verdict.</p>
+          <button class="choice" data-ans="pr" data-fb="You fired p: it showers and stops in the HCAL. Mass ≠ reach.">p — heaviest goes deepest</button>
+          <button class="choice" data-ans="el" data-fb="You fired e⁻: it showers first, in the EM cal.">e⁻ — lightest and fastest</button>
+          <button class="choice" data-correct data-ans="mu" data-fb="You fired μ⁻: it only ionizes — crosses everything. Depth is interaction type, not mass.">μ⁻</button>
+          <div class="predict-eval"></div></div>
+<div class="inq-step" data-gate data-reveal="fire:nu"><h4>4 · The invisible particle</h4>
+          <p>Every species so far left some mark. Beta decay's other product, the neutrino, is next — committing fires a ν. What will the detector record?</p>
+          <button class="choice" data-correct data-fb="No charge, no strong force, almost no interaction — the red <strong>missing p</strong> arrow is its only witness.">Nothing — only missing momentum gives it away</button>
+          <button class="choice" data-fb="Tracks need charge; the ν has none — the Tracker stays dark.">A faint track in the Tracker</button>
+          <button class="choice" data-fb="That is the neutron's signature — neutral hadrons still feel the strong force; the ν doesn't.">A late shower in the HCAL</button>
+          <div class="predict-eval"></div></div>
+<div class="inq-step" data-gate data-reveal="fire:pr"><h4>5 · Three identical fingerprints</h4>
+          <p>π⁺, K⁺ and p share one <strong>Signature</strong>: track → HCAL shower. In the 10 m race below all have p = 1.0 GeV/c, yet p arrives last — 45.7 ns vs π's 33.7. So the proton's energy <strong>E</strong> is…</p>
+          <button class="choice" data-fb="Slow ≠ low energy: E² = p² + m², and the proton's m is largest — committing selects p so you can read <strong>E</strong>.">Lower — it is the slowest</button>
+          <button class="choice" data-fb="E depends on mass too: at fixed p, E² = p² + m² splits the three.">Equal — same momentum, same energy</button>
+          <button class="choice" data-correct data-fb="<strong>E</strong> = 1.371 GeV vs π's 1.010 — heavier means more E yet slower: β 0.73 vs 0.99.">Higher — E² = p² + m²</button>
+          <div class="predict-eval"></div></div>
+<div class="inq-step" data-gate data-reveal="mom5"><h4>6 · Turn up the momentum</h4>
+          <p>At 1.0 GeV/c the race splits cleanly — 12 ns between π and p. Committing sets <strong>Momentum p</strong> to 5.0 GeV/c for all racers. The arrival-time gaps will…</p>
+          <button class="choice" data-fb="Every β saturates near 1: all racers ride with the light pulse and the spread collapses.">Grow — more momentum, more spread</button>
+          <button class="choice" data-correct data-fb="p−π falls 12 ns → 0.6 ns, K−π to 0.15 — TOF identification dies at high p.">Shrink — every β → 1</button>
+          <button class="choice" data-fb="Mass is invariant, but β = p/E → 1 for everyone — the delays vanish.">Stay the same — mass never changes</button>
+          <div class="predict-eval"></div>
+          <p class="inq-after">This layered design is ATLAS and CMS in miniature. High-p ID needs other tricks — watch <strong>Cherenkov n=1.33</strong> flip ON as the proton passes ~1.1 GeV/c. Still unfired: K⁺ and n — find their signatures.</p></div>
       </div>
-      <div class="inq-nav"><button id="inq-next" class="shell-btn primary">Next →</button></div>
+      <div class="inq-nav">
+        <div class="inq-pager">
+          <button id="inq-prev" class="shell-btn primary inq-pager-btn" title="Previous step" aria-label="Previous step" disabled>&lt;</button>
+          <button id="inq-pager-next" class="shell-btn primary inq-pager-btn" title="Next step" aria-label="Next step">&gt;</button>
+        </div>
+        <button id="inq-next" class="shell-btn primary">Next →</button>
+      </div>
     </div>
     <button id="aside-inquiry-restore" class="aside-restore" title="Revisit the guided inquiry">▸ Guided inquiry</button>
     <div id="aside-controls" class="aside-zone">
@@ -438,16 +472,6 @@ body.light-theme .predict-eval .answer,body.light-theme .predict-eval strong,htm
   </div>
 </div>
 
-<div class="shell-panel sim-panel">
-  <div class="sim-panel-title">Predict, then fire</div>
-  <div class="sim-q">Which particle reaches the outer muon chambers?</div>
-  <div class="sim-predict" id="simPredGrid">
-    <button class="sim-chip sim-pred" data-pred="pr" aria-pressed="false">p — heaviest goes deepest</button>
-    <button class="sim-chip sim-pred" data-pred="el" aria-pressed="false">e⁻ — lightest and fastest</button>
-    <button class="sim-chip sim-pred" data-pred="mu" aria-pressed="false">μ⁻</button>
-  </div>
-  <div class="sim-feedback" id="simFb"></div>
-</div>
     </div>
   </aside>
 
@@ -502,6 +526,16 @@ const Shell = (function(){
     root.classList.toggle('inquiry-collapsed', on);
     requestAnimationFrame(refit);
   }
+  // Lecture display mode: ON = the post-completion free-exploration state
+  // (finishInquiry fast-forwards, runs onComplete, collapses, resumes play);
+  // OFF (second click or the restore chip) = reopen the inquiry at card 1.
+  function setLectureMode(on){
+    root.classList.toggle('lecture-mode', on);
+    const b=document.getElementById('shell-lecture');
+    if(b) b.classList.toggle('active', on);
+    if(on){ finishInquiry(); }
+    else { setInquiryCollapsed(false); if(inqCards().length) inqShow(0); }
+  }
 
   // ---- Guided-inquiry stepper (shell-owned, so Next/Finish are always wired) ----
   // The SIM supplies sequential <div class="inq-step"> cards in #inq-cards. The
@@ -525,8 +559,23 @@ const Shell = (function(){
       next.disabled = gated;
       next.textContent = (inqStep>=cards.length-1) ? 'Finish' : 'Next →';
     }
+    inqUpdatePager();
     onStep(inqStep);
     requestAnimationFrame(refit);
+  }
+  function inqUpdatePager(){
+    const cards=inqCards();
+    const prev=document.getElementById('inq-prev');
+    const pnext=document.getElementById('inq-pager-next');
+    if(prev) prev.disabled = inqStep<=0;
+    if(pnext) pnext.disabled = inqStep>=cards.length-1;
+  }
+  function inqPrev(){
+    if(inqStep>0) inqShow(inqStep-1);
+  }
+  function inqPagerNext(){
+    const cards=inqCards();
+    if(inqStep<cards.length-1) inqShow(inqStep+1);
   }
   function inqNext(){
     const cards=inqCards();
@@ -563,7 +612,6 @@ const Shell = (function(){
     const reset=document.getElementById('shell-reset');
     const spd=document.getElementById('shell-speed');
     const maxBtn=document.getElementById('shell-maximize');
-    const skip=document.getElementById('aside-inquiry-skip');
     const restore=document.getElementById('aside-inquiry-restore');
     const tFormal=document.getElementById('toggle-formal');
 
@@ -596,12 +644,17 @@ const Shell = (function(){
       else if(root.classList.contains('shell-max')) setMaximized(false);
     });
 
-    // Skip ✕ jumps to the completed state (all controls live); restore reopens it.
-    if(skip) skip.addEventListener('click',finishInquiry);
-    if(restore) restore.addEventListener('click',()=>setInquiryCollapsed(false));
+    // Lecture button jumps to the completed state (all controls live); restore reopens at card 1.
+    const lecture=document.getElementById('shell-lecture');
+    if(lecture) lecture.addEventListener('click',()=>setLectureMode(!root.classList.contains('lecture-mode')));
+    if(restore) restore.addEventListener('click',()=>setLectureMode(false));
     // Next / Finish — shell-driven step advance (Finish collapses the inquiry).
     const inqNextBtn=document.getElementById('inq-next');
     if(inqNextBtn) inqNextBtn.addEventListener('click',inqNext);
+    const inqPrevBtn=document.getElementById('inq-prev');
+    if(inqPrevBtn) inqPrevBtn.addEventListener('click',inqPrev);
+    const inqPagerNextBtn=document.getElementById('inq-pager-next');
+    if(inqPagerNextBtn) inqPagerNextBtn.addEventListener('click',inqPagerNext);
     // Auto-gate: a .choice click inside the active gated card enables Next.
     const cardsHost=document.getElementById('inq-cards');
     if(cardsHost) cardsHost.addEventListener('click',e=>{
@@ -629,15 +682,25 @@ const Shell = (function(){
     init(opts){
       onFrame=opts.onFrame||onFrame; onReset=opts.onReset||onReset; onResize=opts.onResize||onResize; onStep=opts.onStep||onStep; onComplete=opts.onComplete||onComplete;
       wire();
-      // Guided inquiry is retired from the sidebar: hide the whole zone + restore bar,
-      // and open the sim directly in its COMPLETED state (as if the student had finished
-      // the inquiry) — every control live, every staged panel revealed.
+      // Guided inquiry RE-ENABLED (was retired in the raw lecture export): build the
+      // step dots and open on card 1. Sims that ship no cards still fall back to the
+      // retired behaviour — zone hidden, sim opened in its completed state.
       const cards=inqCards();
       inqTotal=cards.length;
-      root.classList.add('no-inquiry');
-      onResize(); onReset();
-      if(inqTotal>0){ for(let k=0;k<cards.length;k++) onStep(k); inqStep=cards.length-1; }
-      onComplete();
+      if(inqTotal>0){
+        const dotsHost=document.getElementById('inq-dots');
+        if(dotsHost&&!dotsHost.children.length){
+          for(let k=0;k<inqTotal;k++){const d=document.createElement('div');d.className='inq-dot';dotsHost.appendChild(d);}
+        }
+        onResize(); onReset();
+        inqShow(0);
+      }else{
+        root.classList.add('no-inquiry');
+        const lb=document.getElementById('shell-lecture');
+        if(lb) lb.style.display='none';
+        onResize(); onReset();
+        onComplete();
+      }
       setPlaying(true);
       last=performance.now();
       if(!started){ started=true; requestAnimationFrame(loop); }
@@ -703,12 +766,16 @@ window.__audit = { at(momentumGeV) {
     ne: 'no track \u2192 HCAL shower',
     nu: 'nothing \u2014 missing momentum'
   };
-  const STEPS = [{ part: 'el' }, { part: 'ph' }, { part: 'pr' }, { part: 'mu' }, { part: 'nu' }, { part: 'pi' }];
-  const PRED = {
-    pr: { fire: 'pr', ok: false, html: '\u2717 You fired p: it stops in the HCAL. Mass \u2260 reach.' },
-    el: { fire: 'el', ok: false, html: '\u2717 You fired e\u207B: it showers first, in the EM cal.' },
-    mu: { fire: 'mu', ok: true, html: '\u2713 You fired \u03BC\u207B: it only ionizes \u2014 crosses everything.' }
-  };
+  /* Guided-inquiry scene spec \u2014 one self-contained entry per card (pre-answer state;
+     the card's own data-reveal drives the answer's reveal via the sim's setters). */
+  const STEPS = [
+    { part: 'el', p: 1 },  // 1 \u00B7 ground: e\u207B baseline (track \u2192 EM shower)
+    { part: 'el', p: 1 },  // 2 \u00B7 photon predict (e\u207B stays until commit)
+    { part: 'ph', p: 1 },  // 3 \u00B7 muon-chamber predict (photon settled)
+    { part: 'mu', p: 1 },  // 4 \u00B7 neutrino predict (muon settled)
+    { part: 'pi', p: 1 },  // 5 \u00B7 E at fixed p predict (pion selected)
+    { part: 'pr', p: 1 }   // 6 \u00B7 high-p TOF predict (proton selected)
+  ];
 
   const cvMain = $('simMain'), cvStrip = $('simStrip');
   const ctxMain = cvMain.getContext('2d'), ctxStrip = cvStrip.getContext('2d');
@@ -1136,14 +1203,30 @@ window.__audit = { at(momentumGeV) {
     ev = buildEvent(true);
     updateReadouts(); drawAll();
   });
-  document.querySelectorAll('#simPredGrid .sim-pred').forEach(b => {
-    b.addEventListener('click', () => {
-      document.querySelectorAll('#simPredGrid .sim-pred').forEach(o => o.setAttribute('aria-pressed', 'false'));
-      b.setAttribute('aria-pressed', 'true');
-      const pr = PRED[b.dataset.pred];
-      $('simFb').innerHTML = pr.html;
-      selectParticle(pr.fire);
-    });
+  /* ---------- guided-inquiry layer: choice feedback + data-reveal hooks ---------- */
+  document.querySelectorAll('#inq-cards .inq-step').forEach(card => {
+    const evalBox = card.querySelector('.predict-eval');
+    card.querySelectorAll('.choice').forEach(ch => ch.addEventListener('click', () => {
+      if (card.dataset.answered) return; card.dataset.answered = '1';
+      const correct = ch.hasAttribute('data-correct');
+      card.querySelectorAll('.choice').forEach(c => {
+        c.disabled = true;
+        if (c.hasAttribute('data-correct')) c.classList.add('correct');
+        else if (c === ch) c.classList.add('wrong'); else c.classList.add('dim');
+      });
+      if (evalBox) { evalBox.innerHTML = ch.dataset.fb || ''; evalBox.classList.add('show', correct ? 'correct' : 'wrong'); }
+      /* data-reveal — the commitment triggers the reveal via the sim's own setters */
+      const r = card.dataset.reveal;
+      if (r) {
+        if (window.Shell && Shell.setPlaying) Shell.setPlaying(true);
+        if (r === 'choice') selectParticle(ch.dataset.ans);
+        else if (r.slice(0, 5) === 'fire:') selectParticle(r.slice(5));
+        else if (r === 'mom5') {
+          state.p = 5; momEl.value = '5'; state.fireCount++;
+          ev = buildEvent(false); updateReadouts(); drawAll();
+        }
+      }
+    }));
   });
 
   /* ---------- KaTeX (guarded, deferred-safe) ---------- */
@@ -1182,16 +1265,14 @@ window.__audit = { at(momentumGeV) {
   function onReset() {
     state.part = 'pi'; state.p = 1; state.fireCount = 0;
     momEl.value = '1';
-    document.querySelectorAll('#simPredGrid .sim-pred').forEach(o => o.setAttribute('aria-pressed', 'false'));
-    $('simFb').innerHTML = '';
     syncChips(); updateReadouts();
     ev = buildEvent(false);
     drawAll();
   }
   function onStep(i) {
     const st = STEPS[Math.max(0, Math.min(STEPS.length - 1, i | 0))];
-    state.part = st.part; state.p = 1; state.fireCount = (i | 0);
-    momEl.value = '1';
+    state.part = st.part; state.p = st.p || 1; state.fireCount = (i | 0);
+    momEl.value = String(state.p);
     syncChips(); updateReadouts();
     ev = buildEvent(false);
     drawAll();
