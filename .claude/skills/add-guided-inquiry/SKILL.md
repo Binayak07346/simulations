@@ -24,6 +24,15 @@ Allowed to touch:
   CSS block (most v2 sims already ship it; check first, never duplicate).
 - Event wiring that calls `Shell.stepReady()` (e.g. a sim-side predict widget answered,
   or a "watch it happen" condition met).
+- **The ONE sanctioned shell change — inquiry re-enablement.** The v2 "lecture" exports
+  retire the inquiry inside `Shell.init` (comment "Guided inquiry is retired…",
+  `root.classList.add('no-inquiry')`, fast-forward all steps, `onComplete()`): with it in
+  place, no cards ever render. Replace ONLY that init block with: if cards exist → build
+  the `#inq-dots` dots (one `div.inq-dot` per card — this shell never builds them),
+  `onResize(); onReset(); inqShow(0);`; else keep the retired path verbatim as the
+  zero-cards fallback. Touch nothing else in the runtime. (Also note: this shell has NO
+  ‹ › pager — Next/Skip/dots only — so verification substitutes Finish fast-forward +
+  Reset for the pager round-trip.)
 
 NEVER touch (even if it looks wrong or redundant):
 - Sim controls, panels, buttons, sliders, readouts, legends — add nothing, remove nothing,
@@ -53,7 +62,10 @@ that line; grep for anchors and read around them. Make edits with exact-string r
 ## STEP 0 — Detect & classify (always first, before any edit)
 
 Open the sim (grep-based), extract `#inq-cards`, the sim's `onStep`, and any `.choice`
-usage. Classify into exactly one state and SAY WHICH, with evidence, before editing:
+usage. Also grep `no-inquiry` in `Shell.init`: the lecture exports RETIRE the inquiry
+there — if present, the sanctioned re-enablement (see the hard-boundary section) is part
+of the work regardless of card state. Classify into exactly one state and SAY WHICH,
+with evidence, before editing:
 
 - **State A — ABSENT**: `#inq-cards` empty or missing, or < 2 cards. → full CREATE path.
 - **State B — PRESENT BUT WEAK** (any one of these qualifies; most v2 sims are here):
