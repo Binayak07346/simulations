@@ -503,6 +503,7 @@ body.light-theme .predict-eval .answer,body.light-theme .predict-eval strong,htm
     <div class="sim-lab"><label for="ktRange">Temperature kT</label><span class="sim-val" id="ktVal">0.25 MeV</span></div>
     <input id="ktRange" type="range" min="0.05" max="1.5" step="0.01" value="0.25">
   </div>
+  <div class="sim-sub" id="ktKelvin">≈ 2.9×10⁹ K</div>
 </div></div>
 <div class="shell-panel"><div class="sim-pad">
   <h3 class="sim-h">Readouts</h3>
@@ -792,7 +793,7 @@ const S = {
 function g(id){ return document.getElementById(id); }
 const els = {
   sea:g('seaCanvas'), drift:g('driftCanvas'),
-  kt:g('ktRange'), ktVal:g('ktVal'),
+  kt:g('ktRange'), ktVal:g('ktVal'), ktK:g('ktKelvin'),
   field:g('fieldRange'), fieldVal:g('fieldVal'),
   depth:g('depthRange'), depthVal:g('depthVal'),
   excite:g('exciteBtn'),
@@ -1264,6 +1265,7 @@ function syncExcite(){
 function syncLabels(){
   if(!els.ktVal) return;
   els.ktVal.textContent=S.ktMeV.toFixed(2)+' MeV';
+  els.ktK.textContent='≈ '+(S.ktMeV*11.6045).toFixed(1)+'×10⁹ K';
   const f=S.field;
   els.fieldVal.textContent = Math.abs(f)<0.03 ? 'off' : (f>0?'→ ':'← ')+Math.abs(f).toFixed(2);
   els.depthVal.textContent='±'+S.depthMeV.toFixed(1)+' MeV';
