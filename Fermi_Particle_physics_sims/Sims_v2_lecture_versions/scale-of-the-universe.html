@@ -214,8 +214,10 @@ body.light-theme .predict-eval .answer,body.light-theme .predict-eval strong,htm
 #inq-cards{flex:1 1 auto;min-height:0;}
 .inq-step{display:none;}
 .inq-step.active{display:block;}
-.inq-nav{display:flex;justify-content:flex-end;flex-shrink:0;}
-#inq-next{min-width:96px;justify-content:center;}
+.inq-nav{display:flex;justify-content:space-between;flex-shrink:0;}
+.inq-pager{display:flex;align-items:center;gap:8px;}
+.inq-pager-btn{min-width:36px;padding:6px 11px;justify-content:center;font-size:13px;line-height:1;}
+#inq-next{min-width:96px;justify-content:center;margin-left:auto;}
 .aside-restore{display:none;width:100%;text-align:left;background:var(--panel-2);border:1px solid var(--line);
   color:var(--ink-mid);font:inherit;font-size:11px;letter-spacing:.06em;text-transform:uppercase;
   padding:8px 12px;border-radius:6px;cursor:pointer;flex-shrink:0;transition:background .15s,color .15s;}
@@ -269,6 +271,8 @@ body.light-theme .predict-eval .answer,body.light-theme .predict-eval strong,htm
 .inq-step p{margin:0 0 12px;font-size:14px;line-height:1.55;color:var(--muted);}
 .inq-step .predict-eval{display:none;}
 .inq-step .predict-eval.show{display:block;}
+.inq-step .inq-after{display:none;}
+.inq-step[data-answered] .inq-after{display:block;}
 
 /* Readout β/φ switch (a genuine sim control — not a shell duplicate). */
 .switch{display:inline-flex;border:1px solid var(--ctrl-border);border-radius:6px;overflow:hidden;}
@@ -316,14 +320,6 @@ body.light-theme .predict-eval .answer,body.light-theme .predict-eval strong,htm
 .sim-note b{color:var(--muted);font-weight:700;}
 .sim-bandkey{display:flex;flex-wrap:wrap;align-items:center;gap:5px 10px;margin:2px 0 0;font-size:12px;color:var(--text-muted);}
 .sim-bandkey i{display:inline-block;width:9px;height:9px;border-radius:2px;margin-right:5px;vertical-align:middle;}
-.sim-q{font-size:14px;color:var(--text);line-height:1.35;}
-.sim-chiprow{display:flex;flex-wrap:wrap;gap:6px;margin-top:9px;}
-.sim-chip{padding:6px 10px;border:1.5px solid var(--border);border-radius:999px;background:var(--surface);color:var(--text);font-size:14px;font-weight:600;cursor:pointer;}
-.sim-chip:hover{border-color:var(--accent);}
-.sim-chip[data-sel="1"]{border-color:var(--accent);color:var(--accent);background:color-mix(in srgb,var(--accent) 14%,var(--surface));}
-.sim-verdict{min-height:40px;margin-top:9px;font-size:13.5px;line-height:1.4;color:var(--muted);overflow-wrap:anywhere;}
-.sim-verdict.sim-good{color:var(--accent);font-weight:700;}
-.sim-verdict.sim-bad{color:var(--text);font-weight:600;}
 .sim-formal{display:flex;flex-direction:column;gap:8px;align-items:center;padding:6px 4px;}
 .sim-eq{font-size:17px;color:var(--text);text-align:center;overflow-wrap:anywhere;min-width:0;}
 .sim-formal-note{font-size:13.5px;color:var(--muted);text-align:center;max-width:760px;line-height:1.5;}
@@ -353,8 +349,8 @@ body.light-theme .predict-eval .answer,body.light-theme .predict-eval strong,htm
         <table class="shell-info-table">
   <thead><tr><th>Principle</th><th>In this sim</th></tr></thead>
   <tbody>
-    <tr><td>Predict first</td><td>The prediction chips sit first in the sidebar and are live from load; the zoom that tests them runs only after a choice.</td></tr>
-    <tr><td>Misconception encoded</td><td>The "better lens" chip freezes a dashed ghost wave at the old wavelength while the target shrinks 1000× — it visibly cannot resolve it.</td></tr>
+    <tr><td>Predict first</td><td>The guided-inquiry cards ask for a commitment before each reveal; the zoom that tests a prediction runs only after a choice.</td></tr>
+    <tr><td>Misconception encoded</td><td>The "better lens" choice freezes a dashed ghost wave at the old wavelength while the target shrinks 1000× — it visibly cannot resolve it.</td></tr>
     <tr><td>Invariant visible</td><td>ħc ≈ 0.197 GeV·fm ties the size ruler to the energy ruler at every zoom; E and p read identically (E = pc).</td></tr>
     <tr><td>Operational readouts</td><td>d, E<sub>min</sub> and the imaging-technology chip update live off one cursor; p appears with the Formal layer.</td></tr>
     <tr><td>Formal layer on demand</td><td>The de Broglie relation, the 197 GeV example and the on-canvas formulas stay behind the ∑ Formal toggle.</td></tr>
@@ -370,6 +366,7 @@ body.light-theme .predict-eval .answer,body.light-theme .predict-eval strong,htm
     <div class="shell-group">
       <button id="shell-info" class="shell-btn" title="About this simulation">ⓘ Info</button>
       <button id="shell-theme" class="shell-btn" title="Toggle light / dark theme">☾</button>
+      <button id="shell-lecture" class="shell-btn" title="Lecture display mode — hide the guided inquiry, show the full simulation">🎓 Lecture</button>
     </div>
     <div class="shell-controls"><a id="shell-refine" class="shell-btn" style="display:none" target="_blank" rel="noopener" title="Refine this simulation (dev only)">✎ Refine</a>
       <div class="shell-group">
@@ -402,34 +399,47 @@ body.light-theme .predict-eval .answer,body.light-theme .predict-eval strong,htm
     <div id="aside-inquiry" class="aside-zone">
       <div class="aside-zone-head">
         <h3>Guided Inquiry</h3>
-        <button id="aside-inquiry-skip" class="shell-btn aside-skip" title="Skip the guided inquiry">Skip ✕</button>
       </div>
       <div id="inq-dots" class="inq-dots"></div>
       <div id="inq-cards" class="aside-zone-body">
-        <div class="inq-step"><h4>Earth — d ≈ 10⁷ m</h4><p>Planet-sized detail. The minimum probe energy is vanishingly small: resolution is free out here.</p></div>
-<div class="inq-step"><h4>Cell — d ≈ 12 µm</h4><p>Twelve decades smaller than Earth. E<sub>min</sub> has climbed to about a tenth of an eV.</p></div>
-<div class="inq-step"><h4>Atom — d = 10⁻¹⁰ m</h4><p>Five more decades down, and E<sub>min</sub> is now keV — X-ray energies.</p></div>
-<div class="inq-step"><h4>Proton — d ≈ 1.7 fm</h4><p>Five more decades: E<sub>min</sub> is now hundreds of MeV.</p></div>
-<div class="inq-step"><h4>Quark — d &lt; 10⁻¹⁸ m</h4><p>At 10⁻¹⁸ m, E<sub>min</sub> ≈ 197 GeV. Nine decades of size have cost nine decades of energy.</p></div>
-<div class="inq-step"><h4>Explore the ladder</h4><p>Drag the cursor anywhere: d falls while E<sub>min</sub> rises, and the product d·E<sub>min</sub> never leaves ħc.</p></div>
+        <div class="inq-step"><h4>1 · The resolution ladder</h4>
+          <p>How small can physics see — and at what cost? On screen: a human, <strong>d</strong> = 1.7 m, with the probe wave that just resolves it. The bottom ruler runs Earth → quark, coloured by imaging technology. <strong>E<sub>min</sub></strong> reads 116 neV — resolution is free out here.</p></div>
+<div class="inq-step" data-gate data-reveal="zoom"><h4>2 · The price of 1000×</h4>
+          <p>Every probe is a wave, and detail finer than about one wavelength blurs away. From here the zoom will drop 1000× in d. What must happen to <strong>E<sub>min</sub></strong>? Commit — the zoom runs and tests it.</p>
+          <button class="choice" data-correct data-demo="before" data-fb="Right — watch <strong>E<sub>min</sub></strong> climb 1000× as d falls 1000×: they are locked together.">1000× higher</button>
+          <button class="choice" data-demo="before" data-fb="Backwards — watch the readout: smaller detail needs a shorter wave, and shorter waves cost more energy.">1000× lower</button>
+          <button class="choice" data-demo="stale" data-fb="No lens beats its wave: the dashed ghost keeps its old wavelength and visibly cannot resolve the smaller target.">Unchanged — a better lens will do</button>
+          <div class="predict-eval"></div></div>
+<div class="inq-step" data-gate><h4>3 · Where light gives up</h4>
+          <p>d = 100 nm — a virus, and <strong>E<sub>min</sub></strong> reads 1.97 eV: exactly a visible-light photon. Right here the ruler band hands over from <span style="color:#5fcb72">light</span> to <span style="color:#41c8dd">electron</span> microscopes. Why must the technology change?</p>
+          <button class="choice" data-fb="Engineering is not the wall — a flawless light microscope still blurs detail finer than light's own wavelength.">Electron microscopes are better engineered</button>
+          <button class="choice" data-correct data-fb="Yes — a 2 eV photon's wave is ~100 nm, as big as the virus; electrons pack more momentum into shorter waves.">Light's own wavelength is now bigger than the target</button>
+          <button class="choice" data-fb="Viruses scatter light fine — but any detail finer than one wavelength blurs away regardless of the sample.">Light damages samples this small</button>
+          <div class="predict-eval"></div></div>
+<div class="inq-step" data-gate data-reveal="proton"><h4>4 · Decades for decades</h4>
+          <p>d = 10⁻¹⁰ m — an atom; <strong>E<sub>min</sub></strong> ≈ 2 keV, X-ray territory. The proton is 100,000× smaller still (1.7 fm). Predict E<sub>min</sub> there — the zoom will check you.</p>
+          <button class="choice" data-fb="The ladder is log–log: five decades of size cost five decades of energy. Watch <strong>E<sub>min</sub></strong> land at 116 MeV.">A few times more — tens of keV</button>
+          <button class="choice" data-fb="Brightness adds photons, not resolution — each photon's wave is unchanged. Watch <strong>E<sub>min</sub></strong> climb to 116 MeV.">Same keV — just a brighter beam</button>
+          <button class="choice" data-correct data-fb="Decade for decade — watch the zoom land at 1.7 fm as <strong>E<sub>min</sub></strong> climbs to 116 MeV.">About 100,000× more — hundreds of MeV</button>
+          <div class="predict-eval"></div></div>
+<div class="inq-step" data-gate><h4>5 · Why no one has seen a quark</h4>
+          <p>d = 10⁻¹⁸ m — quark scale. <strong>E<sub>min</sub></strong> reads 197 GeV, and the ruler band says <span style="color:#b26ef7">collider</span>. Why will no microscope ever photograph a quark?</p>
+          <button class="choice" data-fb="No size is too small for a short-enough wave — the barrier is the energy that wave costs.">Quarks are simply too small for any wave</button>
+          <button class="choice" data-correct data-fb="Right — only colliders reach 197 GeV, and they reconstruct collision debris, never an image; below 2×10⁻¹⁹ m, no machine at all.">That wave costs ~197 GeV — collider territory</button>
+          <button class="choice" data-fb="Scattering does probe quarks inside protons — confinement bars free quarks, not high-momentum probing.">Confinement hides quarks from probes</button>
+          <div class="predict-eval"></div>
+          <p class="inq-after">Nine decades of size cost nine decades of energy: d·E<sub>min</sub> never leaves ħc ≈ 0.197 GeV·fm. Drag the ruler cursor anywhere and watch <strong>d</strong> fall as <strong>E<sub>min</sub></strong> climbs, decade for decade.</p></div>
       </div>
-      <div class="inq-nav"><button id="inq-next" class="shell-btn primary">Next →</button></div>
+      <div class="inq-nav">
+        <div class="inq-pager">
+          <button id="inq-prev" class="shell-btn primary inq-pager-btn" title="Previous step" aria-label="Previous step" disabled>&lt;</button>
+          <button id="inq-pager-next" class="shell-btn primary inq-pager-btn" title="Next step" aria-label="Next step">&gt;</button>
+        </div>
+        <button id="inq-next" class="shell-btn primary">Next →</button>
+      </div>
     </div>
     <button id="aside-inquiry-restore" class="aside-restore" title="Revisit the guided inquiry">▸ Guided inquiry</button>
     <div id="aside-controls" class="aside-zone">
-
-      <div class="shell-panel" id="sim-panel-predict">
-        <div class="sim-pad">
-          <div class="sim-ptitle">Predict first</div>
-          <div class="sim-q">To resolve a detail 1000× smaller, the probe energy must be…</div>
-          <div class="sim-chiprow">
-            <button class="sim-chip" id="sim-p0" type="button">1000× higher</button>
-            <button class="sim-chip" id="sim-p1" type="button">1000× lower</button>
-            <button class="sim-chip" id="sim-p2" type="button">unchanged — better lens</button>
-          </div>
-          <div class="sim-verdict" id="sim-verdict">Pick one — the zoom then runs and tests it.</div>
-        </div>
-      </div>
 
       <div class="shell-panel">
         <div class="sim-pad">
@@ -530,6 +540,16 @@ const Shell = (function(){
     root.classList.toggle('inquiry-collapsed', on);
     requestAnimationFrame(refit);
   }
+  // Lecture display mode: ON = the post-completion free-exploration state
+  // (finishInquiry fast-forwards, runs onComplete, collapses, resumes play);
+  // OFF (second click or the restore chip) = reopen the inquiry at card 1.
+  function setLectureMode(on){
+    root.classList.toggle('lecture-mode', on);
+    const b=document.getElementById('shell-lecture');
+    if(b) b.classList.toggle('active', on);
+    if(on){ finishInquiry(); }
+    else { setInquiryCollapsed(false); if(inqCards().length) inqShow(0); }
+  }
 
   // ---- Guided-inquiry stepper (shell-owned, so Next/Finish are always wired) ----
   // The SIM supplies sequential <div class="inq-step"> cards in #inq-cards. The
@@ -553,8 +573,23 @@ const Shell = (function(){
       next.disabled = gated;
       next.textContent = (inqStep>=cards.length-1) ? 'Finish' : 'Next →';
     }
+    inqUpdatePager();
     onStep(inqStep);
     requestAnimationFrame(refit);
+  }
+  function inqUpdatePager(){
+    const cards=inqCards();
+    const prev=document.getElementById('inq-prev');
+    const pnext=document.getElementById('inq-pager-next');
+    if(prev) prev.disabled = inqStep<=0;
+    if(pnext) pnext.disabled = inqStep>=cards.length-1;
+  }
+  function inqPrev(){
+    if(inqStep>0) inqShow(inqStep-1);
+  }
+  function inqPagerNext(){
+    const cards=inqCards();
+    if(inqStep<cards.length-1) inqShow(inqStep+1);
   }
   function inqNext(){
     const cards=inqCards();
@@ -591,7 +626,6 @@ const Shell = (function(){
     const reset=document.getElementById('shell-reset');
     const spd=document.getElementById('shell-speed');
     const maxBtn=document.getElementById('shell-maximize');
-    const skip=document.getElementById('aside-inquiry-skip');
     const restore=document.getElementById('aside-inquiry-restore');
     const tFormal=document.getElementById('toggle-formal');
 
@@ -624,12 +658,17 @@ const Shell = (function(){
       else if(root.classList.contains('shell-max')) setMaximized(false);
     });
 
-    // Skip ✕ jumps to the completed state (all controls live); restore reopens it.
-    if(skip) skip.addEventListener('click',finishInquiry);
-    if(restore) restore.addEventListener('click',()=>setInquiryCollapsed(false));
+    // 🎓 Lecture toggles the post-completion display state; restore reopens at card 1.
+    const lecture=document.getElementById('shell-lecture');
+    if(lecture) lecture.addEventListener('click',()=>setLectureMode(!root.classList.contains('lecture-mode')));
+    if(restore) restore.addEventListener('click',()=>setLectureMode(false));
     // Next / Finish — shell-driven step advance (Finish collapses the inquiry).
     const inqNextBtn=document.getElementById('inq-next');
     if(inqNextBtn) inqNextBtn.addEventListener('click',inqNext);
+    const inqPrevBtn=document.getElementById('inq-prev');
+    if(inqPrevBtn) inqPrevBtn.addEventListener('click',inqPrev);
+    const inqPagerNextBtn=document.getElementById('inq-pager-next');
+    if(inqPagerNextBtn) inqPagerNextBtn.addEventListener('click',inqPagerNext);
     // Auto-gate: a .choice click inside the active gated card enables Next.
     const cardsHost=document.getElementById('inq-cards');
     if(cardsHost) cardsHost.addEventListener('click',e=>{
@@ -657,15 +696,25 @@ const Shell = (function(){
     init(opts){
       onFrame=opts.onFrame||onFrame; onReset=opts.onReset||onReset; onResize=opts.onResize||onResize; onStep=opts.onStep||onStep; onComplete=opts.onComplete||onComplete;
       wire();
-      // Guided inquiry is retired from the sidebar: hide the whole zone + restore bar,
-      // and open the sim directly in its COMPLETED state (as if the student had finished
-      // the inquiry) — every control live, every staged panel revealed.
+      // Guided inquiry RE-ENABLED (was retired in the raw lecture export): build the
+      // step dots and open on card 1. Sims that ship no cards still fall back to the
+      // retired behaviour — zone hidden, sim opened in its completed state.
       const cards=inqCards();
       inqTotal=cards.length;
-      root.classList.add('no-inquiry');
-      onResize(); onReset();
-      if(inqTotal>0){ for(let k=0;k<cards.length;k++) onStep(k); inqStep=cards.length-1; }
-      onComplete();
+      if(inqTotal>0){
+        const dotsHost=document.getElementById('inq-dots');
+        if(dotsHost&&!dotsHost.children.length){
+          for(let k=0;k<inqTotal;k++){const d=document.createElement('div');d.className='inq-dot';dotsHost.appendChild(d);}
+        }
+        onResize(); onReset();
+        inqShow(0);
+      }else{
+        root.classList.add('no-inquiry');
+        const lb=document.getElementById('shell-lecture');
+        if(lb) lb.style.display='none';
+        onResize(); onReset();
+        onComplete();
+      }
       setPlaying(true);
       last=performance.now();
       if(!started){ started=true; requestAnimationFrame(loop); }
@@ -709,15 +758,13 @@ const eScaleV = $('sim-scale-val'), eEnergyV = $('sim-energy-val');
 const roP = $('sim-ro-p'), fxtra = $('sim-formal-extra');
 const panelScale = $('sim-panel-scale');
 const tDot = $('sim-tech-dot'), tName = $('sim-tech-name'), tNote = $('sim-tech-note');
-const verd = $('sim-verdict');
-const chips = [$('sim-p0'), $('sim-p1'), $('sim-p2')];
 const bigBtn = $('sim-bigger'), smallBtn = $('sim-smaller');
 
 let CW = 0, CH = 0, sceneH = 0, rulH = 132, CUT = 3000;
 let ACC = '#6ea8ff';
 const ml = 16, mr = 16;
 const S = { logd: HOME, view: HOME, t: 0, ghost: null, ghostMode: 'before' };
-let pendingVerdict = null, scaleShown = false;
+let scaleShown = false;
 
 const clamp = (v,a,b) => v < a ? a : (v > b ? b : v);
 const fract = x => x - Math.floor(x);
@@ -1460,17 +1507,10 @@ function revealScale(){
   if (panelScale) panelScale.classList.remove('sim-hidden');
   try{ Shell.refit(); }catch(e){}
 }
-function flushVerdict(){
-  if (!pendingVerdict) return;
-  verd.textContent=pendingVerdict[0];
-  verd.className='sim-verdict '+pendingVerdict[1];
-  pendingVerdict=null;
-}
-/* Any hands-on move: stage in the readouts, drop the ghost, settle the verdict. */
+/* Any hands-on move: stage in the readouts, drop the ghost. */
 function userMove(){
   revealScale();
   S.ghost=null;
-  flushVerdict();
 }
 function play(){ try{ if (window.Shell && Shell.setPlaying) Shell.setPlaying(true); }catch(e){} }
 function goto(l, animate){
@@ -1501,31 +1541,17 @@ smallBtn.addEventListener('click', ()=>{
   for (const p of pins){ const L=Math.log10(p.s); if (L<S.logd-0.03 && (best===null||L>best)) best=L; }
   if (best!==null) goto(best,true);
 });
-const VER=[
-  ['✓ Right — the energy readout climbed 1000× while d fell 1000×. d and E are locked: E = ħc/d.','sim-good'],
-  ['✗ Backwards — the energy readout climbed, it did not fall. Smaller d costs MORE energy: E = ħc/d.','sim-bad'],
-  ['✗ No lens beats the wave it uses. The finest detail a probe can separate is about one probe wavelength λ (formally ƛ = λ/2π). The dashed ghost kept its wavelength and cannot resolve the smaller target — only more momentum shortens it.','sim-bad']
-];
-chips.forEach((c,i)=>c.addEventListener('click', ()=>{
-  chips.forEach(o=>o.removeAttribute('data-sel'));
-  c.setAttribute('data-sel','1');
-  revealScale();
+/* Guided-inquiry reveal: descend exactly three decades, leaving a ghost wave at
+   the pre-zoom wavelength ('stale' = the frozen "better lens" wave). Drives only
+   the state fields the sim's own controls set. */
+function zoomDemo(mode){
   play();
-  /* Always DESCEND three decades. If we are within 3 decades of the floor,
-     start from the lowest legal launch point instead of jumping bigger. */
   const start=Math.max(S.logd, LMIN+3);
-  const clamped = start!==S.logd;
-  if (clamped) S.logd=S.view=start;
+  S.logd=S.view=start;
   S.ghost=start;
-  S.ghostMode=(i===2)?'stale':'before';
-  pendingVerdict=VER[i];
-  verd.className='sim-verdict';
-  verd.textContent = (i===2)
-    ? 'Watch: the probe wavelength is held fixed — a “better lens” — while the target shrinks 1000×.'
-    : 'Zooming 1000× smaller — watch the probe-energy readout…';
-  if (clamped) verd.textContent += ' (started at 10⁻¹⁶ m; the ruler floor is 10⁻¹⁹ m.)';
+  S.ghostMode=(mode==='stale')?'stale':'before';
   goto(start-3,true);
-}));
+}
 let dragging=false;
 cv.addEventListener('pointerdown', e=>{
   const r=cv.getBoundingClientRect();
@@ -1572,7 +1598,9 @@ function renderFormal(n){
 renderFormal(12);
 
 /* ---------- shell hooks ---------- */
-const STEPS=[7.105, -4.921, -10, -14.7696, -18, HOME];
+/* Card scenes: 1 human (orient) · 2 human (predict; reveal zooms 3 decades) ·
+   3 virus 100 nm · 4 atom (reveal zooms to proton) · 5 quark. */
+const STEPS=[HOME, HOME, -7, -10, -18];
 function onFrame(dt){
   S.t+=dt;
   if (Math.abs(S.logd-S.view)>0.0008){
@@ -1580,16 +1608,11 @@ function onFrame(dt){
     S.view+=(S.logd-S.view)*k;
     if (Math.abs(S.logd-S.view)<=0.0008) S.view=S.logd;
     updateUI();
-  } else if (pendingVerdict){
-    flushVerdict();                        /* evidence first, verdict after */
   }
   draw();
 }
 function onReset(){
-  S.logd=S.view=HOME; S.t=0; S.ghost=null; pendingVerdict=null;
-  chips.forEach(c=>c.removeAttribute('data-sel'));
-  verd.className='sim-verdict';
-  verd.textContent='Pick one — the zoom then runs and tests it.';
+  S.logd=S.view=HOME; S.t=0; S.ghost=null;
   updateUI(); draw();
 }
 function onResize(){ sizeCanvas(); updateUI(); draw(); }
@@ -1598,6 +1621,11 @@ function onStep(i){
   S.logd=S.view=v; S.ghost=null;
   updateUI(); draw();
 }
+function onComplete(){
+  revealScale();               /* stage in the "At this scale" panel for free exploration */
+  S.ghost=null;
+  goto(HOME,true);
+}
 if (typeof ResizeObserver!=='undefined'){
   const ro=new ResizeObserver(()=>{ sizeCanvas(); draw(); });
   ro.observe(wrap);
@@ -1605,7 +1633,23 @@ if (typeof ResizeObserver!=='undefined'){
 sizeCanvas();
 updateUI();
 draw();
-Shell.init({ onFrame, onReset, onResize, onStep });
+/* ---------- guided-inquiry layer: choice feedback + data-reveal hooks ---------- */
+document.querySelectorAll('#inq-cards .inq-step').forEach(card=>{
+  const evalBox=card.querySelector('.predict-eval');
+  card.querySelectorAll('.choice').forEach(ch=>ch.addEventListener('click',()=>{
+    if(card.dataset.answered) return; card.dataset.answered='1';
+    const correct=ch.hasAttribute('data-correct');
+    card.querySelectorAll('.choice').forEach(c=>{ c.disabled=true;
+      if(c.hasAttribute('data-correct')) c.classList.add('correct');
+      else if(c===ch) c.classList.add('wrong'); else c.classList.add('dim'); });
+    if(evalBox){ evalBox.innerHTML=ch.dataset.fb||''; evalBox.classList.add('show', correct?'correct':'wrong'); }
+    /* data-reveal — the commitment triggers the reveal via the sim's own setters */
+    const r=card.dataset.reveal;
+    if(r==='zoom'){ zoomDemo(ch.dataset.demo); }
+    else if(r==='proton'){ play(); goto(Math.log10(1.7e-15),true); }
+  }));
+});
+Shell.init({ onFrame, onReset, onResize, onStep, onComplete });
 })();
 </script>
 <script>/* dev-only reviewer affordance: link this sim to the refinement studio.
