@@ -215,8 +215,10 @@ body.light-theme .predict-eval .answer,body.light-theme .predict-eval strong,htm
 #inq-cards{flex:1 1 auto;min-height:0;}
 .inq-step{display:none;}
 .inq-step.active{display:block;}
-.inq-nav{display:flex;justify-content:flex-end;flex-shrink:0;}
-#inq-next{min-width:96px;justify-content:center;}
+.inq-nav{display:flex;justify-content:space-between;flex-shrink:0;}
+.inq-pager{display:flex;align-items:center;gap:8px;}
+.inq-pager-btn{min-width:36px;padding:6px 11px;justify-content:center;font-size:13px;line-height:1;}
+#inq-next{min-width:96px;justify-content:center;margin-left:auto;}
 .aside-restore{display:none;width:100%;text-align:left;background:var(--panel-2);border:1px solid var(--line);
   color:var(--ink-mid);font:inherit;font-size:11px;letter-spacing:.06em;text-transform:uppercase;
   padding:8px 12px;border-radius:6px;cursor:pointer;flex-shrink:0;transition:background .15s,color .15s;}
@@ -307,14 +309,6 @@ body.light-theme .predict-eval .answer,body.light-theme .predict-eval strong,htm
 .sim-tbl td{padding:5px 2px;border-bottom:1px solid var(--border);overflow-wrap:anywhere;}
 .sim-tbl td:first-child{color:var(--muted);}
 .sim-tbl td:last-child{text-align:right;font-weight:700;font-variant-numeric:tabular-nums;white-space:nowrap;}
-.sim-q{font-size:14px;color:var(--text);margin:0 0 8px;line-height:1.5;}
-.sim-chips{display:flex;flex-direction:column;gap:6px;}
-.sim-chip{padding:7px 10px;border:1.5px solid var(--border);background:var(--surface);color:var(--text);border-radius:8px;font-size:14px;text-align:left;cursor:pointer;box-sizing:border-box;min-width:120px;overflow-wrap:anywhere;}
-.sim-chip.sim-sel{border-color:var(--accent);color:var(--accent);font-weight:700;}
-.sim-badge{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-top:9px;font-size:13px;font-weight:700;color:var(--accent);}
-.sim-linkbtn{background:none;border:none;color:var(--muted);font:inherit;font-size:12px;font-weight:600;text-decoration:underline;cursor:pointer;padding:2px 0;white-space:nowrap;}
-.sim-linkbtn:hover{color:var(--text);}
-.sim-fb{margin-top:8px;font-size:13.5px;line-height:1.55;color:var(--text);border-left:3px solid var(--accent);padding:6px 8px;background:var(--bg);border-radius:0 6px 6px 0;overflow-wrap:anywhere;}
 .sim-formal{display:flex;flex-direction:column;gap:12px;}
 .sim-formal-col{display:flex;flex-direction:column;gap:8px;min-width:0;}
 .sim-eqrow{display:flex;flex-wrap:wrap;gap:8px 24px;font-size:15px;color:var(--text);}
@@ -334,6 +328,9 @@ body.light-theme .predict-eval .answer,body.light-theme .predict-eval strong,htm
 .inq-step p{margin:0 0 12px;font-size:14px;line-height:1.55;color:var(--muted);}
 .inq-step .predict-eval{display:none;}
 .inq-step .predict-eval.show{display:block;}
+/* Post-answer reveal: extension prose hidden until the card's predict is committed. */
+.inq-step .inq-after{display:none;}
+.inq-step[data-answered] .inq-after{display:block;}
 </style>
 </head>
 <body>
@@ -355,12 +352,12 @@ body.light-theme .predict-eval .answer,body.light-theme .predict-eval strong,htm
   <dt>Inquiry</dt>
   <dd>Start warm (P = 0): the spins tumble even though the coil is energized. Cool the crystal (raise P) and run the source, then read the two counters and their asymmetry 𝒜. Next hold up a mirror: the reflected apparatus has reversed current, reversed B and reversed spin, while the electron paths are unchanged — compare what that image asserts with your own data. As an optional extension, add charge conjugation and check whether the antimatter mirror can be reconciled with the measurement.</dd>
   <dt>Misconception</dt>
-  <dd>"Physics must look identical in a mirror, so the two counters must agree." It is encoded in the "Equal — a mirror image can't tell ↑ from ↓" prediction chip; the mirror panel then lets the student check that argument against the counts they collected themselves.</dd>
+  <dd>"Physics must look identical in a mirror, so the two counters must agree." It is encoded in the "Equal — a mirror image can't tell ↑ from ↓" prediction choice in the guided inquiry; the mirror panel then lets the student check that argument against the counts they collected themselves.</dd>
 </dl>
         <table class="shell-info-table">
   <tr><th>Principle</th><th>Where it appears</th></tr>
-  <tr><td>Predict, then observe</td><td>The Predict panel is first in the sidebar and the scene opens paused with zero counts — the prediction is committed (visibly badged) before ▶ Play produces any data.</td></tr>
-  <tr><td>Misconception in a choice</td><td>The "Equal — a mirror image can't tell ↑ from ↓" chip encodes mirror-symmetry intuition; the mirror panel refutes it structurally, against the student's own counts.</td></tr>
+  <tr><td>Predict, then observe</td><td>The guided-inquiry cards gate each reveal behind a committed prediction, and the scene opens paused with zero counts — no outcome is visible before the student commits.</td></tr>
+  <tr><td>Misconception in a choice</td><td>The "Equal — a mirror image can't tell ↑ from ↓" choice encodes mirror-symmetry intuition; the mirror panel refutes it structurally, against the student's own counts.</td></tr>
   <tr><td>Invariant vs varying</td><td>A = −1 and v/c ≈ 0.60 are fixed by the decay; only P varies. The measured asymmetry tracks A·P·(v/c)/2 as the slider moves.</td></tr>
   <tr><td>Operational quantities</td><td>Live hemisphere counts, measured 𝒜 with its statistical uncertainty, and a building (1/N)dN/dcosθ histogram against the exact line ½(1 + A·P·(v/c)·cosθ).</td></tr>
   <tr><td>Formal layer optional</td><td>W(θ), hemisphere probabilities and the distribution plot live behind the formal-tools toggle; the apparatus story works without them.</td></tr>
@@ -374,6 +371,7 @@ body.light-theme .predict-eval .answer,body.light-theme .predict-eval strong,htm
     <div class="shell-group">
       <button id="shell-info" class="shell-btn" title="About this simulation">ⓘ Info</button>
       <button id="shell-theme" class="shell-btn" title="Toggle light / dark theme">☾</button>
+      <button id="shell-lecture" class="shell-btn" title="Lecture display mode — hide the guided inquiry, show the full simulation">🎓 Lecture</button>
     </div>
     <div class="shell-controls"><a id="shell-refine" class="shell-btn" style="display:none" target="_blank" rel="noopener" title="Refine this simulation (dev only)">✎ Refine</a>
       <div class="shell-group">
@@ -403,56 +401,44 @@ body.light-theme .predict-eval .answer,body.light-theme .predict-eval strong,htm
     <div id="aside-inquiry" class="aside-zone">
       <div class="aside-zone-head">
         <h3>Guided Inquiry</h3>
-        <button id="aside-inquiry-skip" class="shell-btn aside-skip" title="Skip the guided inquiry">Skip ✕</button>
       </div>
       <div id="inq-dots" class="inq-dots"></div>
       <div id="inq-cards" class="aside-zone-body">
-        <div class="inq-step" data-step="0">
-  <h4>Warm crystal</h4>
-  <p>The coil is energized (B points ↑) but the crystal is warm, so the spins tumble. What do you expect the two counters to show?</p>
-</div>
-<div class="inq-step" data-step="1">
-  <h4>Cool it down</h4>
-  <p>Raising P lines the spins up with B. Before you run it — should lining the spins up change <em>where</em> the electrons come out?</p>
-</div>
-<div class="inq-step" data-step="2">
-  <h4>Count electrons</h4>
-  <p>Run the source. Which counter climbs faster, and by how much? How large does 𝒜 get, and how sure are you at this N?</p>
-</div>
-<div class="inq-step" data-step="3">
-  <h4>Hold up a mirror</h4>
-  <p>The mirror flips momenta but not spin or B. What does the reflected apparatus claim about the two counters — and could that be a real experiment?</p>
-</div>
-<div class="inq-step" data-step="4">
-  <h4>Add antimatter (optional)</h4>
-  <p>Now also swap matter for antimatter: C reverses the current, B and μ but leaves spin alone. Does the image become a possible experiment again?</p>
-</div>
-<div class="inq-step" data-step="5">
-  <h4>Explore</h4>
-  <p>Sweep P from 0 to 1. How closely does your measured 𝒜 track A·P·(v/c)/2, and when is the difference just statistics?</p>
-</div>
+        <div class="inq-step" data-gate data-play><h4>1 · A warm start</h4>
+          <p>⁶⁰Co nuclei (purple <strong>J</strong> arrows) sit inside a coil; <strong>B</strong> points ↑ between two counters. The crystal is warm, so the spins tumble. When the source runs, what will the counters read?</p>
+          <button class="choice" data-fb="A field can curve a track, not choose a hemisphere. With spins tumbling, nothing picks a side — watch both counters climb together.">↓ leads — the field pushes electrons down</button>
+          <button class="choice" data-correct data-fb="Right — random spins average out. Watch <strong>𝒜</strong> hover near 0: this symmetric limit is exactly what a parity-respecting world shows.">Equal — no direction is special yet</button>
+          <button class="choice" data-fb="Emission couples to each nucleus's spin, not to B directly — and the spins point everywhere. Watch 𝒜 stay near 0.">↑ leads — electrons escape along B</button>
+          <div class="predict-eval"></div></div>
+<div class="inq-step" data-gate data-play><h4>2 · Cool it down</h4>
+          <p>Cooled to ~0.01 K: <strong>Spin polarization P</strong> = 1.00, every <strong>J</strong> locked onto <strong>B</strong> (↑). Wu's question: does β decay care which way the spin points? Commit — the source runs on your answer. Which counter fills faster?</p>
+          <button class="choice" data-pred="equal" data-fb="Exactly what parity conservation predicts — now watch the counters: ↓ pulls ahead. Nature breaks the tie.">Equal — a mirror image can't tell ↑ from ↓</button>
+          <button class="choice" data-pred="up" data-fb="Sign matters: A(⁶⁰Co) = −1. Watch <strong>↓</strong> collect ~65% and <strong>𝒜</strong> settle near −0.30, the theory row's value.">↑ counter — along the spin</button>
+          <button class="choice" data-correct data-pred="down" data-fb="Yes — watch ↓ climb to ~65% and <strong>𝒜 → −0.30</strong>, matching <strong>Theory 𝒜 = A·P·(v/c)/2</strong> with A = −1.">↓ counter — opposite the spin</button>
+          <div class="predict-eval"></div></div>
+<div class="inq-step" data-gate data-build="mirror"><h4>3 · Hold up a mirror</h4>
+          <p>Your counters record the law: electrons exit opposite <strong>J</strong>. Now reflect the whole apparatus — coil, field, spins, tracks — in a mirror. Relative to the mirror-nuclei's spin, which way do <em>its</em> electrons leave? Commit to reveal the reflection.</p>
+          <button class="choice" data-correct data-fb="Axial spin and polar momentum transform oppositely, so the correlation reverses: mirror-⁶⁰Co emits <strong>along</strong> its spin — a decay no real nucleus performs. Parity is violated.">Along it — the reflection reverses the rule</button>
+          <button class="choice" data-fb="Spin is axial, momentum polar — a reflection cannot preserve both. Watch the dashed panel: emission ends up along J, and the chip reads ✗.">Opposite, like ours — mirrors can't change physics</button>
+          <button class="choice" data-fb="A mirror maps each track one-to-one; nothing averages out. The image obeys along-spin emission — a law no experiment shows.">Equal — reflection scrambles the correlation</button>
+          <div class="predict-eval"></div></div>
+<div class="inq-step" data-gate data-build="cp"><h4>4 · The antimatter repair</h4>
+          <p>The dashed mirror world is impossible. Try one more swap on it — charge conjugation: matter → antimatter, <strong>I → −I, B → −B, μ → −μ</strong>, spin untouched. Does the CP image describe a possible experiment? Commit to apply C.</p>
+          <button class="choice" data-fb="Apply it and watch: anti-⁶⁰Co emitting e⁺ along its spin is exactly what the weak force predicts — the chip flips to ✓.">No — once the mirror fails, nothing repairs it</button>
+          <button class="choice" data-correct data-fb="✓ CP mirror matches the data: anti-⁶⁰Co would decay this way. P and C fail separately; their product survives here.">Yes — mirror plus C matches real physics</button>
+          <div class="predict-eval"></div>
+          <p class="inq-after">Wu, 1956–57: parity dead within months; Lee and Yang took the 1957 Nobel. Explore: sweep <strong>Spin polarization P</strong> and check measured <strong>𝒜</strong> tracks A·P·(v/c)/2; toggle the mirrors freely. (CP itself cracked in 1964 — kaons.)</p></div>
       </div>
-      <div class="inq-nav"><button id="inq-next" class="shell-btn primary">Next →</button></div>
+      <div class="inq-nav">
+        <div class="inq-pager">
+          <button id="inq-prev" class="shell-btn primary inq-pager-btn" title="Previous step" aria-label="Previous step" disabled>&lt;</button>
+          <button id="inq-pager-next" class="shell-btn primary inq-pager-btn" title="Next step" aria-label="Next step">&gt;</button>
+        </div>
+        <button id="inq-next" class="shell-btn primary">Next →</button>
+      </div>
     </div>
     <button id="aside-inquiry-restore" class="aside-restore" title="Revisit the guided inquiry">▸ Guided inquiry</button>
     <div id="aside-controls" class="aside-zone">
-
-      <div class="shell-panel">
-        <div class="shell-panel-head"><h3>Predict first</h3><span class="shell-caret">▾</span></div>
-        <div class="shell-panel-body">
-          <p class="sim-q">Cool the crystal (raise <b>P</b>) so the ⁶⁰Co spins line up with <b>B</b> (↑), then press ▶ Play. Which counter fills faster?</p>
-          <div class="sim-chips">
-            <button class="sim-chip" data-pred="up">↑ counter — along the spin</button>
-            <button class="sim-chip" data-pred="down">↓ counter — opposite the spin</button>
-            <button class="sim-chip" data-pred="equal">Equal — a mirror image can't tell ↑ from ↓</button>
-          </div>
-          <div id="predBadge" class="sim-badge" hidden>
-            <span id="predBadgeTxt"></span>
-            <button id="predChange" class="sim-linkbtn" type="button">Change prediction</button>
-          </div>
-          <div id="predFb" class="sim-fb" hidden></div>
-        </div>
-      </div>
 
       <div class="shell-panel">
         <div class="shell-panel-head"><h3>Apparatus</h3><span class="shell-caret">▾</span></div>
@@ -481,15 +467,10 @@ body.light-theme .predict-eval .answer,body.light-theme .predict-eval strong,htm
       <div class="shell-panel">
         <div class="shell-panel-head"><h3>Optional extension — the mirror test</h3><span class="shell-caret">▾</span></div>
         <div class="shell-panel-body">
-          <p class="sim-q">Step 1 — record what your counters actually did:</p>
-          <button id="confirmBtn" class="sim-btn" type="button">✓ Confirm what the counters show</button>
-          <div id="confirmNote" class="sim-note">Nothing recorded yet.</div>
-          <p class="sim-q" style="margin-top:12px;">Step 2 — put the whole apparatus in a mirror, then (optionally) swap matter for antimatter:</p>
           <div class="sim-btnrow">
             <button id="mirrorBtn" class="sim-btn" aria-pressed="false">Mirror image: OFF</button>
             <button id="antiBtn" class="sim-btn" aria-pressed="false">+ Charge conjugation: OFF</button>
           </div>
-          <div class="sim-note">Under P: momenta flip, spin and B do not. Under C: I → −I, B → −B and μ → −μ, while spin is unchanged.</div>
         </div>
       </div>
 
@@ -555,6 +536,16 @@ const Shell = (function(){
     root.classList.toggle('inquiry-collapsed', on);
     requestAnimationFrame(refit);
   }
+  // Lecture display mode: ON = the post-completion free-exploration state
+  // (finishInquiry fast-forwards, runs onComplete, collapses, resumes play);
+  // OFF (second click or the restore chip) = reopen the inquiry at card 1.
+  function setLectureMode(on){
+    root.classList.toggle('lecture-mode', on);
+    const b=document.getElementById('shell-lecture');
+    if(b) b.classList.toggle('active', on);
+    if(on){ finishInquiry(); }
+    else { setInquiryCollapsed(false); if(inqCards().length) inqShow(0); }
+  }
 
   // ---- Guided-inquiry stepper (shell-owned, so Next/Finish are always wired) ----
   // The SIM supplies sequential <div class="inq-step"> cards in #inq-cards. The
@@ -578,8 +569,23 @@ const Shell = (function(){
       next.disabled = gated;
       next.textContent = (inqStep>=cards.length-1) ? 'Finish' : 'Next →';
     }
+    inqUpdatePager();
     onStep(inqStep);
     requestAnimationFrame(refit);
+  }
+  function inqUpdatePager(){
+    const cards=inqCards();
+    const prev=document.getElementById('inq-prev');
+    const pnext=document.getElementById('inq-pager-next');
+    if(prev) prev.disabled = inqStep<=0;
+    if(pnext) pnext.disabled = inqStep>=cards.length-1;
+  }
+  function inqPrev(){
+    if(inqStep>0) inqShow(inqStep-1);
+  }
+  function inqPagerNext(){
+    const cards=inqCards();
+    if(inqStep<cards.length-1) inqShow(inqStep+1);
   }
   function inqNext(){
     const cards=inqCards();
@@ -616,7 +622,6 @@ const Shell = (function(){
     const reset=document.getElementById('shell-reset');
     const spd=document.getElementById('shell-speed');
     const maxBtn=document.getElementById('shell-maximize');
-    const skip=document.getElementById('aside-inquiry-skip');
     const restore=document.getElementById('aside-inquiry-restore');
     const tFormal=document.getElementById('toggle-formal');
 
@@ -649,12 +654,17 @@ const Shell = (function(){
       else if(root.classList.contains('shell-max')) setMaximized(false);
     });
 
-    // Skip ✕ jumps to the completed state (all controls live); restore reopens it.
-    if(skip) skip.addEventListener('click',finishInquiry);
-    if(restore) restore.addEventListener('click',()=>setInquiryCollapsed(false));
+    // 🎓 Lecture jumps to the completed state (all controls live); restore reopens at card 1.
+    const lecture=document.getElementById('shell-lecture');
+    if(lecture) lecture.addEventListener('click',()=>setLectureMode(!root.classList.contains('lecture-mode')));
+    if(restore) restore.addEventListener('click',()=>setLectureMode(false));
     // Next / Finish — shell-driven step advance (Finish collapses the inquiry).
     const inqNextBtn=document.getElementById('inq-next');
     if(inqNextBtn) inqNextBtn.addEventListener('click',inqNext);
+    const inqPrevBtn=document.getElementById('inq-prev');
+    if(inqPrevBtn) inqPrevBtn.addEventListener('click',inqPrev);
+    const inqPagerNextBtn=document.getElementById('inq-pager-next');
+    if(inqPagerNextBtn) inqPagerNextBtn.addEventListener('click',inqPagerNext);
     // Auto-gate: a .choice click inside the active gated card enables Next.
     const cardsHost=document.getElementById('inq-cards');
     if(cardsHost) cardsHost.addEventListener('click',e=>{
@@ -682,15 +692,25 @@ const Shell = (function(){
     init(opts){
       onFrame=opts.onFrame||onFrame; onReset=opts.onReset||onReset; onResize=opts.onResize||onResize; onStep=opts.onStep||onStep; onComplete=opts.onComplete||onComplete;
       wire();
-      // Guided inquiry is retired from the sidebar: hide the whole zone + restore bar,
-      // and open the sim directly in its COMPLETED state (as if the student had finished
-      // the inquiry) — every control live, every staged panel revealed.
+      // Guided inquiry RE-ENABLED (was retired in the raw lecture export): build the
+      // step dots and open on card 1. Sims that ship no cards still fall back to the
+      // retired behaviour — zone hidden, sim opened in its completed state.
       const cards=inqCards();
       inqTotal=cards.length;
-      root.classList.add('no-inquiry');
-      onResize(); onReset();
-      if(inqTotal>0){ for(let k=0;k<cards.length;k++) onStep(k); inqStep=cards.length-1; }
-      onComplete();
+      if(inqTotal>0){
+        const dotsHost=document.getElementById('inq-dots');
+        if(dotsHost&&!dotsHost.children.length){
+          for(let k=0;k<inqTotal;k++){const d=document.createElement('div');d.className='inq-dot';dotsHost.appendChild(d);}
+        }
+        onResize(); onReset();
+        inqShow(0);
+      }else{
+        root.classList.add('no-inquiry');
+        const lb=document.getElementById('shell-lecture');
+        if(lb) lb.style.display='none';
+        onResize(); onReset();
+        onComplete();
+      }
       setPlaying(true);
       last=performance.now();
       if(!started){ started=true; requestAnimationFrame(loop); }
@@ -744,16 +764,10 @@ const polSlider = document.getElementById('polSlider');
 const polVal    = document.getElementById('polVal');
 const mirrorBtn = document.getElementById('mirrorBtn');
 const antiBtn   = document.getElementById('antiBtn');
-const confirmBtn= document.getElementById('confirmBtn');
-const confirmNote=document.getElementById('confirmNote');
 const cntUpEl = document.getElementById('cntUp');
 const cntDnEl = document.getElementById('cntDn');
 const aMeasEl = document.getElementById('aMeas');
 const aTheoEl = document.getElementById('aTheo');
-const predFb  = document.getElementById('predFb');
-const predBadge = document.getElementById('predBadge');
-const predBadgeTxt = document.getElementById('predBadgeTxt');
-const predChange = document.getElementById('predChange');
 
 let TH = {text:'#222',muted:'#777',accent:'#3b9b8f',border:'#ccc',surface:'#fff',bg:'#0b0b0b',
           spin:'#a78bfa',sans:'system-ui,sans-serif',nums:'ui-monospace,monospace'};
@@ -777,8 +791,8 @@ const S = {
   spins:[], electrons:[],
   nUp:0, nDn:0, total:0,
   bins:new Array(24).fill(0),
-  spawnAcc:0, pred:null, confirmed:false,
-  flashUp:0, flashDn:0, _fb:''
+  spawnAcc:0, pred:null,
+  flashUp:0, flashDn:0
 };
 const LG = { sc:1, cy:120, w:0, h:0 };
 const OPEN = {p:0, m:false, a:false};   // opening state: single apparatus, warm crystal
@@ -1160,26 +1174,6 @@ function drawDist(){
 
 /* ===== readouts ===== */
 function fmt(n){ return n<10000 ? String(n) : (n/1000).toFixed(1)+'k'; }
-function predText(){
-  if(!S.pred) return '';
-  const k = A_COEF*S.P*VC, pu = 0.5+k/4, pd = 0.5-k/4;
-  const base = {
-    up:   'You picked ↑ (along the spin). Press ▶ Play and watch which counter climbs faster — the counters decide, not the argument.',
-    down: 'You picked ↓ (opposite the spin). Press ▶ Play and watch which counter climbs faster — the counters decide, not the argument.',
-    equal:'You picked a tie — exactly what mirror symmetry demands. Press ▶ Play and let the counters test it.'
-  }[S.pred];
-  const m = measured();
-  if(m.t < REVEAL_N) return base + (m.t? ' (N = '+fmt(m.t)+' so far.)' : '');
-  let out = 'Data at N = '+fmt(m.t)+': ↓ '+(100*S.nDn/m.t).toFixed(1)+'% vs ↑ '+(100*S.nUp/m.t).toFixed(1)+
-            '%, 𝒜 = '+m.a.toFixed(3)+' ± '+m.s.toFixed(3)+'. ';
-  if(Math.abs(m.a) < 2*m.s) return out + 'Still consistent with zero — raise P (or collect more) before you judge.';
-  const ratio = pu>0 ? (pd/pu) : 0;
-  out += 'At P = '+S.P.toFixed(2)+' (v/c ≈ '+VC.toFixed(2)+') theory expects the ↓ counter to lead by about '+ratio.toFixed(2)+'×. ';
-  if(S.pred==='down') out += (m.a<0 ? 'Your prediction matches the data.' : 'The counters currently lead the other way — collect more.');
-  else if(S.pred==='up') out += (m.a<0 ? 'The data go the other way: the excess is opposite the spin.' : 'The counters agree with you so far — keep collecting.');
-  else out += 'The counters do NOT tie. Turn on the mirror image and see what that costs the symmetry argument.';
-  return out;
-}
 function updateReadouts(){
   const t = S.total, m = measured();
   cntUpEl.textContent = t? fmt(S.nUp)+' ('+(100*S.nUp/t).toFixed(1)+'%)' : '0';
@@ -1187,24 +1181,12 @@ function updateReadouts(){
   aMeasEl.textContent = t>=50 ? (m.a.toFixed(3)+' ± '+m.s.toFixed(3)) : '—';
   aTheoEl.textContent = (S.pred!==null || t>=REVEAL_N) ? (A_COEF*S.P*VC/2).toFixed(3) : '—';
   polVal.textContent  = S.P.toFixed(2);
-  if(S.pred){
-    const s = predText();
-    if(s!==S._fb){ S._fb=s; predFb.textContent=s; }
-    predFb.hidden = false;
-  }
-}
-function updateConfirmUI(){
-  const t=S.total;
-  if(!S.confirmed){ confirmNote.textContent = 'Nothing recorded yet — run the source, then record what the two counters did.'; return; }
-  if(t<50){ confirmNote.textContent = 'Recorded — but only N = '+fmt(t)+' so far. Press ▶ Play and let the counters run before trusting it.'; return; }
-  confirmNote.textContent = 'Recorded at N = '+fmt(t)+': '+(100*S.nDn/t).toFixed(1)+'% of the electrons reached the ↓ counter, '+
-                            (100*S.nUp/t).toFixed(1)+'% the ↑ counter.';
 }
 
 /* ===== state management ===== */
 function clearCounts(){
   S.nUp=0; S.nDn=0; S.total=0; S.bins.fill(0);
-  S.electrons.length=0; S.spawnAcc=0; S.flashUp=0; S.flashDn=0; S._fb='';
+  S.electrons.length=0; S.spawnAcc=0; S.flashUp=0; S.flashDn=0;
 }
 function resampleSpins(){
   for(const sp of S.spins){ sp.th=sampleSpinTheta(); sp.thT=sp.th; sp.clock=Math.random(); }
@@ -1220,15 +1202,15 @@ function syncControls(){
 function setState(o){
   S.P=o.p; S.mirror=o.m; S.anti=o.a;
   syncControls(); resampleSpins(); clearCounts();
-  updateReadouts(); updateConfirmUI(); drawAll(); drawDist();
+  updateReadouts(); drawAll(); drawDist();
 }
+/* Guided-inquiry step specs — absolute state per card (self-contained, pager-safe).
+   pause:true opens the card's scene frozen so the reveal follows the commitment. */
 const STEPS = [
-  {p:0,   m:false, a:false},
-  {p:0.6, m:false, a:false},
-  {p:1,   m:false, a:false},
-  {p:1,   m:true,  a:false},
-  {p:1,   m:true,  a:true },
-  {p:0.9, m:true,  a:false}
+  {p:0, m:false, a:false, pause:true },   // 1 · warm crystal, zero counts, paused
+  {p:1, m:false, a:false, pause:true },   // 2 · fully polarized, paused until commit
+  {p:1, m:false, a:false, pause:false},   // 3 · counters running; mirror revealed on commit
+  {p:1, m:true,  a:false, pause:false}    // 4 · mirror view; C applied on commit
 ];
 
 /* ===== controls (every one live from load) ===== */
@@ -1248,28 +1230,6 @@ function wireControls(){
     if(S.anti) S.mirror = true;
     syncControls(); drawAll();
   });
-  confirmBtn.addEventListener('click', ()=>{
-    S.confirmed = true; updateConfirmUI(); drawAll();
-  });
-  const LABEL = { up:'↑ along the spin', down:'↓ opposite the spin', equal:'a tie (mirror symmetry)' };
-  document.querySelectorAll('.sim-chip[data-pred]').forEach(btn=>{
-    btn.addEventListener('click', ()=>{
-      S.pred = btn.dataset.pred;
-      document.querySelectorAll('.sim-chip[data-pred]').forEach(b=>b.classList.toggle('sim-sel', b===btn));
-      predBadge.hidden = false;
-      predBadgeTxt.textContent = '✓ Prediction committed: '+LABEL[S.pred];
-      S._fb='';
-      predFb.hidden = false;
-      updateReadouts(); drawAll();
-    });
-  });
-  predChange.addEventListener('click', ()=>{ clearPredictUI(); updateReadouts(); drawAll(); });
-}
-function clearPredictUI(){
-  S.pred=null; S._fb='';
-  document.querySelectorAll('.sim-chip[data-pred]').forEach(b=>b.classList.remove('sim-sel'));
-  predBadge.hidden = true; predBadgeTxt.textContent='';
-  predFb.hidden = true; predFb.textContent='';
 }
 
 /* ===== formal (KaTeX, guarded/deferred) ===== */
@@ -1296,11 +1256,9 @@ function onFrame(dt){
   if(++tick%45===0) themeRefresh();
   physics(dt);
   drawAll(); drawDist(); updateReadouts();
-  if(S.confirmed && tick%20===0) updateConfirmUI();
 }
 function onReset(){
-  clearPredictUI();
-  S.confirmed=false;
+  S.pred=null;                               // prediction lives in the inquiry cards now
   setState(OPEN);                            // back to the OPENING state, not the finale
 }
 function onResize(){
@@ -1311,6 +1269,7 @@ function onResize(){
 function onStep(i){
   const s = STEPS[Math.max(0,Math.min(STEPS.length-1,i|0))];
   setState(s);
+  Shell.setPlaying(!s.pause);
 }
 function onComplete(){
   /* Free exploration begins from the neutral single-apparatus entry point:
@@ -1328,6 +1287,28 @@ themeRefresh();
 fitCanvas(stage); fitCanvas(distCv);
 setState(OPEN);
 renderFormal();
+
+/* ---------- guided-inquiry layer: choice feedback + answer-triggered reveals ---------- */
+document.querySelectorAll('#inq-cards .inq-step').forEach(card=>{
+  const evalBox=card.querySelector('.predict-eval');
+  card.querySelectorAll('.choice').forEach(ch=>ch.addEventListener('click',()=>{
+    if(card.dataset.answered) return; card.dataset.answered='1';
+    const correct=ch.hasAttribute('data-correct');
+    card.querySelectorAll('.choice').forEach(c=>{ c.disabled=true;
+      if(c.hasAttribute('data-correct')) c.classList.add('correct');
+      else if(c===ch) c.classList.add('wrong'); else c.classList.add('dim'); });
+    if(evalBox){ evalBox.innerHTML=ch.dataset.fb||''; evalBox.classList.add('show', correct?'correct':'wrong'); }
+    /* Commit the prediction into the sim's own state field (drives verdict + theory row). */
+    if(ch.dataset.pred){ S.pred=ch.dataset.pred; updateReadouts(); drawAll(); }
+    /* data-build — the commitment drives the reveal via the sim's own setters
+       (same behaviour as mirrorBtn / antiBtn: counts are kept). */
+    const spec=card.dataset.build;
+    if(spec==='mirror'){ S.mirror=true; syncControls(); drawAll(); }
+    else if(spec==='cp'){ S.mirror=true; S.anti=true; syncControls(); drawAll(); }
+    /* data-play — the commitment starts the source (the card's scene opened paused). */
+    if(card.hasAttribute('data-play')) Shell.setPlaying(true);
+  }));
+});
 
 Shell.init({ onFrame, onReset, onResize, onStep, onComplete });
 /* Prediction-first by ORDER + PAUSE: the scene opens paused with the enabled
