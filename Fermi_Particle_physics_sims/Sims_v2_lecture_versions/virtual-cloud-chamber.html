@@ -214,8 +214,10 @@ body.light-theme .predict-eval .answer,body.light-theme .predict-eval strong,htm
 #inq-cards{flex:1 1 auto;min-height:0;}
 .inq-step{display:none;}
 .inq-step.active{display:block;}
-.inq-nav{display:flex;justify-content:flex-end;flex-shrink:0;}
-#inq-next{min-width:96px;justify-content:center;}
+.inq-nav{display:flex;justify-content:space-between;flex-shrink:0;}
+.inq-pager{display:flex;align-items:center;gap:8px;}
+.inq-pager-btn{min-width:36px;padding:6px 11px;justify-content:center;font-size:13px;line-height:1;}
+#inq-next{min-width:96px;justify-content:center;margin-left:auto;}
 .aside-restore{display:none;width:100%;text-align:left;background:var(--panel-2);border:1px solid var(--line);
   color:var(--ink-mid);font:inherit;font-size:11px;letter-spacing:.06em;text-transform:uppercase;
   padding:8px 12px;border-radius:6px;cursor:pointer;flex-shrink:0;transition:background .15s,color .15s;}
@@ -269,6 +271,9 @@ body.light-theme .predict-eval .answer,body.light-theme .predict-eval strong,htm
 .inq-step p{margin:0 0 12px;font-size:14px;line-height:1.55;color:var(--muted);}
 .inq-step .predict-eval{display:none;}
 .inq-step .predict-eval.show{display:block;}
+/* Post-answer reveal: extension prose hidden until the card's predict is committed. */
+.inq-step .inq-after{display:none;}
+.inq-step[data-answered] .inq-after{display:block;}
 
 /* Readout β/φ switch (a genuine sim control — not a shell duplicate). */
 .switch{display:inline-flex;border:1px solid var(--ctrl-border);border-radius:6px;overflow:hidden;}
@@ -299,22 +304,6 @@ body.light-theme .predict-eval .answer,body.light-theme .predict-eval strong,htm
 .sim-pad{padding:12px}
 
 /* Question strip — sits ABOVE the stage: the question precedes the reveal. */
-.sim-predict{flex:0 0 auto;display:flex;flex-direction:column;gap:7px;padding:9px 12px;border:1px solid var(--border);border-radius:10px;background:var(--surface);box-sizing:border-box}
-.sim-trail{display:flex;flex-wrap:wrap;gap:6px;font-size:12px;color:var(--text-muted)}
-.sim-tstep{padding:2px 9px;border-radius:999px;border:1px solid var(--border);white-space:nowrap}
-.sim-tstep.sim-now{border-color:var(--accent);color:var(--accent)}
-.sim-tstep.sim-done{color:#3ecf8e;border-color:#3ecf8e}
-.sim-prow{display:flex;flex-wrap:wrap;align-items:center;gap:8px}
-.sim-prow2{display:flex;flex-wrap:wrap;align-items:center;gap:8px}
-.sim-pq{font-size:14px;font-weight:600;color:var(--text);flex:1 1 240px;min-width:190px;overflow-wrap:anywhere}
-.sim-popts{display:flex;flex-wrap:wrap;gap:6px}
-.sim-pbtn{font-size:13.5px;padding:5px 12px;border-radius:999px;border:1.5px solid var(--border);background:transparent;color:var(--text);cursor:pointer;text-align:left}
-.sim-pbtn:hover{border-color:var(--accent)}
-.sim-pbtn.sim-committed{border-color:var(--accent);color:var(--accent);font-weight:700;box-shadow:inset 0 0 0 1px var(--accent)}
-.sim-pbtn.sim-good{border-color:#3ecf8e;color:#3ecf8e;font-weight:700}
-.sim-pbtn.sim-bad{border-color:#ff7a7a;color:#ff7a7a}
-.sim-pbtn.sim-dim{opacity:.5}
-.sim-pfb{font-size:13.5px;color:var(--muted);flex:1 1 240px;min-width:180px;overflow-wrap:anywhere}
 
 .sim-ptitle{margin:0 0 8px;font-size:14px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.05em}
 .sim-chips{display:flex;flex-wrap:wrap;gap:6px}
@@ -341,7 +330,6 @@ body.light-theme .predict-eval .answer,body.light-theme .predict-eval strong,htm
 .sim-eq p{margin:6px 0 0;font-size:13.5px;color:var(--muted);overflow-wrap:anywhere}
 @media (max-width:1000px){
   .sim-eq{flex:1 1 100%;min-width:0}
-  .sim-pq,.sim-pfb{min-width:140px}
   .sim-hero{gap:8px}
 }
 .inq-step h4{margin:0 0 8px;font-size:14px;font-weight:600;color:var(--text);}
@@ -385,6 +373,7 @@ body.light-theme .predict-eval .answer,body.light-theme .predict-eval strong,htm
     <div class="shell-group">
       <button id="shell-info" class="shell-btn" title="About this simulation">ⓘ Info</button>
       <button id="shell-theme" class="shell-btn" title="Toggle light / dark theme">☾</button>
+      <button id="shell-lecture" class="shell-btn" title="Lecture display mode — hide the guided inquiry, show the full simulation">🎓 Lecture</button>
     </div>
     <div class="shell-controls"><a id="shell-refine" class="shell-btn" style="display:none" target="_blank" rel="noopener" title="Refine this simulation (dev only)">✎ Refine</a>
       <div class="shell-group">
@@ -406,19 +395,6 @@ body.light-theme .predict-eval .answer,body.light-theme .predict-eval strong,htm
 
   <main class="shell-hero">
     <div class="sim-hero">
-  <div class="sim-predict" id="simPredict">
-    <div class="sim-trail" id="simTrail"></div>
-    <div class="sim-prow">
-      <span class="sim-pq" id="simPq">—</span>
-      <div class="sim-popts" id="simPopts"></div>
-    </div>
-    <div class="sim-prow2">
-      <span class="sim-pfb" id="simPfb"></span>
-      <button class="sim-btn sim-hidden" id="simCheck" type="button">Check my answer</button>
-      <button class="sim-btn sim-hidden" id="simChange" type="button">Change my answer</button>
-      <button class="sim-btn sim-hidden" id="simNextQ" type="button">Next question →</button>
-    </div>
-  </div>
   <div class="plot-box sim-stage">
     <div class="plot-title">Cloud chamber — side view<span class="plot-inline">B out of the page</span></div>
     <canvas id="simChamber"></canvas>
@@ -430,25 +406,48 @@ body.light-theme .predict-eval .answer,body.light-theme .predict-eval strong,htm
     <div id="aside-inquiry" class="aside-zone">
       <div class="aside-zone-head">
         <h3>Guided Inquiry</h3>
-        <button id="aside-inquiry-skip" class="shell-btn aside-skip" title="Skip the guided inquiry">Skip ✕</button>
       </div>
       <div id="inq-dots" class="inq-dots"></div>
       <div id="inq-cards" class="aside-zone-body">
-        <div class="inq-step"><h4>1 · One curved track</h4><p>There is no plate in the chamber. Could this single arc have been left by a positive particle going up just as easily as by a negative one going down?</p>
-  <button class="choice" type="button" data-c="0">No — the two would curl opposite ways</button>
-  <button class="choice" type="button" data-c="1">Yes — both leave the same arc</button>
-  <div class="predict-eval">Reversing the charge <em>and</em> the velocity flips the force twice. <strong>Both give one and the same curve</strong>, so the photograph alone cannot give the sign.</div></div>
-<div class="inq-step"><h4>2 · Turn the field up</h4><p>The field is now <span data-live="B">1.50 T</span> and the radius reads <span data-live="R">—</span>. Before you drag the B slider, what happens to the radius when B goes up?</p>
-  <button class="choice" type="button" data-c="1">The radius shrinks</button>
-  <button class="choice" type="button" data-c="0">The radius grows</button>
-  <button class="choice" type="button" data-c="0">The radius does not change</button>
-  <div class="predict-eval">Check it against the readout: <strong>r = p/(|q|B)</strong>, so doubling B halves r at fixed momentum.</div></div>
-<div class="inq-step"><h4>3 · Put the lead in</h4><p>With the plate in, one side of the track curls tighter than the other. Which side did the particle leave by?</p>
-  <button class="choice" type="button" data-c="1">The tighter side</button>
-  <button class="choice" type="button" data-c="0">The wider side</button>
-  <div class="predict-eval">Energy only goes down in the lead, so p drops and r = p/(|q|B) shrinks: <strong>the tighter arc is the exit side</strong>. Direction first, then the curl gives the sign.</div></div>
+        <div class="inq-step" data-gate data-reveal="identical"><h4>1 · One track, two stories</h4>
+          <p>The chamber marks two candidate stories: <strong>A</strong> — an e⁺ entering below, moving ↑; <strong>B</strong> — an e⁻ entering above, moving ↓. One photograph is about to be exposed. What will it show?</p>
+          <button class="choice" data-fb="Answering exposed it: the dashed mirror guess visibly misses — flipping charge <em>and</em> velocity flips the force twice.">Two mirror-image curves</button>
+          <button class="choice" data-correct data-fb="Watch the e⁻ ↓ track slide exactly onto the e⁺ ↑ photograph — curvature alone can never give the sign.">One and the same curve</button>
+          <button class="choice" data-fb="B tightens both arcs equally and bends both cases the same way round — the two curves still coincide.">B decides which way each curls</button>
+          <div class="predict-eval"></div></div>
+<div class="inq-step" data-gate data-reveal="bfield"><h4>2 · Turn the field up</h4>
+          <p>The photograph is exposed: B = <span data-live="B">1.50 T</span> and the arc's radius reads <span data-live="R">—</span> in <strong>Track readout</strong>. Answering doubles B to 3.00 T. The radius will…</p>
+          <button class="choice" data-correct data-fb="r = p/(|q|B): p is unchanged, B doubles, so r drops 14.1 → 7.1 cm — check <strong>r before plate</strong>.">Halve</button>
+          <button class="choice" data-fb="A stronger field bends harder, not wider: B sits in the denominator of r = p/(|q|B).">Double</button>
+          <button class="choice" data-fb="The particle alone does not fix r: r = p/(|q|B), so doubling B halves the arc.">Stay the same</button>
+          <div class="predict-eval"></div></div>
+<div class="inq-step" data-gate data-reveal="proton"><h4>3 · Heavy versus light</h4>
+          <p>Answering keeps this e⁺ arc (63 MeV, r ≈ 14 cm) as a ghost and fires a proton with the <em>same</em> 63 MeV of kinetic energy. The proton's arc will be…</p>
+          <button class="choice" data-fb="Slower, yes — but momentum is what bends: p = √(E²−(mc²)²) gives the proton 350 MeV/c, not 63.">Tighter — heavier and slower means more bending</button>
+          <button class="choice" data-fb="r tracks momentum, not kinetic energy: at the same 63 MeV the proton carries 350 MeV/c to the e⁺'s 63.5.">The same — equal energy, equal arc</button>
+          <button class="choice" data-correct data-fb="p jumps 63 → 350 MeV/c, so r grows 14 → 78 cm: a track's curvature reads mass as well as charge.">Wider — same energy but far more momentum</button>
+          <div class="predict-eval"></div></div>
+<div class="inq-step" data-gate data-reveal="plate"><h4>4 · The lead plate breaks the tie</h4>
+          <p>A 6 mm lead plate now crosses the chamber (B eased to 0.70 T), and the e⁺ (marked ↑) is about to cross it, losing ≈ 40 MeV inside. Which side of the plate will carry the tighter arc?</p>
+          <button class="choice" data-fb="That would need the lead to <em>add</em> energy — it only takes it, so p and r shrink on exit.">The side it entered from</button>
+          <button class="choice" data-correct data-fb="Energy drops in the lead, p falls, r = p/(|q|B) shrinks — compare <strong>r before plate</strong> and <strong>r after plate</strong>.">The side it left by</button>
+          <button class="choice" data-fb="Compare <strong>r before plate</strong> with <strong>r after plate</strong>: they differ, because the lead takes energy.">Both sides curl the same</button>
+          <div class="predict-eval"></div></div>
+<div class="inq-step" data-gate><h4>5 · Anderson's photograph, 1932</h4>
+          <p>This is the signature Carl Anderson caught in 1932 — one track, a plate crossing, the tighter arc above. What could he settle from a single photograph like this?</p>
+          <button class="choice" data-fb="Not any more: the tighter exit arc fixes the direction of travel, and that breaks the tie of card 1.">Nothing — a curved track never gives the sign</button>
+          <button class="choice" data-fb="The photograph names no particle; it gives r and — with the plate — a direction. His curl came out positive.">It must be an electron — cosmic rays make electrons</button>
+          <button class="choice" data-correct data-fb="Exactly — and his track curled the wrong way for an electron: a positive electron, the positron.">Direction from the tighter arc, then the curl gives the sign</button>
+          <div class="predict-eval"></div>
+          <p class="inq-after">Dirac's equation had demanded negative-energy solutions; Anderson's wrong-way track made them flesh — the antiparticle. Open <strong>＋ More particles &amp; energy</strong> and fire <strong>? unknown</strong>: read its p and its bending, then press it again to reveal.</p></div>
       </div>
-      <div class="inq-nav"><button id="inq-next" class="shell-btn primary">Next →</button></div>
+      <div class="inq-nav">
+        <div class="inq-pager">
+          <button id="inq-prev" class="shell-btn primary inq-pager-btn" title="Previous step" aria-label="Previous step" disabled>&lt;</button>
+          <button id="inq-pager-next" class="shell-btn primary inq-pager-btn" title="Next step" aria-label="Next step">&gt;</button>
+        </div>
+        <button id="inq-next" class="shell-btn primary">Next →</button>
+      </div>
     </div>
     <button id="aside-inquiry-restore" class="aside-restore" title="Revisit the guided inquiry">▸ Guided inquiry</button>
     <div id="aside-controls" class="aside-zone">
@@ -485,7 +484,6 @@ body.light-theme .predict-eval .answer,body.light-theme .predict-eval strong,htm
     <label class="sim-check"><input type="checkbox" id="simPlate"> Lead plate (6 mm)</label>
     <button class="sim-btn" id="simClear" type="button">Clear old tracks</button>
   </div>
-  <p class="sim-hint sim-hidden" id="simPlateHint">Confirm: those two arcs are one and the same curve. Now slide the lead plate in ↑</p>
 </div></div>
 <div class="shell-panel"><div class="sim-pad">
   <h3 class="sim-ptitle">Track readout</h3>
@@ -551,6 +549,16 @@ const Shell = (function(){
     root.classList.toggle('inquiry-collapsed', on);
     requestAnimationFrame(refit);
   }
+  // Lecture display mode: ON = the post-completion free-exploration state
+  // (finishInquiry fast-forwards, runs onComplete, collapses, resumes play);
+  // OFF (second click or the restore chip) = reopen the inquiry at card 1.
+  function setLectureMode(on){
+    root.classList.toggle('lecture-mode', on);
+    const b=document.getElementById('shell-lecture');
+    if(b) b.classList.toggle('active', on);
+    if(on){ finishInquiry(); }
+    else { setInquiryCollapsed(false); if(inqCards().length) inqShow(0); }
+  }
 
   // ---- Guided-inquiry stepper (shell-owned, so Next/Finish are always wired) ----
   // The SIM supplies sequential <div class="inq-step"> cards in #inq-cards. The
@@ -574,8 +582,23 @@ const Shell = (function(){
       next.disabled = gated;
       next.textContent = (inqStep>=cards.length-1) ? 'Finish' : 'Next →';
     }
+    inqUpdatePager();
     onStep(inqStep);
     requestAnimationFrame(refit);
+  }
+  function inqUpdatePager(){
+    const cards=inqCards();
+    const prev=document.getElementById('inq-prev');
+    const pnext=document.getElementById('inq-pager-next');
+    if(prev) prev.disabled = inqStep<=0;
+    if(pnext) pnext.disabled = inqStep>=cards.length-1;
+  }
+  function inqPrev(){
+    if(inqStep>0) inqShow(inqStep-1);
+  }
+  function inqPagerNext(){
+    const cards=inqCards();
+    if(inqStep<cards.length-1) inqShow(inqStep+1);
   }
   function inqNext(){
     const cards=inqCards();
@@ -612,7 +635,6 @@ const Shell = (function(){
     const reset=document.getElementById('shell-reset');
     const spd=document.getElementById('shell-speed');
     const maxBtn=document.getElementById('shell-maximize');
-    const skip=document.getElementById('aside-inquiry-skip');
     const restore=document.getElementById('aside-inquiry-restore');
     const tFormal=document.getElementById('toggle-formal');
 
@@ -645,12 +667,17 @@ const Shell = (function(){
       else if(root.classList.contains('shell-max')) setMaximized(false);
     });
 
-    // Skip ✕ jumps to the completed state (all controls live); restore reopens it.
-    if(skip) skip.addEventListener('click',finishInquiry);
-    if(restore) restore.addEventListener('click',()=>setInquiryCollapsed(false));
+    // 🎓 Lecture jumps to the completed state (all controls live); restore reopens at card 1.
+    const lecture=document.getElementById('shell-lecture');
+    if(lecture) lecture.addEventListener('click',()=>setLectureMode(!root.classList.contains('lecture-mode')));
+    if(restore) restore.addEventListener('click',()=>setLectureMode(false));
     // Next / Finish — shell-driven step advance (Finish collapses the inquiry).
     const inqNextBtn=document.getElementById('inq-next');
     if(inqNextBtn) inqNextBtn.addEventListener('click',inqNext);
+    const inqPrevBtn=document.getElementById('inq-prev');
+    if(inqPrevBtn) inqPrevBtn.addEventListener('click',inqPrev);
+    const inqPagerNextBtn=document.getElementById('inq-pager-next');
+    if(inqPagerNextBtn) inqPagerNextBtn.addEventListener('click',inqPagerNext);
     // Auto-gate: a .choice click inside the active gated card enables Next.
     const cardsHost=document.getElementById('inq-cards');
     if(cardsHost) cardsHost.addEventListener('click',e=>{
@@ -678,15 +705,25 @@ const Shell = (function(){
     init(opts){
       onFrame=opts.onFrame||onFrame; onReset=opts.onReset||onReset; onResize=opts.onResize||onResize; onStep=opts.onStep||onStep; onComplete=opts.onComplete||onComplete;
       wire();
-      // Guided inquiry is retired from the sidebar: hide the whole zone + restore bar,
-      // and open the sim directly in its COMPLETED state (as if the student had finished
-      // the inquiry) — every control live, every staged panel revealed.
+      // Guided inquiry RE-ENABLED (was retired in the raw lecture export): build the
+      // step dots and open on card 1. Sims that ship no cards still fall back to the
+      // retired behaviour — zone hidden, sim opened in its completed state.
       const cards=inqCards();
       inqTotal=cards.length;
-      root.classList.add('no-inquiry');
-      onResize(); onReset();
-      if(inqTotal>0){ for(let k=0;k<cards.length;k++) onStep(k); inqStep=cards.length-1; }
-      onComplete();
+      if(inqTotal>0){
+        const dotsHost=document.getElementById('inq-dots');
+        if(dotsHost&&!dotsHost.children.length){
+          for(let k=0;k<inqTotal;k++){const d=document.createElement('div');d.className='inq-dot';dotsHost.appendChild(d);}
+        }
+        onResize(); onReset();
+        inqShow(0);
+      }else{
+        root.classList.add('no-inquiry');
+        const lb=document.getElementById('shell-lecture');
+        if(lb) lb.style.display='none';
+        onResize(); onReset();
+        onComplete();
+      }
       setPlaying(true);
       last=performance.now();
       if(!started){ started=true; requestAnimationFrame(loop); }
@@ -727,8 +764,7 @@ var KEYS=Object.keys(PARTS);
 /* ---------- state ---------- */
 var st={pKey:'e+',Ek:63,B:1.5,plate:false,track:null,ghosts:[],s:0,expo:0,mode:'photo',
         mystery:null,scrub:false,lastFrame:0,showNums:false,
-        qi:0,ans:[null,null,null],checked:[false,false,false],trail:[false,false,false],
-        note:'',sceneNote:'',sceneNoteT:0,probe:null,probeSig:''};
+        sceneNote:'',sceneNoteT:0,probe:null,probeSig:''};
 var booted=false;
 /* ---------- dom ---------- */
 function $(id){return document.getElementById(id);}
@@ -737,9 +773,7 @@ var ekS=$('simEk'),bS=$('simB'),plateChk=$('simPlate'),ekVal=$('simEkVal'),bVal=
 var beamBox=$('simBeam'),mysChip=$('simMysChip'),clearBtn=$('simClear'),fireBtn=$('simFire');
 var moreBtn=$('simMoreBtn'),moreBox=$('simMore');
 var roPart=$('roPart'),roP1=$('roP1'),roR1=$('roR1'),roP2=$('roP2'),roR2=$('roR2'),roDE=$('roDE');
-var roHint=$('roHint'),roList=$('roList'),plateHint=$('simPlateHint');
-var pqEl=$('simPq'),poptsEl=$('simPopts'),pfb=$('simPfb'),trailEl=$('simTrail');
-var checkBtn=$('simCheck'),changeBtn=$('simChange'),nextQBtn=$('simNextQ');
+var roHint=$('roHint'),roList=$('roList');
 var W=640,H=420,scale=1400,cx=320,cy=210;
 var SPECKS=[];for(var i0=0;i0<170;i0++)SPECKS.push({fx:Math.random()*2-1,fy:Math.random()*2-1,a:0.04+Math.random()*0.12,r:0.5+Math.random()*1.4});
 /* ---------- physics ---------- */
@@ -1101,77 +1135,7 @@ function syncControls(){
  plateChk.checked=st.plate;setActive(st.mystery?'?':st.pKey);
  syncPanels();syncInqText();
 }
-/* ---------- question strip (predict -> reveal -> check) ---------- */
-var QUESTIONS=[
- {q:function(){return st.plate
-   ? 'Take the lead plate out: would an e\u207A moving \u2191 and an e\u207B moving \u2193 leave different photographs? (answering takes the plate out)'
-   : 'No plate. One photograph, one curved track \u2014 it was made either by an e\u207A moving \u2191 or an e\u207B moving \u2193. What does the photograph show?';},
-  opts:['Two mirror-image curves','One and the same curve','The field strength decides which way each curls'],
-  ans:1,
-  fb:['The dashed mirror guess on the chamber misses the real track completely: reversing the charge and the velocity flips the force twice, so both cases give one curve.',
-      'Yes \u2014 the e\u207B \u2193 track settles exactly onto the e\u207A \u2191 photograph, so curvature alone can never give the sign of the charge.',
-      'B changes how tightly both curl, but it bends both cases the same way round \u2014 the two arcs still coincide exactly.'],
-  onCommit:function(){revealIdentical();}},
- {q:function(){return 'Slide the lead plate in (checkbox in the sidebar). Which side of the plate carries the tighter arc?';},
-  opts:['The side it entered from','The side it left by','Both sides curl the same'],
-  ans:1,
-  fb:['Energy only goes down inside the lead, and r = p/(|q|B): less momentum means a tighter arc, so the tight side is the exit.',
-      'Yes \u2014 the lead takes energy, p drops, r = p/(|q|B) shrinks. Compare r before plate and r after plate in the readout.',
-      'Compare r before plate with r after plate in the readout: they differ, because the lead takes energy.'],
-  onCommit:function(){revealPlate();}},
- {q:function(){return 'Anderson had one photograph like this in 1932. Using what you have just seen, what could he settle from it?';},
-  opts:['Nothing \u2014 a curved track never gives the sign of a charge',
-        'The tighter arc fixes the direction of travel, and then the curl gives the sign',
-        'It must be an electron, because that is what cosmic rays make'],
-  ans:1,
-  fb:['Not nothing: the plate breaks the tie, because it shows which end the particle left by.',
-      'Exactly \u2014 direction first (from the tighter exit arc), then the curl direction gives the sign. His track curled the wrong way for an electron.',
-      'The photograph does not name the particle. It gives r, and \u2014 with the plate \u2014 the direction; the sign that came out was positive.'],
-  onCommit:function(){}}
-];
-function showEl(el,on){el.classList.toggle('sim-hidden',!on);}
-function renderTrail(){
- var names=['1 predict','2 compare arcs','3 plate reveal'];
- trailEl.innerHTML='';
- for(var i=0;i<names.length;i++){
-  var s=document.createElement('span');
-  s.className='sim-tstep'+(st.trail[i]?' sim-done':'')+(i===st.qi?' sim-now':'');
-  s.textContent=(st.trail[i]?'\u2713 ':'')+names[i];
-  trailEl.appendChild(s);
- }
-}
-function renderQ(){
- var q=QUESTIONS[st.qi],chosen=st.ans[st.qi],checked=st.checked[st.qi];
- pqEl.textContent='Q'+(st.qi+1)+' \u00B7 '+q.q();
- poptsEl.innerHTML='';
- q.opts.forEach(function(txt,i){
-  var b=document.createElement('button');
-  b.type='button';b.className='sim-pbtn';b.textContent=txt;
-  if(chosen===i)b.classList.add(checked?(i===q.ans?'sim-good':'sim-bad'):'sim-committed');
-  else if(checked&&i===q.ans)b.classList.add('sim-good');
-  else if(checked)b.classList.add('sim-dim');
-  b.addEventListener('click',function(){answer(i);});
-  poptsEl.appendChild(b);
- });
- var msg=st.note?st.note+' ':'';
- if(chosen===null)msg+='Commit an answer first \u2014 nothing is locked, and you can change it afterwards.';
- else if(!checked)msg+='Committed: \u201C'+q.opts[chosen]+'\u201D. Watch the chamber, then check.';
- else msg+=(chosen===q.ans?'\u2713 ':'\u2717 ')+q.fb[chosen];
- pfb.textContent=msg;
- showEl(checkBtn,chosen!==null&&!checked);
- showEl(changeBtn,chosen!==null);
- showEl(nextQBtn,checked&&st.qi<QUESTIONS.length-1);
- renderTrail();
-}
-function answer(i){
- st.note='';
- st.ans[st.qi]=i;st.checked[st.qi]=false;
- if(st.qi===0)st.trail[0]=true;
- var q=QUESTIONS[st.qi];
- if(q.onCommit)q.onCommit();
- renderQ();
-}
-function sceneNote(txt){st.sceneNote=txt;st.sceneNoteT=3.4;st.note='Scene changed \u2014 '+txt+'.';}
+function sceneNote(txt){st.sceneNote=txt;st.sceneNoteT=3.4;}
 function revealIdentical(){
  var notes=[];
  if(st.plate){st.plate=false;plateChk.checked=false;notes.push('the lead plate was taken out');}
@@ -1185,8 +1149,7 @@ function revealIdentical(){
  /* the real thing: an e- running DOWN the same path, slid in so the match is seen happening */
  st.ghosts.push(ghostRecipe('e+',st.Ek,st.B,false,{rev:true,solid:true,special:true,slide:-0.055,
    col:PARTS['e-'].col,tag:'e\u207B \u2193'}));
- st.trail[1]=true;
- if(notes.length)sceneNote(notes.join(' and '));else st.note='';
+ if(notes.length)sceneNote(notes.join(' and '));
  if(window.Shell&&Shell.setPlaying)Shell.setPlaying(true);
  syncControls();draw();
 }
@@ -1196,42 +1159,44 @@ function revealPlate(){
  st.ghosts=st.ghosts.filter(function(g){return !g.special;});
  if(st.track)pushGhost(false);
  if(!st.plate){st.plate=true;plateChk.checked=true;notes.push('the lead plate was slid in');}
- st.scrub=false;st.showNums=true;st.trail[2]=true;
+ st.scrub=false;st.showNums=true;
  syncPanels();fire('anim');
- if(notes.length)sceneNote(notes.join(' and '));else st.note='';
+ if(notes.length)sceneNote(notes.join(' and '));
  if(window.Shell&&Shell.setPlaying)Shell.setPlaying(true);
  draw();
 }
-checkBtn.addEventListener('click',function(){
- st.checked[st.qi]=true;st.note='';
- if(st.qi===0)plateHint.classList.remove('sim-hidden');
- renderQ();
-});
-changeBtn.addEventListener('click',function(){
- st.ans[st.qi]=null;st.checked[st.qi]=false;st.note='Answer cleared \u2014 pick again.';renderQ();
-});
-nextQBtn.addEventListener('click',function(){
- st.qi=Math.min(QUESTIONS.length-1,st.qi+1);st.note='';renderQ();
-});
-/* ---------- staged scenes (also used by the guided-inquiry stepper) ---------- */
+/* ---------- staged scenes (deterministic; one spec per guided-inquiry card) ---------- */
+var STEPS=[
+ {plate:false,fire:null,  nums:false,play:false,B:1.5},  /* 1 \u00b7 two candidate stories, unexposed  */
+ {plate:false,fire:'full',nums:true, play:true ,B:1.5},  /* 2 \u00b7 exposed arc + readout, B question */
+ {plate:false,fire:'full',nums:true, play:true ,B:1.5},  /* 3 \u00b7 same arc, heavy-vs-light question */
+ {plate:true, fire:'anim',nums:false,play:false,B:0.7},  /* 4 \u00b7 plate in, e+ waiting at the entry (B eased so it crosses) */
+ {plate:true, fire:'full',nums:true, play:true ,B:0.7}   /* 5 \u00b7 Anderson's full plate crossing, 63 \u2192 ~23 MeV */
+];
 function stageFor(i){
- st.mystery=null;st.scrub=false;st.ghosts=[];st.track=null;st.s=0;st.expo=0;
- st.plate=(i>=1);
- if(i>=1)st.showNums=true;
- st.pKey='e+';
+ var sp=STEPS[Math.max(0,Math.min(STEPS.length-1,i))];
+ if(st.mystery)cancelMystery();
+ st.scrub=false;st.ghosts=[];st.track=null;st.s=0;st.expo=0;
+ st.sceneNote='';st.sceneNoteT=0;
+ st.pKey='e+';st.Ek=63;st.B=sp.B;
+ st.plate=sp.plate;st.showNums=sp.nums;
  st.mode=st.plate?'track':'photo';
+ if(sp.fire)fire(sp.fire);
  syncControls();updateReadouts();draw();
+ Shell.setPlaying(sp.play);
 }
 function onStep(i){
- if(!booted)return;                    /* the shell replays every step at init: keep the entry scene */
- st.qi=Math.max(0,Math.min(QUESTIONS.length-1,i));
- stageFor(st.qi);renderQ();
+ if(!booted)return;                    /* boot stages card 1 itself before Shell.init runs */
+ stageFor(i);
 }
 function onReset(){
- stageFor(st.qi);
- st.note=(st.ans[0]!==null)?'Scene reset \u2014 your committed answers are kept.':'';
- st.sceneNote='';st.sceneNoteT=0;
- if(booted)renderQ();
+ stageFor(window.Shell&&typeof Shell.step==='number'?Shell.step:0);
+}
+function onComplete(){
+ /* free exploration: every particle reachable, readouts on, sim running */
+ st.showNums=true;syncPanels();
+ if(moreBox.classList.contains('sim-hidden'))moreBtn.click();
+ Shell.setPlaying(true);
 }
 /* ---------- wiring ---------- */
 ekS.addEventListener('input',function(){
@@ -1246,8 +1211,8 @@ bS.addEventListener('input',function(){
 bS.addEventListener('change',function(){st.scrub=false;});
 plateChk.addEventListener('change',function(){
  beginChange();st.scrub=false;st.plate=plateChk.checked;
- if(st.plate){st.showNums=true;st.trail[2]=true;}
- syncPanels();fire(animMode());renderQ();
+ if(st.plate){st.showNums=true;}
+ syncPanels();fire(animMode());
 });
 clearBtn.addEventListener('click',function(){st.ghosts=[];draw();});
 fireBtn.addEventListener('click',function(){
@@ -1281,19 +1246,23 @@ function syncInqText(){
   else if(w==='R')els[i].textContent=st.track?fmtR(st.track.r1):'\u2014';
  }
 }
-(function(){
- var host=document.getElementById('inq-cards');
- if(!host)return;
- host.addEventListener('click',function(e){
-  var ch=e.target.closest('.choice');if(!ch)return;
-  var card=ch.closest('.inq-step');if(!card)return;
-  var right=ch.dataset.c==='1';
-  card.querySelectorAll('.choice').forEach(function(b){b.classList.add('dim');});
-  ch.classList.remove('dim');ch.classList.add(right?'correct':'wrong');
-  var ev=card.querySelector('.predict-eval');
-  if(ev){ev.classList.add('show');ev.classList.add(right?'correct':'wrong');}
- });
-})();
+document.querySelectorAll('#inq-cards .inq-step').forEach(function(card){
+ var evalBox=card.querySelector('.predict-eval');
+ card.querySelectorAll('.choice').forEach(function(ch){ch.addEventListener('click',function(){
+  if(card.dataset.answered)return;card.dataset.answered='1';
+  var correct=ch.hasAttribute('data-correct');
+  card.querySelectorAll('.choice').forEach(function(c){c.disabled=true;
+   if(c.hasAttribute('data-correct'))c.classList.add('correct');
+   else if(c===ch)c.classList.add('wrong');else c.classList.add('dim');});
+  if(evalBox){evalBox.innerHTML=ch.dataset.fb||'';evalBox.classList.add('show',correct?'correct':'wrong');}
+  /* data-reveal — the commitment drives the scene via the sim's own setters */
+  var r=card.dataset.reveal;
+  if(r==='identical'){revealIdentical();Shell.setPlaying(true);}
+  else if(r==='bfield'){if(st.track)pushGhost(false);st.scrub=false;st.B=3.0;fire('full');syncControls();Shell.setPlaying(true);}
+  else if(r==='proton'){if(st.track)pushGhost(false);st.scrub=false;st.pKey='p';setActive('p');if(moreBox.classList.contains('sim-hidden'))moreBtn.click();fire('full');Shell.setPlaying(true);}
+  else if(r==='plate'){revealPlate();Shell.setPlaying(true);}
+ });});
+});
 /* ---------- formal layer (KaTeX, deferred-safe) ---------- */
 var EQS=[
  ['sim-eq1','r=\\dfrac{p}{|q|\\,B}'],
@@ -1312,11 +1281,11 @@ if(window.ResizeObserver){new ResizeObserver(function(){onResize();}).observe(cv
 stageFor(0);
 onResize();
 renderFormal(0);
-Shell.init({onFrame:onFrame,onReset:onReset,onResize:onResize,onStep:onStep});
+Shell.init({onFrame:onFrame,onReset:onReset,onResize:onResize,onStep:onStep,onComplete:onComplete});
 /* Prediction-first: the outcome-bearing exposure waits on the ENABLED Play button. */
 Shell.setPlaying(false);
 booted=true;
-renderQ();renderTrail();syncControls();draw();
+syncControls();draw();
 })();
 </script>
 <script>/* dev-only reviewer affordance: link this sim to the refinement studio.
