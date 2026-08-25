@@ -1,6 +1,6 @@
 ---
 name: hide
-description: Register text into a CM sim's Hide-Text container from screenshots or quoted strings — the friendly front-end to the hide-text mechanism. Use when the user invokes /hide with attached/pasted screenshots (annotated or cropped) or names text to hide ("hide 'perihelion' and the legend in L37"). Locates each item in the sim file (DOM or canvas), gates it behind the Hide Text checkbox, updates the registry, and verifies both toggle states in a real browser. Hide-only — never deletes.
+description: Register text into a sim's Hide-Text container (CM sims AND v2 particle-physics sims in Fermi_Particle_physics_sims/Sims_v2_lecture_versions/) from screenshots or quoted strings — the friendly front-end to the hide-text mechanism. Use when the user invokes /hide with attached/pasted screenshots (annotated or cropped) or names text to hide ("hide 'perihelion' and the legend in L37"). Locates each item in the sim file (DOM or canvas), gates it behind the Hide Text checkbox, updates the registry, and verifies both toggle states in a real browser. Hide-only — never deletes.
 ---
 
 # /hide — put text into the Hide-Text container
@@ -61,6 +61,16 @@ Front-end to the registration workflow. **Canonical mechanism spec:
 6. **Report**: table of item → mechanism (dom/canvas) → anchor → hidden/restored
    verified. Flag anything not found, ambiguous, or appearing in additional modes.
    Cite the before/after screenshot filenames.
+
+## Particle-physics sims: two extra rules
+
+- **Never register inquiry-layer elements** (`#inq-cards`, `.inq-step`, `.choice`,
+  `.predict-eval`, dots, pager, the `▸ Guided inquiry` chip) — the 🎓 Lecture button
+  already owns hiding the inquiry; Hide Text is for sim labels/readouts only.
+- **Check for card conflicts before registering**: PP inquiry cards name controls and
+  readouts in `<strong>` ("watch **cost to make the last pair**"). Grep the item's
+  visible text against `#inq-cards` — if a card references it, hiding it breaks that
+  card's instruction; flag the conflict and get explicit confirmation before gating it.
 
 ## Hard rules
 

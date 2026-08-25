@@ -1,9 +1,9 @@
 ---
 name: add-hide-text
-description: Install the "Hide Text" checkbox + empty hide-registry into CM lecture sims (one sim, a list, or "all"), following the canonical spec in .cursor/rules/hide-text-checkbox.mdc. Also handles the later "register" step — putting named text items into a sim's hide container. Use when asked to add the Hide Text checkbox/container, roll it out across sims, or register/hide specific labels. Install mode NEVER hides anything — the container ships empty.
+description: Install the "Hide Text" checkbox + empty hide-registry into CM lecture sims AND the v2 particle-physics sims (Fermi_Particle_physics_sims/Sims_v2_lecture_versions/) — one sim, a list, or "all" — following the canonical spec in .cursor/rules/hide-text-checkbox.mdc. Also handles the later "register" step — putting named text items into a sim's hide container. Use when asked to add the Hide Text checkbox/container, roll it out across sims, or register/hide specific labels. Install mode NEVER hides anything — the container ships empty.
 ---
 
-# Add Hide-Text container to CM sims
+# Add Hide-Text container (CM sims + v2 particle-physics sims)
 
 **Canonical spec: `.cursor/rules/hide-text-checkbox.mdc` — read it FIRST, follow it
 exactly.** This skill is the executor; the MDC is the single source of truth for the
@@ -14,8 +14,11 @@ disagree, the MDC wins.
 
 Given one sim, a list, or "all":
 
-1. Read the MDC. Resolve targets; for "all" glob `Capacity_CM_simulations/*.html`
-   minus `index.html`, `vendor/`, `CM_lecture_sims_backup/`.
+1. Read the MDC. Resolve targets; for "all": CM = `Capacity_CM_simulations/*.html`
+   minus `index.html`, `vendor/`, `CM_lecture_sims_backup/`; particle physics =
+   `Fermi_Particle_physics_sims/Sims_v2_lecture_versions/*.html` minus `index.html`.
+   Both families carry the same anchors (`#shell-lecture`, `</header>`, `#shell`) —
+   the PP sims got their Lecture button from `add-guided-inquiry-and-lecture-mode`.
 2. Per sim, **idempotency check first**: if `id="ht-toggle"` is already present, skip
    and report "already installed".
 3. Locate the three anchors and make exactly the MDC's three insertions:
@@ -27,12 +30,17 @@ Given one sim, a list, or "all":
 
 ### Verify (per sim)
 - Grep: exactly one `ht-toggle`, one `HIDE-TEXT REGISTRY`, one `#shell.hide-text .ht-hide`.
-- Browser smoke (bundled probe from the review skill works unchanged):
-  `node .claude/skills/review-CM-sims/browser-probe.mjs "<sim>" "<scratch-dir>"` →
-  `errors: []`, and the initial screenshot shows the checkbox beside 🎓 Lecture.
-- For one deeper check (first install / spot checks): drive the page with the same
-  puppeteer pattern and assert that clicking `#ht-toggle` toggles class `hide-text` on
-  `#shell`, with zero console errors and no visual change (registry is empty).
+- Browser smoke: CM — the bundled probe works unchanged
+  (`node .claude/skills/review-CM-sims/browser-probe.mjs "<sim>" "<scratch-dir>"`);
+  PP — use the Chrome/`onFrame`-driving pattern from `add-guided-inquiry-and-lecture-mode`
+  (backgrounded tabs have frozen rAF). Either way: `errors: []`, checkbox beside 🎓 Lecture.
+- **Boot default differs by family**: CM sims boot into lecture mode → checkbox CHECKED
+  at load; PP sims boot into guided inquiry → the load-sync is inert and the checkbox
+  is UNCHECKED at load (correct — text visible by default). Hide Text stays independent
+  of the 🎓 Lecture toggle in PP; do not couple them unless explicitly asked.
+- For one deeper check (first install / spot checks): assert that clicking `#ht-toggle`
+  toggles class `hide-text` on `#shell`, with zero console errors and no visual change
+  (registry is empty).
 
 ### Batch report
 End with a table: sim · installed / already present / skipped (+why) · probe errors.

@@ -1,6 +1,6 @@
 ---
-description: Hide Text checkbox + empty hide-registry for CM lecture sims — top-bar checkbox beside the 🎓 Lecture button; nothing is hidden until items are explicitly registered
-globs: Capacity_CM_simulations/*.html
+description: Hide Text checkbox + empty hide-registry for CM lecture sims and v2 particle-physics sims — top-bar checkbox beside the 🎓 Lecture button; nothing is hidden until items are explicitly registered
+globs: ["Capacity_CM_simulations/*.html", "Fermi_Particle_physics_sims/Sims_v2_lecture_versions/*.html"]
 alwaysApply: false
 ---
 
@@ -26,7 +26,8 @@ back by unchecking (or removing the auto-lecture default).
 
 ## Insertion 1 — markup (in the top bar)
 
-Find the lecture button (present in every CM sim):
+Find the lecture button (present in every CM sim; the v2 particle-physics sims got
+theirs from `add-guided-inquiry-and-lecture-mode`):
 
 ```html
 <button id="shell-lecture" class="shell-btn" title="...">🎓 Lecture</button>
@@ -118,7 +119,10 @@ Installation ships the container **empty**. When asked to register text:
 ## Verify after installing (per sim)
 
 1. `id="ht-toggle"` appears exactly once; registry comment appears exactly once.
-2. Load the sim: checkbox renders beside 🎓 Lecture, checked by default (sims boot into
-   lecture mode), zero console errors.
+2. Load the sim: checkbox renders beside 🎓 Lecture, zero console errors. Boot default
+   differs by family: **CM** sims boot into lecture mode → checkbox CHECKED at load;
+   **particle-physics** sims boot into guided inquiry → the load-sync is inert and the
+   checkbox is UNCHECKED at load (correct — text visible by default; Hide Text stays
+   independent of the 🎓 Lecture toggle unless explicitly coupled later).
 3. Toggling it adds/removes `hide-text` on `#shell` and nothing visible changes (empty registry).
 4. Physics untouched: no edits inside the sim's main IIFE.
