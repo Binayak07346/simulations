@@ -214,8 +214,18 @@ body.light-theme .predict-eval .answer,body.light-theme .predict-eval strong,htm
 #inq-cards{flex:1 1 auto;min-height:0;}
 .inq-step{display:none;}
 .inq-step.active{display:block;}
+/* Guided-inquiry step card typography + prediction feedback reveal. */
+.inq-step h4{margin:0 0 8px;font-size:14px;font-weight:600;color:var(--text);}
+.inq-step p{margin:0 0 12px;font-size:14px;line-height:1.55;color:var(--muted);}
+.inq-step .predict-eval{display:none;}
+.inq-step .predict-eval.show{display:block;}
+/* Post-answer reveal: extension prose hidden until the card's predict is committed. */
+.inq-step .inq-after{display:none;}
+.inq-step[data-answered] .inq-after{display:block;}
 .inq-nav{display:flex;justify-content:flex-end;flex-shrink:0;}
-#inq-next{min-width:96px;justify-content:center;}
+.inq-pager{display:flex;align-items:center;gap:8px;}
+.inq-pager-btn{min-width:36px;padding:6px 11px;justify-content:center;font-size:13px;line-height:1;}
+#inq-next{min-width:96px;justify-content:center;margin-left:auto;}
 .aside-restore{display:none;width:100%;text-align:left;background:var(--panel-2);border:1px solid var(--line);
   color:var(--ink-mid);font:inherit;font-size:11px;letter-spacing:.06em;text-transform:uppercase;
   padding:8px 12px;border-radius:6px;cursor:pointer;flex-shrink:0;transition:background .15s,color .15s;}
@@ -280,7 +290,6 @@ body.light-theme .predict-eval .answer,body.light-theme .predict-eval strong,htm
 #cvMain{cursor:pointer;touch-action:none}
 .sim-panel{flex-shrink:0;box-sizing:border-box;padding:12px}
 .sim-h{margin:0 0 8px;font-size:14px;font-weight:700;letter-spacing:.05em;text-transform:uppercase;color:var(--muted)}
-.sim-count{float:right;font-size:12px;font-weight:700;letter-spacing:0;text-transform:none;color:var(--accent);font-variant-numeric:tabular-nums}
 .sim-chiprow{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:6px}
 .sim-chip{box-sizing:border-box;font-size:15px;font-weight:700;padding:7px 2px;border-radius:9px;border:1.5px solid var(--border);background:var(--surface);color:var(--text);cursor:grab;line-height:1.1;user-select:none;-webkit-user-select:none;touch-action:none}
 .sim-chip.sel{box-shadow:0 0 0 2px var(--accent);border-color:var(--accent);color:var(--accent)}
@@ -298,20 +307,6 @@ body.light-theme .predict-eval .answer,body.light-theme .predict-eval strong,htm
 .sim-ro-row b{font-size:16px;font-weight:650;color:var(--text);white-space:nowrap;font-variant-numeric:tabular-nums}
 .sim-inv b{color:var(--accent)}
 .sim-note{font-size:12.5px;line-height:1.5;color:var(--text-muted);margin-top:8px;overflow-wrap:anywhere}
-.sim-pq{font-size:14px;line-height:1.45;color:var(--text);margin:0 0 8px;font-weight:600}
-.sim-pchips{display:flex;gap:6px}
-.sim-pchip{flex:1 1 0;min-width:0;font-size:15px;font-weight:700;padding:7px 2px;border-radius:8px;border:1.5px solid var(--border);background:var(--surface);color:var(--text);cursor:pointer}
-.sim-pchip:hover{border-color:var(--accent)}
-.sim-pchip.pick{border-color:var(--accent);color:var(--accent);box-shadow:0 0 0 2px var(--accent-soft)}
-.sim-pick{font-size:13px;font-weight:700;color:var(--accent);margin-top:7px;min-height:1px}
-.sim-pfb{margin-top:6px;font-size:13.5px;line-height:1.55;color:var(--text);overflow-wrap:anywhere;min-height:18px}
-.sim-pfb b{color:var(--accent)}
-.sim-dots{display:flex;gap:5px;margin:0 0 9px}
-.sim-dot{flex:1;height:4px;border-radius:2px;background:var(--ctrl-border);transition:background .2s}
-.sim-dot.on{background:var(--accent)}
-.sim-dot.past{background:var(--accent-soft)}
-.sim-tour-card h4{margin:0 0 6px;font-size:14px;font-weight:700;color:var(--text)}
-.sim-tour-card p{margin:0 0 5px;font-size:13.5px;line-height:1.5;color:var(--muted)}
 .sim-drag-ghost{position:fixed;z-index:9999;pointer-events:none;transform:translate(-50%,-130%);padding:6px 13px;border-radius:9px;border:1.5px solid var(--accent);background:var(--surface);color:var(--text);font-size:16px;font-weight:700}
 .sim-formal{display:grid;grid-template-columns:1fr;gap:10px 20px;align-items:center}
 .sim-feq{min-width:0;color:var(--text);font-size:14px}
@@ -344,7 +339,7 @@ body.light-theme .predict-eval .answer,body.light-theme .predict-eval strong,htm
   <dt>Inquiry</dt>
   <dd>Drag leptons onto the four legs and find out which combinations the vertices allow.
   Commit a prediction for what doubling √s does to σ — σ stays hidden until you do.
-  Then press "×2 √s" and read what actually happened against the ◆ anchors.</dd>
+  Then drag √s to 6 GeV and read what actually happened against the ◆ anchors.</dd>
   <dt>Misconception</dt>
   <dd>"More collision energy makes annihilation more likely." It does the opposite: σ ∝ 1/s, so doubling √s quarters σ.
   Not because the amplitude shrinks — ⟨|M|²⟩ = e⁴(1 + cos²θ) is energy-independent — but because the flux × phase-space factor 1/(64π²s) falls.
@@ -352,7 +347,7 @@ body.light-theme .predict-eval .answer,body.light-theme .predict-eval strong,htm
 </dl>
         <table class="shell-info-table">
   <tr><th>Principle</th><th>Where it appears</th></tr>
-  <tr><td>Predict → test → reveal</td><td>σ, s·σ, the σ(√s) curve and the invariant line stay hidden until a prediction is committed; the explanation waits until the student has actually changed √s.</td></tr>
+  <tr><td>Predict → test → reveal</td><td>σ, s·σ, the σ(√s) curve and the invariant line stay hidden until a prediction is committed in the guided inquiry.</td></tr>
   <tr><td>Misconception handled structurally</td><td>"×4" is one of three answer chips; picking it plots a dashed "your ×4" ghost against the measured point on the 1/s curve.</td></tr>
   <tr><td>Invariant vs changing</td><td>σ slides down the log–log 1/s curve while the s·σ marker stays on the flat dashed line at 86.85 nb·GeV².</td></tr>
   <tr><td>Operational anchors</td><td>◆ reference anchors 86.85 / 9.65 / 0.87 nb at √s = 1 / 3 / 10 GeV (massless limit), cited in the feedback.</td></tr>
@@ -368,6 +363,7 @@ body.light-theme .predict-eval .answer,body.light-theme .predict-eval strong,htm
     <div class="shell-group">
       <button id="shell-info" class="shell-btn" title="About this simulation">ⓘ Info</button>
       <button id="shell-theme" class="shell-btn" title="Toggle light / dark theme">☾</button>
+      <button id="shell-lecture" class="shell-btn" title="Lecture display mode — hide the guided inquiry, show the full simulation">🎓 Lecture</button>
     </div>
     <div class="shell-controls"><a id="shell-refine" class="shell-btn" style="display:none" target="_blank" rel="noopener" title="Refine this simulation (dev only)">✎ Refine</a>
       <div class="shell-group">
@@ -398,49 +394,47 @@ body.light-theme .predict-eval .answer,body.light-theme .predict-eval strong,htm
     <div id="aside-inquiry" class="aside-zone">
       <div class="aside-zone-head">
         <h3>Guided Inquiry</h3>
-        <button id="aside-inquiry-skip" class="shell-btn aside-skip" title="Skip the guided inquiry">Skip ✕</button>
       </div>
       <div id="inq-dots" class="inq-dots"></div>
       <div id="inq-cards" class="aside-zone-body">
-        <div class="inq-step"><h4>Empty diagram</h4><p>Four legs, no particles yet.</p><p>The horizontal direction is a schematic reading order, left → right.</p></div>
-<div class="inq-step"><h4>Incoming pair</h4><p>e⁻ and e⁺ meet at vertex V₁.</p><p>What must the charges entering a vertex add up to?</p></div>
-<div class="inq-step"><h4>Virtual photon γ*</h4><p>The internal line is off-shell: q² = s ≠ 0, so it is γ*, not a real photon.</p><p>It is a propagator factor, not a beam — nothing travels along it.</p></div>
-<div class="inq-step"><h4>Outgoing pair</h4><p>μ⁻μ⁺ leaves vertex V₂.</p><p>Which pairs is V₂ allowed to emit? Try e⁻μ⁺ and read the verdict chip.</p></div>
-<div class="inq-step"><h4>Amplitude → σ</h4><p>All the factors multiply into one measurable number: σ.</p><p>Commit the prediction at the top, then press "×2 √s" to test it.</p></div>
-<div class="inq-step"><h4>Sweep the diagram</h4><p>Drag the gold sweep line, or press ▶ Play.</p><p>The sweep is only a reading aid — vertex times are integrated over.</p></div>
+        <div class="inq-step"><h4>1 · A recipe, not a picture</h4>
+          <p>Feynman's 1949 shorthand turns scattering into arithmetic. Four stub <strong>legs</strong> wait for particles; vertices <strong>V₁</strong> and <strong>V₂</strong> enforce the rules; the wavy line joins them. Left → right is reading order — press <strong>▶ Play</strong> to run the gold sweep line.</p></div>
+        <div class="inq-step" data-gate data-build="slots:e-,e+,e-,mu+"><h4>2 · What may V₂ emit?</h4>
+          <p>V₁ has absorbed e⁻e⁺: charge in = 0. Suppose V₂ emits <strong>e⁻μ⁺</strong> — charge out is also 0. The verdict chip will say:</p>
+          <button class="choice" data-fb="Charge alone isn't enough — the chip flags ✗ V₂: lepton number, because each family's count must balance separately.">✓ allowed — charge balances</button>
+          <button class="choice" data-correct data-fb="Right: e⁻μ⁺ leaves electron number +1 and muon number −1 — the chip flags <strong>✗ V₂: lepton number</strong>.">✗ — electron and muon number count separately</button>
+          <button class="choice" data-fb="The photon does couple to every lepton equally, yet each family's number must still balance — chip: ✗ V₂: lepton number.">✓ — the photon is flavour-blind</button>
+          <div class="predict-eval"></div>
+          <p class="inq-after">Fix it: press <strong>e⁻e⁺ → μ⁻μ⁺</strong> (or drag chips onto the legs) — the verdict flips to <strong>✓ QED allowed</strong>.</p></div>
+        <div class="inq-step" data-gate data-build="slots:e-,e+,tau-,tau+"><h4>3 · Now try τ⁻τ⁺</h4>
+          <p>μ⁻μ⁺ passes both counts: <strong>✓ QED allowed</strong>. The heavier τ⁻τ⁺ (m<sub>τ</sub> = 1.78 GeV) passes them too. At <strong>√s = 3.00 GeV</strong> its verdict will read:</p>
+          <button class="choice" data-correct data-fb="Yes — vertex-legal isn't enough: making the pair costs 2m<sub>τ</sub> = 3.55 GeV, more than √s supplies.">✗ — needs √s ≥ 3.55 GeV</button>
+          <button class="choice" data-fb="The counts do balance (τ number +1 − 1 = 0), but the collision energy cannot pay for two τ masses.">✓ — same lepton counts as μ⁻μ⁺</button>
+          <button class="choice" data-fb="τ⁻τ⁺ keeps tau number at 0 — the block is energy, not a broken count.">✗ — τ breaks lepton number</button>
+          <div class="predict-eval"></div>
+          <p class="inq-after">Drag <strong>√s</strong> past 3.55 GeV — the chip flips to <strong>✓ · near threshold</strong> as β climbs from 0.</p></div>
+        <div class="inq-step"><h4>4 · Read the γ* line</h4>
+          <p>Between the vertices runs <strong>γ* (virtual), q² = s</strong> — off-shell, not a real photon. Press <strong>▶ Play</strong>: crossing the middle, the whole line glows <em>virtual exchange — no trajectory</em>. It is a propagator factor; vertex times are integrated over.</p></div>
+        <div class="inq-step" data-gate><h4>5 · Double √s — what does σ do?</h4>
+          <p>Every factor multiplies into one measurable number: σ, the cross section. Predict: <strong>√s</strong> 3.00 → 6.00 GeV. σ does what?</p>
+          <button class="choice" data-commit="x4" data-fb="The usual intuition — but measurement goes the other way: drag <strong>√s</strong> to 6.00 GeV and watch σ fall 9.65 → 2.41 nb.">×4 larger</button>
+          <button class="choice" data-commit="same" data-fb="σ is not constant — only s·σ is: drag <strong>√s</strong> to 6.00 GeV and watch σ fall 9.65 → 2.41 nb.">no change</button>
+          <button class="choice" data-correct data-commit="q" data-fb="σ ∝ 1/s — the flux × phase-space factor, not the propagator: at 6.00 GeV, σ = 2.41 nb while s·σ stays 86.85.">÷4 smaller</button>
+          <div class="predict-eval"></div>
+          <p class="inq-after">Your pick is drawn as a dashed ghost on the σ(√s) plot — test it by dragging <strong>√s</strong>. Then explore: hunt the τ threshold; the ◆ anchors read 86.85 / 9.65 / 0.87 nb at √s = 1 / 3 / 10 GeV.</p></div>
       </div>
-      <div class="inq-nav"><button id="inq-next" class="shell-btn primary">Next →</button></div>
+      <div class="inq-nav">
+        <div class="inq-pager">
+          <button id="inq-prev" class="shell-btn primary inq-pager-btn" title="Previous step" aria-label="Previous step" disabled>&lt;</button>
+          <button id="inq-pager-next" class="shell-btn primary inq-pager-btn" title="Next step" aria-label="Next step">&gt;</button>
+        </div>
+        <button id="inq-next" class="shell-btn primary">Next →</button>
+      </div>
     </div>
     <button id="aside-inquiry-restore" class="aside-restore" title="Revisit the guided inquiry">▸ Guided inquiry</button>
     <div id="aside-controls" class="aside-zone">
 
-      <div class="shell-panel sim-panel" id="predictPanel">
-  <h3 class="sim-h">Predict first</h3>
-  <p class="sim-pq" id="pQ">Predict: √s 3.00 → 6.00 GeV. σ does what?</p>
-  <div class="sim-pchips">
-    <button class="sim-pchip" data-ans="x4">×4</button>
-    <button class="sim-pchip" data-ans="same">same</button>
-    <button class="sim-pchip" data-ans="q">÷4</button>
-  </div>
-  <div class="sim-pick" id="pPick"></div>
-  <div class="sim-pfb" id="pFb">Commit a guess — σ and its curve stay hidden until you do.</div>
-  <div class="sim-btnrow">
-    <button class="sim-btn" id="btnDouble">×2 √s — test it</button>
-    <button class="sim-btn" id="btnRepred" style="display:none">Change prediction</button>
-  </div>
-</div>
-
-<div class="shell-panel sim-panel" id="tourPanel">
-  <h3 class="sim-h">Guided build <span class="sim-count" id="tourCount">1 / 6</span></h3>
-  <div class="sim-dots" id="tourDots"></div>
-  <div class="sim-tour-card" id="tourCard"></div>
-  <div class="sim-btnrow">
-    <button class="sim-btn" id="tourPrev">← Back</button>
-    <button class="sim-btn" id="tourNext">Next →</button>
-  </div>
-</div>
-
-<div class="shell-panel sim-panel">
+      <div class="shell-panel sim-panel">
   <h3 class="sim-h">Build the diagram</h3>
   <div class="sim-chiprow" id="chipRow">
     <button class="sim-chip" data-p="e-">e⁻</button>
@@ -475,7 +469,7 @@ body.light-theme .predict-eval .answer,body.light-theme .predict-eval strong,htm
     <div class="sim-ro-row"><span>σ (this diagram)</span><b id="roSig">—</b></div>
     <div class="sim-ro-row sim-inv"><span>s·σ</span><b id="roInv">—</b></div>
   </div>
-  <div class="sim-note" id="roLock">σ and s·σ unlock once you commit a prediction above.</div>
+  <div class="sim-note" id="roLock">σ and s·σ unlock at the σ prediction in the guided inquiry.</div>
   <div class="sim-note">σ = (4πα²/3s)·β(3−β²)/2 with fixed α = 1/137.036 (no running) — LO QED, one s-channel γ*, massless beams.</div>
 </div>
 
@@ -534,6 +528,16 @@ const Shell = (function(){
     root.classList.toggle('inquiry-collapsed', on);
     requestAnimationFrame(refit);
   }
+  // Lecture display mode: ON = the post-completion free-exploration state
+  // (finishInquiry fast-forwards, runs onComplete, collapses, resumes play);
+  // OFF (second click or the restore chip) = reopen the inquiry at card 1.
+  function setLectureMode(on){
+    root.classList.toggle('lecture-mode', on);
+    const b=document.getElementById('shell-lecture');
+    if(b) b.classList.toggle('active', on);
+    if(on){ finishInquiry(); }
+    else { setInquiryCollapsed(false); if(inqCards().length) inqShow(0); }
+  }
 
   // ---- Guided-inquiry stepper (shell-owned, so Next/Finish are always wired) ----
   // The SIM supplies sequential <div class="inq-step"> cards in #inq-cards. The
@@ -557,8 +561,23 @@ const Shell = (function(){
       next.disabled = gated;
       next.textContent = (inqStep>=cards.length-1) ? 'Finish' : 'Next →';
     }
+    inqUpdatePager();
     onStep(inqStep);
     requestAnimationFrame(refit);
+  }
+  function inqUpdatePager(){
+    const cards=inqCards();
+    const prev=document.getElementById('inq-prev');
+    const pnext=document.getElementById('inq-pager-next');
+    if(prev) prev.disabled = inqStep<=0;
+    if(pnext) pnext.disabled = inqStep>=cards.length-1;
+  }
+  function inqPrev(){
+    if(inqStep>0) inqShow(inqStep-1);
+  }
+  function inqPagerNext(){
+    const cards=inqCards();
+    if(inqStep<cards.length-1) inqShow(inqStep+1);
   }
   function inqNext(){
     const cards=inqCards();
@@ -595,7 +614,6 @@ const Shell = (function(){
     const reset=document.getElementById('shell-reset');
     const spd=document.getElementById('shell-speed');
     const maxBtn=document.getElementById('shell-maximize');
-    const skip=document.getElementById('aside-inquiry-skip');
     const restore=document.getElementById('aside-inquiry-restore');
     const tFormal=document.getElementById('toggle-formal');
 
@@ -628,12 +646,17 @@ const Shell = (function(){
       else if(root.classList.contains('shell-max')) setMaximized(false);
     });
 
-    // Skip ✕ jumps to the completed state (all controls live); restore reopens it.
-    if(skip) skip.addEventListener('click',finishInquiry);
-    if(restore) restore.addEventListener('click',()=>setInquiryCollapsed(false));
+    // 🎓 Lecture jumps to the completed state (all controls live); restore reopens at card 1.
+    const lecture=document.getElementById('shell-lecture');
+    if(lecture) lecture.addEventListener('click',()=>setLectureMode(!root.classList.contains('lecture-mode')));
+    if(restore) restore.addEventListener('click',()=>setLectureMode(false));
     // Next / Finish — shell-driven step advance (Finish collapses the inquiry).
     const inqNextBtn=document.getElementById('inq-next');
     if(inqNextBtn) inqNextBtn.addEventListener('click',inqNext);
+    const inqPrevBtn=document.getElementById('inq-prev');
+    if(inqPrevBtn) inqPrevBtn.addEventListener('click',inqPrev);
+    const inqPagerNextBtn=document.getElementById('inq-pager-next');
+    if(inqPagerNextBtn) inqPagerNextBtn.addEventListener('click',inqPagerNext);
     // Auto-gate: a .choice click inside the active gated card enables Next.
     const cardsHost=document.getElementById('inq-cards');
     if(cardsHost) cardsHost.addEventListener('click',e=>{
@@ -661,15 +684,25 @@ const Shell = (function(){
     init(opts){
       onFrame=opts.onFrame||onFrame; onReset=opts.onReset||onReset; onResize=opts.onResize||onResize; onStep=opts.onStep||onStep; onComplete=opts.onComplete||onComplete;
       wire();
-      // Guided inquiry is retired from the sidebar: hide the whole zone + restore bar,
-      // and open the sim directly in its COMPLETED state (as if the student had finished
-      // the inquiry) — every control live, every staged panel revealed.
+      // Guided inquiry RE-ENABLED (was retired in the raw lecture export): build the
+      // step dots and open on card 1. Sims that ship no cards still fall back to the
+      // retired behaviour — zone hidden, sim opened in its completed state.
       const cards=inqCards();
       inqTotal=cards.length;
-      root.classList.add('no-inquiry');
-      onResize(); onReset();
-      if(inqTotal>0){ for(let k=0;k<cards.length;k++) onStep(k); inqStep=cards.length-1; }
-      onComplete();
+      if(inqTotal>0){
+        const dotsHost=document.getElementById('inq-dots');
+        if(dotsHost&&!dotsHost.children.length){
+          for(let k=0;k<inqTotal;k++){const d=document.createElement('div');d.className='inq-dot';dotsHost.appendChild(d);}
+        }
+        onResize(); onReset();
+        inqShow(0);
+      }else{
+        root.classList.add('no-inquiry');
+        const lb=document.getElementById('shell-lecture');
+        if(lb) lb.style.display='none';
+        onResize(); onReset();
+        onComplete();
+      }
       setPlaying(true);
       last=performance.now();
       if(!started){ started=true; requestAnimationFrame(loop); }
@@ -725,7 +758,8 @@ window.__audit = {
   /* ---------- state ---------- */
   const D = { slots: { in1: null, in2: null, out1: null, out2: null }, sqrtS: 3, t: 0, pred: null };
   let cyc = 0, sel = null, hover = null, G = null, AN = null;
-  let predS = 3, predMass = 0.10566, predTested = false;
+  let predS = 3, predMass = 0.10566;
+  let inqDone = false;   /* set on inquiry completion: reveals σ even if no prediction was committed */
   let bandUnlocked = false, replayAt = -9;
   const flashes = { in1: -9, in2: -9, out1: -9, out2: -9 };
   function clockWall() { return performance.now() / 1000; }
@@ -739,11 +773,7 @@ window.__audit = {
     stage: $('simStage'), bandBox: $('bandBox'), resultPanel: $('resultPanel'),
     slS: $('slS'), slT: $('slT'), vS: $('vS'), vT: $('vT'),
     roProc: $('roProc'), roSig: $('roSig'), roInv: $('roInv'), roLock: $('roLock'),
-    pQ: $('pQ'), pFb: $('pFb'), pPick: $('pPick'),
-    btnAuto: $('btnAuto'), btnClear: $('btnClear'),
-    btnDouble: $('btnDouble'), btnRepred: $('btnRepred'),
-    tourCard: $('tourCard'), tourDots: $('tourDots'), tourCount: $('tourCount'),
-    tourPrev: $('tourPrev'), tourNext: $('tourNext')
+    btnAuto: $('btnAuto'), btnClear: $('btnClear')
   };
   /* Canvas typography comes from the design system (set in TH()). */
   let FAM = 'system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif';
@@ -804,20 +834,15 @@ window.__audit = {
     els.stage.classList.toggle('sim-band-off', !v);
     requestAnimationFrame(onResize);
   }
-  function updPQ() {
-    const a = D.sqrtS, b = a * 2;
-    els.pQ.textContent = 'Predict: √s ' + fmtS(a) + ' → ' + fmtS(b) + ' GeV. σ does what?';
-  }
   function updateAll() {
     AN = analyze();
-    const shown = D.pred !== null;
+    const shown = D.pred !== null || inqDone;
     if (AN.valid) setBandUnlocked(true);
     if (els.resultPanel) els.resultPanel.style.display = (AN.n === 4) ? '' : 'none';
     els.roProc.textContent = AN.n === 0 ? '—' : AN.proc + (AN.mark === '✗' ? '  ✗' : '');
     els.roSig.textContent = (AN.valid && shown) ? fmt(AN.sigma) + ' nb' : '—';
     els.roInv.textContent = (AN.valid && shown) ? (D.sqrtS * D.sqrtS * AN.sigma).toFixed(2) + ' nb·GeV²' : '—';
     if (els.roLock) els.roLock.style.display = shown ? 'none' : '';
-    updPQ();
   }
 
   /* ---------- geometry ---------- */
@@ -1071,7 +1096,7 @@ window.__audit = {
     const c = xB, th = TH();
     c.clearRect(0, 0, BW, BH);
     const r = AN || analyze();
-    const shown = D.pred !== null;
+    const shown = D.pred !== null || inqDone;
     const px0 = 56, px1 = BW - 16, py0 = 26, py1 = BH - 40;
     if (px1 - px0 < 90 || py1 - py0 < 26) return;
     const LS0 = Math.log(S_MIN), LS1 = Math.log(S_MAX), LY0 = Math.log(0.05), LY1 = Math.log(400);
@@ -1119,7 +1144,7 @@ window.__audit = {
       c.textAlign = x > mid ? 'right' : 'left'; c.textBaseline = 'top';
       c.fillText('√s = ' + fmtS(D.sqrtS) + ' GeV', x + (x > mid ? -8 : 8), py0 + 2);
       c.font = F(14, 650); c.fillStyle = th.muted; c.textAlign = 'center'; c.textBaseline = 'middle';
-      c.fillText('commit a prediction (Predict panel) to reveal σ(√s)', mid, (py0 + py1) / 2);
+      c.fillText('commit the σ prediction (guided inquiry) to reveal σ(√s)', mid, (py0 + py1) / 2);
       return;
     }
 
@@ -1205,7 +1230,6 @@ window.__audit = {
     D.sqrtS = Math.max(S_MIN, Math.min(S_MAX, v));
     if (moveSlider) els.slS.value = Math.round(1000 * Math.log(D.sqrtS / S_MIN) / Math.log(S_MAX / S_MIN));
     els.vS.textContent = fmtS(D.sqrtS) + ' GeV';
-    checkTest();
     updateAll(); drawAll();
   }
   els.slS.addEventListener('input', () => {
@@ -1302,83 +1326,29 @@ window.__audit = {
   });
   cvM.addEventListener('pointerup', () => { scrubbing = false; });
 
-  /* ---------- prediction: commit → test → explain ---------- */
-  const PLAB = { x4: '×4 larger', same: 'no change', q: '÷4 smaller' };
-  const FB = {
-    x4: 'Committed: ×4 larger. Now test it — press “×2 √s” (or drag √s) and watch σ.',
-    same: 'Committed: no change. Now test it — press “×2 √s” (or drag √s) and watch σ.',
-    q: 'Committed: ÷4 smaller. Now test it — press “×2 √s” (or drag √s) and watch σ.'
-  };
-  const VERD = {
-    x4: 'Your ×4 is the usual intuition — the measurement goes the other way.',
-    same: 'σ is not constant; only s·σ stays put.',
-    q: 'That matches what the sandbox measures.'
-  };
-  function checkTest() {
-    if (D.pred === null || predTested) return;
-    const ratio = D.sqrtS / predS;
-    if (ratio >= 1.6 || ratio <= 0.625) { predTested = true; showVerdict(); }
-  }
-  function showVerdict() {
-    const a = sigmaOf(predS, predMass) || sigma0(predS);
-    const b = sigmaOf(D.sqrtS, predMass) || sigma0(D.sqrtS);
-    const f = b / a;
-    els.pFb.innerHTML =
-      'Tested: √s ' + fmtS(predS) + ' → ' + fmtS(D.sqrtS) + ' GeV gives σ ' + fmt(a) + ' → ' + fmt(b) +
-      ' nb, a factor <b>×' + (f < 0.1 ? f.toFixed(3) : f.toFixed(2)) + '</b>. ' + VERD[D.pred] +
-      '<br><br>Why: <b>σ ∝ 1/s</b> comes from the flux × phase-space factor in dσ/dΩ = ⟨|M|²⟩/(64π²s). ' +
-      'The amplitude itself carries no s — ⟨|M|²⟩ = e⁴(1 + cos²θ) — because the propagator\'s 1/s² is cancelled ' +
-      'by the s² of the spinor currents. Check the ◆ anchors: 86.85 / 9.65 / 0.87 nb at √s = 1 / 3 / 10 GeV — ' +
-      'each ×10 in √s is ÷100 in σ, while s·σ stays on the flat dashed line.';
-  }
-  document.querySelectorAll('.sim-pchip').forEach(b => {
-    b.addEventListener('click', () => {
-      D.pred = b.dataset.ans; predS = D.sqrtS; predTested = false;
-      predMass = (AN && AN.valid) ? AN.mf : 0.10566;
-      document.querySelectorAll('.sim-pchip').forEach(x => x.classList.toggle('pick', x === b));
-      els.pPick.textContent = 'Your prediction: ' + PLAB[D.pred];
-      els.pFb.textContent = FB[D.pred];
-      els.btnRepred.style.display = '';
-      updateAll(); drawAll();
-    });
-  });
-  els.btnDouble.addEventListener('click', () => { pause(); setS(D.sqrtS * 2, true); });
-  els.btnRepred.addEventListener('click', () => {
-    D.pred = null; predTested = false;
-    document.querySelectorAll('.sim-pchip').forEach(x => x.classList.remove('pick'));
-    els.pPick.textContent = '';
-    els.pFb.textContent = 'Prediction cleared — pick again to unlock σ.';
-    els.btnRepred.style.display = 'none';
+  /* ---------- guided-inquiry hooks: answer-triggered reveals ---------- */
+  /* Commit the σ prediction (folded from the old Predict-first panel): unlocks the
+     σ readouts + curve and draws the student's ghost marker against the measurement. */
+  function commitPred(ans) {
+    if (D.pred !== null) return;
+    D.pred = ans; predS = D.sqrtS;
+    predMass = (AN && AN.valid) ? AN.mf : 0.10566;
     updateAll(); drawAll();
-  });
-
-  /* ---------- sim-side guided build (reads the step cards, never disables) ---------- */
-  const tourCards = Array.prototype.slice.call(document.querySelectorAll('#inq-cards .inq-step'));
-  let tourIdx = 0;
-  (function buildDots() {
-    if (!els.tourDots) return;
-    els.tourDots.innerHTML = '';
-    for (let i = 0; i < tourCards.length; i++) {
-      const d = document.createElement('span'); d.className = 'sim-dot'; els.tourDots.appendChild(d);
-    }
-  })();
-  function renderTour() {
-    const n = tourCards.length; if (!n || !els.tourCard) return;
-    els.tourCard.innerHTML = tourCards[tourIdx].innerHTML;
-    els.tourCount.textContent = (tourIdx + 1) + ' / ' + n;
-    const dots = els.tourDots.children;
-    for (let i = 0; i < dots.length; i++) {
-      dots[i].className = 'sim-dot' + (i === tourIdx ? ' on' : (i < tourIdx ? ' past' : ''));
-    }
-    els.tourNext.textContent = (tourIdx >= n - 1) ? '↻ Restart' : 'Next →';
   }
-  function tourGo(i) {
-    const n = tourCards.length; if (!n) return;
-    tourIdx = ((i % n) + n) % n;
-    renderTour(); onStep(tourIdx);
+  /* Apply a card's data-build spec via the sim's own setters (same fields the
+     chips / btnAuto / √s slider set). e.g. "slots:e-,e+,mu-,mu+" or "s:3". */
+  function applyBuild(spec) {
+    spec.split('|').forEach(part => {
+      const i = part.indexOf(':'), k = part.slice(0, i), v = part.slice(i + 1);
+      if (k === 'slots') {
+        const a = v.split(',');
+        D.slots = { in1: a[0] || null, in2: a[1] || null, out1: a[2] || null, out2: a[3] || null };
+      } else if (k === 's') {
+        D.sqrtS = Math.max(S_MIN, Math.min(S_MAX, +v));
+      }
+    });
+    sel = null; updSel(); syncSliders(); updateAll(); drawAll();
   }
-  if (els.tourNext) els.tourNext.addEventListener('click', () => tourGo(tourIdx + 1));
-  if (els.tourPrev) els.tourPrev.addEventListener('click', () => tourGo(tourIdx - 1));
 
   /* ---------- KaTeX (guarded, deferred-safe) ---------- */
   function tryFormal() {
@@ -1429,41 +1399,59 @@ window.__audit = {
   }
   function onReset() {
     D.slots = { in1: null, in2: null, out1: null, out2: null };
-    D.sqrtS = 3; cyc = 0; D.t = 0; D.pred = null;
-    predS = 3; predMass = 0.10566; predTested = false;
+    D.sqrtS = 3; cyc = 0; D.t = 0;
     sel = null; hover = null; updSel();
     setBandUnlocked(false);
-    document.querySelectorAll('.sim-pchip').forEach(x => x.classList.remove('pick'));
-    if (els.pPick) els.pPick.textContent = '';
-    if (els.pFb) els.pFb.textContent = 'Commit a guess — σ and its curve stay hidden until you do.';
-    if (els.btnRepred) els.btnRepred.style.display = 'none';
-    tourIdx = 0; renderTour();
     syncSliders(); updateAll(); drawAll();
   }
+  /* Deterministic, self-contained scene per inquiry card — the ‹ › pager and the
+     restore chip land on the exact scene each card describes. A committed σ
+     prediction (D.pred) deliberately survives steps and Reset: card 5 is one-shot. */
   function onStep(i) {
     const empty = { in1: null, in2: null, out1: null, out2: null };
     const inn = { in1: 'e-', in2: 'e+', out1: null, out2: null };
     const full = { in1: 'e-', in2: 'e+', out1: 'mu-', out2: 'mu+' };
-    if (i === 0) { D.slots = Object.assign({}, empty); cyc = 0; }
-    else if (i === 1) { D.slots = Object.assign({}, inn); cyc = 0.30; }
-    else if (i === 2) { D.slots = Object.assign({}, inn); cyc = 0.52; }
-    else if (i === 3) { D.slots = Object.assign({}, full); cyc = 0.86; }
-    else if (i === 4) { D.slots = Object.assign({}, full); cyc = 0.15; }
-    else { D.slots = Object.assign({}, full); cyc = 0; }
+    if (i === 0) { D.slots = Object.assign({}, empty); cyc = 0; }        /* 1 · orient: empty diagram */
+    else if (i === 1) { D.slots = Object.assign({}, inn); cyc = 0.30; }  /* 2 · V₂ rules: e⁻e⁺ in only */
+    else if (i === 2) { D.slots = Object.assign({}, full); cyc = 0; }    /* 3 · threshold: valid μμ baseline */
+    else if (i === 3) { D.slots = Object.assign({}, full); cyc = 0.52; } /* 4 · γ*: sweep mid-exchange */
+    else { D.slots = Object.assign({}, full); cyc = 0.15; }              /* 5 · σ predict: μμ at 3 GeV */
+    D.sqrtS = 3;
     D.t = Math.min(cyc, 1);
+    sel = null; updSel();
     pause();
+    syncSliders(); updateAll(); drawAll();
+  }
+  function onComplete() {
+    inqDone = true;   /* σ, s·σ and the curve stay revealed in free exploration */
+    D.slots = { in1: 'e-', in2: 'e+', out1: 'mu-', out2: 'mu+' };
+    sel = null; updSel();
     syncSliders(); updateAll(); drawAll();
   }
 
   onReset();
   onResize();
-  /* onStep is driven by the sim's own stepper, so the shell cannot fast-forward
-     the scene past step 0 at boot. */
-  Shell.init({ onFrame: onFrame, onReset: onReset, onResize: onResize });
-  /* Prediction-first by ORDER + PAUSE: the sweep starts paused with Play
-     prominent and fully enabled. Nothing is ever disabled. */
+  /* ---------- guided-inquiry layer: choice feedback + data-build reveals ---------- */
+  document.querySelectorAll('#inq-cards .inq-step').forEach(card => {
+    const evalBox = card.querySelector('.predict-eval');
+    card.querySelectorAll('.choice').forEach(ch => ch.addEventListener('click', () => {
+      if (card.dataset.answered) return; card.dataset.answered = '1';
+      const correct = ch.hasAttribute('data-correct');
+      card.querySelectorAll('.choice').forEach(c => { c.disabled = true;
+        if (c.hasAttribute('data-correct')) c.classList.add('correct');
+        else if (c === ch) c.classList.add('wrong'); else c.classList.add('dim'); });
+      if (evalBox) { evalBox.innerHTML = ch.dataset.fb || ''; evalBox.classList.add('show', correct ? 'correct' : 'wrong'); }
+      /* data-build="slots:…" — the commitment itself triggers the on-canvas reveal. */
+      const spec = card.dataset.build;
+      if (spec) applyBuild(spec);
+      /* data-commit="x4|same|q" — card 5 commits the σ prediction (folded widget). */
+      if (ch.dataset.commit) commitPred(ch.dataset.commit);
+    }));
+  });
+  Shell.init({ onFrame: onFrame, onReset: onReset, onResize: onResize, onStep: onStep, onComplete: onComplete });
+  /* Card 1 opens on a paused sweep: ▶ Play is prominent and fully enabled —
+     nothing is ever disabled. */
   Shell.setPlaying(false);
-  renderTour();
 })();
 </script>
 <script>/* dev-only reviewer affordance: link this sim to the refinement studio.
