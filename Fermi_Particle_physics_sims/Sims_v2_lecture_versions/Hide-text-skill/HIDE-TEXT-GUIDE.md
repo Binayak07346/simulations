@@ -10,11 +10,20 @@ captions for a cleaner lecture display — and get them back with one click.
   registered item is also listed in a `HIDE-TEXT REGISTRY` comment inside the sim file,
   so there's a full manifest of what the checkbox controls.
 
-## How to hide text (using Claude Code or Cursor)
+## Setup (one time)
 
-Open this folder (`Sims_v2_lecture_versions`) in Claude Code or Cursor and use the
-**`/hide`** skill (it lives in `.claude/skills/hide/` here). You tell it *which sim*
-and *what text* — in any of three ways, and you can mix them:
+The skill file lives next to this guide: `Hide-text-skill/SKILL.md`.
+
+- **Claude Code**: copy it to `.claude/skills/hide/SKILL.md` under the folder you open
+  Claude in (or under the repo root) — it then appears as the `/hide` skill.
+- **Cursor**: add `SKILL.md` to your rules/context (e.g. copy it into `.cursor/rules/`
+  as `hide-text.mdc`, or just @-reference the file in your prompt).
+
+## How to hide text
+
+Open the sims folder in Claude Code or Cursor and invoke **`/hide`** (or reference the
+skill file). You tell it *which sim* and *what text* — in any of three ways, and you
+can mix them:
 
 ### 1 · Annotated screenshot (recommended)
 Take a screenshot of the sim, circle / box / highlight the text you want hidden, and
