@@ -347,6 +347,7 @@ body.light-theme .predict-eval .answer,body.light-theme .predict-eval strong,htm
   <dt>Serves</dt><dd>Relativistic quantum mechanics / intro particle physics; bridges naturally to the semiconductor electron–hole picture used later in solid state.</dd>
   <dt>Inquiry</dt><dd>The sim opens on an undisturbed sea with the field ℰ off. Commit to the drift prediction, then click anywhere on the sea (or press Excite) to pay the exact cost 2E(p) at a momentum you choose, stretch the energy axis to feel the bottomless depth, and switch ℰ on to watch e⁻ and h⁺ separate while net charge holds at zero.</dd>
   <dt>Misconception</dt><dd>Tested rather than asserted: the prediction asks whether a vacancy can move at all, and the real-space strip answers it — with ℰ on, h⁺ drifts opposite e⁻, and a wrong prediction is drawn as a dashed ghost that visibly falls behind the real holes. A hole carries +e and mass m, so it moves and carries current: it is the positron.</dd>
+  <dt>Caveats</dt><dd>Dots in the sea are schematic occupancy, not a state density. Speeds use v = pc²/E. Annihilation photons carry off whatever momentum the matter loses.</dd>
 </dl>
         <table class="shell-info-table">
   <tr><th>Principle</th><th>Where it appears</th></tr>
@@ -456,12 +457,11 @@ body.light-theme .predict-eval .answer,body.light-theme .predict-eval strong,htm
     <div class="sim-lab"><label for="fieldRange">Field ℰ</label><span class="sim-val" id="fieldVal">off</span></div>
     <input id="fieldRange" type="range" min="-1" max="1" step="0.05" value="0">
   </div>
-  <div class="sim-sub" id="fieldNote">ℰ = applied electric field. At ℰ = 1 it changes each particle's momentum by 4.0 MeV/c per second.</div>
+  <div class="sim-sub" id="fieldNote">ℰ = applied electric field.</div>
   <div class="sim-row">
     <div class="sim-lab"><label for="depthRange">Axis depth</label><span class="sim-val" id="depthVal">±3.0 MeV</span></div>
     <input id="depthRange" type="range" min="2" max="15" step="0.1" value="3">
   </div>
-  <div class="sim-sub">Stretch the energy axis — does the sea ever end?</div>
   <div class="sim-row">
     <div class="sim-lab"><label for="ktRange">Temperature kT</label><span class="sim-val" id="ktVal">0.25 MeV</span></div>
     <input id="ktRange" type="range" min="0.05" max="1.5" step="0.01" value="0.25">
@@ -476,8 +476,7 @@ body.light-theme .predict-eval .answer,body.light-theme .predict-eval strong,htm
     <tr><td>net charge</td><td id="roQ">0 e</td></tr>
     <tr><td id="labMom">net momentum (matter)</td><td id="roP">0 MeV/c</td></tr>
   </table>
-  <div class="sim-sub">Try it: make a pair near p = 0, then click far out on the branch — which one costs more? Then watch net charge while pairs appear and annihilate.</div>
-  <div class="sim-sub">Dots in the sea are schematic occupancy, not a state density. Speeds use v = pc²/E. Annihilation photons carry off whatever momentum the matter loses.</div>
+  <div class="sim-sub">Try it: make a pair near p = 0, then click far out on the branch</div>
 </div></div>
     </div>
   </aside>
@@ -1229,7 +1228,7 @@ function syncExcite(){
 function syncLabels(){
   if(!els.ktVal) return;
   els.ktVal.textContent=S.ktMeV.toFixed(2)+' MeV';
-  els.ktK.textContent='≈ '+(S.ktMeV*11.6045).toFixed(1)+'×10⁹ K — the Sun\u2019s core is only 0.015×10⁹ K. Slide down: how cold before pairs stop appearing on their own?';
+  els.ktK.textContent='≈ '+(S.ktMeV*11.6045).toFixed(1)+'×10⁹ K';
   const f=S.field;
   els.fieldVal.textContent = Math.abs(f)<0.03 ? 'off' : (f>0?'→ ':'← ')+Math.abs(f).toFixed(2);
   els.depthVal.textContent='±'+S.depthMeV.toFixed(1)+' MeV';
