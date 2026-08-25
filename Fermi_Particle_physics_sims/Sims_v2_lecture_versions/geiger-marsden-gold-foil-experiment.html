@@ -358,7 +358,7 @@ body.light-theme .sim-hot,html[data-theme="light"] .sim-hot{color:#c2410c}
       <button id="shell-theme" class="shell-btn" title="Toggle light / dark theme">☾</button>
       <button id="shell-lecture" class="shell-btn" title="Lecture display mode — hide the guided inquiry, show the full simulation">🎓 Lecture</button>
       <label id="ht-ctl" class="shell-btn" title="Hide Text — hides registered labels/readouts; registry is empty until items are added">
-        <input type="checkbox" id="ht-toggle"> Hide Text
+        <input type="checkbox" id="ht-toggle" checked> Hide Text
       </label>
     </div>
     <div class="shell-controls"><a id="shell-refine" class="shell-btn" style="display:none" target="_blank" rel="noopener" title="Refine this simulation (dev only)">✎ Refine</a>
@@ -383,7 +383,11 @@ body.light-theme .sim-hot,html[data-theme="light"] .sim-hot{color:#c2410c}
      DOM items:    add class "ht-hide" to the element.
      Canvas items: wrap the draw call in  if(!HT()){ ... }
      Keep this list current when registering items:
-     (empty — nothing registered yet)
+     - [dom] "5.0 MeV α on a 0.40 µm gold foil … build the pattern quickly." — beam-rate panel .sim-note, ~L482
+     - [dom] "Odds are per incident α. The 1° line is only where this model starts counting …" — readouts panel .sim-note, ~L495
+     - [dom] "Screen: upper and lower arcs … large angles over-shown." — #gmDotNote (dynamic innerHTML), ~L496
+     - [dom] "The green points are the measurement — this switch never changes them …" — Compare-models panel .sim-note, ~L503
+     NOTE: default flipped — Hide Text boots CHECKED in this sim (curriculum request).
 -->
 <script>
 /* Hide Text toggle — empty registry; hides .ht-hide DOM nodes and gates HT() canvas labels. */
@@ -397,11 +401,13 @@ body.light-theme .sim-hot,html[data-theme="light"] .sim-hot{color:#c2410c}
     window.dispatchEvent(new Event('resize')); /* forces a redraw via the shell's refit path, even while paused */
   }
   box.addEventListener('change', apply);
-  /* Default: follow lecture mode at boot. Inert in the PP sims (they boot into the
-     guided inquiry, so the class is absent and the box starts unchecked — correct). */
+  /* Curriculum default for this sim: registered text hidden at boot. The checkbox
+     ships with the `checked` attribute; apply synchronously so the default holds
+     even in background tabs where rAF/load callbacks are throttled. */
+  apply();
   window.addEventListener('load', function(){
     requestAnimationFrame(function(){ requestAnimationFrame(function(){
-      box.checked = shell.classList.contains('lecture-mode');
+      box.checked = true;
       apply();
     });});
   });
@@ -479,7 +485,7 @@ body.light-theme .sim-hot,html[data-theme="light"] .sim-hot{color:#c2410c}
             <button type="button" id="gmRateSlow" class="sim-seg-btn sim-on">10 k α/s</button>
             <button type="button" id="gmRateFast" class="sim-seg-btn">100 k α/s</button>
           </div>
-          <div class="sim-note">5.0 MeV α on a 0.40 µm gold foil (n·t = 2.4×10²² m⁻²). At 10 k α/s the rare flashes past 90° arrive about one every few seconds — Geiger and Marsden counted them by eye in a darkened room. Use 100 k α/s to build the pattern quickly.</div>
+          <div class="sim-note ht-hide">5.0 MeV α on a 0.40 µm gold foil (n·t = 2.4×10²² m⁻²). At 10 k α/s the rare flashes past 90° arrive about one every few seconds — Geiger and Marsden counted them by eye in a darkened room. Use 100 k α/s to build the pattern quickly.</div>
         </div>
       </div>
 
@@ -492,15 +498,15 @@ body.light-theme .sim-hot,html[data-theme="light"] .sim-hot{color:#c2410c}
             <div class="sim-row"><span>counts θ &gt; 90°</span><b id="gmBack" class="sim-hot">0</b></div>
             <div class="sim-row"><span>odds of θ &gt; 90°</span><b id="gmOdds">—</b></div>
           </div>
-          <div class="sim-note">Odds are per <b>incident</b> α. The 1° line is only where this model starts counting; sub-degree deflections are not simulated.</div>
-          <div class="sim-note" id="gmDotNote">Screen: upper and lower arcs are opposite azimuthal sides of the same θ.</div>
+          <div class="sim-note ht-hide">Odds are per <b>incident</b> α. The 1° line is only where this model starts counting; sub-degree deflections are not simulated.</div>
+          <div class="sim-note ht-hide" id="gmDotNote">Screen: upper and lower arcs are opposite azimuthal sides of the same θ.</div>
         </div>
       </div>
 
       <div class="shell-panel">
         <div class="shell-panel-head"><h3>Compare models</h3><span class="shell-caret">▾</span></div>
         <div class="shell-panel-body">
-          <div class="sim-note">The green points are the measurement — this switch never changes them. It only chooses which <b>prediction</b> is drawn over them.</div>
+          <div class="sim-note ht-hide">The green points are the measurement — this switch never changes them. It only chooses which <b>prediction</b> is drawn over them.</div>
           <div class="sim-seg" role="group" aria-label="overlay prediction">
             <button type="button" id="gmModeNuc" class="sim-seg-btn sim-on">Rutherford only</button>
             <button type="button" id="gmModePlum" class="sim-seg-btn">+ plum pudding</button>
