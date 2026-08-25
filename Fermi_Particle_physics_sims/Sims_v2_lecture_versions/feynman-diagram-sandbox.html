@@ -222,6 +222,11 @@ body.light-theme .predict-eval .answer,body.light-theme .predict-eval strong,htm
 /* Post-answer reveal: extension prose hidden until the card's predict is committed. */
 .inq-step .inq-after{display:none;}
 .inq-step[data-answered] .inq-after{display:block;}
+
+/* Hide Text toggle */
+#ht-ctl{display:inline-flex;align-items:center;gap:6px;cursor:pointer;user-select:none;}
+#ht-ctl input{accent-color:var(--accent);margin:0;cursor:pointer;}
+#shell.hide-text .ht-hide{display:none !important;}
 .inq-nav{display:flex;justify-content:flex-end;flex-shrink:0;}
 .inq-pager{display:flex;align-items:center;gap:8px;}
 .inq-pager-btn{min-width:36px;padding:6px 11px;justify-content:center;font-size:13px;line-height:1;}
@@ -364,6 +369,9 @@ body.light-theme .predict-eval .answer,body.light-theme .predict-eval strong,htm
       <button id="shell-info" class="shell-btn" title="About this simulation">ⓘ Info</button>
       <button id="shell-theme" class="shell-btn" title="Toggle light / dark theme">☾</button>
       <button id="shell-lecture" class="shell-btn" title="Lecture display mode — hide the guided inquiry, show the full simulation">🎓 Lecture</button>
+      <label id="ht-ctl" class="shell-btn" title="Hide Text — hides registered labels/readouts; registry is empty until items are added">
+        <input type="checkbox" id="ht-toggle"> Hide Text
+      </label>
     </div>
     <div class="shell-controls"><a id="shell-refine" class="shell-btn" style="display:none" target="_blank" rel="noopener" title="Refine this simulation (dev only)">✎ Refine</a>
       <div class="shell-group">
@@ -382,6 +390,35 @@ body.light-theme .predict-eval .answer,body.light-theme .predict-eval strong,htm
       </div>
     </div>
   </header>
+
+<!-- HIDE-TEXT REGISTRY ("Simplify display" v2)
+     DOM items:    add class "ht-hide" to the element.
+     Canvas items: wrap the draw call in  if(!HT()){ ... }
+     Keep this list current when registering items:
+     (empty — nothing registered yet)
+-->
+<script>
+/* Hide Text toggle — empty registry; hides .ht-hide DOM nodes and gates HT() canvas labels. */
+(function(){
+  var shell=document.getElementById('shell');
+  var box=document.getElementById('ht-toggle');
+  if(!shell||!box) return;
+  window.HT=function(){ return shell.classList.contains('hide-text'); };
+  function apply(){
+    shell.classList.toggle('hide-text', box.checked);
+    window.dispatchEvent(new Event('resize')); /* forces a redraw via the shell's refit path, even while paused */
+  }
+  box.addEventListener('change', apply);
+  /* Default: follow lecture mode at boot. Inert in the PP sims (they boot into the
+     guided inquiry, so the class is absent and the box starts unchecked — correct). */
+  window.addEventListener('load', function(){
+    requestAnimationFrame(function(){ requestAnimationFrame(function(){
+      box.checked = shell.classList.contains('lecture-mode');
+      apply();
+    });});
+  });
+})();
+</script>
 
   <main class="shell-hero">
     <div class="sim-stage sim-band-off" id="simStage">
@@ -444,22 +481,20 @@ body.light-theme .predict-eval .answer,body.light-theme .predict-eval strong,htm
     <button class="sim-chip" data-p="tau-">τ⁻</button>
     <button class="sim-chip" data-p="tau+">τ⁺</button>
   </div>
-  <div class="sim-hint-line">Drag a chip onto a leg — or click the chip, then the leg. Click a filled leg to clear it.</div>
+  <div class="sim-hint-line">Drag or click a chip onto a leg. Click a filled leg to clear.</div>
   <div class="sim-btnrow">
     <button class="sim-btn" id="btnAuto">e⁻e⁺ → μ⁻μ⁺</button>
     <button class="sim-btn" id="btnClear">Clear legs</button>
   </div>
-  <div class="sim-note">Arrow = fermion-number flow: antiparticle arrows point backwards along the line. Line slopes are schematic, not velocities.</div>
+  <div class="sim-note">Arrows = fermion-number flow (backwards on antiparticles). Slopes are schematic.</div>
 </div>
 
 <div class="shell-panel sim-panel">
   <h3 class="sim-h">Collider</h3>
   <label class="sim-lab">√s <span class="sim-val" id="vS">3.00 GeV</span>
     <input type="range" id="slS" min="0" max="1000" step="1" value="438"></label>
-  <div class="sim-note">√s = invariant centre-of-mass energy; s = q² carried by the γ*.</div>
   <label class="sim-lab">sweep position <span class="sim-val" id="vT">0.00</span>
     <input type="range" id="slT" min="0" max="1000" step="1" value="0"></label>
-  <div class="sim-note">Schematic left → right read of the diagram — it carries no time scale.</div>
 </div>
 
 <div class="shell-panel sim-panel" id="resultPanel" style="display:none">
@@ -1008,11 +1043,10 @@ window.__audit = {
     const px = g.notePx, w = MW - 20;
     c.save(); c.fillStyle = th.muted; c.globalAlpha = 0.95; c.textAlign = 'left'; c.textBaseline = 'top';
     c.font = F(px, 500);
-    const L1L = 'The sweep is a reading aid, not a trajectory: vertex times and positions are integrated over (both orderings included).';
-    const L1S = 'Sweep = reading aid, not a trajectory.';
-    const L2L = 'Arrow = fermion-number flow (antiparticle arrows point backwards along the line); line slopes are schematic, not velocities.';
-    const L2S = 'Arrow = fermion-number flow; slopes ≠ velocities.';
-    c.fillText(c.measureText(L1L).width <= w ? L1L : L1S, 10, g.axisY + 10);
+    const L1 = 'Sweep = reading aid, not a trajectory.';
+    const L2L = 'Arrows = fermion-number flow (backwards on antiparticles). Slopes are schematic.';
+    const L2S = 'Arrows = fermion-number flow; slopes ≠ velocities.';
+    c.fillText(L1, 10, g.axisY + 10);
     if (g.noteLines > 1) c.fillText(c.measureText(L2L).width <= w ? L2L : L2S, 10, g.axisY + 10 + px + 4);
     c.restore();
   }
