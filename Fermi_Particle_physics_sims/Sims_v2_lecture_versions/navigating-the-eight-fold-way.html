@@ -522,7 +522,7 @@ const Shell = (function(){
   let inqStep=0, inqTotal=0;   // guided-inquiry stepper (shell-owned)
 
   function loop(now){
-    let dt=(now-last)/1000; if(dt>0.1)dt=0.1; last=now;
+    let dt=(now-last)/1000; if(dt>0.1)dt=0.1; if(!(dt>=0))dt=0; /* first frame after setPlaying can predate the stamp */ last=now;
     if(playing) onFrame(dt*speed);
     requestAnimationFrame(loop);
   }
@@ -1367,9 +1367,14 @@ function onReset(){
   // lecture mode) → re-arm the completed free-exploration state.
   var shellEl=document.getElementById('shell');
   if(shellEl&&shellEl.classList.contains('inquiry-collapsed')) completedState();
-  else stepState(Math.max(0,Math.min(3,Shell.step|0)));
+  else onStep(Shell.step|0); /* via onStep so an answered card's reveal survives Reset (SYS-5) */
 }
-function onStep(i){ stepState(Math.max(0,Math.min(3,i|0))); }
+function onStep(i){ var k=Math.max(0,Math.min(3,i|0)); stepState(k);
+  /* SYS-5: an answered card's reveal must survive revisits and Reset */
+  var c=document.querySelectorAll('#inq-cards .inq-step')[k];
+  if(c&&c.dataset.answered){ var r=c.dataset.reveal;
+    if(r==='qlines'&&!state.qlines){ state.qlines=true; syncUI(); draw(); }
+    else if(r==='omega'&&!state.revealed){ revealOmega(); } } }
 function onComplete(){ completedState(); }
 
 if(window.ResizeObserver){
