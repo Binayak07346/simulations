@@ -7,6 +7,21 @@ detail — this file is the validation checklist). Findings are listed **in prio
 
 ## ⚠ Systemic bugs (same root cause across many sims — fixable as one sweep)
 
+> **STATUS: ALL FIVE VERIFIED GENUINE AND FIXED** (per-sim commits `af676da…cc636de`,
+> 2026-08-26). Independent verification before fixing found the scope slightly WIDER
+> than reported: SYS-1 also hit gold-foil (a 7th guard the agents missed); SYS-2 was
+> missing in 9 sims (+ how-to-make); SYS-4 affected 6 sims (+ detector-hq, scale,
+> dirac latent). Fixes applied: `window.Shell = Shell` exposure (6 sims);
+> `onStep(Shell.step)` re-sync in onReset (9 sims) + force-play dropped from the wu /
+> wine-bottle reset wires so per-card pause specs survive Reset; negative-dt clamp in
+> the shell loop (all 14); palette reads switched to `document.body` (6 sims);
+> answered-card reveal re-fire in onStep (eight-fold-way, detector-hq, wu — incl.
+> routing 8fold's onReset through onStep). Headless-verified: all 14 load clean; probes
+> confirm fire-while-paused resumes, Reset preserves the active card's scene AND pause
+> state, theme reaches the canvas, and answered reveals survive pager + Reset.
+> The per-sim findings below that map to SYS-1…SYS-5 are therefore RESOLVED; remaining
+> per-sim findings (PHY-P0s, hat overflow, KaTeX, etc.) are still open.
+
 - **SYS-1 · `window.Shell` dead-guard** — `const Shell` is lexical, so every
   `if(window.Shell && Shell.xxx)` guard silently no-ops. Hit in **6 sims** with varying
   impact: cloud-chamber (P0: blank chamber on Fire-while-paused, Reset restages wrong
