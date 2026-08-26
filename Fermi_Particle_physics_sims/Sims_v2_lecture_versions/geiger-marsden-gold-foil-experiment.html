@@ -317,7 +317,7 @@ body.light-theme .sim-hot,html[data-theme="light"] .sim-hot{color:#c2410c}
 </style>
 </head>
 <body>
-<!-- POLISH: [physics] incident-α model added (n·t = 2.4e22 m⁻² for 0.40 µm Au): "α fired" now counts INCIDENT α, a separate "scattered ≥1°" row exposes THMIN, and θ>90° odds are per incident α (~1 in 26 000 at 5 MeV, matching Rutherford's ~1 in 20 000); histogram now plots counts per incident α per sr so the whole curve (not just its tail) drops ∝1/Eₖ² with momentum; prediction feedback strings computed live from the current run instead of a hardcoded "1 in 13,000"; d_touch = R_Au+R_α ≈ 8.9 fm ⇒ R_Au ≈ 7 fm corrected in modal/formal (chip number-free); Neff floor removed (absolute normalisation); flatten test keeps bin 0 and plots every bin at its intensity-weighted effective angle (binning artefact removed); Poisson noise now applied to every bin; screen dots use equal probability and equal size at all angles with an on-canvas sampling caption; "α reaches nucleus" chip gated on dₘᵢₙ ≤ d_touch; solid curve legended "Rutherford × nuclear absorption" with the phenomenological cut-off stated in the formal row and the central flash labelled "α absorbed by nucleus"; tracer speed ∝ p; α_em used for the fine-structure constant and z/Z defined in words; θ labelled as LAB angle (lab≈CM to 2 %); dₘᵢₙ labelled "head-on, θ=180°"; lower arc relabelled 90° with an azimuth note; momentum slider no longer pauses the run and rebuilds live; forward-glow width derived from the θ containing 90 % of events; legend wraps instead of dropping entries; plum-pudding kick count corrected to ≈2.5×10³; beam energy/source realism stated and p>0.240 GeV/c flagged as an accelerator beam. ; [pedagogy] measured data are ALWAYS generated from the nucleus model — the model switch now only chooses which PREDICTION curve is overlaid (plum always dashed/muted, Rutherford always solid/accent); sim opens PAUSED and EMPTY (Play prominent and enabled) via onComplete, so nothing is revealed before the prediction; Predict panel moved to the top of the sidebar and rebuilt as five staged prompts (predict → record-what-you-see → warrant → 1/sin⁴ relationship → Z² transfer) with the committed prediction echoed and changeable; histogram band appears only once α have been fired and the comparison curve only once the student asks for it; beam-rate control added (default 10 k α/s) so individual rare θ>90° flashes are separable and countable; nuclear-size material (momentum, Eₖ, dₘᵢₙ) moved into a clearly-marked "Sub-question" panel at the end of the sidebar — every control stays visible and live at all times; counters renamed to match the canvas ("counts θ>90°", "odds of θ>90°") and colour-matched; inquiry cards converted from result-announcing exposition to prediction-first choices; info-modal Concept cut to two sentences. ; [visuals] canvas chips moved below the plot title; full light-theme palette for dots/glow/tracers/ZnS band/flashes; fixed log decade window (10⁻⁸–10²) so the y-axis no longer slides every frame; sidebar panels rebuilt with shell-panel-head/shell-panel-body so nothing sits flush on the border and the slider thumb is no longer clipped; parameter changes reseed the run at the current statistics and never pause; lower "90°" tick label offset off the ZnS arc; legend wraps to a second row; small-canvas branch keeps the key apparatus labels and caps decade labels; superscript decade labels; x-axis titled "scattering angle θ (lab frame)"; canvas font taken from --font-sans; flatten checkbox relabelled "Multiply counts by sin⁴(θ/2)"; formal equations wrap instead of scrolling. -->
+<!-- POLISH: [physics] incident-α model added (n·t = 2.4e22 m⁻² for 0.40 µm Au): "α fired" now counts INCIDENT α, a separate "scattered ≥1°" row exposes THMIN, and θ>90° odds are per incident α (~1 in 26 000 at 5 MeV, matching Rutherford's ~1 in 20 000); histogram now plots counts per incident α per sr so the whole curve (not just its tail) drops ∝1/Eₖ² with momentum; prediction feedback strings computed live from the current run instead of a hardcoded "1 in 13,000"; d_touch = R_Au+R_α ≈ 8.9 fm ⇒ R_Au ≈ 7 fm corrected in modal/formal (chip number-free); Neff floor removed (absolute normalisation); flatten test keeps bin 0 and plots every bin at its intensity-weighted effective angle (binning artefact removed); Poisson noise now applied to every bin; screen dots use equal probability and equal size at all angles with an on-canvas sampling caption; "α reaches nucleus" chip gated on d<sub>min</sub> ≤ d_touch; solid curve legended "Rutherford × nuclear absorption" with the phenomenological cut-off stated in the formal row and the central flash labelled "α absorbed by nucleus"; tracer speed ∝ p; α_em used for the fine-structure constant and z/Z defined in words; θ labelled as LAB angle (lab≈CM to 2 %); d<sub>min</sub> labelled "head-on, θ=180°"; lower arc relabelled 90° with an azimuth note; momentum slider no longer pauses the run and rebuilds live; forward-glow width derived from the θ containing 90 % of events; legend wraps instead of dropping entries; plum-pudding kick count corrected to ≈2.5×10³; beam energy/source realism stated and p>0.240 GeV/c flagged as an accelerator beam. ; [pedagogy] measured data are ALWAYS generated from the nucleus model — the model switch now only chooses which PREDICTION curve is overlaid (plum always dashed/muted, Rutherford always solid/accent); sim opens PAUSED and EMPTY (Play prominent and enabled) via onComplete, so nothing is revealed before the prediction; Predict panel moved to the top of the sidebar and rebuilt as five staged prompts (predict → record-what-you-see → warrant → 1/sin⁴ relationship → Z² transfer) with the committed prediction echoed and changeable; histogram band appears only once α have been fired and the comparison curve only once the student asks for it; beam-rate control added (default 10 k α/s) so individual rare θ>90° flashes are separable and countable; nuclear-size material (momentum, Eₖ, d<sub>min</sub>) moved into a clearly-marked "Sub-question" panel at the end of the sidebar — every control stays visible and live at all times; counters renamed to match the canvas ("counts θ>90°", "odds of θ>90°") and colour-matched; inquiry cards converted from result-announcing exposition to prediction-first choices; info-modal Concept cut to two sentences. ; [visuals] canvas chips moved below the plot title; full light-theme palette for dots/glow/tracers/ZnS band/flashes; fixed log decade window (10⁻⁸–10²) so the y-axis no longer slides every frame; sidebar panels rebuilt with shell-panel-head/shell-panel-body so nothing sits flush on the border and the slider thumb is no longer clipped; parameter changes reseed the run at the current statistics and never pause; lower "90°" tick label offset off the ZnS arc; legend wraps to a second row; small-canvas branch keeps the key apparatus labels and caps decade labels; superscript decade labels; x-axis titled "scattering angle θ (lab frame)"; canvas font taken from --font-sans; flatten checkbox relabelled "Multiply counts by sin⁴(θ/2)"; formal equations wrap instead of scrolling. -->
 <div id="shell" class="hide-formal">
 
   <div id="shell-info-modal" class="shell-modal-backdrop">
@@ -331,7 +331,7 @@ body.light-theme .sim-hot,html[data-theme="light"] .sim-hot{color:#c2410c}
   <dt>Concept</dt>
   <dd>Scintillation counts at scattering angle θ follow 1/sin⁴(θ/2), so they fall by about 2×10⁵ between 5° and 150° yet never vanish. Because roughly 1 in 26,000 incident α turns through more than 90° — impossible if the positive charge were spread through the whole atom — that charge must sit in a tiny, massive nucleus.</dd>
   <dt>Sub-question</dt>
-  <dd>Nuclear size: the head-on closest approach is dₘᵢₙ = zZ·α_em·ħc/Eₖ = 45.5 fm at 5 MeV. Raising the beam momentum shrinks dₘᵢₙ; when the large-angle counts sag below the dashed point-Coulomb curve the α is grazing the nuclear surface at d_touch = R_Au + R_α ≈ 8.9 fm, so R_Au ≈ 7 fm (diameter ≈ 1.4×10⁻¹⁴ m).</dd>
+  <dd>Nuclear size: the head-on closest approach is d<sub>min</sub> = zZ·α_em·ħc/Eₖ = 45.5 fm at 5 MeV. Raising the beam momentum shrinks d<sub>min</sub>; when the large-angle counts sag below the dashed point-Coulomb curve the α is grazing the nuclear surface at d_touch = R_Au + R_α ≈ 8.9 fm, so R_Au ≈ 7 fm (diameter ≈ 1.4×10⁻¹⁴ m).</dd>
   <dt>Model notes</dt>
   <dd>Plum pudding is modelled as ≈2.5×10³ random ≈0.02° kicks, so the random walk gives σ = √2500 × 0.02° ≈ 1° at 5 MeV and essentially no counts past a few degrees. The measured (green) points are always generated from the nuclear model — the switch only chooses which prediction curve is drawn over them. Single scattering only: sub-degree multiple scattering is not simulated. Foil: 0.40 µm gold, n·t = 2.4×10²² m⁻².</dd>
   <dt>Serves</dt>
@@ -345,8 +345,8 @@ body.light-theme .sim-hot,html[data-theme="light"] .sim-hot{color:#c2410c}
   <tr><td>Data are the data</td><td>The green points are always generated from the nuclear model. The model switch changes only the overlaid prediction curve, so a wrong model can never "confirm" itself.</td></tr>
   <tr><td>Cognitive conflict</td><td>The dashed plum-pudding prediction plunges off the bottom of the plot by ~7° while measured θ&gt;90° counts keep arriving.</td></tr>
   <tr><td>Invariant made visible</td><td>The ×sin⁴(θ/2) toggle collapses the Rutherford data onto one horizontal line at any momentum — the constancy Geiger and Marsden tabulated.</td></tr>
-  <tr><td>Operational anchors</td><td>Live counters: incident α fired, α scattered ≥1°, counts θ&gt;90°, odds per incident α, Eₖ and dₘᵢₙ.</td></tr>
-  <tr><td>Formal layer on demand</td><td>Cross-section, dₘᵢₙ, q, the n·t conversion and the model's stated limits appear only in the toggleable formal region.</td></tr>
+  <tr><td>Operational anchors</td><td>Live counters: incident α fired, α scattered ≥1°, counts θ&gt;90°, odds per incident α, Eₖ and d<sub>min</sub>.</td></tr>
+  <tr><td>Formal layer on demand</td><td>Cross-section, d<sub>min</sub>, q, the n·t conversion and the model's stated limits appear only in the toggleable formal region.</td></tr>
 </table>
       </div>
     </div>
@@ -462,10 +462,10 @@ body.light-theme .sim-hot,html[data-theme="light"] .sim-hot{color:#c2410c}
           <div class="predict-eval"></div></div>
 <div class="inq-step" data-gate data-run="p:0.500,N:3000000,seed:2">
           <h4>5 · How big is the nucleus?</h4>
-          <p>At 5 MeV, <strong>dₘᵢₙ</strong> reads 45.5 fm — the α never touches the nucleus. Suppose an accelerator raised the <strong>α momentum</strong> to 0.500 GeV/c (Eₖ = 33.5 MeV). What would signal first contact?</p>
+          <p>At 5 MeV, <strong>d<sub>min</sub></strong> reads 45.5 fm — the α never touches the nucleus. Suppose an accelerator raised the <strong>α momentum</strong> to 0.500 GeV/c (Eₖ = 33.5 MeV). What would signal first contact?</p>
           <button class="choice" data-fb="Opposite — a faster α deflects less at every angle; contact shows up at the largest angles instead.">The forward beam spot widens</button>
           <button class="choice" data-fb="They collapse — dσ/dΩ ∝ 1/Eₖ², and α that graze the nucleus are absorbed, emptying the tail.">The counts beyond 90° increase</button>
-          <button class="choice" data-correct data-fb="Yes — dₘᵢₙ = 6.8 fm &lt; d_touch ≈ 8.9 fm: the tail sinks below the dashed <strong>point Coulomb</strong> curve as grazing α are absorbed.">Large-angle counts sag below the point-charge curve</button>
+          <button class="choice" data-correct data-fb="Yes — d<sub>min</sub> = 6.8 fm &lt; d_touch ≈ 8.9 fm: the tail sinks below the dashed <strong>point Coulomb</strong> curve as grazing α are absorbed.">Large-angle counts sag below the point-charge curve</button>
           <div class="predict-eval"></div>
           <p class="inq-after">That sag sized the nucleus: d_touch = R_Au + R_α ≈ 8.9 fm ⇒ R_Au ≈ 7 fm. Explore freely — and try aluminium in your head: Z² means (13/79)² ≈ 37× fewer backscatters.</p></div>
       </div>
@@ -528,7 +528,7 @@ body.light-theme .sim-hot,html[data-theme="light"] .sim-hot{color:#c2410c}
           </div>
           <div class="sim-rows">
             <div class="sim-row"><span>kinetic energy Eₖ</span><b id="gmEk">5.0 MeV</b></div>
-            <div class="sim-row"><span>dₘᵢₙ (head-on, θ = 180°)</span><b id="gmDmin">45.5 fm</b></div>
+            <div class="sim-row"><span>d<sub>min</sub> (head-on, θ = 180°)</span><b id="gmDmin">45.5 fm</b></div>
           </div>
         </div>
       </div>
@@ -539,9 +539,9 @@ body.light-theme .sim-hot,html[data-theme="light"] .sim-hot{color:#c2410c}
   <section class="shell-formal">
     <div class="sim-formal">
   <div class="sim-eq" id="gmEq1">dσ/dΩ = (zZ·α_em·ħc / 4Eₖ)² · 1/sin⁴(θ/2)</div>
-  <div class="sim-eq" id="gmEq2">dₘᵢₙ = zZ·α_em·ħc/Eₖ , q = 2p·sin(θ/2) , Eₖ = p²/2m_α</div>
+  <div class="sim-eq" id="gmEq2">d<sub>min</sub> = zZ·α_em·ħc/Eₖ , q = 2p·sin(θ/2) , Eₖ = p²/2m_α</div>
   <div class="sim-eq" id="gmEq3">dN / (N₀ dΩ) = n·t · dσ/dΩ</div>
-  <div class="sim-eq-live" id="gmFormalLive">z = 2 (α charge number), Z = 79 (gold) · Eₖ = 5.0 MeV · dₘᵢₙ = 45.5 fm</div>
+  <div class="sim-eq-live" id="gmFormalLive">z = 2 (α charge number), Z = 79 (gold) · Eₖ = 5.0 MeV · d<sub>min</sub> = 45.5 fm</div>
   <div class="sim-eq-live" id="gmFormalNote">θ is the scattering angle in the LAB frame (lab ≈ CM to 2 % for α on ¹⁹⁷Au); the upper and lower screen arcs are opposite azimuthal sides of the same θ. Solid curve = Rutherford × a phenomenological nuclear-absorption factor: a logistic cut-off of 0.4 fm width removes α whose closest approach reaches d_touch = R_Au + R_α ≈ 8.9 fm (⇒ R_Au ≈ 7 fm). Single scattering only; foil n·t = 2.4×10²² m⁻² (0.40 µm gold).</div>
 </div>
   </section>
@@ -937,9 +937,10 @@ function syncUI(){ var Ek=EkOf(st.p), n;
   n=el('gmRateFast'); if(n)n.classList.toggle('sim-on',st.rate>RSLOW);
   n=el('gmFlat'); if(n)n.checked=!!st.flat;
   var v150=coefFm2(Ek)/Math.pow(Math.sin(75*D2R),4)/100;
-  txt('gmFormalLive','z = 2 (α charge number), Z = 79 (gold), α_em = 1/137.036 · p = '+st.p.toFixed(3)+
-    ' GeV/c → Eₖ = '+(Ek*1000).toFixed(1)+' MeV · dₘᵢₙ (head-on, θ = 180°) = '+dminOf(Ek).toFixed(1)+
-    ' fm · dσ/dΩ(150°) = '+v150.toFixed(2)+' b/sr · n·t·σ(θ>90°) = 1 in '+sig3(1/(NT*sigGT(Math.PI/2,Ek)))); }
+  var gflEl=el('gmFormalLive');
+  if(gflEl) gflEl.innerHTML='z = 2 (α charge number), Z = 79 (gold), α_em = 1/137.036 · p = '+st.p.toFixed(3)+
+    ' GeV/c → Eₖ = '+(Ek*1000).toFixed(1)+' MeV · d<sub>min</sub> (head-on, θ = 180°) = '+dminOf(Ek).toFixed(1)+
+    ' fm · dσ/dΩ(150°) = '+v150.toFixed(2)+' b/sr · n·t·σ(θ>90°) = 1 in '+sig3(1/(NT*sigGT(Math.PI/2,Ek))); }
 
 /* ---- canvas sizing ---- */
 function sizeCanvas(){ var r=CV.getBoundingClientRect();
