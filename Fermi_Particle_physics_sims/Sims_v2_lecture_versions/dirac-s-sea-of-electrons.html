@@ -298,6 +298,8 @@ body.light-theme .predict-eval .answer,body.light-theme .predict-eval strong,htm
 .sim-main{flex:1 1 auto;min-height:0;display:flex;flex-direction:column}
 .sim-strip{flex:0 0 150px;display:flex;flex-direction:column}
 .sim-main canvas,.sim-strip canvas{flex:1 1 auto;min-height:0;width:100%;display:block}
+.sim-main .legend{top:10px;right:12px;bottom:auto;left:auto}
+.sim-main .plot-title{max-width:calc(100% - 360px)}
 #seaCanvas{cursor:crosshair}
 /* padding wrapper: the shell's .shell-panel has none, so sim content needs its own */
 .sim-pad{padding:12px}
@@ -541,7 +543,7 @@ const Shell = (function(){
   let inqStep=0, inqTotal=0;   // guided-inquiry stepper (shell-owned)
 
   function loop(now){
-    let dt=(now-last)/1000; if(dt>0.1)dt=0.1; last=now;
+    let dt=(now-last)/1000; if(dt>0.1)dt=0.1; if(!(dt>=0))dt=0; /* first frame after setPlaying can predate the stamp */ last=now;
     if(playing) onFrame(dt*speed);
     requestAnimationFrame(loop);
   }
@@ -757,6 +759,7 @@ const Shell = (function(){
     setPlaying, refit
   };
 })();
+window.Shell = Shell; /* expose for the sim's window.Shell guards (const is lexical-only) */
 
 'use strict';
 
@@ -806,7 +809,7 @@ function tok(n,f){
   let v='';
   try{
     v=getComputedStyle(document.body).getPropertyValue(n);
-    if(!v||!v.trim()) v=getComputedStyle(document.documentElement).getPropertyValue(n);
+    if(!v||!v.trim()) v=getComputedStyle(document.body).getPropertyValue(n);
   }catch(e){}
   v=(v||'').trim(); return v||f;
 }
@@ -1361,7 +1364,9 @@ function onFrame(dt){
   if(!(dt>0)) dt=0; if(dt>0.1) dt=0.1;
   S.t+=dt; physics(dt); draw();
 }
-function onReset(){ applyOpening(); }
+function onReset(){ applyOpening(); 
+  onStep(Shell.step); /* re-sync the scene to the ACTIVE card (SYS-2) */
+}
 function onResize(){
   if(els.sea) fit(els.sea);
   if(els.drift) fit(els.drift);
