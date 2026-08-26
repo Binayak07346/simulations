@@ -514,7 +514,7 @@ const Shell = (function(){
   let inqStep=0, inqTotal=0;   // guided-inquiry stepper (shell-owned)
 
   function loop(now){
-    let dt=(now-last)/1000; if(dt>0.1)dt=0.1; last=now;
+    let dt=(now-last)/1000; if(dt>0.1)dt=0.1; if(!(dt>=0))dt=0; /* first frame after setPlaying can predate the stamp */ last=now;
     if(playing) onFrame(dt*speed);
     requestAnimationFrame(loop);
   }
@@ -846,7 +846,7 @@ window.__audit = {
   }
   function alphaCol(c, al) { const p = parseCol(c); return p ? 'rgba(' + p[0] + ',' + p[1] + ',' + p[2] + ',' + al + ')' : c; }
   function themeVals() {
-    const cs = getComputedStyle(document.documentElement);
+    const cs = getComputedStyle(document.body);
     const g = n => { const v = cs.getPropertyValue(n); return v ? v.trim() : ''; };
     const bg = g('--bg') || '#0f1318', surface = g('--surface') || '#171d24', text = g('--text') || '#e9eef4';
     const muted = g('--muted') || '#8b98a5', accent = g('--accent') || '#4da3ff', border = g('--border') || '#2a323c';
@@ -1339,7 +1339,9 @@ window.__audit = {
     state.hovT = -1; state.hovC = -1; state.t = 0;
     introStart = performance.now();
     syncDom(); draw();
-  }
+  
+  onStep(Shell.step); /* re-sync the scene to the ACTIVE card (SYS-2) */
+}
   function onResize() { sizeAll(); renderFormal(); draw(); }
   function onStep(i) {
     state.hovT = -1; state.hovC = -1;
