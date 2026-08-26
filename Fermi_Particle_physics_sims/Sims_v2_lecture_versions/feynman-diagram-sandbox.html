@@ -445,11 +445,11 @@ body.light-theme .predict-eval .answer,body.light-theme .predict-eval strong,htm
           <p class="inq-after">Fix it: press <strong>e⁻e⁺ → μ⁻μ⁺</strong> (or drag chips onto the legs) — the verdict flips to <strong>✓ QED allowed</strong>.</p></div>
         <div class="inq-step" data-gate data-build="slots:e-,e+,tau-,tau+"><h4>3 · Now try τ⁻τ⁺</h4>
           <p>μ⁻μ⁺ passes both counts: <strong>✓ QED allowed</strong>. The heavier τ⁻τ⁺ (m<sub>τ</sub> = 1.78 GeV) passes them too. At <strong>√s = 3.00 GeV</strong> its verdict will read:</p>
-          <button class="choice" data-correct data-fb="Yes — vertex-legal isn't enough: making the pair costs 2m<sub>τ</sub> = 3.55 GeV, more than √s supplies.">✗ — needs √s ≥ 3.55 GeV</button>
+          <button class="choice" data-correct data-fb="Yes — vertex-legal isn't enough: making the pair costs 2m<sub>τ</sub> = 3.554 GeV, more than √s supplies.">✗ — needs √s ≥ 3.554 GeV</button>
           <button class="choice" data-fb="The counts do balance (τ number +1 − 1 = 0), but the collision energy cannot pay for two τ masses.">✓ — same lepton counts as μ⁻μ⁺</button>
           <button class="choice" data-fb="τ⁻τ⁺ keeps tau number at 0 — the block is energy, not a broken count.">✗ — τ breaks lepton number</button>
           <div class="predict-eval"></div>
-          <p class="inq-after">Drag <strong>√s</strong> past 3.55 GeV — the chip flips to <strong>✓ · near threshold</strong> as β climbs from 0.</p></div>
+          <p class="inq-after">Drag <strong>√s</strong> past 3.554 GeV — the chip flips to <strong>✓ · near threshold</strong> as β climbs from 0.</p></div>
         <div class="inq-step"><h4>4 · Read the γ* line</h4>
           <p>Between the vertices runs <strong>γ* (virtual), q² = s</strong> — off-shell, not a real photon. Press <strong>▶ Play</strong>: crossing the middle, the whole line glows <em>virtual exchange — no trajectory</em>. It is a propagator factor; vertex times are integrated over.</p></div>
         <div class="inq-step" data-gate><h4>5 · Double √s — what does σ do?</h4>
@@ -841,7 +841,7 @@ window.__audit = {
     const n = [i1, i2, o1, o2].filter(Boolean).length;
     const r = { proc: sym('in1') + ' ' + sym('in2') + ' → ' + sym('out1') + ' ' + sym('out2'),
                 n, cut: null, mark: '?', valid: false, status: '', col: 'muted', title: '',
-                sigma: null, mf: 0.10566, beta: 1, tch: false };
+                sigma: null, mf: 0.10566, beta: 1, tch: false, outOK: false };
     r.title = n === 0 ? 'empty diagram' : r.proc;
     if (!i1 || !i2) { r.cut = 'V1'; r.status = 'legs ' + n + '/4'; return r; }
     const e1 = pairIssue(i1, i2);
@@ -852,9 +852,9 @@ window.__audit = {
     const e2 = pairIssue(o1, o2);
     if (e2) { r.cut = 'V2'; r.mark = '✗'; r.status = '✗ V₂: ' + e2; r.col = 'bad'; return r; }
     const thr = 2 * Math.max(o1.m, o2.m);
-    if (D.sqrtS < thr) { r.cut = 'V2'; r.mark = '✗'; r.status = '✗ needs √s ≥ ' + thr.toFixed(2) + ' GeV'; r.col = 'bad'; return r; }
+    r.mf = Math.max(o1.m, o2.m); r.outOK = true; /* well-formed final state: σ(√s) curve can be drawn even below threshold */
+    if (D.sqrtS < thr) { r.cut = 'V2'; r.mark = '✗'; r.status = '✗ needs √s ≥ ' + thr.toFixed(3) + ' GeV'; r.col = 'bad'; return r; }
     r.valid = true;
-    r.mf = o1.m;
     r.beta = betaOf(D.sqrtS, r.mf);
     r.sigma = sigmaOf(D.sqrtS, r.mf);
     /* a t-channel partner exists only if the final flavour equals the initial one */
@@ -1165,7 +1165,7 @@ window.__audit = {
     c.fillStyle = th.muted; c.font = F(12, 650);
     c.save(); c.translate(14, (py0 + py1) / 2); c.rotate(-Math.PI / 2);
     c.textAlign = 'center'; c.textBaseline = 'middle'; c.fillText('σ (nb)', 0, 0); c.restore();
-    c.textAlign = 'right'; c.textBaseline = 'top'; c.fillText('√s (GeV)', px1, py1 + 4);
+    c.textAlign = 'right'; c.textBaseline = 'top'; c.fillText('√s (GeV)', px1 - 24, py1 + 4);
     /* header — follows the built process */
     const procTxt = (r.n === 4) ? r.proc : 'e⁻e⁺ → μ⁻μ⁺';
     let ttl = 'σ(' + procTxt + '), log–log';
@@ -1197,15 +1197,33 @@ window.__audit = {
     c.save(); c.strokeStyle = th.text; c.globalAlpha = 0.5; c.setLineDash([6, 5]); c.lineWidth = 1.7;
     c.beginPath(); c.moveTo(px0, yi); c.lineTo(px1, yi); c.stroke(); c.restore();
     c.font = F(12, 650); c.fillStyle = th.text; c.textAlign = 'right'; c.textBaseline = 'bottom';
-    const invLong = 's·σ = ' + invV.toFixed(2) + ' nb·GeV² (constant in √s)  ≡  σ at √s = 1 GeV';
-    const invShort = 's·σ = ' + invV.toFixed(2) + ' nb·GeV² (constant)';
+    const invLong = 's·σ = ' + invV.toFixed(2) + ' nb·GeV² (constant in √s, massless limit)  ≡  σ at √s = 1 GeV';
+    const invShort = 's·σ = ' + invV.toFixed(2) + ' nb·GeV² (massless limit)';
     c.fillText(c.measureText(invLong).width < (px1 - px0) * 0.85 ? invLong : invShort, px1 - 4, yi - 3);
-    /* 1/s reference curve (massless limit) */
+    /* curve for the built final state (threshold-cut σ(√s)); massless 1/s reference when none is built */
+    const cf = r.outOK ? (v => sigmaOf(v, r.mf)) : sigma0;
+    const thrS = r.outOK ? 2 * r.mf : 0;
+    if (thrS > S_MIN) {
+      /* dashed massless 1/s reference behind — the ◆ anchors sit on it */
+      c.save(); c.strokeStyle = th.muted; c.globalAlpha = 0.7; c.setLineDash([5, 4]); c.lineWidth = 1.6; c.beginPath();
+      for (let i = 0; i <= 80; i++) {
+        const v = S_MIN * Math.pow(S_MAX / S_MIN, i / 80);
+        const X = lx(v), Y = ly(sigma0(v));
+        i ? c.lineTo(X, Y) : c.moveTo(X, Y);
+      }
+      c.stroke(); c.restore();
+      c.font = F(11, 600, true); c.fillStyle = th.muted; c.textAlign = 'left'; c.textBaseline = 'top';
+      c.fillText('massless 1/s reference', lx(1.35) + 4, ly(sigma0(1.35)) + 5);
+    }
     c.strokeStyle = th.accent; c.lineWidth = 2.5; c.beginPath();
-    for (let i = 0; i <= 80; i++) {
-      const v = S_MIN * Math.pow(S_MAX / S_MIN, i / 80);
-      const X = lx(v), Y = ly(sigma0(v));
-      i ? c.lineTo(X, Y) : c.moveTo(X, Y);
+    let onC = false;
+    if (thrS > S_MIN) { c.moveTo(lx(thrS), py1); onC = true; } /* σ → 0 exactly at √s = 2m_f */
+    for (let i = 0; i <= 160; i++) {
+      const v = S_MIN * Math.pow(S_MAX / S_MIN, i / 160);
+      if (v < thrS) continue;
+      const X = lx(v), Y = ly(cf(v));
+      onC ? c.lineTo(X, Y) : c.moveTo(X, Y);
+      onC = true;
     }
     c.stroke();
     /* labelled reference anchors */
@@ -1233,6 +1251,8 @@ window.__audit = {
     let tx = mX + 10, ty = mY - 9;
     if (tx + mw2 > px1 - 4) tx = mX - 10 - mw2;
     if (ty - 14 < py0) ty = mY + 22;
+    /* dodge the s·σ ring + label (short band, √s near an anchor); +34 also clears the ◆ anchor caption */
+    if (tx < sx + 40 && tx + mw2 > sx - 9 && ty > yi - 6 && ty - 14 < yi + 16) ty = Math.min(mY + 34, py1 - 2);
     c.fillStyle = th.text; c.textAlign = 'left'; c.textBaseline = 'alphabetic'; c.fillText(mt, tx, ty);
     c.restore();
     /* the student's own prediction, drawn against the measured curve */
