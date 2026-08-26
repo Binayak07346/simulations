@@ -534,7 +534,7 @@ const Shell = (function(){
   let inqStep=0, inqTotal=0;   // guided-inquiry stepper (shell-owned)
 
   function loop(now){
-    let dt=(now-last)/1000; if(dt>0.1)dt=0.1; last=now;
+    let dt=(now-last)/1000; if(dt>0.1)dt=0.1; if(!(dt>=0))dt=0; /* first frame after setPlaying can predate the stamp */ last=now;
     if(playing) onFrame(dt*speed);
     requestAnimationFrame(loop);
   }
@@ -789,7 +789,7 @@ function hide(id){ var el=$(id); if(el) el.classList.add('sim-hidden'); }
 var eSlider=$('eSlider'), eRead=$('eReadout');
 
 function tokens(){
-  var cs=getComputedStyle(document.documentElement);
+  var cs=getComputedStyle(document.body);
   function g(n){ var v=cs.getPropertyValue(n).trim(); return v||'#888888'; }
   var fsans=cs.getPropertyValue('--font-sans').trim()||'system-ui,sans-serif';
   var fnums=cs.getPropertyValue('--font-nums').trim()||'ui-monospace,monospace';
@@ -1268,6 +1268,8 @@ function onReset(){
   /* If the guided inquiry is live, land back on the current card's exact scene. */
   if(typeof Shell!=='undefined' && Shell.totalSteps>0 && STEPS[Shell.step]) applyStep(STEPS[Shell.step]);
   draw();
+
+  onStep(Shell.step); /* re-sync the scene to the ACTIVE card (SYS-2) */
 }
 function onFrame(dt){
   if(!isFinite(dt)||dt<0) dt=0.016;
