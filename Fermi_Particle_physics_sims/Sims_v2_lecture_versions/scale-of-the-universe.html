@@ -457,7 +457,7 @@ body.light-theme .predict-eval .answer,body.light-theme .predict-eval strong,htm
           <button class="choice" data-fb="Viruses scatter light fine — but any detail finer than one wavelength blurs away regardless of the sample.">Light damages samples this small</button>
           <div class="predict-eval"></div></div>
 <div class="inq-step" data-gate data-reveal="proton"><h4>4 · Decades for decades</h4>
-          <p>d = 10⁻¹⁰ m — an atom; <strong>E<sub>min</sub></strong> ≈ 2 keV, X-ray territory. The proton is 100,000× smaller still (1.7 fm). Predict E<sub>min</sub> there — the zoom will check you.</p>
+          <p>d = 10⁻¹⁰ m — an atom; <strong>E<sub>min</sub></strong> ≈ 2 keV, X-ray territory. The proton is almost five orders of magnitude smaller still (1.7 fm). Predict E<sub>min</sub> there — the zoom will check you.</p>
           <button class="choice" data-fb="The ladder is log–log: five decades of size cost five decades of energy. Watch <strong>E<sub>min</sub></strong> land at 116 MeV.">A few times more — tens of keV</button>
           <button class="choice" data-fb="Brightness adds photons, not resolution — each photon's wave is unchanged. Watch <strong>E<sub>min</sub></strong> climb to 116 MeV.">Same keV — just a brighter beam</button>
           <button class="choice" data-correct data-fb="Decade for decade — watch the zoom land at 1.7 fm as <strong>E<sub>min</sub></strong> climbs to 116 MeV.">About 100,000× more — hundreds of MeV</button>
@@ -1568,7 +1568,9 @@ eScale.addEventListener('input', ()=>{
 });
 eEnergy.addEventListener('input', ()=>{
   userMove();
-  S.logd=S.view=clamp(LOGC-parseFloat(eEnergy.value),LMIN,LMAX);
+  /* Snap to the slider's own 2-dp resolution: the 4-dp min/max attributes carry
+     LOGC rounding, so the raw endpoint would read d = 99,997 km instead of 10⁵ km. */
+  S.logd=S.view=clamp(Math.round((LOGC-parseFloat(eEnergy.value))*100)/100,LMIN,LMAX);
   updateUI(); draw();
 });
 bigBtn.addEventListener('click', ()=>{
@@ -1625,7 +1627,7 @@ function renderFormal(n){
   if (a && b && c && window.katex){
     try{
       katex.render('\\frac{\\lambda}{2\\pi}=\\frac{\\hbar}{p}\\;\\Rightarrow\\; p\\gtrsim\\frac{\\hbar}{d}', a, {throwOnError:false});
-      katex.render('E_{\\min}=pc=\\frac{\\hbar c}{d},\\qquad \\hbar c\\approx 0.1973\\ \\text{GeV·fm}', b, {throwOnError:false});
+      katex.render('E_{\\min}=pc=\\frac{\\hbar c}{d},\\qquad \\hbar c\\approx 0.1973\\ \\text{GeV}\\cdot\\text{fm}', b, {throwOnError:false});
       katex.render('d=10^{-18}\\,\\text{m}\\ \\Rightarrow\\ E_{\\min}\\approx 197\\ \\text{GeV}', c, {throwOnError:false});
     }catch(e){}
     return;
