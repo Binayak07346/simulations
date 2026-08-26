@@ -403,7 +403,8 @@ body.light-theme .predict-eval .answer,body.light-theme .predict-eval strong,htm
      DOM items:    add class "ht-hide" to the element.
      Canvas items: wrap the draw call in  if(!HT()){ ... }
      Keep this list current when registering items:
-     (empty — nothing registered yet)
+     - [dom] "P is set by the crystal's temperature: P = Brillouin(μB/kT) … counts reset when you change P." — .sim-note under the Source/P panel, ~L487
+     - [dom] "Each counter takes a full 2π hemisphere about B … theory value appears once you commit a prediction (or after N > 200)." — .sim-note under the Counters panel, ~L500
 -->
 <script>
 /* Hide Text toggle — empty registry; hides .ht-hide DOM nodes and gates HT() canvas labels. */
@@ -484,7 +485,7 @@ body.light-theme .predict-eval .answer,body.light-theme .predict-eval strong,htm
             <label for="polSlider">Spin polarization P <span id="polVal" class="sim-val">0.00</span></label>
             <input type="range" id="polSlider" min="0" max="100" step="1" value="0">
           </div>
-          <div class="sim-note">P is set by the crystal's <b>temperature</b>: P = Brillouin(μB/kT), strongly non-linear — this slider sets P directly. The coil current <b>I</b> and the field <b>B</b> are held <b>fixed</b> (drawn schematic, not to scale), as in Wu's run. Press <b>▶ Play</b> to run the source; counts reset when you change P.</div>
+          <div class="sim-note ht-hide">P is set by the crystal's <b>temperature</b>: P = Brillouin(μB/kT), strongly non-linear — this slider sets P directly. The coil current <b>I</b> and the field <b>B</b> are held <b>fixed</b> (drawn schematic, not to scale), as in Wu's run. Press <b>▶ Play</b> to run the source; counts reset when you change P.</div>
         </div>
       </div>
 
@@ -497,7 +498,7 @@ body.light-theme .predict-eval .answer,body.light-theme .predict-eval strong,htm
             <tr><td>Asymmetry 𝒜, measured</td><td id="aMeas">—</td></tr>
             <tr><td>Theory 𝒜 = A·P·(v/c)/2</td><td id="aTheo">—</td></tr>
           </table>
-          <div class="sim-note">Each counter takes a full 2π hemisphere about <b>B</b>. Negative 𝒜 ⇒ the excess is emitted <b>opposite B</b> (opposite the spin). A(⁶⁰Co) = −1 is fixed by the weak interaction and v/c ≈ 0.60 by the decay energy — only P varies. The theory value appears once you commit a prediction (or after N &gt; 200).</div>
+          <div class="sim-note ht-hide">Each counter takes a full 2π hemisphere about <b>B</b>. Negative 𝒜 ⇒ the excess is emitted <b>opposite B</b> (opposite the spin). A(⁶⁰Co) = −1 is fixed by the weak interaction and v/c ≈ 0.60 by the decay energy — only P varies. The theory value appears once you commit a prediction (or after N &gt; 200).</div>
         </div>
       </div>
 
