@@ -1311,7 +1311,7 @@ function bindUI(){
   /* kT and ℰ keep running while dragged — their whole point is the motion */
   if(els.kt) els.kt.addEventListener('input',()=>{ S.ktMeV=+els.kt.value; syncLabels(); draw(); });
   if(els.field) els.field.addEventListener('input',()=>{ S.field=+els.field.value; syncLabels(); draw(); });
-  if(els.depth) els.depth.addEventListener('input',()=>{ S.depthMeV=+els.depth.value; syncLabels(); pauseScrub(); });
+  if(els.depth) els.depth.addEventListener('input',()=>{ S.depthMeV=+els.depth.value; syncLabels(); draw(); });
   if(els.excite) els.excite.addEventListener('click',()=>{ spawnPair(0.001*S.sign,true); S.sign*=-1; syncExcite(); play(); });
   if(els.sea) els.sea.addEventListener('pointerdown',ev=>{
     if(!S.map) return;
