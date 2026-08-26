@@ -1036,9 +1036,9 @@ window.__audit = {
     if (bSlider) bSlider.value = String(beta);
   }
   /* User-driven parameter change: rewind the animation state (phase, positions) so
-     the new configuration starts from t = 0 in view, and (re)start playback. */
+     the new configuration starts from t = 0 in view at the left edge, and (re)start playback. */
   function restartAnim() {
-    state.phase = 0; state.phaseWave = 0; state.xe = 0.35; state.labOff = 0;
+    state.phase = 0; state.phaseWave = 0; state.xe = 0; state.labOff = 0;
     try { if (Shell && Shell.setPlaying) Shell.setPlaying(true); } catch (e) { }
   }
 
@@ -1125,7 +1125,8 @@ window.__audit = {
   }
   function onComplete() {
     // Free exploration from the baseline: flip point reachable, all controls live.
-    state.phase = 0; state.phaseWave = 0; state.xe = 0.35; state.labOff = 0;
+    // Boot ball at the left edge so Play sweeps the animation rightward across the canvas.
+    state.phase = 0; state.phaseWave = 0; state.xe = 0; state.labOff = 0;
     apply(1, 0);
     tick();
     /* Boot / lecture-completion: pause on entry — student clicks Play to start the animation. */
