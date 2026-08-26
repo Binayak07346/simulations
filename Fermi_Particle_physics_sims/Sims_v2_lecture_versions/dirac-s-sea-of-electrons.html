@@ -298,7 +298,7 @@ body.light-theme .predict-eval .answer,body.light-theme .predict-eval strong,htm
 .sim-main{flex:1 1 auto;min-height:0;display:flex;flex-direction:column}
 .sim-strip{flex:0 0 150px;display:flex;flex-direction:column}
 .sim-main canvas,.sim-strip canvas{flex:1 1 auto;min-height:0;width:100%;display:block}
-.sim-main .legend{top:10px;right:12px;bottom:auto;left:auto}
+.sim-main .legend{top:2px;right:12px;bottom:auto;left:auto;padding:6px 12px}
 .sim-main .plot-title{max-width:calc(100% - 360px)}
 #seaCanvas{cursor:crosshair}
 /* padding wrapper: the shell's .shell-panel has none, so sim content needs its own */
@@ -739,6 +739,7 @@ const Shell = (function(){
         }
         onResize(); onReset();
         inqShow(0);
+        setLectureMode(true); /* default view: open in Lecture mode (curriculum request) — 🎓 or the restore chip re-opens the inquiry at card 1 */
       }else{
         root.classList.add('no-inquiry');
         const lb=document.getElementById('shell-lecture');
