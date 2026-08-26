@@ -410,6 +410,9 @@ body.light-theme .predict-eval .answer,body.light-theme .predict-eval strong,htm
      - [dom] "φ = the (homogeneous) complex field … V(φ) = μ²|φ|² + λ|φ|⁴, with λ = 1 fixed here." — .sim-defs under the Potential panel, ~L497
      - [dom] "μ² is the Lagrangian mass parameter … μ² < 0 just means there is no real μ …" — .sim-note under the Potential panel, ~L508 (whole note; user's target was the 2nd half but hiding just it orphans the colon)
      - [dom] "external damping, added by hand — not part of V. γ = 0 is the true dynamics." — #sim-fric-note (also covers the dynamic γ > 0 variant), ~L520
+     - [dom] "ring m² stays 0 for every μ² < 0 — one flat direction for the one broken symmetry." — #sim-note-inv (only shown at broken-phase state anyway), ~L535
+     - [dom] "Model units, ħ = c = 1: the curvature of V is ω², so m² = ω² and the radial period is 2π/m. …" — .sim-units, ~L536
+     - [dom] "∑ Formal (top bar) shows the equations and draws the curvature fit on the slice." — .sim-note, ~L537
 -->
 <script>
 /* Hide Text toggle — empty registry; hides .ht-hide DOM nodes and gates HT() canvas labels. */
@@ -532,9 +535,9 @@ body.light-theme .predict-eval .answer,body.light-theme .predict-eval strong,htm
           <tr><td id="sim-lab-mt" style="border-left:3px solid #2fd07f;padding-left:7px">ring mode m² (Goldstone)</td><td id="sim-ro-mt">—</td></tr>
           <tr><td id="sim-lab-T">radial period 2π/m (small oscillations)</td><td id="sim-ro-T">—</td></tr>
         </table>
-        <div class="sim-dim sim-note" id="sim-note-inv" style="display:none">ring m² stays 0 for every μ² &lt; 0 — one flat direction for the one broken symmetry.</div>
-        <div class="sim-dim sim-units">Model units, ħ = c = 1: the curvature of V <em>is</em> ω², so m² = ω² and the radial period is 2π/m. The top-bar speed selector rescales the period you observe, not the physics.</div>
-        <div class="sim-dim sim-note">∑ Formal (top bar) shows the equations and draws the curvature fit on the slice.</div>
+        <div class="sim-dim sim-note ht-hide" id="sim-note-inv" style="display:none">ring m² stays 0 for every μ² &lt; 0 — one flat direction for the one broken symmetry.</div>
+        <div class="sim-dim sim-units ht-hide">Model units, ħ = c = 1: the curvature of V <em>is</em> ω², so m² = ω² and the radial period is 2π/m. The top-bar speed selector rescales the period you observe, not the physics.</div>
+        <div class="sim-dim sim-note ht-hide">∑ Formal (top bar) shows the equations and draws the curvature fit on the slice.</div>
       </div></div>
 
     </div>
