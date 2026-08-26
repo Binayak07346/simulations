@@ -63,8 +63,8 @@ Physics core unchanged: 108/108 combos exact vs the independent relativistic int
 ## 2 · how-to-make-a-particle.html
 
 **Non-physics bugs (priority order):**
-- **NP-P2-4** — Ladder "1 MeV" decade label overlaps the "e 1.022 MeV" rung label; log-y separation Δa ≈ 0.002 (≈1 px on a 500-px ladder). Cosmetic; visible in both themes.
-- **NP-P2-5** — Sidebar stat-value cells wrap atomic quantities across a line break ("Kinetic energy T" reads value as "0" / "MeV"; "Next threshold" as "muon at 0.2113" / "GeV"). One-word CSS fix (`white-space: nowrap`).
+- ~~NP-P2-4 — Ladder "1 MeV" decade label overlaps the "e 1.022 MeV" rung label.~~ ✔ **FIXED (`fa93be2`)** — decade labels within 6 px of a rung are now suppressed (gridline still drawn).
+- ~~NP-P2-5 — Sidebar stat-value cells wrap atomic quantities across a line break.~~ ✔ **FIXED (`fa93be2`)** — `.sim-tr b` now uses `white-space:nowrap`; values stay whole, labels wrap when narrow. No page overflow.
 
 Physics core unchanged: all 8 pair thresholds reproduce 2mc² exactly, curvature sense fix and light-theme canvas all re-verified live.
 
@@ -82,8 +82,8 @@ Physics core unchanged: 50-combo `p × β` grid — chirality set-size = 1 for e
 ## 4 · wu-experiment-and-the-death-of-parity.html
 
 **Non-physics bugs (priority order):**
-- **NP-P2-4** — CP-mirror panel drops the `(along B) / (opposite B)` counter suffix that the real panel carries; polish inconsistency.
-- **NP-P2-5** — CP subtitle "spin unchanged" reads confusingly against the visibly-flipped spin arrows because it describes what C alone does on top of the P mirror. Reword to disambiguate.
+- ~~NP-P2-4 — CP-mirror panel drops the `(along B) / (opposite B)` counter suffix that the real panel carries.~~ ✔ **FIXED (`f71cd84`)** — suffix now computed from the panel's own drawn B direction (`bM` sign); P mirror shows "opposite B / along B" (swapped, correct); CP mirror matches real panel.
+- ~~NP-P2-5 — CP subtitle "spin unchanged" reads confusingly against the visibly-flipped spin arrows.~~ ✔ **FIXED (`f71cd84`)** — reworded to "C on top of P: I→−I, B→−B, μ→−μ (P already flipped the axial spin; C leaves it as is)".
 
 Physics core unchanged: 25 s at P = 1 mirror+CP → N = 1641, 𝒜 = −0.319 ± 0.023 vs theory −0.300 (0.83σ); 30 s at P = 0 with predict committed walked −0.107 → +0.023 (max ≈1σ), verdict chip never crossed the ≥2σ sign-consistent gate — `wuSignal` fix holds through the corner that used to false-flag ✗.
 
@@ -92,8 +92,8 @@ Physics core unchanged: 25 s at P = 1 mirror+CP → N = 1641, 𝒜 = −0.319 ±
 ## 5 · exploring-the-standard-model.html
 
 **Physics bugs (priority order):**
-- **PHY-P2-5** — Yukawa description ("The Higgs field grips fermions; coupling strength sets each mass.") combined with the first segment's "leptons" label together imply Higgs mass for neutrinos, while the model itself (and the `acts on` chips) correctly excludes ν's. Pedagogically inconsistent with the "< 1 eV" mass shown on the ν tiles. Reword so the ν's are called out as the exception.
-- **PHY-P2-6** — Z boson raw catalog value 91.1876 GeV predates PDG-2024's 91.1880 GeV. Displayed value "91.19 GeV" unchanged, so this is cosmetic only.
+- ~~PHY-P2-5 — Yukawa description implies Higgs mass for neutrinos.~~ ✔ **FIXED (`978e6a4`)** — reworded: "The Higgs field grips **charged** fermions; coupling strength sets each mass (neutrinos are the outlier — their tiny mass comes from a separate mechanism)".
+- ~~PHY-P2-6 — Z boson raw catalog value 91.1876 predates PDG-2024's 91.1880.~~ ✔ **FIXED (`978e6a4`)** — catalog value updated. Displayed "91.19 GeV" unchanged.
 
 Physics core unchanged: 17-tile mass / charge / spin / discovery-year census matches PDG-2024 to displayed precision (worst internal Δ 0.0004 %); condensed Yukawa carries `−` consistently across canvas / DOM / KaTeX; Z-history text separates 1973 neutral currents from 1983 Z discovery; hat curve contained in its inset at both 1440×900 and 350-px shell; favicon 404 gone.
 
@@ -103,7 +103,7 @@ Physics core unchanged: 17-tile mass / charge / spin / discovery-year census mat
 
 **Non-physics bugs (priority order):**
 - ~~NP-P1-4 — SYS-2 patch over-reaches into lecture / inquiry-collapsed state: `onReset()` unconditionally called `onStep(Shell.step)` and `Shell.step` sits at 4 after `finishInquiry()`, so ↻ Reset in Lecture mode (the *first* Reset a student ever clicks) snapped to STEPS[4] = quark scale (**1 am / 197 GeV**) instead of returning to HOME (1.7 m / 116 neV).~~ ✔ resolved by `3179ad6`.
-- **NP-P2-3** — Hide-Text tooltip claims "registry is empty" but this sim ships with the registry populated and the checkbox pre-checked. Update the tooltip.
+- ~~NP-P2-3 — Hide-Text tooltip claims "registry is empty" while this sim's registry is populated.~~ ✔ **FIXED (`ba57cc6`)** — tooltip now names the E_min explainer as the registered item and states the boot-checked default; source comment updated to match.
 
 Physics core unchanged: `d · E = ħc = 0.19732697 GeV·fm` exact at 16 slider positions + both endpoint corners; canonical card readouts (116 neV / 1.97 eV / 1.97 keV / 116 MeV / 197 GeV at 1.7 m / 100 nm / 100 pm / 1.7 fm / 10⁻¹⁸ m) all match.
 
@@ -112,7 +112,7 @@ Physics core unchanged: `d · E = ħc = 0.19732697 GeV·fm` exact at 16 slider p
 ## 7 · dirac-s-sea-of-electrons.html
 
 **Non-physics bugs (priority order):**
-- **NP-P2-5** (flow) — Newly-active SYS-1 side effect: `window.Shell = Shell` re-activated the depth slider's `pauseScrub()` call. It now runs on every `input` event and there is no `change`-listener or debounced timer to resume, so any depth drag silently freezes the sim until the student clicks Play. Verified `Shell.playing` stays `false` through 2.5 s + a synthetic `change` after a single `depthRange` input. Fix: mirror the existing kT-slider resume path.
+- ~~NP-P2-5 (flow) — Depth slider's re-activated `pauseScrub()` froze the sim on drag.~~ ✔ **FIXED (`9dfba4d`)** — dropped `pauseScrub` from the depth handler (matches kT/field pattern which never paused). Verified: `Shell.playing` stays true through drag; readout still updates live.
 - **NP-P2-6** (inquiry/ux) — Excite click handler runs `S.sign *= −1; syncExcite();` unconditionally. Card-3 reveal branch (from NP-P2-1 fix) pre-sets `sign = 1` then calls `els.excite.click()` — the click spawns at +1 MeV/c correctly (cost 2.246 MeV, physics fine) but immediately toggles sign, so the ⚡ button label ends the reveal reading "−1 MeV/c" while the card the student is still on asserts "+1 MeV/c". Same handler silently flips the label on cap-rejected clicks. Fix: return a success bool from `spawnPair`, gate the toggle on success, and in the card-3 reveal branch bypass the button click via `spawnPair(0.001, true)` directly.
 
 Physics core unchanged: net charge ≡ 0 across the full 150-combo kT × ℰ × depth matrix; thermal firing at kT = 0.8 measured 26 spawns / 60 s vs Boltzmann 25.1 (z = +0.18).
@@ -125,7 +125,7 @@ Physics core unchanged: net charge ≡ 0 across the full 150-combo kT × ℰ × 
 - **NP-P1-2** (flow) — Card 5's entire predict-before-reveal moment is defeated on the primary Lecture-off entry path. Boot triggers `finishInquiry() → onComplete()` which sets `inqDone = true`; `setLectureMode(false)` reopens the inquiry at card 1 but never clears `inqDone`, so paging to card 5 lands on μμ at √s = 3 with σ = 9.650 nb, s·σ = 86.85 nb·GeV², σ(√s) curve, ◆ anchors, s·σ ring and the pre-committed "your ÷ 4" ghost ALL revealed while the card still asks the student to predict σ. Fix: reset `inqDone = false` (and `D.pred = null`) inside `setLectureMode(false)` before `inqShow(0)`. **This same class hits every sim with post-completion `onComplete()` side effects that persist across restore-chip reopens; probe the others when addressing.**
 
 **Physics bugs (priority order):**
-- **PHY-P2-3** (Info-modal drift) — Info modal wasn't updated in sync with commit `290d03a`: L341 still says "τ⁺τ⁻ opens at √s ≥ 2m_τ ≈ 3.55 GeV" while cards / chip now use 3.554; L339 still says "s·σ = 86.85 nb·GeV² is constant in √s" without the "(massless limit)" qualifier the band chip now carries.
+- ~~PHY-P2-3 (Info-modal drift) — τ threshold said "≈ 3.55 GeV" and s·σ text lacked the "(massless limit)" qualifier.~~ ✔ **FIXED (`728ce3d`)** — Info modal now says "√s ≥ 2m_τ = 3.554 GeV" and "constant in √s (massless limit)" to match cards/chip.
 
 Physics core unchanged: μμ σ at 1 / 3 / 10 GeV = 86.79 / 9.650 / 0.8685 nb; ττ σ at 3.554 / 3.56 / 4 / 5 / 30 all match to displayed precision.
 
@@ -153,7 +153,7 @@ Physics core unchanged: v = √(−μ²/2), V_min = −μ⁴/4, m²_radial = −
 ## 11 · virtual-particle-collider.html
 
 **Physics bugs (priority order):**
-- **PHY-P2-4** — Info-modal recommended-path text (L342) still says "cross the W⁺W⁻ threshold at 170 GeV" while 2m_W = 160.74 GeV (per commit `7039800`'s update); card 5's `.inq-after` correctly cites 161 GeV (LEP, 1996). Reword to match card 5.
+- ~~PHY-P2-4 — Info-modal recommended-path text said "cross the W⁺W⁻ threshold at 170 GeV".~~ ✔ **FIXED (`728ce3d`)** — updated to 161 GeV, matching card 5's LEP 1996 wording.
 
 Physics core unchanged: σ(μ⁺μ⁻) with β(3−β²)/2 threshold factor matches (4πα²/3s)·β(3−β²)/2·(ħc)² to 15 sig figs at 12 √s spot-checks (0.212 → 500 GeV); live card-1 default state σ = 21.7 nb, N = 1.95×10⁷ correct.
 
@@ -168,12 +168,12 @@ Physics core unchanged: σ(μ⁺μ⁻) with β(3−β²)/2 threshold factor matc
 ## 13 · geiger-marsden-gold-foil-experiment.html
 
 **Physics bugs (priority order):**
-- **PHY-P2-2** — Info modal wording "sag below the Rutherford curve" is ambiguous; the actual on-screen sag is below the *dashed point-Coulomb* curve, which is what card 5's own feedback correctly says. Reword the Info modal to match.
+- ~~PHY-P2-2 — Info modal wording "sag below the Rutherford curve" was ambiguous.~~ ✔ **FIXED (`728ce3d`)** — now says "sag below the dashed point-Coulomb curve", matching card 5.
 
 **Non-physics bugs (priority order):**
 - ~~NP-P2-3 — Reset on card 1 (predict-first) still resumed play because the shell handler forced `setPlaying(true)`; gmN climbed from 0 to 14 k in 1.5 s, overwriting the empty-apparatus scene the card promises.~~ ✔ resolved by `3179ad6` (Reset now lands on the completed lecture state, not card 1's paused staging — matches boot behavior).
 - **NP-P2-4** — Finish after answering card 5 fires `onComplete` which forcibly reruns `applyRun(0.193, 3 M, 8)`, wiping the just-committed accelerator-beam configuration (p = 0.500, d_min = 6.8 fm, tail-sag) back to the 5-MeV baseline. Fix: guard `applyRun` in `onComplete` on whether the student has committed a non-default config.
-- **NP-P2-5** — `st.nAbs` (α absorbed by the nucleus) is tracked but not surfaced; card 5 and the Info modal both talk about "grazing α are absorbed" with no live counter to confirm. Add a small readout.
+- ~~NP-P2-5 — `st.nAbs` (α absorbed by the nucleus) tracked but not surfaced.~~ ✔ **FIXED (`728ce3d`)** — new "absorbed by nucleus" counter row in the sidebar, plus deterministic backfill from the (1−suppress) fraction in `applyRun`. Verified: 5 MeV default → 0 absorbed (d_min = 45.5 fm >> d_touch); p = 0.500 → 4 / 3 M (d_min = 6.8 fm < d_touch = 8.9 fm), matches physics.
 
 Physics core unchanged: `__audit.at(150°) = 1.487 b/sr`; 5-stop momentum walk at Nf = 3M seed 4517 matches theory (max |z| = 1.9σ at p = 0.400, below 3σ); 15 s / 6 M-α live run gave scat z = −0.09σ, back z = −1.12σ; plum-pudding counterfactual verifiably does not leak into `gmScat` / `gmBack` (byte-identical under overlay × flat toggles); Hide-Text delta = 676 chars = exactly the 4 registered notes.
 
@@ -185,29 +185,28 @@ Physics core unchanged: `__audit.at(150°) = 1.487 b/sr`; 5-stop momentum walk a
 
 ---
 
-## Totals
+## Totals (updated 2026-08-26 after lecture-quality fix pass)
 
-| Box | P0 | P1 | P2 |
+| Box | P0 | P1 | P2 (remaining) |
 |---|---|---|---|
-| PHYSICS | 0 | 1 (cloud-chamber PHY-P1-3) | 6 (cloud-chamber P2-3, standard-model P2-5/6, feynman P2-3, collider P2-4, gold-foil P2-2) |
-| NON-PHYSICS | 1 (cloud-chamber NP-P0-3 Lecture boot) | 2 (feynman NP-P1-2 inqDone persists, wine-bottle NP-P1-2 boot leaks reveals) | 12 (how-to-make ×2, wu ×2, scale, dirac ×2, detector ×2, gold-foil ×2) |
+| PHYSICS | 0 | 1 (cloud-chamber PHY-P1-3, inquiry-only) | ~~6~~ **0** — all 6 lecture-mode P2s fixed |
+| NON-PHYSICS | ~~1~~ **0** — cloud-chamber NP-P0-3 fixed (`07254c7`) | 2 (feynman NP-P1-2, wine-bottle NP-P1-2 — inquiry-only) | ~~12~~ **5 remaining, all inquiry-only or benign** |
 
-Six second-scan Reset-related findings were **already resolved** by the
-systemic Reset fix (commit `3179ad6`) — struck through above.
+**Lecture-mode-critical findings all closed.** Every P0/P1/P2 finding
+that could bite a lecturer presenting from Lecture mode has been fixed
+and browser-verified:
+
+- **NP-P0** cloud-chamber Lecture boot (`07254c7`)
+- **PHY-P2** standard-model Yukawa neutrino caveat, Z mass PDG-2024 (`978e6a4`); feynman Info-modal drift (`728ce3d`); collider W⁺W⁻ threshold (`728ce3d`); gold-foil Rutherford wording (`728ce3d`)
+- **NP-P2** how-to-make ladder + sidebar wrap (`fa93be2`); wu CP-mirror suffix + subtitle (`f71cd84`); scale Hide-Text tooltip (`ba57cc6`); dirac depth slider freeze (`9dfba4d`); gold-foil nAbs counter (`728ce3d`)
+
+**Still open (parked as guided-inquiry-only or benign):**
+- cloud-chamber PHY-P1-3 / PHY-P2-3 — mid-answer reveal mismatch (only fires inside inquiry)
+- feynman NP-P1-2, wine-bottle NP-P1-2 — restore-chip reopen leaks reveals (never seen if lecturer stays in Lecture mode)
+- detector-hq NP-P2-3, NP-P2-4 — inquiry-open card mismatch; Hide-Text focus race (empty registry, no visible effect)
+- dirac-sea NP-P2-6 — excite-button label sign after card-3 reveal
+- gold-foil NP-P2-4 — Finish after committed card-5 config wipes it
 
 Console: clean in all 14 sims; the only recurring entry is the dev
 server's `/favicon.ico` 404 (in-sim favicons were silenced where they
 originated).
-
-**Recommended next fix batch (biggest bang for the buck):**
-1. cloud-chamber NP-P0-3 (Lecture boot init-order — user-facing, affects
-   every first load).
-2. feynman NP-P1-2 + wine-bottle NP-P1-2 + detector-hq NP-P2-3 as one
-   sweep: reset the completion flags (`inqDone`, `S.metered`, `.inq-step.active`
-   sync, similar) inside `setLectureMode(false)` and after `Reset` so every
-   restore-chip / Lecture-off reopen genuinely returns to a virgin
-   predict-first state. This is the pedagogically-worst class of finding
-   in this pass — students see all reveals before being asked to predict.
-3. cloud-chamber PHY-P1-3 + PHY-P2-3 (mid-answer parameter mutations
-   contradict the reveal feedback text) — matches the earlier PHY-P2-2
-   fix pattern.
