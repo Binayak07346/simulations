@@ -1711,19 +1711,20 @@ document.querySelectorAll('#inq-cards .inq-step').forEach(card=>{
     else if(r==='proton'){ play(); goto(Math.log10(1.7e-15),true); }
   }));
 });
-/* When the auto-tour has parked at LMAX and the user clicks Play again, restart the sweep from LMIN. */
+Shell.init({ onFrame, onReset, onResize, onStep, onComplete });
+/* When the auto-tour has parked at LMAX and the user clicks Play again, restart the sweep from LMIN.
+   Registered AFTER Shell.init so this listener runs AFTER the shell's own click-toggle listener —
+   which means Shell.playing already reflects the just-toggled state when we check. */
 (function(){
   const playBtn=document.getElementById('shell-play');
   if(!playBtn) return;
   playBtn.addEventListener('click',()=>{
-    /* Runs AFTER the shell toggles Shell.playing. Restart only if we just went from paused → playing at the endpoint. */
     if(window.Shell && Shell.playing && S.view>=LMAX-0.01){
       S.view=LMIN; S.logd=LMAX; S.autoTour=true;
       updateUI(); draw();
     }
   });
 })();
-Shell.init({ onFrame, onReset, onResize, onStep, onComplete });
 })();
 </script>
 <script>/* dev-only reviewer affordance: link this sim to the refinement studio.
