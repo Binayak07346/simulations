@@ -1,5 +1,7 @@
 # Review — build-a-baryon.html ("Build-a-Baryon — quark combination lab", curriculum: Simulation Descriptions row "Build-A-Baryon" · Lecture 14 The Quark Model)
 **Verdict:** Physics data layer and combination logic are fully clean (58/58 exhaustive combos, full PDG cross-check); one real flow bug (Reset desyncs the scene from the active inquiry card) and three polish items.
+
+**FIXES APPLIED (browser-verified):** PHY-P2-1 → Σb⁺/Σb⁻ now "~7×10⁻²³ s"; PHY-P2-2 → neutron "878 s (free)"; NP-P1-1 → `onReset` re-applies the active card's spec via `onStep(Shell.step)` (card 3 + Reset now restores uuu, verified live); NP-P2-1 → library draws a "+N more" overflow marker when the strip is full ("+46 more" verified via fillText intercept at 50 discoveries on a small canvas). Console clean after all fixes.
 **Console:** clean at every stage.  **Combos tested:** 58 exhaustive (35 baryons + 5 top-combos + 15 mesons + 3 antiquark orders) + ~40 sampled (13-click frontier cycle incl. wrap, flow mutations, stress).
 **Note:** reviewed in a backgrounded tab (rAF frozen → frames driven via `onFrame`; canvas 319×300, so layout/overlap at full viewport was NOT visually re-verified this run — prior sessions verified 1440/1100; see To verify).
 

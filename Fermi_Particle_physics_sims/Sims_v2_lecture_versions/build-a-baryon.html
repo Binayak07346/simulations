@@ -761,7 +761,7 @@ function BF(sym,m,spin,tau,dec,yr,where,note){return{sym,m,spin,tau,dec,yr,where
 function BP(sym,m,spin,need){return{sym,m,spin,need,disc:false};}
 const BARYONS={
 uud:BF('p',938.3,'½','stable · >10³⁴ yr','—',1919,'Rutherford','the hydrogen nucleus'),
-udd:BF('n',939.6,'½','880 s (free)','p e⁻ ν̄',1932,'Chadwick','stable inside nuclei'),
+udd:BF('n',939.6,'½','878 s (free)','p e⁻ ν̄',1932,'Chadwick','stable inside nuclei'),
 uuu:BF('Δ⁺⁺',1232,'3⁄2','5.6×10⁻²⁴ s','p π⁺',1952,'Fermi, Chicago','3 identical u — needs colour!'),
 ddd:BF('Δ⁻',1232,'3⁄2','5.6×10⁻²⁴ s','n π⁻',1952,'Fermi, Chicago',''),
 uus:BF('Σ⁺',1189.4,'½','8.0×10⁻¹¹ s','p π⁰ / n π⁺',1953,'cosmic rays',''),
@@ -781,8 +781,8 @@ dcc:BP('Ξcc⁺',3620,'½','confirm SELEX’s 2002 hint — LHCb data'),
 scc:BP('Ωcc⁺',3740,'½','two charm pairs in one baryon'),
 ccc:BP('Ωccc⁺⁺',4800,'3⁄2','triple charm at once — LHC hunts'),
 udb:BF('Λb⁰',5619.6,'½','1.5×10⁻¹² s','Λc⁺ π⁻ …',1991,'CERN LEP',''),
-uub:BF('Σb⁺',5810.6,'½','~10⁻²² s','Λb⁰ π⁺',2007,'CDF',''),
-ddb:BF('Σb⁻',5815.6,'½','~10⁻²² s','Λb⁰ π⁻',2007,'CDF',''),
+uub:BF('Σb⁺',5810.6,'½','~7×10⁻²³ s','Λb⁰ π⁺',2007,'CDF',''),
+ddb:BF('Σb⁻',5815.6,'½','~7×10⁻²³ s','Λb⁰ π⁻',2007,'CDF',''),
 usb:BF('Ξb⁰',5791.9,'½','1.5×10⁻¹² s','J/ψ Ξ⁰ …',2011,'CDF',''),
 dsb:BF('Ξb⁻',5797,'½','1.6×10⁻¹² s','J/ψ Ξ⁻',2007,'DØ / CDF',''),
 ssb:BF('Ωb⁻',6045.8,'½','1.6×10⁻¹² s','J/ψ Ω⁻',2009,'DØ / CDF','mass dispute settled by LHCb'),
@@ -1080,6 +1080,7 @@ function drawLib(T,W,H,libH){const y0=H-libH;
     ctx.fillText('● found   ✧ predicted   ⊘ no-go',W-14,y0+21);ctx.textAlign='left';}
   const chipH=26,gap=8;let x=14,y=y0+34;const maxY=H-chipH-8;
   ctx.font='700 14px system-ui,sans-serif';
+  let chipsDrawn=0;
   for(const c of state.lib){
     const label=c.sym+(c.kind==='had'&&c.yr?' ’'+String(c.yr).slice(2):'');
     const wch=Math.ceil(ctx.measureText(label).width)+22+(c.kind==='pred'?16:0);
@@ -1087,7 +1088,12 @@ function drawLib(T,W,H,libH){const y0=H-libH;
     if(y>maxY)break;
     drawChip(x,y,wch,chipH,label,c,T);
     hits.push({k:'chip',c,x,y,w:wch,h:chipH});
-    x+=wch+gap;}
+    x+=wch+gap;chipsDrawn++;}
+  if(chipsDrawn<state.lib.length){
+    /* Overflow marker: the strip is full — say how many discoveries are not shown. */
+    ctx.fillStyle=T.mu;ctx.font='700 13px system-ui,sans-serif';ctx.textAlign='right';
+    ctx.fillText('+'+(state.lib.length-chipsDrawn)+' more',W>620?W-260:W-14,y0+21);
+    ctx.textAlign='left';}
   let ph=0;
   while(y<=maxY&&ph<10){const wph=54;
     if(x+wph>W-14){x=14;y+=chipH+gap;continue;}
@@ -1142,6 +1148,9 @@ function onComplete(){state.completed=true;draw();}
 function onReset(){state.lib=[];state.libKeys.clear();state.frontI=0;
   state.toast=null;state.t=0;state.heavy=true;
   for(let i=0;i<STEPS.length;i++)onStep(i);
+  /* Re-sync the scene to the ACTIVE card so a mid-inquiry Reset never contradicts
+     the card's prose (the loop above ends at the last step's spec). */
+  onStep(Shell.step);
   draw();}
 function onResize(){const cv=stage;const r=cv.getBoundingClientRect();
   const d=window.devicePixelRatio||1;
