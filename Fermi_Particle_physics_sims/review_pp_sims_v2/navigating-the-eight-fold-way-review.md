@@ -77,3 +77,7 @@ none
 - Dragging a **placed** tile to a wrong/empty node sends it to the tray (not back to its node) — consistent staging-shelf behaviour, verified non-destructive; flagging only in case a "snap back to origin" feel is preferred.
 - KaTeX loads from CDN (katex@0.16.9); offline the ∑ Formal panel falls back to correct plain-text equations (graceful, verified in code path) — confirm CDN use is acceptable for deployment.
 - "Charge diagonals (constant Q)" checkbox label hints card 2's answer — waived by design (genuine control), per review brief.
+
+## FIXES APPLIED (2026-08-26)
+- **PHY-P2-1 — CONFIRMED + FIXED.** Source (`TILES` entry, L774) and live tile click (headless Chrome, octet mode, Λ⁰ at centre-right) both showed the note "≈1950 — first “strange” particle." Historically wrong: the first strange particles were the 1947 Rochester–Butler V-particles (neutral kaons); Λ⁰ (~1950, Hopper & Biswas) is the first strange **baryon**. Reworded to "≈1950 — first “strange” baryon (kaons, 1947, were the first strange particles)." — one-line change to the `P('L0',…)` note string. Verified live (?v=efwfix2): Λ⁰ card shows the new note, wraps to two lines inside the card with no overflow (scrollWidth==clientWidth, scrollHeight==clientHeight), zero pageerrors. Screenshot: efw-L0-card-efwfix2.png (scratchpad).
+- NP-P2-1 not touched here — already fixed by the systemic sweep (SYS-5).
