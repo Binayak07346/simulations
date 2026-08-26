@@ -1021,7 +1021,7 @@ window.__audit = { at(momentumGeV) {
     const sNow = Math.min(1, ev.clock / ev.dur);
 
     /* deposit meters */
-    const meter = (z, dep, ratio, prog, col) => {
+    const meter = (z, dep, ratio, prog, col, cap) => {
       const zw = z[1] - z[0], mw = Math.min(76, zw - 16);
       if (mw < 30) return;
       const cx = (z[0] + z[1]) / 2, x = cx - mw / 2, y = L.yTop + 8;
@@ -1032,10 +1032,12 @@ window.__audit = { at(momentumGeV) {
       if (val > 0.004 && prog > 0.03) {
         ctx.fillStyle = T.text; ctx.font = '600 14px ' + FONT; ctx.textAlign = 'center'; ctx.textBaseline = 'alphabetic';
         ctx.fillText(val.toFixed(2) + ' GeV', cx, y + 24);
+        if (cap) { ctx.fillStyle = T.muted; ctx.font = '500 10px ' + FONT; ctx.fillText(cap, cx, y + 37); }
       }
     };
     meter(L.ecal, ev.dep.ecal, ev.kin.E > 0 ? ev.dep.ecal / ev.kin.E : 0, rev01(sNow, ev.mR.ecal), 'rgba(42,168,96,0.85)');
-    meter(L.hcal, ev.dep.hcal, ev.kin.E > 0 ? ev.dep.hcal / ev.kin.E : 0, rev01(sNow, ev.mR.hcal), 'rgba(236,140,40,0.9)');
+    meter(L.hcal, ev.dep.hcal, ev.kin.E > 0 ? ev.dep.hcal / ev.kin.E : 0, rev01(sNow, ev.mR.hcal), 'rgba(236,140,40,0.9)',
+      ev.P.kind === 'had' ? 'kinetic energy deposited' : null);
 
     /* trail */
     const cutLen = sNow * ev.totalLen;
