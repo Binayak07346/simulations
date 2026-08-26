@@ -768,7 +768,7 @@ window.__audit = {
 
   var state = {
     pMeV: 1, betaObs: 0,
-    phase: 0, xe: 0.35, labOff: 0
+    phase: 0, phaseWave: 0, xe: 0.35, labOff: 0
   };
 
   // ---------- DOM ----------
@@ -868,7 +868,7 @@ window.__audit = {
     ctx.beginPath();
     var open = false;
     for (var s = 0; s <= trail; s += 6) {
-      var th = state.phase - kk * s;
+      var th = state.phaseWave - kk * s;
       var front = Math.cos(th) >= 0;
       var x = xe - dir * s;
       if (((pass === 1) !== front) || x < W * 0.02 || x > W * 0.98) { open = false; continue; }
@@ -1038,7 +1038,7 @@ window.__audit = {
   /* User-driven parameter change: rewind the animation state (phase, positions) so
      the new configuration starts from t = 0 in view, and (re)start playback. */
   function restartAnim() {
-    state.phase = 0; state.xe = 0.35; state.labOff = 0;
+    state.phase = 0; state.phaseWave = 0; state.xe = 0.35; state.labOff = 0;
     try { if (Shell && Shell.setPlaying) Shell.setPlaying(true); } catch (e) { }
   }
 
@@ -1078,15 +1078,26 @@ window.__audit = {
   // ---------- shell hooks ----------
   function onFrame(dt) {
     var d = phys();
+    /* Spin phase — invariant rotation rate. Drives the spin marker on the ball. */
     state.phase += OMEGA * dt;
     if (state.phase > 6.283185307179586) state.phase %= 6.283185307179586;
+    /* Wave phase — advances so the drawn crests slide at the electron's own velocity even
+       when kk is clamped for visibility (fixes low-momentum flicker: without this the crests
+       swept through a nearly-stationary ball at OMEGA/kk_clamped ≈ 67 px/s while the ball
+       itself drifted at only vpx px/s). */
+    var vpx = Math.abs(d.betaRel) * W * 0.16;
+    var kkMax = 2 * Math.PI / 70;
+    var kkPhys = OMEGA / Math.max(vpx, 1e-6);
+    var omegaWave = kkPhys <= kkMax ? OMEGA : kkMax * vpx;
+    state.phaseWave += omegaWave * dt;
+    if (state.phaseWave > 6.283185307179586) state.phaseWave %= 6.283185307179586;
     state.xe = wrap01(state.xe + d.betaRel * 0.16 * dt);
     state.labOff += state.betaObs * W * 0.16 * dt;
     if (state.labOff > 1e6) state.labOff %= 1e4;
     tick(d);
   }
   function onReset() {
-    state.phase = 0; state.xe = 0.35; state.labOff = 0;
+    state.phase = 0; state.phaseWave = 0; state.xe = 0.35; state.labOff = 0;
     apply(1, 0);
     tick();
   
@@ -1104,7 +1115,7 @@ window.__audit = {
     tick();
   }
   function onStep(i) {
-    state.phase = 0; state.xe = 0.35; state.labOff = 0;
+    state.phase = 0; state.phaseWave = 0; state.xe = 0.35; state.labOff = 0;
     // One entry per inquiry card — deterministic, self-contained scenes:
     // 1 lab frame · 2 chase at β=0.5 · 3 overtaken at β=0.9 · 4 p=20 MeV, β=0.9.
     var presets = [[1, 0], [1, 0.5], [1, 0.9], [20, 0.9]];
@@ -1114,9 +1125,11 @@ window.__audit = {
   }
   function onComplete() {
     // Free exploration from the baseline: flip point reachable, all controls live.
-    state.phase = 0; state.xe = 0.35; state.labOff = 0;
+    state.phase = 0; state.phaseWave = 0; state.xe = 0.35; state.labOff = 0;
     apply(1, 0);
     tick();
+    /* Boot / lecture-completion: pause on entry — student clicks Play to start the animation. */
+    setTimeout(function(){ try { if (Shell && Shell.setPlaying) Shell.setPlaying(false); } catch (e) {} }, 0);
   }
 
   onResize();
