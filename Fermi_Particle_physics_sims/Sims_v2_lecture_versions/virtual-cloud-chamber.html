@@ -835,20 +835,30 @@ function computeTrack(key,Ek0,B,plateOn){
  var cross=[],stopped=false,endR='exit';
  var maxLen=Math.min(4.0,Math.max(0.85,2.35*2*Math.PI*r1));
  for(var i=0;i<9000;i++){
+  var yPrev=y;
   th+=sgn*DS/r;x+=Math.cos(th)*DS;y+=Math.sin(th)*DS;s+=DS;
   var nowIn=plateOn&&Math.abs(y)<PLATE_T/2;
-  if(nowIn){
-   inPb=true;
-   /* energy is taken along the path ACTUALLY travelled in the lead (oblique
-      crossings cost more than 6 mm), sub-stepped so dE/dx tracks beta. */
-   var sub=6,dl=DS/sub,q2;
+  /* energy is taken along the path ACTUALLY travelled in the lead (oblique
+     crossings cost more than 6 mm): each step is charged only for its in-plate
+     fraction (linear interpolation of the y = ±PLATE_T/2 crossings), so the
+     path is continuous, not quantized to DS; sub-stepped so dE/dx tracks beta. */
+  var frac=0;
+  if(plateOn){
+   var hp=PLATE_T/2,loY=Math.min(yPrev,y),hiY=Math.max(yPrev,y);
+   if(hiY-loY>1e-12)frac=Math.max(0,Math.min(1,(Math.min(hiY,hp)-Math.max(loY,-hp))/(hiY-loY)));
+   else frac=nowIn?1:0;
+  }
+  if(frac>0){
+   var sub=6,dl=frac*DS/sub,q2;
    for(q2=0;q2<sub;q2++){
     Ek-=dEdxPb(P,Ek)*dl*1000;pathPb+=dl;
     if(Ek<=0.5){stopped=true;break;}
    }
    if(stopped){pts.push({x:x,y:y,s:s,h:true,j:0,u:0,a:0,w:0,b:0});endR='plate';break;}
    k=kin(P.m,Ek);p=k.p;r=radiusM(p,B);
-  }else if(inPb){
+  }
+  if(nowIn)inPb=true;
+  else if(inPb){
    inPb=false;
    cross.push({i:pts.length,p:p,r:r,Ek:Ek,path:pathPb});
   }
