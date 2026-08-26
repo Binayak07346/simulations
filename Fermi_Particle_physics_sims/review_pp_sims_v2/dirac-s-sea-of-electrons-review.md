@@ -82,3 +82,18 @@ none
 - Real-pointer slider drags and sea clicks (this run used synthetic `input`/`pointerdown` events; behaviour should be identical but a 30-second manual pass would close it).
 - Whether Reset-to-opening while a card is active is wanted pedagogy (the code comments claim it is) — NP-P1-2 stands either way because card 4's on-screen kT claim is contradicted.
 - Light-theme legend styling choice (NP-P2-3): fixed-light text on the dark pill vs a theme-aware pill — either resolves the contrast; pick one.
+
+## FIXES APPLIED (2026-08-26)
+Each finding re-reproduced live (headless Chrome 1440×900, zero pageerrors) before any edit; fixes verified in the real restored-inquiry flow (the sim boots in Lecture mode — probes exit it via 🎓 first).
+
+| ID | Verdict | Evidence / fix |
+|---|---|---|
+| NP-P1-1 | ALREADY-RESOLVED | Systemic sweep SYS-1: `window.Shell = Shell` attached at ~L763; guards in `pauseScrub`/`play` now find it. Not touched. |
+| NP-P1-2 | ALREADY-RESOLVED | Systemic sweep SYS-2: `onReset()` now calls `onStep(Shell.step)` (~L1374). Not touched. |
+| PHY-P2-1 | CONFIRMED + FIXED | Repro: after card-3 reveal `roP` stayed "0 MeV/c" (pair is momentum-symmetric) while the fb pointed at **net momentum (matter)** as if it would change. Fix: card-3 correct `data-fb` reworded — "…**net momentum (matter)** stays 0: e⁻ carries +1 MeV/c and h⁺ carries −1 MeV/c." Physics untouched. |
+| NP-P2-1 | CONFIRMED + FIXED | Repro: ⚡ once (S.sign→−1) then card-3 reveal fired at −1 MeV/c (`flightP:−1`) against the card's "+1 MeV/c" promise. Fix: `S.sign=1` set in `applyStep(2)` (card entry: button label reads +1) AND forced in the `r==='excite'` reveal branch (covers ⚡ presses made while card 3 is open). Verified: mid-card ⚡ → sign −1 → answer → `flightP:+1`, cost 2.25 MeV. |
+| NP-P2-2 | CONFIRMED + FIXED | Repro: 4th/5th ⚡ at the 3-flight cap and sea click at cap → no flight, no chip, silence; same at the 14-electron cap. Fix: `rejectNote()` helper reuses the existing transient gold cost-chip mechanic — "sea is busy — wait for the flight" (flight cap) / "sea is full — wait for annihilation" (14-cap) at the clicked p, user actions only, duplicate-stacking guarded, fades like any chip (screenshot `dirac-cap-chip.png`). No new UI panel. |
+| NP-P2-3 | CONFIRMED + FIXED | Repro (light theme): `.legend` computed bg `rgba(6,14,17,.72)` with ink `rgb(15,23,42)` — dark-on-dark. Fix: one CSS line `body.light-theme .legend,html[data-theme="light"] .legend{background:rgba(255,255,255,.8)}`. Verified: light bg `rgba(255,255,255,0.8)` (screenshot `dirac-legend-light-after.png`); dark theme unchanged (`rgba(6,14,17,0.72)` / `rgb(226,232,240)`). |
+| NP-P2-4 | CONFIRMED + FIXED | Repro: "4.0 MeV/c per s" appears only in the Info-modal table row + a code comment; `#fieldNote` says just "ℰ = applied electric field." Fix per task directive (Info text corrected to match the screen, no new readout): modal row now reads "…both axes carry units (MeV and MeV/c); internally the ℰ slider applies eℰ = 4.0 MeV/c per second at ℰ = 1." — no longer claims the value is shown on-screen. |
+
+Post-fix spot-checks: full inquiry walk (cards 1→5 + Finish) then kT = 0.8 hot run — net charge readout "0 e", `ne===nh` (3/3), `roP` "0 MeV/c", pageerrors [].
