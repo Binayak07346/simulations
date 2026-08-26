@@ -395,10 +395,12 @@ body.light-theme .predict-eval .answer,body.light-theme .predict-eval strong,htm
      DOM items:    add class "ht-hide" to the element.
      Canvas items: wrap the draw call in  if(!HT()){ ... }
      Keep this list current when registering items:
-     (empty — nothing registered yet)
+     - [dom]    "Arrows = fermion-number flow (backwards on antiparticles). Slopes are schematic." — .sim-note under the diagram-build panel, ~L489
+     - [canvas] "Arrows = fermion-number flow …" (L2L / L2S) — drawNote() below the main diagram, ~L1060
+     - [dom]    "σ = (4πα²/3s)·β(3−β²)/2 with fixed α = 1/137.036 (no running) — LO QED, one s-channel γ*, massless beams." — .sim-note under the Result panel, ~L508
 -->
 <script>
-/* Hide Text toggle — empty registry; hides .ht-hide DOM nodes and gates HT() canvas labels. */
+/* Hide Text toggle — hides .ht-hide DOM nodes and gates HT() canvas labels. Registry: two prose notes (fermion-arrow explainer + sigma-formula explainer) plus the below-diagram fermion-arrow caption; see HIDE-TEXT REGISTRY comment above. */
 (function(){
   var shell=document.getElementById('shell');
   var box=document.getElementById('ht-toggle');
@@ -486,7 +488,7 @@ body.light-theme .predict-eval .answer,body.light-theme .predict-eval strong,htm
     <button class="sim-btn" id="btnAuto">e⁻e⁺ → μ⁻μ⁺</button>
     <button class="sim-btn" id="btnClear">Clear legs</button>
   </div>
-  <div class="sim-note">Arrows = fermion-number flow (backwards on antiparticles). Slopes are schematic.</div>
+  <div class="sim-note ht-hide">Arrows = fermion-number flow (backwards on antiparticles). Slopes are schematic.</div>
 </div>
 
 <div class="shell-panel sim-panel">
@@ -505,7 +507,7 @@ body.light-theme .predict-eval .answer,body.light-theme .predict-eval strong,htm
     <div class="sim-ro-row sim-inv"><span>s·σ</span><b id="roInv">—</b></div>
   </div>
   <div class="sim-note" id="roLock">σ and s·σ unlock at the σ prediction in the guided inquiry.</div>
-  <div class="sim-note">σ = (4πα²/3s)·β(3−β²)/2 with fixed α = 1/137.036 (no running) — LO QED, one s-channel γ*, massless beams.</div>
+  <div class="sim-note ht-hide">σ = (4πα²/3s)·β(3−β²)/2 with fixed α = 1/137.036 (no running) — LO QED, one s-channel γ*, massless beams.</div>
 </div>
 
     </div>
@@ -1057,7 +1059,7 @@ window.__audit = {
     const L2L = 'Arrows = fermion-number flow (backwards on antiparticles). Slopes are schematic.';
     const L2S = 'Arrows = fermion-number flow; slopes ≠ velocities.';
     c.fillText(L1, 10, g.axisY + 10);
-    if (g.noteLines > 1) c.fillText(c.measureText(L2L).width <= w ? L2L : L2S, 10, g.axisY + 10 + px + 4);
+    if (g.noteLines > 1 && !HT()) c.fillText(c.measureText(L2L).width <= w ? L2L : L2S, 10, g.axisY + 10 + px + 4);
     c.restore();
   }
   function drawMain() {
