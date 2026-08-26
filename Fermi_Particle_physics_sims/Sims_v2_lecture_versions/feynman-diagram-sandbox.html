@@ -1053,19 +1053,18 @@ window.__audit = {
   function drawNotes(c, th) {
     const g = G; if (!g.noteLines) return;
     const px = g.notePx, w = MW - 20;
-    c.save(); c.fillStyle = th.muted; c.globalAlpha = 0.95; c.textAlign = 'right'; c.textBaseline = 'bottom';
+    c.save(); c.fillStyle = th.muted; c.globalAlpha = 0.95;
     c.font = F(px, 500);
     const L1 = 'Sweep = reading aid, not a trajectory.';
     const L2L = 'Arrows = fermion-number flow (backwards on antiparticles). Slopes are schematic.';
     const L2S = 'Arrows = fermion-number flow; slopes ≠ velocities.';
-    /* bottom-right corner of the top canvas; L2 (when shown) sits below L1 */
-    const showL2 = g.noteLines > 1 && !HT();
-    const yBottom = MH - 8;
-    if (showL2) {
-      c.fillText(c.measureText(L2L).width <= w ? L2L : L2S, MW - 10, yBottom);
-      c.fillText(L1, MW - 10, yBottom - px - 4);
-    } else {
-      c.fillText(L1, MW - 10, yBottom);
+    /* L1 (Sweep): bottom-right corner of the top canvas */
+    c.textAlign = 'right'; c.textBaseline = 'bottom';
+    c.fillText(L1, MW - 10, MH - 8);
+    /* L2 (Arrows): unchanged position (below axis, left-aligned); still hidden by HT */
+    if (g.noteLines > 1 && !HT()) {
+      c.textAlign = 'left'; c.textBaseline = 'top';
+      c.fillText(c.measureText(L2L).width <= w ? L2L : L2S, 10, g.axisY + 10 + px + 4);
     }
     c.restore();
   }
