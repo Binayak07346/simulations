@@ -535,7 +535,7 @@ const Shell = (function(){
   let inqStep=0, inqTotal=0;   // guided-inquiry stepper (shell-owned)
 
   function loop(now){
-    let dt=(now-last)/1000; if(dt>0.1)dt=0.1; last=now;
+    let dt=(now-last)/1000; if(dt>0.1)dt=0.1; if(!(dt>=0))dt=0; /* first frame after setPlaying can predate the stamp */ last=now;
     if(playing) onFrame(dt*speed);
     requestAnimationFrame(loop);
   }
@@ -1446,7 +1446,9 @@ window.__audit = {
     sel = null; hover = null; updSel();
     setBandUnlocked(false);
     syncSliders(); updateAll(); drawAll();
-  }
+  
+  onStep(Shell.step); /* re-sync the scene to the ACTIVE card (SYS-2) */
+}
   /* Deterministic, self-contained scene per inquiry card — the ‹ › pager and the
      restore chip land on the exact scene each card describes. A committed σ
      prediction (D.pred) deliberately survives steps and Reset: card 5 is one-shot. */
