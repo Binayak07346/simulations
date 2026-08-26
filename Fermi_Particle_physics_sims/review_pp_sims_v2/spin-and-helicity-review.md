@@ -78,3 +78,18 @@
 - Fine print on "chirality is boost-invariant": rigorously, γ⁵ commutes with boosts so L/R components never mix, but the u†u-normalized weight of a helicity eigenstate is frame-dependent; the sim (and the course canon + standard texts) pins P_R,L to the electron's lab-frame β_e. This is the intended teaching — flagged only so a lecturer can decide whether a footnote is wanted.
 - Sub-1000-px stacked layout and touch scrubbing were not exercised this run (1440×900 only; wide layout verified clean in dark and light screenshots).
 - The favicon 404 is emitted by the plain http.server for every sim; confirm the deployment host serves one (cosmetic, console-noise only).
+
+## FIXES APPLIED (2026-08-26)
+Phase-1 reconfirmation: every finding re-reproduced in headless Chrome (1440×900, fresh loads, fillText intercept) and recomputed with node (m_e = 0.511 MeV) before any edit. Card 4's convention is momentum (prose: "At p = 20 MeV"), so β_e = 20/√(20² + 0.511²) = 0.999674 — the review's 0.99967 is correct under the sim's own convention (an E=20-total reading gives the same 0.99967; only T=20 would give 0.99969, and nothing in the sim says kinetic).
+
+| ID | Verdict | Evidence / fix |
+|---|---|---|
+| PHY-P0-1 | **CONFIRMED + FIXED** | Live `.predict-eval` showed "β_e = 0.99997" (all 3 choices); node: p=20 → β = 0.999674. Fixed all three `data-fb` strings to 0.99967. Post-fix: `grep -c '0.99997'` = 0, `grep -c '0.99967'` = 3; all three feedbacks re-asserted on fresh loads. |
+| PHY-P2-1 | **CONFIRMED + FIXED** | Sidebar slider "observer boost β" vs bare-β chiral fraction in ∑ Formal (`eqC` KaTeX L1071 + static fallback L502) and Info modal (L350, L363). All four now read β_e / β<sub>e</sub>; live DOM has zero remaining "(1±β)/2", KaTeX renders `\beta_e`. |
+| PHY-P2-2 | **CONFIRMED + FIXED** | Live at p = 20.4 MeV: flipLab "1.000", tick clamped to 100% (slider max 0.9995 → flip shown as reachable). Fixed: `d.bP.toFixed(d.bP > 0.999 ? 4 : 3)` → flipLab now "0.9997" at high p ("0.890" at 1 MeV unchanged); card-4 prose "h flips at β = 1.000" updated to 0.9997 to stay in sync. Tick clamp left as-is (readout now unambiguous). |
+| NP-P2-1 | **CONFIRMED + FIXED** | fillText intercept at slider max captured "boost β = 1.000" while sidebar read 0.9995. Chip `toFixed(3)` → `toFixed(4)` (L979); post-fix intercept captures "boost β = 0.9995". |
+| NP-P2-3 | **CONFIRMED + FIXED** | Live: slider input → Shell.playing false; jump chip → stayed true. Added `pauseForScrub()` to the three chip click handlers (not inside `setBeta`, so card-reveal `setBeta` calls keep their behaviour). Post-fix: slider + all three chips pause consistently. |
+| NP-P1-1 | **ALREADY-RESOLVED** | Fixed by the systemic sweep (SYS-2/SYS-4); not touched this pass. |
+| NP-P2-2 | **ALREADY-RESOLVED** | Fixed by the systemic sweep (SYS-2/SYS-4); not touched this pass. |
+
+Post-fix assertion run: zero pageerrors across all fresh loads; screenshots `sh-fix-final-card4.png`, `sh-fix-maxp-maxbeta.png` in the session scratchpad.

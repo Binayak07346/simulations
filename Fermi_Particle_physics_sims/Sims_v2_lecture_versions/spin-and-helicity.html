@@ -347,7 +347,7 @@ body.light-theme .predict-eval .answer,body.light-theme .predict-eval strong,htm
       <div class="shell-modal-body">
         <dl class="shell-info-dl">
   <dt>Concept</dt>
-  <dd>Helicity h = S·p̂ is frame-dependent for massive particles: boost past the electron and its momentum reverses while its spin does not, so h flips sign. Chirality is the frame-independent notion; for a right-handed-helicity state the chiral mix is P<sub>R,L</sub> = (1±β)/2, so helicity and chirality only coincide as E ≫ mc².</dd>
+  <dd>Helicity h = S·p̂ is frame-dependent for massive particles: boost past the electron and its momentum reverses while its spin does not, so h flips sign. Chirality is the frame-independent notion; for a right-handed-helicity state the chiral mix is P<sub>R,L</sub> = (1±β<sub>e</sub>)/2, so helicity and chirality only coincide as E ≫ mc².</dd>
   <dt>Serves</dt>
   <dd>Intro particle physics / early quantum field theory: why "left-handed neutrino" statements are about chirality, why massive fermions have no invariant handedness, and how p′ = γ(p − βE), E′ = γ(E − βp) drive the flip. Engine-verified anchor: a p = 1 MeV electron (E = 1.123 MeV, β = 0.8905) boosted at β = 0.9 has p′ = −24.5 keV, E′ = 0.512 MeV, h: +1 → −1; its chiral content is 94.5% R, 5.5% L.</dd>
   <dt>Inquiry</dt>
@@ -360,7 +360,7 @@ body.light-theme .predict-eval .answer,body.light-theme .predict-eval strong,htm
   <tr><td>Predict first, never blocking</td><td>An optional three-chip prediction sits above the controls; the sim runs fully without it.</td></tr>
   <tr><td>Targeted cognitive conflict</td><td>The "stay +1" chip encodes the intrinsic-helicity misconception; its rebuttal appears only when that student crosses the flip.</td></tr>
   <tr><td>Invariant vs. varying</td><td>The spin arrow, rotation sense and chirality bar never respond to the boost slider; p′, the helix handedness and h do.</td></tr>
-  <tr><td>Operational quantities</td><td>E′, p′, relative speed and chiral fractions update live from p′ = γ(p − βE), E′ = γ(E − βp), P<sub>R,L</sub> = (1±β)/2.</td></tr>
+  <tr><td>Operational quantities</td><td>E′, p′, relative speed and chiral fractions update live from p′ = γ(p − βE), E′ = γ(E − βp), P<sub>R,L</sub> = (1±β<sub>e</sub>)/2.</td></tr>
   <tr><td>Formal layer on demand</td><td>The helicity definition, boost transform and chiral-fraction formulas live behind the formal-tools toggle.</td></tr>
 </table>
       </div>
@@ -450,10 +450,10 @@ body.light-theme .predict-eval .answer,body.light-theme .predict-eval strong,htm
           <button class="choice" data-correct data-fb="P_R = (1+β_e)/2 knows only the electron's own speed — p just jumped to 20 MeV: watch R hit ≈100%.">electron momentum p</button>
           <div class="predict-eval"></div></div>
 <div class="inq-step" data-gate data-reveal="maxboost"><h4>4 · The massless limit</h4>
-          <p>At p = 20 MeV the electron outruns even your β = 0.9 chase: h = +1 again, the bar ≈100% R, and <strong>h flips at β =</strong> 1.000. At the slider's maximum, β = 0.9995, h will…</p>
-          <button class="choice" data-correct data-fb="β_e = 0.99997 sits beyond the slider: p′ never reverses. As m/E → 0, helicity becomes invariant — and equals chirality.">Stay +1 — you can't overtake it</button>
-          <button class="choice" data-fb="The flip needs β &gt; β_e = 0.99997 — out of reach: <strong>p′ momentum</strong> bottoms out at +0.11 MeV.">Flip, as it did before</button>
-          <button class="choice" data-fb="p′ = 0 only at β = β_e ≈ 0.99997, past the slider's end — p′ stops at +0.11 MeV, h stays defined.">Go undefined — p′ reaches zero</button>
+          <p>At p = 20 MeV the electron outruns even your β = 0.9 chase: h = +1 again, the bar ≈100% R, and <strong>h flips at β =</strong> 0.9997. At the slider's maximum, β = 0.9995, h will…</p>
+          <button class="choice" data-correct data-fb="β_e = 0.99967 sits beyond the slider: p′ never reverses. As m/E → 0, helicity becomes invariant — and equals chirality.">Stay +1 — you can't overtake it</button>
+          <button class="choice" data-fb="The flip needs β &gt; β_e = 0.99967 — out of reach: <strong>p′ momentum</strong> bottoms out at +0.11 MeV.">Flip, as it did before</button>
+          <button class="choice" data-fb="p′ = 0 only at β = β_e ≈ 0.99967, past the slider's end — p′ stops at +0.11 MeV, h stays defined.">Go undefined — p′ reaches zero</button>
           <div class="predict-eval"></div>
           <p class="inq-after">A massless particle can never be overtaken: its helicity is absolute and equals its chirality — that is what "left-handed neutrino" means. Explore: drag <strong>β</strong> across the flip at any p, or tap <strong>ride along</strong> to park at p′ ≈ 0.</p></div>
       </div>
@@ -499,7 +499,7 @@ body.light-theme .predict-eval .answer,body.light-theme .predict-eval strong,htm
     <div class="sim-formal">
   <div class="sim-eq"><div class="sim-eq-c">helicity</div><span id="eqH">h = S·p̂ / (ħ/2) = ±1</span></div>
   <div class="sim-eq"><div class="sim-eq-c">boost along p</div><span id="eqB">p′ = γ(p − βE),  E′ = γ(E − βp)</span></div>
-  <div class="sim-eq"><div class="sim-eq-c">chiral content of h = +1</div><span id="eqC">P_R = (1+β)/2, P_L = (1−β)/2 → {1, 0} as E ≫ mc²</span></div>
+  <div class="sim-eq"><div class="sim-eq-c">chiral content of h = +1</div><span id="eqC">P_R = (1+β_e)/2, P_L = (1−β_e)/2 → {1, 0} as E ≫ mc²</span></div>
 </div>
   </section>
 
@@ -977,7 +977,7 @@ window.__audit = {
     }
 
     // top chips: observer boost (left) + helicity badge (right)
-    chipBox(12, 10, (short ? 'β = ' : 'boost β = ') + state.betaObs.toFixed(3), C.text, C, fsB, false);
+    chipBox(12, 10, (short ? 'β = ' : 'boost β = ') + state.betaObs.toFixed(4), C.text, C, fsB, false);
     var t2, c2;
     if (undef) { t2 = 'p′ ≈ 0 · h undefined'; c2 = C.muted; }
     else if (d.pT >= 0) { t2 = short ? 'h = +1' : 'h = +1 · right-handed'; c2 = C.right; }
@@ -1009,7 +1009,7 @@ window.__audit = {
     d = d || phys();
     if (pVal) pVal.textContent = fmtPin(state.pMeV);
     if (bVal) bVal.textContent = state.betaObs.toFixed(4);
-    if (flipLab) flipLab.textContent = d.bP.toFixed(3);
+    if (flipLab) flipLab.textContent = d.bP.toFixed(d.bP > 0.999 ? 4 : 3);
     if (flipTick) flipTick.style.left = Math.min(100, d.bP / 0.9995 * 100).toFixed(2) + '%';
     if (rE) rE.textContent = fmtE(d.ET);
     if (rP) rP.textContent = fmtMomSigned(d.pT);
@@ -1054,9 +1054,9 @@ window.__audit = {
     if (bSlider) bSlider.value = String(state.betaObs);
     tick();
   }
-  if (jLab) jLab.addEventListener('click', function () { setBeta(0); });
-  if (jMatch) jMatch.addEventListener('click', function () { setBeta(Math.round(phys().bP / 0.0005) * 0.0005); });
-  if (jOver) jOver.addEventListener('click', function () { setBeta(0.9995); });
+  if (jLab) jLab.addEventListener('click', function () { pauseForScrub(); setBeta(0); });
+  if (jMatch) jMatch.addEventListener('click', function () { pauseForScrub(); setBeta(Math.round(phys().bP / 0.0005) * 0.0005); });
+  if (jOver) jOver.addEventListener('click', function () { pauseForScrub(); setBeta(0.9995); });
 
   // ---------- KaTeX (guarded, retried) ----------
   var mathTries = 0;
@@ -1068,7 +1068,7 @@ window.__audit = {
     }
     put('eqH', 'h=\\dfrac{\\vec S\\cdot\\hat p}{\\hbar/2}=\\pm 1');
     put('eqB', "p'=\\gamma\\,(p-\\beta E),\\qquad E'=\\gamma\\,(E-\\beta p)");
-    put('eqC', 'P_{R,L}=\\dfrac{1\\pm\\beta}{2}\\ \\xrightarrow{\\;E\\gg mc^{2}\\;}\\ \\{1,\\,0\\}');
+    put('eqC', 'P_{R,L}=\\dfrac{1\\pm\\beta_e}{2}\\ \\xrightarrow{\\;E\\gg mc^{2}\\;}\\ \\{1,\\,0\\}');
   }
   renderMath();
 
