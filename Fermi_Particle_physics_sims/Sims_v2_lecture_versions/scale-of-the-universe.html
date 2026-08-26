@@ -1553,6 +1553,7 @@ function revealScale(){
 function userMove(){
   revealScale();
   S.ghost=null;
+  S.autoTour=false;                       /* any manual scale change cancels the auto-tour */
 }
 function play(){ try{ if (window.Shell && Shell.setPlaying) Shell.setPlaying(true); }catch(e){} }
 function goto(l, animate){
@@ -1648,10 +1649,23 @@ const STEPS=[HOME, HOME, -7, -10, -18];
 function onFrame(dt){
   S.t+=dt;
   if (Math.abs(S.logd-S.view)>0.0008){
-    const k=1-Math.exp(-1.15*dt);          /* τ ≈ 0.9 s — three decades read as three decades */
-    S.view+=(S.logd-S.view)*k;
-    if (Math.abs(S.logd-S.view)<=0.0008) S.view=S.logd;
+    if (S.autoTour){
+      /* Auto-tour: sweep at a constant ~3 decades/s so all 27 decades take ≈9 s */
+      const dir=S.logd>S.view?1:-1;
+      S.view+=dir*3.0*dt;
+      if (dir>0 && S.view>=S.logd) S.view=S.logd;
+      if (dir<0 && S.view<=S.logd) S.view=S.logd;
+    } else {
+      const k=1-Math.exp(-1.15*dt);          /* τ ≈ 0.9 s — three decades read as three decades */
+      S.view+=(S.logd-S.view)*k;
+      if (Math.abs(S.logd-S.view)<=0.0008) S.view=S.logd;
+    }
     updateUI();
+  }
+  /* Auto-tour endpoint: stop at LMAX and flip the Play button to "Play" */
+  if (S.autoTour && S.view>=LMAX-0.0008){
+    S.autoTour=false;
+    if (window.Shell && Shell.setPlaying) Shell.setPlaying(false);
   }
   draw();
 }
@@ -1670,7 +1684,9 @@ function onStep(i){
 function onComplete(){
   revealScale();               /* stage in the "At this scale" panel for free exploration */
   S.ghost=null;
-  goto(HOME,true);
+  /* Auto-tour: sweep smallest → biggest scale, then pause at LMAX (button flips to "Play") */
+  S.view=LMIN; S.logd=LMAX; S.autoTour=true;
+  updateUI(); draw();
 }
 if (typeof ResizeObserver!=='undefined'){
   const ro=new ResizeObserver(()=>{ sizeCanvas(); draw(); });
@@ -1695,6 +1711,18 @@ document.querySelectorAll('#inq-cards .inq-step').forEach(card=>{
     else if(r==='proton'){ play(); goto(Math.log10(1.7e-15),true); }
   }));
 });
+/* When the auto-tour has parked at LMAX and the user clicks Play again, restart the sweep from LMIN. */
+(function(){
+  const playBtn=document.getElementById('shell-play');
+  if(!playBtn) return;
+  playBtn.addEventListener('click',()=>{
+    /* Runs AFTER the shell toggles Shell.playing. Restart only if we just went from paused → playing at the endpoint. */
+    if(window.Shell && Shell.playing && S.view>=LMAX-0.01){
+      S.view=LMIN; S.logd=LMAX; S.autoTour=true;
+      updateUI(); draw();
+    }
+  });
+})();
 Shell.init({ onFrame, onReset, onResize, onStep, onComplete });
 })();
 </script>
