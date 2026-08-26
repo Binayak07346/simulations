@@ -4,6 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Exploring the Standard Model</title>
+<link rel="icon" href="data:,">
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
 <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
 <style>
@@ -348,7 +349,7 @@ body.light-theme .predict-eval .answer,body.light-theme .predict-eval strong,htm
   <dt>Inquiry</dt>
   <dd>Which particles are familiar and which are new? Recolor the same tiles by charge or by mass: electric charges repeat identically across the three generations, while masses grow enormously — and the log-scale mass ladder makes that pattern quantitative.</dd>
   <dt>Misconception</dt>
-  <dd>"The Higgs, being the newest and most famous discovery, must be the heaviest particle." In fact the top quark (172.7 GeV) outweighs the Higgs (125.2 GeV); the predict question confronts this directly on the mass ladder.</dd>
+  <dd>"The Higgs, being the newest and most famous discovery, must be the heaviest particle." In fact the top quark (172.6 GeV) outweighs the Higgs (125.2 GeV); the predict question confronts this directly on the mass ladder.</dd>
 </dl>
         <table class="shell-info-table">
   <tr><th>Principle</th><th>Where it appears</th></tr>
@@ -442,9 +443,9 @@ body.light-theme .predict-eval .answer,body.light-theme .predict-eval strong,htm
           <div class="predict-eval"></div></div>
 <div class="inq-step" data-gate data-build="color:mass:11"><h4>3 · Meet the newest</h4>
           <p>The <strong>Higgs</strong> arrived last — 2012 completed the table (panel: <strong>125.2 GeV</strong>). Is the newest also the heaviest? Commit, then read the <strong>mass ladder</strong>.</p>
-          <button class="choice" data-fb="Top beats Higgs: 172.7 vs 125.2 GeV — the ladder puts t rightmost.">Yes — the famous Higgs</button>
-          <button class="choice" data-fb="The Z reaches 91.19 GeV — a quark outweighs it: top, 172.7 GeV.">The Z — heaviest force carrier</button>
-          <button class="choice" data-correct data-fb="The <strong>top</strong>: 172.7 GeV, massive as a whole tungsten atom — rightmost on the ladder, found 1995.">The top quark</button>
+          <button class="choice" data-fb="Top beats Higgs: 172.6 vs 125.2 GeV — the ladder puts t rightmost.">Yes — the famous Higgs</button>
+          <button class="choice" data-fb="The Z reaches 91.19 GeV — a quark outweighs it: top, 172.6 GeV.">The Z — heaviest force carrier</button>
+          <button class="choice" data-correct data-fb="The <strong>top</strong>: 172.6 GeV, massive as a whole tungsten atom — rightmost on the ladder, found 1995.">The top quark</button>
           <div class="predict-eval"></div></div>
 <div class="inq-step" data-gate data-build="mode:lagrangian"><h4>4 · One equation</h4>
           <p>Masses span twelve orders of magnitude and three forces differ wildly — yet one Lagrangian ℒ governs all seventeen particles. How many terms does it need? Commit to see it.</p>
@@ -492,7 +493,7 @@ body.light-theme .predict-eval .answer,body.light-theme .predict-eval strong,htm
 
   <section class="shell-formal">
     <div class="sim-formal">
-  <div id="fmMain" class="sim-eq">ℒ = −¼ Fμν Fμν + i ψ̄ γμ Dμ ψ + ψ̄ᵢ yᵢⱼ ψⱼ φ + h.c. + |Dμ φ|² − V(φ)</div>
+  <div id="fmMain" class="sim-eq">ℒ = −¼ Fμν Fμν + i ψ̄ γμ Dμ ψ − ψ̄ᵢ yᵢⱼ ψⱼ φ + h.c. + |Dμ φ|² − V(φ)</div>
   <div class="sim-eq-row">
     <div id="fmD" class="sim-eq-sm">Dμ = ∂μ − igs Gμ − ig Wμ − ig′ Bμ</div>
     <div id="fmV" class="sim-eq-sm">V(φ) = −μ² φ†φ + λ(φ†φ)²</div>
@@ -759,15 +760,15 @@ window.__audit = {
     P('e neutrino', 'ν', 'e', 'l', 1, 0, '0', 0.5, 0, '< 1 eV', 1956, 'Pauli’s 1930 “ghost”, finally caught beside a nuclear reactor.', 0, 3),
     P('μ neutrino', 'ν', 'μ', 'l', 2, 0, '0', 0.5, 0, '< 1 eV', 1962, 'Brookhaven’s two-neutrino experiment earned the 1988 Nobel Prize.', 1, 3),
     P('τ neutrino', 'ν', 'τ', 'l', 3, 0, '0', 0.5, 0, '< 1 eV', 2000, 'The last lepton seen — DONUT at Fermilab, 2000.', 2, 3),
-    P('down', 'd', '', 'q', 1, -1 / 3, '−⅓', 0.5, 0.00467, '4.67 MeV', 1968, 'Proton = uud, neutron = udd; down partners the up.', 0, 1),
+    P('down', 'd', '', 'q', 1, -1 / 3, '−⅓', 0.5, 0.0047, '4.70 MeV', 1968, 'Proton = uud, neutron = udd; down partners the up.', 0, 1),
     P('charm', 'c', '', 'q', 2, 2 / 3, '+⅔', 0.5, 1.27, '1.27 GeV', 1974, 'The 1974 “November Revolution”: J/ψ seen on both coasts.', 1, 0),
-    P('strange', 's', '', 'q', 2, -1 / 3, '−⅓', 0.5, 0.0934, '93.4 MeV', 1968, 'Explains the “strange” long-lived particles in cosmic rays.', 1, 1),
-    P('top', 't', '', 'q', 3, 2 / 3, '+⅔', 0.5, 172.69, '172.7 GeV', 1995, 'Heaviest known particle — massive as a whole tungsten atom.', 2, 0),
+    P('strange', 's', '', 'q', 2, -1 / 3, '−⅓', 0.5, 0.0935, '93.5 MeV', 1968, 'Explains the “strange” long-lived particles in cosmic rays.', 1, 1),
+    P('top', 't', '', 'q', 3, 2 / 3, '+⅔', 0.5, 172.57, '172.6 GeV', 1995, 'Heaviest known particle — massive as a whole tungsten atom.', 2, 0),
     P('bottom', 'b', '', 'q', 3, -1 / 3, '−⅓', 0.5, 4.18, '4.18 GeV', 1977, 'Found as the Υ (upsilon) resonance at Fermilab.', 2, 1),
     P('gluon', 'g', '', 'g', 0, 0, '0', 1, 0, '0', 1979, 'Seen as three-jet events at DESY; itself carries color.', 3, 0),
     P('photon', 'γ', '', 'g', 0, 0, '0', 1, 0, '0', 1923, 'Einstein’s light quantum; Compton scattering sealed the case.', 3, 1),
-    P('Z boson', 'Z', '', 'g', 0, 0, '0', 1, 91.1876, '91.19 GeV', 1983, 'Neutral weak currents — caught at CERN’s proton–antiproton collider.', 3, 2),
-    P('W boson', 'W', '', 'g', 0, 1, '±1', 1, 80.377, '80.38 GeV', 1983, 'Carries charged weak decays; it lets the Sun shine.', 3, 3)
+    P('Z boson', 'Z', '', 'g', 0, 0, '0', 1, 91.1876, '91.19 GeV', 1983, 'Carrier of the neutral weak current — the boson itself caught 1983 at CERN’s proton–antiproton collider.', 3, 2),
+    P('W boson', 'W', '', 'g', 0, 1, '±1', 1, 80.3692, '80.37 GeV', 1983, 'Carries charged weak decays; it lets the Sun shine.', 3, 3)
   ];
 
   const QCOL = { '+⅔': '#e08a2e', '−⅓': '#2fa3a0', '−1': '#4a7fe0', '0': '#7d8792', '±1': '#c95591' };
@@ -788,10 +789,10 @@ window.__audit = {
         { toks: [{ t: '− ig', sub: 's' }, { t: 'G', sub: 'μ' }], lab: 'strong' },
         { toks: [{ t: '− ig' }, { t: 'W', sub: 'μ' }], lab: 'weak' },
         { toks: [{ t: '− ig′' }, { t: 'B', sub: 'μ' }, { t: ' ) ψ' }], lab: 'EM / hypercharge' }],
-      desc: 'Quarks and leptons propagate; D couples them to all three forces.',
+      desc: 'Quarks and leptons propagate; D couples each to the forces it feels — quarks to all three, neutrinos only to the weak force.',
       inv: [2, 8, 9, 10, 11, 12, 0, 1, 4, 5, 6, 7] },
     { title: 'Yukawa couplings', chip: 'fermion masses', color: '#2f9e6b',
-      toks: [{ t: '+ ' }, { t: 'ψ', bar: 1, sub: 'i' }, { t: 'y', sub: 'ij' }, { t: 'ψ', sub: 'j' }, { t: 'φ' }, { t: ' + h.c.' }],
+      toks: [{ t: '− ' }, { t: 'ψ', bar: 1, sub: 'i' }, { t: 'y', sub: 'ij' }, { t: 'ψ', sub: 'j' }, { t: 'φ' }, { t: ' + h.c.' }],
       segs: [
         { toks: [{ t: '− y', sub: 'e' }, { t: 'L', bar: 1 }, { t: 'φ ' }, { t: 'e', sub: 'R' }], lab: 'leptons' },
         { toks: [{ t: '− y', sub: 'd' }, { t: 'Q', bar: 1 }, { t: 'φ ' }, { t: 'd', sub: 'R' }], lab: 'down-type' },
@@ -1177,7 +1178,10 @@ window.__audit = {
         ctx.lineWidth = selc ? 2.5 : 1.5;
         rr(x, rowY, cw, chipH, 10); ctx.stroke();
         drawToks(T.toks, x + (cw - tw) / 2, baseY, s, th.text);
-        if (labelOn) { ctx.font = uf(14, 600); ctx.fillStyle = selc ? T.color : th.muted; ctx.textAlign = 'center'; ctx.fillText(T.chip, x + cw / 2, rowY + chipH + 16); }
+        if (labelOn) {
+          ctx.font = uf(Math.min(14, Math.round(s * 0.55)), 600);
+          if (ctx.measureText(T.chip).width <= cw + s * 0.45) { ctx.fillStyle = selc ? T.color : th.muted; ctx.textAlign = 'center'; ctx.fillText(T.chip, x + cw / 2, rowY + chipH + 16); }
+        }
         chipRects.push({ x, y: rowY, w: cw, h: chipH, i });
         x += cw + s * 0.5;
       }
@@ -1235,7 +1239,7 @@ window.__audit = {
     ctx.font = uf(14, 600); ctx.fillStyle = th.muted; ctx.textAlign = 'left';
     ctx.fillText('V(φ)', x + 10, y + 18);
     const cx = x + w / 2, by = y + h - 26, top = y + 14;
-    const norm = Math.pow(1.35 * 1.35 - 1, 2);
+    const norm = 1; /* max of (u²−1)² on [−1.35, 1.35] is the central bump at u=0 */
     ctx.strokeStyle = color; ctx.lineWidth = 2.5; ctx.beginPath();
     for (let k = 0; k <= 60; k++) {
       const u = -1.35 + 2.7 * k / 60;
@@ -1281,7 +1285,7 @@ window.__audit = {
     const a = document.getElementById('fmMain'), b = document.getElementById('fmD'), c = document.getElementById('fmV');
     if (!a) return;
     try {
-      katex.render('\\mathcal{L}_{\\text{SM}} = -\\tfrac{1}{4}F_{\\mu\\nu}F^{\\mu\\nu} \\;+\\; i\\bar\\psi\\gamma^\\mu D_\\mu\\psi \\;+\\; \\bar\\psi_i\\,y_{ij}\\,\\psi_j\\,\\varphi + \\text{h.c.} \\;+\\; \\left|D_\\mu\\varphi\\right|^2 \\;-\\; V(\\varphi)', a, { throwOnError: false, displayMode: true });
+      katex.render('\\mathcal{L}_{\\text{SM}} = -\\tfrac{1}{4}F_{\\mu\\nu}F^{\\mu\\nu} \\;+\\; i\\bar\\psi\\gamma^\\mu D_\\mu\\psi \\;-\\; \\bar\\psi_i\\,y_{ij}\\,\\psi_j\\,\\varphi + \\text{h.c.} \\;+\\; \\left|D_\\mu\\varphi\\right|^2 \\;-\\; V(\\varphi)', a, { throwOnError: false, displayMode: true });
       if (b) katex.render('D_\\mu = \\partial_\\mu - i g_s G_\\mu - i g W_\\mu - i g^{\\prime} B_\\mu', b, { throwOnError: false });
       if (c) katex.render('V(\\varphi) = -\\mu^2\\varphi^\\dagger\\varphi + \\lambda(\\varphi^\\dagger\\varphi)^2', c, { throwOnError: false });
       formalDone = true;
