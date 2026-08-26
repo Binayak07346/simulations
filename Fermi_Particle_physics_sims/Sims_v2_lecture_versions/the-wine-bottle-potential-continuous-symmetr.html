@@ -407,7 +407,9 @@ body.light-theme .predict-eval .answer,body.light-theme .predict-eval strong,htm
      DOM items:    add class "ht-hide" to the element.
      Canvas items: wrap the draw call in  if(!HT()){ ... }
      Keep this list current when registering items:
-     (empty — nothing registered yet)
+     - [dom] "φ = the (homogeneous) complex field … V(φ) = μ²|φ|² + λ|φ|⁴, with λ = 1 fixed here." — .sim-defs under the Potential panel, ~L497
+     - [dom] "μ² is the Lagrangian mass parameter … μ² < 0 just means there is no real μ …" — .sim-note under the Potential panel, ~L508 (whole note; user's target was the 2nd half but hiding just it orphans the colon)
+     - [dom] "external damping, added by hand — not part of V. γ = 0 is the true dynamics." — #sim-fric-note (also covers the dynamic γ > 0 variant), ~L520
 -->
 <script>
 /* Hide Text toggle — empty registry; hides .ht-hide DOM nodes and gates HT() canvas labels. */
@@ -493,7 +495,7 @@ body.light-theme .predict-eval .answer,body.light-theme .predict-eval strong,htm
 
       <div class="shell-panel"><div class="sim-pad">
         <div class="sim-ptitle">Potential</div>
-        <div class="sim-defs">
+        <div class="sim-defs ht-hide">
           <b>φ</b> = the (homogeneous) complex field, plotted as the plane (Re φ, Im φ); height = <b>V</b>. The red ball is φ(t).<br>
           <b>V(φ) = μ²|φ|² + λ|φ|⁴</b>, with λ = 1 fixed here.
         </div>
@@ -505,7 +507,7 @@ body.light-theme .predict-eval .answer,body.light-theme .predict-eval strong,htm
           <span class="sim-pill sim-pill-br" id="sim-phase">broken: ring of vacua</span>
           <span class="sim-dim">λ = 1 fixed</span>
         </div>
-        <div class="sim-dim sim-note">μ² is the Lagrangian mass <em>parameter</em>, not a physical mass²: μ² &lt; 0 just means there is no real μ, and φ = 0 turns from a minimum into a maximum.</div>
+        <div class="sim-dim sim-note ht-hide">μ² is the Lagrangian mass <em>parameter</em>, not a physical mass²: μ² &lt; 0 just means there is no real μ, and φ = 0 turns from a minimum into a maximum.</div>
       </div></div>
 
       <div class="shell-panel"><div class="sim-pad">
@@ -517,7 +519,7 @@ body.light-theme .predict-eval .answer,body.light-theme .predict-eval strong,htm
         <div class="sim-ctl">
           <label class="sim-lab" for="sim-fric">damping γ <span class="sim-val" id="sim-fric-val">0.00</span></label>
           <input id="sim-fric" type="range" min="0" max="0.6" step="0.01" value="0" aria-label="damping gamma">
-          <div class="sim-dim sim-note" id="sim-fric-note">external damping, added by hand — not part of V. γ = 0 is the true dynamics.</div>
+          <div class="sim-dim sim-note ht-hide" id="sim-fric-note">external damping, added by hand — not part of V. γ = 0 is the true dynamics.</div>
         </div>
       </div></div>
 
