@@ -1083,8 +1083,9 @@ function drawApp(cx, mir, weight){
   /* counter names + counts (mono figures so the numbers don't jitter) */
   const fSz = Math.max(11, Math.min(15, 9+3*sc));
   const fCount = fNums(fSz,700), fName = fSans(Math.max(10,fSz-3),600);
-  const upName = mir ? '↑ counter' : '↑ counter (along B)';
-  const dnName = mir ? '↓ counter' : '↓ counter (opposite B)';
+  /* bM = +1: B points up in this panel → ↑ is along B; bM = −1: B points down → ↑ is opposite B */
+  const upName = '↑ counter (' + (bM>0?'along':'opposite') + ' B)';
+  const dnName = '↓ counter (' + (bM>0?'opposite':'along') + ' B)';
   const upT = fmt(S.nUp) + (S.total? '   '+(100*S.nUp/S.total).toFixed(1)+'%' : '');
   const dnT = fmt(S.nDn) + (S.total? '   '+(100*S.nDn/S.total).toFixed(1)+'%' : '');
   const yTopName = PY(110)+plH/2+13, yTopCount = yTopName+fSz+4;
@@ -1105,7 +1106,7 @@ function drawApp(cx, mir, weight){
     tag = (S.mirror ? 'REAL APPARATUS' : '⁶⁰Co SOURCE') + ' · P = ' + S.P.toFixed(2);
   } else if(anti){
     tag = 'CP MIRROR — mirror + charge conjugation';
-    sub = 'C: I→−I, B→−B, μ→−μ · spin unchanged';
+    sub = 'C on top of P: I→−I, B→−B, μ→−μ (P already flipped the axial spin; C leaves it as is)';
     tcol = revealReady()? GOOD : TH.muted;
   } else {
     tag = 'MIRROR IMAGE — what parity predicts';
