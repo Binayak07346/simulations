@@ -1037,7 +1037,7 @@ window.__audit = { at(momentumGeV) {
     };
     meter(L.ecal, ev.dep.ecal, ev.kin.E > 0 ? ev.dep.ecal / ev.kin.E : 0, rev01(sNow, ev.mR.ecal), 'rgba(42,168,96,0.85)');
     meter(L.hcal, ev.dep.hcal, ev.kin.E > 0 ? ev.dep.hcal / ev.kin.E : 0, rev01(sNow, ev.mR.hcal), 'rgba(236,140,40,0.9)',
-      ev.P.kind === 'had' ? 'kinetic energy deposited' : null);
+      ev.P.kind === 'had' ? 'ECAL + HCAL = kinetic energy' : null);
 
     /* trail */
     const cutLen = sNow * ev.totalLen;

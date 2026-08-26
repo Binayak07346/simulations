@@ -182,7 +182,7 @@ detail — this file is the validation checklist). Findings are listed **in prio
 
 ## 9 · particle-detector-headquarters.html  (review: particle-detector-headquarters-review.md)
 
-> **e2d003f** (confirmed genuine before fixing): PHY-P2-1 (bend clamp softened — proton bend now strictly monotone 0.2→5 GeV while containment holds), PHY-P2-3 (TOF shows "(<0.001)" instead of "+0.000"), NP-P2-1 (race strip keeps the proton reference lane for e/μ/n) fixed. **PHY-P2-2 CLOSED** (user chose the caption option): HCAL meter now shows "kinetic energy deposited" under its value for hadron events only; deposit numbers unchanged, verified per species.
+> **e2d003f** (confirmed genuine before fixing): PHY-P2-1 (bend clamp softened — proton bend now strictly monotone 0.2→5 GeV while containment holds), PHY-P2-3 (TOF shows "(<0.001)" instead of "+0.000"), NP-P2-1 (race strip keeps the proton reference lane for e/μ/n) fixed. **PHY-P2-2 CLOSED** (user chose the caption option): HCAL meter now shows "ECAL + HCAL = kinetic energy" under its value for hadron events only (reworded from "kinetic energy deposited" so the caption names the sum, not the HCAL value alone); deposit numbers unchanged, verified per species.
 
 **Physics bugs (priority order):**
 - PHY-P2-1 — Track bend saturates at a geometric clamp below p ≈ 1.06 GeV (0.2 GeV proton pixel-identical to 1.0 GeV); r = p/qB trend only visible 1→5 GeV.
@@ -287,6 +287,6 @@ calculation) before fixing; each sim committed separately (revert per hash).
 
 **Open items remaining (1):**
 1. scale NP-P1-4 — curriculum's forces-strength panel was deliberately cut per the sim's change-log; recommendation: keep the cut, amend the curriculum row.
-2. ~~detector-hq PHY-P2-2~~ **CLOSED** — user chose the caption option: HCAL meter now says "kinetic energy deposited" for hadron events (deposit numbers unchanged).
+2. ~~detector-hq PHY-P2-2~~ **CLOSED** — user chose the caption option: HCAL meter now says "ECAL + HCAL = kinetic energy" for hadron events (deposit numbers unchanged).
 
 Console: clean in all 14 sims; the in-sim favicon 404s were silenced where they originated (standard-model, gold-foil).
