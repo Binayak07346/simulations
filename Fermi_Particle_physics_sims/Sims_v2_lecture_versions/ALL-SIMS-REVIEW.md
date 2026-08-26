@@ -49,6 +49,8 @@ detail — this file is the validation checklist). Findings are listed **in prio
 
 ## 1 · virtual-cloud-chamber.html  (review: virtual-cloud-chamber-review.md)
 
+> **CLOSED — e6ac154** (2026-08-26, confirmed genuine before fixing): PHY-P2-1 — plate ΔE really was quantized to 1.5 mm steps; each step now charges its true in-plate fraction. Card-4 scene 40.2 MeV/6.0 mm → 42.7 MeV/6.4 mm, ≤0.1% from a fine-step reference. All this sim's findings are now resolved (rest were fixed in 099c45b).
+
 **Physics bugs (priority order):**
 - PHY-P2-1 — Plate path/ΔE quantized to 1.5 mm steps: card 4 shows "40.2 MeV over 6.0 mm" where the continuous oblique-path model gives 6.33 mm → 42.4 MeV (~5% low); internally self-consistent and matches Anderson's ≈40 MeV.
 - PHY-P2-2 — Card 2 feedback hardcodes "14.1 → 7.1 cm" while its B/R spans are live — wrong numbers if the student changes config mid-card before answering.
@@ -77,6 +79,8 @@ detail — this file is the validation checklist). Findings are listed **in prio
 
 ## 3 · spin-and-helicity.html  (review: spin-and-helicity-review.md)
 
+> **CLOSED — d5b75dc** (confirmed genuine before fixing): all 5 open findings fixed — card-4 β_e strings → 0.99967 (node-verified, zero 0.99997 left), formal/Info β → β_e, flip readout shows 0.9997 (no longer clamps to 1.000), canvas chip shows 0.9995 at slider max, jump chips now auto-pause like sliders.
+
 **Physics bugs (priority order):**
 - PHY-P0-1 — Card 4 feedback (all 3 choices) claims β_e = 0.99997 for the 20 MeV electron; true value **0.99967** (1−β overstated ×10). String swap ×3.
 - PHY-P2-1 — Formal/Info write P_R,L = (1±β)/2 with bare β, colliding with the boost slider's symbol (cards correctly use β_e).
@@ -92,6 +96,8 @@ detail — this file is the validation checklist). Findings are listed **in prio
 
 ## 4 · wu-experiment-and-the-death-of-parity.html  (review: wu-experiment-review.md)
 
+> **CLOSED — 8bf1ed8** (confirmed genuine before fixing): all 5 open findings fixed — mirror subtitle reworded to the drawn convention; verdict chip now sign-aware (pre-fix 5/10 30k-event runs at P=0 fired false "✗", post-fix 0/20; P=1 still fires at 55σ); __audit.at() reports live P/A/β; counts persist across cards 2→3→4 (pager-safe); formal equations no longer wrap mid-formula.
+
 **Physics bugs (priority order):**
 - PHY-P1-1 — Mirror panel's on-canvas subtitle "P: momenta flip · spin and B do not" states the **opposite** of the drawn transformation (spins/B visibly flip, tracks don't); cards + Info describe the drawn convention correctly. Reword the subtitle.
 - PHY-P1-2 — Verdict chip tests only |𝒜| ≥ 2σ, never the sign: spurious "✗ Mirror disagrees with the data" reproduced at P = 0 from a +2.1σ fluctuation. Require sign consistency with A = −1.
@@ -106,6 +112,8 @@ detail — this file is the validation checklist). Findings are listed **in prio
 *Physics core: sampler/hemispheres/histogram all <1σ over 60k-event runs at 5 polarizations; theory −0.300 internally consistent (A·P·β/2, β = 0.6).*
 
 ## 5 · exploring-the-standard-model.html  (review: exploring-the-standard-model-review.md)
+
+> **CLOSED — 4d196a5** (confirmed genuine before fixing): all 7 open findings fixed — Higgs-hat inset normalized by the true max (bump stays in the box), Yukawa unified on the −y convention in all three renderings, Z panel wording separates 1973 neutral currents from the 1983 discovery, force-coupling sentence now species-accurate, PDG-2024 masses (d/s/W/top + the four 172.7 prose spots), small-width chip captions declutter, favicon 404 gone. One NP-P2-2 sub-claim (ladder-title overlap at 700 px) did not reproduce — left as-is.
 
 **Physics bugs (priority order):**
 - PHY-P2-1 — "Matter in motion" description: "D couples them to all three forces" overreaches (leptons feel no strong force; ν no EM).
@@ -124,6 +132,8 @@ detail — this file is the validation checklist). Findings are listed **in prio
 
 ## 6 · scale-of-the-universe.html  (review: scale-of-the-universe-review.md)
 
+> **0dab193** (confirmed genuine before fixing): PHY-P2-1 (card-4 ratio → "almost five orders of magnitude, 1.7 fm"), NP-P1-3 (KaTeX now renders "GeV·fm"), NP-P2-2 (clean endpoint corners both slider ends) fixed. **NP-P2-1 REFUTED** — the swallow path exists in code but is unreachable since the lecture-default boot reveals the scale before any input; did not reproduce in 3/3 fresh loads. **NP-P1-4 assess-only**: change-log cut verified; recommendation is keep the cut and amend the curriculum row — awaiting user's call.
+
 **Physics bugs (priority order):**
 - PHY-P2-1 — Card 4 "proton is 100,000× smaller" than the atom; actual 58,824× (4.77 decades).
 
@@ -138,6 +148,8 @@ detail — this file is the validation checklist). Findings are listed **in prio
 *Physics core: d × E_min = ħc = 197.327 MeV·fm exact at all 31 sampled points, both drive directions; reveals land exactly on stated values.*
 
 ## 7 · dirac-s-sea-of-electrons.html  (review: dirac-s-sea-of-electrons-review.md)
+
+> **CLOSED — 987c28a** (confirmed genuine before fixing): all 5 open findings fixed — card-3 feedback now says net matter momentum *stays* 0 (+1/−1 split), card-3 reveal pinned to the promised +1 MeV/c, cap rejections flash a transient chip ("sea is busy/full") via the existing chip mechanic, light-theme legend pill readable, Info modal no longer claims an absent readout. Net-charge ≡ 0 and ne = nh re-verified post-fix.
 
 **Physics bugs (priority order):**
 - PHY-P2-1 — Card-3 feedback points at "net momentum (matter)", which (correctly) never changes for the symmetric pair — the pointer implies a change that never comes.
@@ -154,6 +166,8 @@ detail — this file is the validation checklist). Findings are listed **in prio
 
 ## 8 · feynman-diagram-sandbox.html  (review: feynman-diagram-sandbox-review.md)
 
+> **CLOSED — 290d03a** (confirmed genuine before fixing): all 5 open findings fixed — the band now plots the actual process curve with its real threshold (ττ dives at √s = 3.554; measured point sits on the labelled curve) with the massless 1/s kept only as a dashed labelled reference; s·σ chip says "massless limit"; threshold text shows the exact 3.554 (card-3 quotes updated in sync); axis-title and σ/s·σ label overlaps decluttered. All σ readouts re-verified against LO QED.
+
 **Physics bugs (priority order):**
 - PHY-P1-1 — The σ(√s) band always plots the **massless 1/s reference but titles it as the built process** — for τ⁻τ⁺ the labelled curve shows no τ threshold and the plotted point sits off it; card 5 sends students threshold-hunting on this plot.
 - PHY-P2-1 — "s·σ constant" chip says 86.85 while the readout correctly shows 86.79 at √s = 1 (μ-mass factor) — label should say "massless limit".
@@ -167,6 +181,8 @@ detail — this file is the validation checklist). Findings are listed **in prio
 *Physics core: all 1296 slot combinations match an independent vertex oracle (16 valid / 1280 flagged, right rule order); every σ matches LO QED.*
 
 ## 9 · particle-detector-headquarters.html  (review: particle-detector-headquarters-review.md)
+
+> **e2d003f** (confirmed genuine before fixing): PHY-P2-1 (bend clamp softened — proton bend now strictly monotone 0.2→5 GeV while containment holds), PHY-P2-3 (TOF shows "(<0.001)" instead of "+0.000"), NP-P2-1 (race strip keeps the proton reference lane for e/μ/n) fixed. **PHY-P2-2 assess-only**: deposits confirmed = KE for all hadrons incl. mesons; recommendation is a one-word caption tweak ("kinetic energy deposited") — awaiting user's call.
 
 **Physics bugs (priority order):**
 - PHY-P2-1 — Track bend saturates at a geometric clamp below p ≈ 1.06 GeV (0.2 GeV proton pixel-identical to 1.0 GeV); r = p/qB trend only visible 1→5 GeV.
@@ -183,6 +199,8 @@ detail — this file is the validation checklist). Findings are listed **in prio
 
 ## 10 · the-wine-bottle-potential-continuous-symmetr.html  (review: the-wine-bottle-potential-review.md)
 
+> **CLOSED — 2ed7b91** (confirmed genuine before fixing): all 6 open findings fixed — period label gains "(small oscillations)" (kick kept, card-3 prose depends on it), wall bounce now truly elastic (ΔV returned to KE: ~1%/bounce loss → ~4×10⁻⁷), card-4 prose softened, symmetry-breaking azimuth randomized per run (was fixed ≈31°; no card depends on an angle), V_min/φ tag collision decluttered, inert 'use strict' removed. v/V_min/m² invariants re-verified.
+
 **Physics bugs (priority order):**
 - PHY-P2-1 — "Radial period 2π/m = 2.22" vs measured 2.443 at the default card-3 kick (10% anharmonic); smaller kick or "(small oscillations)" label.
 - PHY-P2-2 — Wall labelled "elastic bounce" loses ~2–3% energy per bounce (radial projection discards ΔV).
@@ -198,6 +216,8 @@ detail — this file is the validation checklist). Findings are listed **in prio
 
 ## 11 · virtual-particle-collider.html  (review: virtual-particle-collider-review.md)
 
+> **CLOSED — 7039800** (confirmed genuine before fixing): all 4 open findings fixed — σ(μ⁺μ⁻) gains the β(3−β²)/2 threshold factor (now exact LO QED at 0.25/0.5/1/10 GeV; curve rises from zero at threshold; no inquiry-card numbers changed), caption boundary now exactly 2m_μ = 0.2113 GeV, m_W → PDG 80.3692 (threshold 160.74), card-1 precision harmonized. ττ verified free of the same omission.
+
 **Physics bugs (priority order):**
 - PHY-P2-1 — σ(μ⁺μ⁻) omits the β(3−β²)/2 threshold factor: σ steps discontinuously to ~1.94×10³ nb at √s = 2m_μ (27% high at 0.25 GeV; negligible above ~1 GeV).
 - PHY-P2-2 — Caption "μ⁺μ⁻ closed — √s < 0.21 GeV" contradicts the readout in the 0.210–0.2113 sliver.
@@ -211,6 +231,8 @@ detail — this file is the validation checklist). Findings are listed **in prio
 
 ## 12 · navigating-the-eight-fold-way.html  (review: navigating-the-eight-fold-way-review.md)
 
+> **CLOSED — aeb9742** (confirmed genuine before fixing): PHY-P2-1 fixed — Λ⁰ note now reads "≈1950 — first "strange" baryon (kaons, 1947, were the first strange particles)"; verified rendering without overflow on the live tile card.
+
 **Physics bugs (priority order):**
 - PHY-P2-1 — Λ⁰ note "≈1950 — first 'strange' particle": the 1947 Rochester–Butler V-particles (kaons) were first; Λ is the first strange **baryon**.
 
@@ -220,6 +242,8 @@ detail — this file is the validation checklist). Findings are listed **in prio
 *Physics core: fully clean — all 18 tiles at exact (I₃,S) nodes, GMN everywhere, equal-spacing ladder, Ω⁻ gap correct; Reset already re-syncs here.*
 
 ## 13 · geiger-marsden-gold-foil-experiment.html  (review: geiger-marsden-gold-foil-experiment-review.md)
+
+> **CLOSED — bb367ae** (confirmed genuine before fixing): all 3 open findings fixed — Info modal ratio → "about 2×10⁵" (exact sin⁻⁴ ratio 2.4×10⁵), restore chip / Lecture-off now reopens paused matching the boot staging, favicon 404 silenced. Hide-Text boot state (checked, 4 notes hidden) re-verified.
 
 **Physics bugs (priority order):**
 - PHY-P2-1 — Info modal: counts "fall by about 10⁵ between 5° and 150°"; exact 1/sin⁴ ratio is 2.4×10⁵.
@@ -239,11 +263,30 @@ Physics core: 58/58 exhaustive combos + full PDG cross-check clean.
 
 ---
 
-### Totals (open findings, excluding build-a-baryon's fixed set)
+### Totals — FINAL STATUS (2026-08-26 verify-and-fix sweep)
 
-| Box | P0 | P1 | P2 |
-|---|---|---|---|
-| PHYSICS | 2 (how-to-make tracks; spin-helicity β_e) | 3 (wu subtitle, wu verdict sign, feynman σ-band) | 24 |
-| NON-PHYSICS | 2 (cloud-chamber crash; cloud-chamber Shell guard) | 12 (mostly SYS-1/SYS-2 instances + SM hat overflow, scale KaTeX, scale curriculum-conflict, how-to-make theme) | ~30 |
+Every open finding was independently re-confirmed (live browser repro + explicit
+calculation) before fixing; each sim committed separately (revert per hash).
 
-Console: clean in all 14 sims (sole recurring entry is the dev server's `/favicon.ico` 404).
+| Sim | Commit | Outcome |
+|---|---|---|
+| virtual-cloud-chamber | e6ac154 | closed (1 confirmed+fixed; rest in 099c45b) |
+| how-to-make-a-particle | 6bd64f1, 7fc2ffe | closed (6 confirmed+fixed) |
+| spin-and-helicity | d5b75dc | closed (5 confirmed+fixed) |
+| wu-experiment | 8bf1ed8 | closed (5 confirmed+fixed) |
+| exploring-the-standard-model | 4d196a5 | closed (7 confirmed+fixed; 1 sub-claim not reproduced) |
+| scale-of-the-universe | 0dab193 | 3 confirmed+fixed; **NP-P2-1 refuted**; NP-P1-4 awaiting user call |
+| dirac-s-sea-of-electrons | 987c28a | closed (5 confirmed+fixed) |
+| feynman-diagram-sandbox | 290d03a | closed (5 confirmed+fixed) |
+| particle-detector-headquarters | e2d003f | 3 confirmed+fixed; PHY-P2-2 awaiting user call |
+| the-wine-bottle-potential | 2ed7b91 | closed (6 confirmed+fixed) |
+| virtual-particle-collider | 7039800 | closed (4 confirmed+fixed) |
+| navigating-the-eight-fold-way | aeb9742 | closed (1 confirmed+fixed) |
+| geiger-marsden-gold-foil | bb367ae | closed (3 confirmed+fixed) |
+| build-a-baryon | 65368df | closed (earlier) |
+
+**Open items remaining (2, both deliberate judgement calls):**
+1. scale NP-P1-4 — curriculum's forces-strength panel was deliberately cut per the sim's change-log; recommendation: keep the cut, amend the curriculum row.
+2. detector-hq PHY-P2-2 — HCAL deposits show kinetic energy for mesons (exact for p/n, an idealization for π/K); recommendation: add "kinetic energy deposited" to the meter caption.
+
+Console: clean in all 14 sims; the in-sim favicon 404s were silenced where they originated (standard-model, gold-foil).
