@@ -873,7 +873,9 @@ window.__audit = { at(momentumGeV) {
       const dxRun = Math.max(80, L.xEnd - L.trk[1]);
       const up = P.q > 0;
       const clear = Math.max(24, up ? (L.yMid - (L.yTop + 50)) : ((L.yBot - 16) - L.yMid));
-      const mag = Math.min(0.62, 0.34 / p, Math.atan(clear / dxRun));
+      const geo = Math.min(0.62, Math.atan(clear / dxRun));
+      /* soft clamp: monotone in p over the whole 0.2-5 range (hard min() saturated below ~1 GeV), always < geo so the track stays inside the detector */
+      const mag = geo * (0.34 / p) / (0.34 / p + geo);
       thT = (up ? -1 : 1) * mag;
     }
 
@@ -1130,8 +1132,7 @@ window.__audit = { at(momentumGeV) {
   function laneKeys() {
     const out = [];
     if (PARTS[state.part].m > 0) out.push(state.part);
-    for (const k of ['pi', 'ka', 'pr']) {
-      if (out.length >= 3) break;
+    for (const k of ['pi', 'ka', 'pr']) { /* always keep all three reference racers (p is the star of cards 5-6) — 5th lane when e/mu/n selected */
       if (!out.includes(k)) out.push(k);
     }
     return out;
@@ -1145,12 +1146,13 @@ window.__audit = { at(momentumGeV) {
     if (ctx.measureText(title).width > W - 70) title = 'TOF race, 10 m \u2014 same p';
     if (ctx.measureText(title).width <= W - 70) ctx.fillText(title, 10, 17);
 
-    const yA = 26, yB = H - 8, lh = (yB - yA) / 4;
+    const keys = laneKeys();
+    const yA = 26, yB = H - 8, lh = (yB - yA) / (keys.length + 1);
     const startX = 72, finX = W - 84, Ln = finX - startX;
     if (Ln < 60 || lh < 10) return;
 
     const rows = [{ key: 'light', sym: 'light', col: '#eab308', beta: 1, q: 0, t: TOF_D / C }];
-    for (const k of laneKeys()) {
+    for (const k of keys) {
       const p = PARTS[k], kk = kinematics(p.m, state.p);
       rows.push({ key: k, sym: p.sym, col: p.color, beta: kk.beta, q: p.q, t: kk.t });
     }
@@ -1201,9 +1203,10 @@ window.__audit = { at(momentumGeV) {
 
   /* ---------- readouts / UI ---------- */
   function fmtDelay(dns) {
-    if (dns < 0.02) return dns.toFixed(3);
-    if (dns < 1) return dns.toFixed(2);
-    return dns.toFixed(1);
+    if (dns < 0.001) return '<0.001'; /* massive particle: delay is real but below display precision */
+    if (dns < 0.02) return '+' + dns.toFixed(3);
+    if (dns < 1) return '+' + dns.toFixed(2);
+    return '+' + dns.toFixed(1);
   }
   function updateReadouts() {
     const P = PARTS[state.part], k = kinematics(P.m, state.p);
@@ -1211,7 +1214,7 @@ window.__audit = { at(momentumGeV) {
     const g = P.m > 0 ? (k.gamma > 999 ? k.gamma.toFixed(0) : k.gamma.toFixed(2)) : '\u221E';
     $('roBeta').textContent = k.beta.toFixed(4) + ' (\u03B3 ' + g + ')';
     const tns = k.t * 1e9, dns = (k.t - k.tL) * 1e9;
-    $('roTof').textContent = tns.toFixed(2) + ' ns' + (P.m > 0 ? ' (+' + fmtDelay(dns) + ')' : ' (light)');
+    $('roTof').textContent = tns.toFixed(2) + ' ns' + (P.m > 0 ? ' (' + fmtDelay(dns) + ')' : ' (light)');
     const ch = $('roCh');
     if (P.q === 0) { ch.textContent = 'n/a \u2014 neutral'; ch.style.color = ''; }
     else if (k.beta > 1 / N_W) { ch.textContent = 'ON \u00B7 \u03B2 > 0.752'; ch.style.color = 'var(--accent)'; }
