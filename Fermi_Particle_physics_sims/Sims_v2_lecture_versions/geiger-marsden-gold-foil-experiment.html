@@ -388,6 +388,7 @@ body.light-theme .sim-hot,html[data-theme="light"] .sim-hot{color:#c2410c}
      - [dom] "Odds are per incident α. The 1° line is only where this model starts counting …" — readouts panel .sim-note, ~L495
      - [dom] "Screen: upper and lower arcs … large angles over-shown." — #gmDotNote (dynamic innerHTML), ~L496
      - [dom] "The green points are the measurement — this switch never changes them …" — Compare-models panel .sim-note, ~L503
+     - [dom] "Natural α sources run 4–9 MeV (RaC′ 7.7 MeV = 0.240 GeV/c)." — #gmBeamNote (dynamic; also covers the "Accelerator beam" variant), ~L526
      NOTE: default flipped — Hide Text boots CHECKED in this sim (curriculum request).
 -->
 <script>
@@ -523,7 +524,7 @@ body.light-theme .sim-hot,html[data-theme="light"] .sim-hot{color:#c2410c}
           <div class="sim-ctl">
             <label for="gmMomentum"><span>α momentum</span> <span class="sim-val" id="gmPVal">0.193 GeV/c</span></label>
             <input type="range" id="gmMomentum" min="0.185" max="0.500" step="0.001" value="0.193">
-            <div class="sim-note" id="gmBeamNote">Natural α sources run 4–9 MeV (RaC′ 7.7 MeV = 0.240 GeV/c).</div>
+            <div class="sim-note ht-hide" id="gmBeamNote">Natural α sources run 4–9 MeV (RaC′ 7.7 MeV = 0.240 GeV/c).</div>
           </div>
           <div class="sim-rows">
             <div class="sim-row"><span>kinetic energy Eₖ</span><b id="gmEk">5.0 MeV</b></div>
