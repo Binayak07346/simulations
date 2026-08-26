@@ -351,7 +351,7 @@ body.light-theme .predict-eval .answer,body.light-theme .predict-eval strong,htm
   <dt>Misconception</dt>
   <dd>"E &gt; mc² is enough." Creation is pairwise — charge (and, for the proton, baryon number) conservation doubles the bill: threshold 2mc², not mc². The faint thin ticks on the ladder mark mc²; the beam marker sails past them without lighting anything. A second trap: "protons can't be created" — they can, as p p̄. And a lone photon in empty space can never convert at any energy.</dd>
   <dt>Caveats</dt>
-  <dd>Rates are schematic: the lightest open pair overwhelmingly dominates real photoproduction, so heavier channels are shown occasionally and tagged "rare channel". The photon's drawn wavelength is log-compressed, not to scale. √s for γ + Pb is ≈ 195 GeV at every setting of the beam knob — it is shown in the formal layer only, never as the control.</dd>
+  <dd>Rates are schematic: the lightest open pair overwhelmingly dominates real photoproduction, so heavier channels are shown occasionally and tagged "rare channel". The photon's drawn wavelength is log-compressed, not to scale. √s for γ + Pb is ≈ 194 GeV at every setting of the beam knob — it is shown in the formal layer only, never as the control.</dd>
 </dl>
         <table class="shell-info-table">
   <tr><th>Principle</th><th>Where it appears</th></tr>
@@ -517,7 +517,7 @@ body.light-theme .predict-eval .answer,body.light-theme .predict-eval strong,htm
   <div class="sim-frow"><span class="sim-fcap">Momentum of each twin (chamber frame, M<sub>N</sub> → ∞)</span><span class="sim-ktx" data-tex="pc=\sqrt{\left(E_{\gamma}/2\right)^{2}-\left(mc^{2}\right)^{2}}"></span></div>
   <div class="sim-frow"><span class="sim-fcap">Kinetic energy T of the pair (chamber frame, M<sub>N</sub> → ∞)</span><span class="sim-ktx" data-tex="T=E_{\gamma}-2mc^{2}"></span></div>
   <div class="sim-frow"><span class="sim-fcap">Track radius in the chamber field</span><span class="sim-ktx" data-tex="r=\dfrac{p}{qB}\qquad (B=1\ \mathrm{T},\ \text{into the page})"></span></div>
-  <p class="sim-fnote">√s is frame-invariant and is <b>not</b> what the beam knob sets: for γ + Pb it is ≈ 195 GeV even when E<sub>γ</sub> is 1 MeV, because almost all of it is the nucleus' own rest energy. The threshold that matters here is the chamber-frame photon energy E<sub>γ</sub>. A lone photon in empty vacuum cannot convert at any energy — energy and momentum cannot both be conserved; the heavy nucleus takes up the recoil momentum while absorbing almost none of the energy.</p>
+  <p class="sim-fnote">√s is frame-invariant and is <b>not</b> what the beam knob sets: for γ + Pb it is ≈ 194 GeV even when E<sub>γ</sub> is 1 MeV, because almost all of it is the nucleus' own rest energy. The threshold that matters here is the chamber-frame photon energy E<sub>γ</sub>. A lone photon in empty vacuum cannot convert at any energy — energy and momentum cannot both be conserved; the heavy nucleus takes up the recoil momentum while absorbing almost none of the energy.</p>
 </div>
   </section>
 
@@ -653,7 +653,7 @@ const Shell = (function(){
 
     if(play) play.addEventListener('click',()=>setPlaying(!playing));
     // Reset zeroes state AND ensures the loop is running (replay-from-start).
-    if(reset) reset.addEventListener('click',()=>{ onReset(); last=performance.now(); setPlaying(true); });
+    if(reset) reset.addEventListener('click',()=>{ onReset(); last=performance.now(); /* play state is owned by the step specs (SYS-2): onReset re-applies the active card, incl. its pause flag */ });
     if(spd) spd.addEventListener('change',e=>{ speed=parseFloat(e.target.value)||1; });
 
     if(maxBtn) maxBtn.addEventListener('click',()=>setMaximized(!root.classList.contains('shell-max')));
@@ -827,7 +827,7 @@ function openList(){
 function vToE(v){ return Math.pow(10, LG(EMIN)+(v/1000)*(LG(EMAX)-LG(EMIN))); }
 function eToV(E){ return Math.round(1000*(LG(E)-LG(EMIN))/(LG(EMAX)-LG(EMIN))); }
 function fmtE(E){
-  if(E<=0) return '0';
+  if(E<=0) return '0 MeV';
   if(E<0.02) return (+(E*1000).toPrecision(4))+' MeV';
   if(E>=10) return E.toFixed(2)+' GeV';
   return E.toFixed(3)+' GeV';
@@ -1057,8 +1057,17 @@ function drawEvents(g,T){
       var ex=tr.pts[(n-1)*2], ey=tr.pts[(n-1)*2+1];
       ctx.beginPath(); ctx.arc(ex,ey,2.6,0,6.283); ctx.fill();
       ctx.font=T.f(700,12,false); ctx.textAlign='left'; ctx.textBaseline='middle';
-      var lx=Math.max(ch.x+6, Math.min(ex+7, ch.x+ch.w-26));
-      var ly=Math.max(ch.y+12, Math.min(ch.y+ch.h-12, ey-9));
+      /* Tight-spiral declutter: when the endpoint closes on the nucleus, push the
+         label radially outward so it never piles onto the sprite / its twin. */
+      var lbx=ex+7, lby=ey-9;
+      var rdx=ex-g.nx, rdy=ey-g.ny, rdd=Math.sqrt(rdx*rdx+rdy*rdy);
+      if(rdd<20){
+        var rux, ruy;
+        if(rdd>1e-3){ rux=rdx/rdd; ruy=rdy/rdd; } else { rux=0; ruy=(k?1:-1); }
+        lbx=ex+rux*16+7; lby=ey+ruy*16-9;
+      }
+      var lx=Math.max(ch.x+6, Math.min(lbx, ch.x+ch.w-26));
+      var ly=Math.max(ch.y+12, Math.min(ch.y+ch.h-12, lby));
       ctx.fillText(ev.sp.lab[k], lx, ly);
     }
     ctx.globalAlpha=1;
@@ -1287,8 +1296,8 @@ eSlider.addEventListener('input',function(){
 });
 $('btnFire').addEventListener('click',function(){
   state.beamOn=true;
-  state.photons.push({u:0});
-  state.spawnT=3.8;
+  /* cap the train: rapid re-fires while >=3 photons are in flight add nothing */
+  if(state.photons.length<3){ state.photons.push({u:0}); state.spawnT=3.8; }
   maybeReveal();
   if(typeof Shell!=='undefined' && Shell.setPlaying) Shell.setPlaying(true);
   draw();
