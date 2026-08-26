@@ -372,7 +372,7 @@ body.light-theme .predict-eval .answer,body.light-theme .predict-eval strong,htm
       <button id="shell-info" class="shell-btn" title="About this simulation">ⓘ Info</button>
       <button id="shell-theme" class="shell-btn" title="Toggle light / dark theme">☾</button>
       <button id="shell-lecture" class="shell-btn" title="Lecture display mode — hide the guided inquiry, show the full simulation">🎓 Lecture</button>
-      <label id="ht-ctl" class="shell-btn" title="Hide Text — hides registered labels/readouts; registry is empty until items are added">
+      <label id="ht-ctl" class="shell-btn" title="Hide Text — hides registered labels/readouts (boots checked; unchecks to reveal the E_min explainer)">
         <input type="checkbox" id="ht-toggle" checked> Hide Text
       </label>
     </div>
@@ -402,7 +402,7 @@ body.light-theme .predict-eval .answer,body.light-theme .predict-eval strong,htm
      NOTE: default flipped — Hide Text boots CHECKED in this sim (curriculum request).
 -->
 <script>
-/* Hide Text toggle — empty registry; hides .ht-hide DOM nodes and gates HT() canvas labels. */
+/* Hide Text toggle — hides .ht-hide DOM nodes and gates HT() canvas labels. Boots CHECKED; the E_min explainer note is the single registered item (see REGISTRY comment above). */
 (function(){
   var shell=document.getElementById('shell');
   var box=document.getElementById('ht-toggle');
