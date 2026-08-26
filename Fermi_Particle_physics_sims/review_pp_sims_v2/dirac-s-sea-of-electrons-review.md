@@ -97,3 +97,76 @@ Each finding re-reproduced live (headless Chrome 1440×900, zero pageerrors) bef
 | NP-P2-4 | CONFIRMED + FIXED | Repro: "4.0 MeV/c per s" appears only in the Info-modal table row + a code comment; `#fieldNote` says just "ℰ = applied electric field." Fix per task directive (Info text corrected to match the screen, no new readout): modal row now reads "…both axes carry units (MeV and MeV/c); internally the ℰ slider applies eℰ = 4.0 MeV/c per second at ℰ = 1." — no longer claims the value is shown on-screen. |
 
 Post-fix spot-checks: full inquiry walk (cards 1→5 + Finish) then kT = 0.8 hot run — net charge readout "0 e", `ne===nh` (3/3), `roP` "0 MeV/c", pageerrors [].
+
+## Second review scan (2026-08-26)
+**Verdict:** Physics core still clean — 150-combo kT × ℰ × depth matrix (kT {0.05,0.25,0.5,0.8,1.2,1.5} × ℰ {−1,−0.5,0,0.5,1} × depth {2,5,8,11,15}, 3 seeded pairs + 30 frames each) preserves `ne===nh` and the "0 e" readout with zero violations; thermal firing rate at kT=0.8 measured 26 spawns / 60 s vs the Boltzmann prediction 25.1 (z = +0.18); opposite drift under ℰ verified (e⁻ p = −h_positron p, real-space vₑ = −vₕ). All prior-review fixes re-verified live on fresh loads (rev2c cache-buster). Two new NON-PHYSICS polish items surface, both direct side-effects of the SYS-1 (`window.Shell` attachment) and NP-P2-1 (reveal-fires-at-+1) fixes activating code paths that were previously dead or unguarded.
+**Console:** clean at every stage (rev2c fresh load through cards 1→5, matrix runs, formal panel, theme flip, hide-text toggle, 40-event kT scrub — zero errors/warnings).  **Combos tested:** 150 exhaustive (matrix) + ~15 sampled (each fix re-verified + polish repros).
+
+## PHYSICS
+### P0
+none
+### P1
+none
+### P2
+none — all prior physics findings remain resolved (card-3 fb text confirmed rewritten; 2E(p) trend, hole=positron map, drift signs all correct).
+
+## NON-PHYSICS
+### P0
+none
+### P1
+none
+### P2
+- **[NP-P2-5] [flow] [high]** Depth slider now permanently freezes the sim on any `input` event with no auto-resume. The prior review flagged `pauseScrub` as dead code because `window.Shell` was undefined; the SYS-1 fix attached Shell to `window`, so `pauseScrub()` (~L1296) — `Shell.setPlaying(false); draw();` — is now live, but there is no `change`-listener, mouseup, or debounced timer to `play()` again once the drag ends, so the sim stops on the first `input` and stays stopped until the student manually presses Play (or a card reveal happens to call `play()`). Repro: kT=0.80, Shell.playing=true → depthRange input=8 → observed `Shell.playing:false` at t=0, t=2.5 s, and after a `change` event (all three stay `false`); visible on screen — the header button flips to "▶ Play" (see `ds-rev2-card3-label-mismatch.jpg`, note the Play button top-right). A student dragging Axis depth during the hot-regime demo sees all thermal spawns freeze. Anchor: `els.depth 'input'` handler ~L1314, `pauseScrub` ~L1296. → **Fix:** either drop the `pauseScrub()` call (the label is misleading — depth is a viewport zoom, not a physics scrub) and just `draw()`; or add an `els.depth.addEventListener('change',()=>{ if(wasPlayingBeforeScrub) play(); })` companion that captures playing-state on the first `input` and restores it on `change`.
+- **[NP-P2-6] [inquiry|ux] [high]** Excite button's `S.sign *= −1; syncExcite();` (~L1315) runs unconditionally after every click — including (a) after the card-3 reveal, whose fixed branch pre-sets `S.sign=1` then calls `els.excite.click()`; the click's own handler successfully spawns at +1 MeV/c (physics OK, cost 2.246 MeV verified) but then immediately toggles sign → post-reveal the ⚡ button reads "⚡ Excite a pair at p = **−1 MeV/c**" while the card the student is reading asserts "The ⚡ Excite button makes the next pair at p = **+1 MeV/c**". Fresh-load repro (rev2c, cards 1→pager→3 → click correct): `sign:−1, label:"⚡ Excite a pair at p = −1 MeV/c"` — screenshot `ds-rev2-card3-label-mismatch.jpg` shows both the card text and the mismatched button in one frame. (b) Clicking ⚡ while the flight cap is reached triggers the new `rejectNote` chip "sea is busy" (NP-P2-2 fix) AND still flips the label silently — verified: `S.flights=3, S.sign:1→−1, label:"+1 MeV/c"→"−1 MeV/c"` after one rejected click. Physics of what actually gets made is correct; the on-screen label just contradicts the card that drove the click, and rejected clicks silently invert future behaviour. Anchor: excite click handler ~L1315; card-3 reveal branch ~L1403. → **Fix:** make `spawnPair` return a boolean (`true` on push, `false` on cap-reject), and in the click handler only toggle when the spawn succeeded — `if(spawnPair(0.001*S.sign,true)){ S.sign*=-1; syncExcite(); } play();`. Then also make the card-3 reveal branch bypass the button — `S.sign=1; syncExcite(); spawnPair(0.001,true); play();` — so the reveal leaves the button reading its promised "+1 MeV/c".
+
+## Control census (rev2 delta)
+| control | new observation this scan | verdict |
+|---|---|---|
+| Axis depth slider | `pauseScrub()` now live (SYS-1); depth `input` pauses Shell and no auto-resume mechanism exists | → **NP-P2-5** |
+| ⚡ Excite button | fresh-load card-3 reveal ends with label reading "−1 MeV/c" (card said "+1"); cap-rejected clicks flip label silently | → **NP-P2-6** |
+| Theme ☾/☀ | light theme legend now `rgba(255,255,255,0.8)` / `rgb(15,23,42)` — dark-on-light restored | NP-P2-3 verified fixed |
+| Info modal | Operational-quantities row now reads "…internally the ℰ slider applies eℰ = 4.0 MeV/c per second at ℰ = 1." (no longer claims it's shown on-screen) | NP-P2-4 verified fixed |
+| Reset (card 4 active) | kT/field/depth all snap back to card-4 spec (0.80/0/3.0), active card unchanged | SYS-2 verified fixed |
+| Hide Text | registry empty; toggle applies `hide-text` class; innerText delta 0 (nothing unregistered disappears) | OK |
+| ⚡ label vs. spawn | reveal-spawned pair cost = 2.246 MeV (2E(1 MeV/c)) exact; only the label side-effects (→ NP-P2-6) | OK / P2 |
+
+## Combination coverage manifest (rev2 delta)
+| combo set | strategy | count | invariants asserted | result |
+|---|---|---|---|---|
+| kT {0.05,0.25,0.5,0.8,1.2,1.5} × ℰ {−1,−0.5,0,0.5,+1} × depth {2,5,8,11,15}, 3 seeded pairs + 30 onFrame(0.05) | exhaustive | 150 | `ne===nh`, `roQ` matches `/0\s*e/`, no NaN/undefined readouts, no negative counts | 150/150 pass |
+| Drift direction (ℰ = +1, seed p=0, 40 frames) | spot | 1 | e_p_MeV = −2.59, positron_p_MeV = +2.59 (opposite sign, equal magnitude); real-space e.x−=, h.x+= | pass |
+| Thermal firing rate (kT=0.8, 60 s sim time, population capped at 4) | long-run MC | 60 s | spawn count 26 vs λT = 25.1 ± 5.0 (z = +0.18) — Boltzmann honest | pass |
+| Excite click at flight cap | spot | 1 | chip "sea is busy — wait for the flight" appears; `S.flights` unchanged | pass (chip) / **NP-P2-6** (label flip) |
+| Sea click at 14-electron cap | spot | 1 | chip "sea is full — wait for annihilation" appears; `S.electrons` unchanged | pass |
+| Reset while card 4 active | spot | 1 | active card, kT, field, depth all match card-4 spec after Reset | pass (SYS-2) |
+| Depth `input` while Shell.playing | spot | 1 | `Shell.playing` goes true→false and stays false through 2.5 s and a `change` event | → **NP-P2-5** |
+| 40-event kT scrub | stress | 40 | `errCount:0`; final kT tracks last input | pass |
+| Formal panel | spot | 1 | dispersion, pair cost, Boltzmann, hole/positron mapping present in text | pass |
+| Info modal wording | spot | 1 | new NP-P2-4 text present, old "is given as" claim absent | pass |
+
+## Inquiry-layer check (rev2 delta)
+| card | rev2 observation | verdict |
+|---|---|---|
+| 1 sea with no bottom | fresh boot in Lecture; restore-chip reopens at card 1 with all `data-answered` null | OK |
+| 2 what does one pair cost? | correct reveal spawns pair at p=0, cost readout "1.02 MeV" | OK |
+| 3 costlier further out? | correct reveal spawns pair at p=+1 MeV/c (physics OK, cost 2.246 MeV verified), fb text rewritten (PHY-P2-1 fix) reads "…net momentum (matter) stays 0: e⁻ carries +1 MeV/c and h⁺ carries −1 MeV/c" — but excite button label flips to "−1 MeV/c" post-reveal → **NP-P2-6** | P2 |
+| 4 charging up the vacuum? | kT=0.80 applied on card entry; Reset from within card 4 restores the same kT (SYS-2 fix live) | OK |
+| 5 which way does the hole go? | ghost prediction path intact; no rev2 change | OK |
+| Lecture 🎓 | boots in Lecture; restore chip present; toggle round-trip preserves answers | OK |
+| Hide Text | empty registry (as declared); toggle changes class only; innerText delta 0 | OK |
+| ∑ Formal | all four canon items (dispersion, pair cost, Boltzmann, hole↔positron) present | OK |
+
+## Curriculum checklist (rev2 delta)
+- Vacuum as an infinitely deep sea of filled −E states → **met** (bottomless fade + "⋯ continues to −∞" still on-screen; empty at hot boot, filled to depth on inquiry restore)
+- Boltzmann jumps → **met and quantitatively honest** (rate + momentum sampling match to z=0.18 across 60 s at kT=0.8)
+- Hole = positron; net charge = 0 → **met** (150-combo matrix passes)
+- Opposite drift under ℰ → **met** (verified e_p and positron_p opposite sign; real-space vₑ and vₕ opposite)
+- Adjustable kT and depth → **met** (kT sweeps clean; depth silently pauses the sim → NP-P2-5)
+- Lecture Display mode → **met** (boots in Lecture, restore chip in the aside)
+- Anti-particle / hole interpretation of −E → **answerable from the screen** (unchanged from first review)
+
+## To verify (human)
+- Whether the excite label side-effect after the card-3 reveal (NP-P2-6a) is deemed pedagogy-critical enough to warrant the spawnPair-returns-bool refactor, or a lighter fix that only skips the toggle in the reveal branch.
+- Whether the depth-scrub pause behaviour (NP-P2-5) is intended (i.e. "freeze while you look at the depth change") or a leftover of the dead-code era — the label `pauseScrub` implies an auto-resume that never existed. Product call.
+- Two-finger real-pointer drag on the depth slider still not exercised (synthetic `input` throughout); manual pass would close it, but the JS state proves the pause path fires.
+

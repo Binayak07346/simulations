@@ -98,3 +98,35 @@ Each finding was independently reproduced (headless Chrome 1440×900 + 1100×760
 | NP-P2-2 | **CONFIRMED + FIXED** | Repro at 1100×760, μμ, √s = 3: "σ = 9.650 nb" bbox [362.7–463.5]×[43.6–60.6] overlaps the "s·σ" label bbox [360.7–377.2]×[45.7–57.7]. Fix: point-label offset test now also dodges the s·σ ring + label zone (pushes the label to mY + 34, clamped above py1, which also clears the ◆ "9.65 nb" anchor caption); post-fix bboxes disjoint (fds-post2-band-mumu3-1100.png). |
 
 Post-fix regression pass: full inquiry walk (cards 1→5, gates, card-3 data-build, card-5 one-shot commit) — σ locked "—" pre-commit, reveal + "your ÷4" ghost + "actual at 2√s" drawn, s·σ stays 86.85 as √s doubles; lecture-mode boot unchanged. Screenshots in the session scratchpad (fds-pre-*/fds-post-*/fds-post2-*).
+
+## Second review scan (2026-08-26)
+
+**Scope:** re-verify prior fixes and hunt for anything new. All prior fixes (PHY-P1-1 curve, PHY-P2-1 chip label, PHY-P2-2 threshold text, NP-P2-1 axis-title overlap, NP-P2-2 point-label collision, NP-P1-1 reset desync) confirmed still applied at 1440×900: σ(ee→ττ) accent curve rises from the labelled dashed massless-reference at √s = 3.554 (screenshot fds-rev2-card5-inqdone-reveal-1440.jpg shows 3.554 GeV chip live; reset from card 3 keeps card 3 active with μμ baseline re-applied). Physics numerics (σ_QED = 4πα²/3s · β(3−β²)/2 with (ħc)² = 389379.37 nb·GeV²) re-verified against `node -e` across μμ {1,3,10} and ττ {3.554, 3.56, 4, 5, 30} — all match on-screen readouts to display precision. Info-modal opens and its 4 KaTeX equations render correctly through ∑ Formal.
+
+Two NEW findings (both scoped to boot-in-Lecture behavior added since the first review):
+
+### PHYSICS
+#### P0   none
+#### P1   none
+#### P2
+- **[PHY-P2-3] [high]** Info-modal "Concept" text is stale versus the applied PHY-P2-1 / PHY-P2-2 fixes. Line 341 still reads "τ⁺τ⁻ opens at √s ≥ 2m_τ ≈ 3.55 GeV" while card 3's on-screen chip and feedback now display 3.554 GeV; line 339 still reads "s·σ = (4πα²/3)(ħc)² = 86.85 nb·GeV² is constant in √s" without the "(massless limit)" caveat that PHY-P2-1 added to the band chip. The claim is only exact for m_f → 0 (μμ at √s = 1 GeV gives s·σ = 86.79, a 0.07% shortfall from the muon-mass factor). Evidence: `fds-rev2-info-modal-1440.jpg`; anchor `#shell-info-modal` L339 & L341. → **Fix:** append " (massless limit)" to the s·σ = 86.85 clause on L339 and change "≈ 3.55 GeV" to "≈ 3.554 GeV" on L341 (or keep "≈ 3.55 GeV" if the ≈ is deemed to license the rounding — but pick one number and use it in all UI copy).
+
+### NON-PHYSICS
+#### P0   none
+#### P1
+- **[NP-P1-2] [inquiry] [high]** Card 5's predict-before-reveal is defeated whenever the student reaches the inquiry via the Lecture-OFF path (the primary entry, because the sim boots in Lecture per L734 curriculum request). `finishInquiry()` at boot runs `onComplete()` which sets `inqDone = true` (L1492) so σ, s·σ, the σ(√s) curve, the ◆ anchors, and the s·σ ring are all revealed. `setLectureMode(false)` reopens the inquiry at card 1 via `inqShow(0)` but does NOT clear `inqDone`. Paging (‹ ›) or Next→ to card 5 lands on μμ at √s = 3, and `updateAll()`'s `shown = D.pred !== null || inqDone` is already true → Result panel shows "σ = 9.650 nb / s·σ = 86.85 nb·GeV²" while card 5 still asks the student to *predict* what σ does when √s doubles and offers all three choices live-clickable. Repro (fresh boot, foreground tab, cleared localStorage): 🎓 Lecture click → ‹pager× 4 to card 5. Observed: roSig = "9.650 nb", roInv = "86.85 nb·GeV²", roLock display = "none", curve + s·σ line + ◆ anchors + "your ÷4" ghost from the pre-committed reveal all drawn; the whole card-5 pedagogy is dead on arrival. Evidence: `fds-rev2-card5-inqdone-reveal-1440.jpg` + JS state dump {`roSigC5: "9.650 nb", roInvC5: "86.85 nb·GeV²", choicesEnabled: [true,true,true]`}. Anchors: L734 `setLectureMode(true) /* curriculum request */`, L1491–1496 `onComplete` setting `inqDone`, L574 `setLectureMode(false)` reopen path. → **Fix:** in `setLectureMode(false)` (or in an "on-reopen" hook the sim can register), reset `inqDone = false` and clear `D.pred = null`, then call `updateAll()`; this is scoped to the reopen — the completed / free-exploration state after a real Finish (or an explicit Lecture toggle from within the inquiry) is unaffected. Alternative: gate `inqDone`'s reveal on "the student actually reached the completion path" rather than the boot fast-forward — e.g., only set it when finishInquiry runs *after* first user interaction with a `.choice`.
+#### P2   none
+
+## Control census (delta only)
+| control | check | verdict |
+|---|---|---|
+| ↻ Reset while inquiry open on card 3 | keeps card 3 active + re-applies μμ baseline | OK (SYS-2 fix holds) |
+| Wrong-choice click on card 3 | data-build applies ee→ττ, feedback + verdict "✗ needs √s ≥ 3.554 GeV" | OK (PHY-P2-2 chip matches card copy) |
+| Lecture OFF → pager to card 5 | σ/s·σ should be locked; they are revealed | **NP-P1-2** |
+| ∑ Formal toggle | 4 KaTeX equations render (M, ⟨\|M\|²⟩, dσ/dΩ ⇒ 4πα²/3s, β(3−β²)/2) | OK |
+| Info modal open/close | text renders, closes on ✕ | OK; content lag → **PHY-P2-3** |
+| Bhabha (ee→ee) build | verdict "✓ allowed · + t-channel (not included)", band header "s-channel piece only (t-channel not plotted)" | OK |
+
+## To verify (human)
+- Tab-foregrounded HT boot state: the empty registry makes this invisible either way, but the HT-follows-lecture load hook uses two rAF frames (L414–418) and rAF is frozen while `document.hidden`, so the boot state of the `#ht-toggle` checkbox differs between backgrounded and foregrounded first-loads. No user-visible effect because registry is empty; flagged so the pattern doesn't get copied into a sim that DOES register items.
+- NP-P1-2's fix option ("reset inqDone on Lecture-OFF reopen") should be checked against the "curriculum request" that motivated boot-in-Lecture — the curriculum owner may specifically want the completed state as the first thing a student sees, in which case card 5 needs a re-hide on reopen rather than an alternative default.

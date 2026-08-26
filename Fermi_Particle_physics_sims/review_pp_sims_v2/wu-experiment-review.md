@@ -86,3 +86,22 @@ All five open findings were independently re-confirmed in a live headless-Chrome
 | NP-P2-1 | **ALREADY-RESOLVED** (SYS-5) | `onStep` re-applies `data-build` reveals for answered cards; live pager round trip: card 3 revisit shows the mirror panel, card 4 revisit shows the CP panel with its ✓ chip. Left alone per instruction. |
 | NP-P2-2 | **CONFIRMED + FIXED** | Pre-fix `setState` called `clearCounts()` unconditionally, so 2→3 (and 3→4) wiped the counts card 3's prose cites. Fix: STEPS 3/4 carry `keep:true`; `setState` preserves counts (and spin phases) when `keep` is set and P is unchanged — specs stay absolute/deterministic for the pager. Live: card 2 N = 1082 → card 3 entry N = 1082 (P = 1 kept) → card 4 N = 1092; pager 4→3→4 keeps counts + reveals; Reset still zeroes (P changes through OPEN, so the wipe path runs). |
 | NP-P2-3 | **CONFIRMED + FIXED** | Pre-fix at 1440×900 with ∑ Formal: `#eqW`/`#eqProb` rendered 334 px wide × 2.6 lines — "W(θ) ∝ 1 +" broke mid-formula (screenshot). Fix: `.sim-eqrow>span{flex:0 0 auto;white-space:nowrap}` (was `flex:1 1 220px;min-width:200px;overflow-wrap:anywhere`) — the flex row wraps BETWEEN formulas, never inside one. Post-fix: spans content-sized (386/390/170 px), single KaTeX line each, no horizontal overflow (screenshot). |
+
+## Second review scan (2026-08-26)
+**Verdict:** Clean — every prior finding still holds fixed under fresh headless Chrome (1440×900, zero pageerrors); physics-core statistics reproduce to <1σ (25 s @ P=1, mirror+CP: N=1641, 𝒜 = −0.319 ± 0.023 vs theory −0.300, 0.83σ; the P=0 corner probed for 30 s with mirror ON reached N=2058 and never crossed the ≥2σ sign-consistent gate — verdict chip stayed neutral throughout, wuSignal() fix holds); pager, Reset re-apply, count-keep across 2→3→4, __audit.at() live-report, and formal-row single-line KaTeX all confirmed. **Console:** clean (favicon-only 404 from the review server, not a sim asset).  **Combos tested:** 15 exhaustive replay + 25 s × N=1641 long-run at P=1 mirror+CP + 30 s × N=2058 P=0 corner + full control walk.
+
+### PHYSICS
+#### P0
+none
+#### P1
+none
+#### P2
+none
+### NON-PHYSICS
+#### P0
+none
+#### P1
+none
+#### P2
+- **[NP-P2-4] [ux] [low]** CP-mirror panel drops the `(along B)` / `(opposite B)` qualifier that the real panel uses — `↑ counter` / `↓ counter` on the CP side vs `↑ counter (along B)` / `↓ counter (opposite B)` on the real side. In CP the B arrow points up (bM = 1 with mir & anti), so `↑ counter` IS along B and the suffix would still be correct; students then have to re-derive the counter-vs-spin relationship visually. Repro: any state with mirror + CP ON (evidence: wu-rev2-B-longrun-P1-CP.png). Anchor: `drawApp` L1086 `const upName = mir ? '↑ counter' : '↑ counter (along B)'`. → **Fix:** in the CP branch (mir && anti) restore the suffixes; keep the bare labels only for the pure-P mirror where B is inverted and the suffix would mislead.
+- **[NP-P2-5] [ux] [low]** CP-mirror subtitle "C: I→−I, B→−B, μ→−μ · spin unchanged" describes what C does to the P-mirror state, but the drawn spin arrows in the CP panel are visibly flipped from the real panel (P flipped them; C left them alone, net: flipped). A student who reads "spin unchanged" while looking at a down-pointing spin arrow next to an up-pointing real one has to reconstruct CP = P ∘ C to reconcile it. Repro: mirror + CP on, any P (evidence: wu-rev2-06-fwd-card4.png). Anchor: `drawApp` L1108 `sub = 'C: I→−I, B→−B, μ→−μ · spin unchanged'`. → **Fix:** rephrase to make the composition explicit — e.g. "C on the mirror: I & B & μ reverse · spin (already flipped by P) unchanged by C".

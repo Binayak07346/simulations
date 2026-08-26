@@ -72,3 +72,19 @@ none
 - Layout/overlap at real viewports this run (backgrounded 319×300 tab); previously verified at 1440/1100 during the build sessions — one fresh visual pass at 1280 recommended.
 - Library chip corner-click: one synthetic click at a chip's exact top-left failed to register while center clicks work; likely synthetic-event artefact, but a quick manual click along chip edges would settle it.
 - Σc⁺⁺/Σc⁰ "~3×10⁻²² s" accepted (PDG ħ/Γ ≈ 3.5×10⁻²² s — inside the tilde); listed here for transparency.
+
+## Second review scan (2026-08-26)
+
+No new findings — physics + non-physics core clean on this pass.
+
+Evidence:
+- All prior fixes verified in code and live: Σb⁺/Σb⁻ line 785–786 shows "~7×10⁻²³ s"; udd line 765 shows "878 s (free)"; `onReset` re-applies active card via `onStep(Shell.step)` (line 1154); `drawLib` overflow marker `'+'+(state.lib.length-chipsDrawn)+' more'` (line 1093–1097).
+- Frontier cycle (12 unseen combos + wrap) driven live via btnFrontier — every readout Q/I3/S/C/Bb matches constituent sums, and the live GMN check `Q = I3 + ½(B+S+C+B̃+T)` prints "= <Q> ✓" for all 12 (dcc,scc,ucb,dcb,scb,ccb,ubb,dbb,sbb,cbb,bbb,ccc); frontier wraps to dcc at click 13. Screenshot: `bab-rev2-frontier.png`.
+- Card 3 gated reveal (u d̄ → π⁺) live: Q=+1, I3=+1, S=0, C=0, Bb=0, colour "r + r̄ → white ✓" — matches π⁺ isospin triplet member and colour-singlet requirement.
+- Layout re-verified at 1440×900, 1280×800, 1100×700 viewports: stage and inq-cards boxes non-overlapping in all three (`overlap:false`); ERRS `[]` in each; screenshots `bab-rev2-1440x900-*`, `bab-rev2-1280x800-*`, `bab-rev2-1100x700-*`.
+- Meson tray in meson mode correctly shows both q and q̄ rows with all 6 flavours (drawTray rows array); top-in-either-slot returns `{kind:'imp',key:'TOPX'}` in resolveCurrent so no undefined-meson-entry crash is reachable.
+- PDG cross-check spot re-run on b-sector: Ξb⁰ 5791.9 MeV / 1.5 ps ✓; Ξb⁻ 5797 MeV / 1.57 ps ✓; Ωb⁻ 6045.8 MeV / 1.64 ps ✓; Bs⁰ 5366.9 MeV / 1.52 ps ✓; Bc⁺ 6274.5 MeV / 0.51 ps ✓; Υ(1S) 9460.3 MeV / 1.22×10⁻²⁰ s ✓ (Γ=54.02 keV → τ=ħ/Γ verified).
+- Console: **clean** on all three viewports (only pre-existing 404 for the shared favicon-like asset, present on every v2 sim). Zero `pageerror`.
+- Combos tested this pass: 12 frontier + 3 viewport-layout runs (each fully walking cards 1→5 with correct answers) + 1 meson gate reveal. Prior 58-exhaustive still holds — data layer unchanged since prior review.
+
+Nothing to raise. The two P2 tilde/lifetime rounds and the flow bug from the first pass all remain fixed; no regression, no new number/sign/trend/animation defect surfaced across the drive.

@@ -97,3 +97,63 @@ none
 | NP-P1-4 | ASSESSED-ONLY | Verified: POLISH change-log (L338) documents the deliberate cut — "[pedagogy] one concept only — force bars, 'force relevance' copy and force-based inquiry cards are gone" and "forceRel() and its four undefined 0–100% bars deleted". No force UI exists. Recommendation: keep the cut (the sim's single-concept focus d·E = ħc is its strength, and force strengths vs scale is a different lesson); instead amend the curriculum row, or if the curriculum team insists, add one static line to the "At this scale" panel naming the dominant force at the current band — needs the user's call. |
 
 Post-fix regression run (headless 1440×900, fresh load): zero pageerrors; Hide-Text boots CHECKED with the one registered note hidden; d×E = ħc held at 9 slider points across the full range (readouts 1.97/197 pairs at every decade); both energy-slider corners clean; formal panel renders all three equations.
+
+## Second review scan (2026-08-26)
+**Scope:** Re-audit after commit `0dab193` (PHY-P2-1, NP-P1-3, NP-P2-2 fixes; SYS-1/SYS-2 sweep). Read-only; new findings only. Method: Chrome MCP + puppeteer-style deterministic slider drive; core invariant `d·E = ħc = 0.19732697 GeV·fm` spot-checked at 16 slider positions across the full 27-decade range plus both endpoint corners — every displayed pair rounds to 0.197 GeV·fm within 3-sig-fig display precision (max err 0.166 %, which is the 0.1973 → 0.197 rounding). Physics core unchanged and correct: card-1/3/4/5 canonical readouts recomputed via `node -e` (116 neV / 1.97 eV / 116 MeV / 197 GeV) match on screen; atom-to-proton ratio 10⁻¹⁰ / 1.7 fm = 58,824× = 4.77 decades matches the "almost five orders of magnitude" card-4 rewording.
+
+**Fix regressions verified (all clean):** `window.Shell === "object"` at boot (NP-P1-1 stays fixed); pausing then clicking a pin flips `Shell.playing → true` (paused-transport wake-through live); ∑ Formal eq2 renders "ℏc ≈ 0.1973 GeV · fm" with proper `\cdot` in the KaTeX tree and 0 `.katex-error` nodes (NP-P1-3 fixed); energy-slider min corner reads exactly "100,000 km / 1.97 feV" and max corner "0.10 am / 1.97 TeV" (NP-P2-2 fixed); Reset while an inquiry CARD is active syncs the scene to that card (card-3 → 100 nm / 1.97 eV — SYS-2 fixed for the card-active case). Card-4 prose reads "The proton is almost five orders of magnitude smaller still (1.7 fm)" (PHY-P2-1 fixed).
+
+## PHYSICS
+### P0
+none
+### P1
+none
+### P2
+none
+
+## NON-PHYSICS
+### P0
+none
+### P1
+- **[NP-P1-5] [flow] [high]** SYS-2 fix over-reaches into the lecture / completed / inquiry-collapsed state: `onReset()` unconditionally calls `onStep(Shell.step)` after zeroing to HOME, and `Shell.step` (getter for `inqStep`) is left at 4 after `finishInquiry()` — so Reset in Lecture-mode or after Finish → jumps the scene to `STEPS[4] = -18` (readouts snap to **1.00 am / 197 GeV**, the quark scale) instead of returning to human scale. This is the very corner the prior review's "To verify" note flagged. Repro (deterministic, 3× fresh loads): Lecture ON (or click Finish → through the inquiry) so `#shell` gains `.lecture-mode .inquiry-collapsed` and `Shell.step === 4` — move the size slider to any value (e.g. sv = 0 → d = 1.00 m) — click ↻ Reset. Observed: d = **1.00 am**, E = **197 GeV**, scale slider snaps to 18. Expected in this mode: d = 1.70 m, E = 116 neV, scale slider = −0.22 (HOME, per the prior review's stated intent for free-exploration Reset). Because the sim boots via `setLectureMode(true)` (L751, curriculum request), the first Reset a student ever clicks lands in this bug path. Evidence: `sotu-rev2-reset-in-lecture-mode.jpg` (post-Reset scene: quark ruler pin lit, "quark · < 10⁻¹⁸ m" caption, min-probe chip "collider beam"); deterministic snapshot log in transcript. Anchor: `onReset()` L1658–L1663 in scale-of-the-universe.html. → **Fix:** guard the re-sync — `if (!shellRoot.classList.contains('inquiry-collapsed')) onStep(Shell.step);` (or equivalent, e.g. gate on `Shell.step < STEPS.length && document.querySelector('#inq-cards .inq-step.active')`) so Reset re-applies the card spec only while a card is open, and returns to HOME in the free-exploration / lecture / completed states.
+
+### P2
+- **[NP-P2-3] [ux] [med]** Hide-Text button tooltip is stale: `title="Hide Text — hides registered labels/readouts; registry is empty until items are added"` (L375), but this sim's registry has **one** DOM item (the E_min explainer `p.sim-note.ht-hide`) and the checkbox is deliberately `checked` at boot — so the tooltip contradicts the visible boot state (the "hide-text" class is on `#shell` from load 1 and the note is already hidden). Repro: hover the Hide Text pill on any fresh load. Anchor: header markup L375. → **Fix:** align the tooltip with the registry ("Hide Text — hides the E_min massless-probe caveat by default; uncheck to show" or simply "Hide the registered E_min caveat"), or drop the misleading "registry is empty" phrase.
+
+## Control census (delta vs first review)
+| control | new probe | verdict |
+|---|---|---|
+| ↻ Reset (in `.inquiry-collapsed` / Lecture) | 3 fresh loads, slider away → Reset | **NEW BUG → NP-P1-5** (jumps to STEPS[4]) |
+| ↻ Reset (with inquiry card active) | card 3 → slider off → Reset | OK (syncs to 100 nm / 1.97 eV as prior review) |
+| ∑ Formal panel | eq1/eq2/eq3 KaTeX tree scanned | 0 errors; eq2 renders "GeV · fm" with proper `\cdot` |
+| Energy slider (min corner) | ev = −23.7048 | 100,000 km / 1.97 feV (exact — NP-P2-2 fix live) |
+| Energy slider (max corner) | ev = 3.2952 | 0.10 am / 1.97 TeV (exact) |
+| `window.Shell` guard | boot `typeof window.Shell` | `"object"` — NP-P1-1 fix live |
+
+## Combination coverage manifest (second scan)
+| combo set | strategy | count | invariants asserted | result |
+|---|---|---|---|---|
+| Slider sweep (size-driven, second pass) | sampled 16 log-spaced | 16 | d·E ∈ [0.197, 0.198] GeV·fm at every point (max 0.166 % vs canon = display-rounding only) | pass |
+| Energy-corner spot check | exhaustive: min, max, min+0.02, max−0.02 | 4 | corner readouts land on canonical round values; interior points on the 0.02 grid | pass |
+| Card-active Reset (SYS-2 regression) | card 3 → slider off → Reset | 1 | scene re-syncs to STEPS[2] = −7 (100 nm / 1.97 eV) | pass |
+| Lecture-collapsed Reset | 3 deterministic reproductions | 3 | scene should return to HOME; observed: STEPS[4] = quark | **fail → NP-P1-5** |
+| Formal panel render | 1 open cycle, KaTeX tree scan | 3 eq | 0 katex-error nodes; eq2 contains `⋅` (U+22C5) | pass |
+| Boot invariants | `window.Shell` presence, Hide-Text default, lecture default | 3 | `Shell` on window; `#shell.hide-text` at boot; `.lecture-mode` at boot | pass |
+| Backgrounded-tab guard | `document.hidden = true` at test time | — | pin buttons freeze S.view (rAF off); readouts don't update — expected per skill, NOT a bug | — |
+
+## Physics spot checks (node -e, this pass)
+| card / label | on-screen | ħc/d expected | verdict |
+|---|---|---|---|
+| Card 1 (d = 1.7 m) | E_min = 116 neV | 0.19732697 / 1.7×10¹⁵ = 1.161×10⁻⁷ eV = 116 neV | ✓ |
+| Card 3 (d = 100 nm) | E_min = 1.97 eV | 0.19732697 / 10⁸ fm = 1.9733 eV | ✓ |
+| Card 4 initial (d = 10⁻¹⁰ m) | E_min ≈ 2 keV | 0.19732697 / 10⁵ fm = 1.973 keV | ✓ (label "2 keV" rounded) |
+| Card 4 reveal (d = 1.7 fm) | E_min = 116 MeV | 0.19732697 / 1.7 = 0.1161 GeV = 116 MeV | ✓ |
+| Card 5 (d = 10⁻¹⁸ m) | E_min = 197 GeV | 0.19732697 / 10⁻³ fm = 197.3 GeV | ✓ |
+| Card-4 wording (atom → proton) | "almost five orders of magnitude smaller" | 10⁻¹⁰ / 1.7×10⁻¹⁵ = 5.88×10⁴ → 4.77 decades | ✓ (was "100,000×" pre-fix; PHY-P2-1 resolved) |
+
+## Assessment of the "PHYSICS" bucket
+All spot-checked numbers agree with canon to display precision. The sim's core `E·d = ħc` invariant is exact within the two-decimal slider grid and 3-sig-fig readout rounding across the full 27-decade range; pin values match canon (Earth diameter 1.274×10⁷ m; human 1.7 m; hair 80 µm; virus 100 nm; atom 10⁻¹⁰ m = 1 Å; proton 1.7 fm = diameter; quark point-like < 10⁻¹⁸ m). ħc numeric constant matches `LOGC = log₁₀(0.19732697×10⁻¹⁵) = −15.7048` in code (L787). No new physics finding.
+
+## To verify (human, second pass)
+- NP-P1-5 fix scope: confirm the intended behaviour for ↻ Reset when the inquiry is (a) collapsed via Lecture ON, (b) collapsed via Finish →, and (c) reopened at card 1 via the restore chip. Prior review's own "To verify" comment already said Reset should HOME in the collapsed/completed state — this second scan promotes that concern from advisory to a live P1 bug.
+- NP-P1-4 (fundamental-forces panel absent) status unchanged: still ASSESSED-ONLY, awaiting product decision on curriculum vs POLISH note.

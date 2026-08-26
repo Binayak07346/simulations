@@ -99,3 +99,141 @@ Every finding was independently reproduced headless (Chrome 1440×900, physics d
 | NP-P2-1 | **CONFIRMED + FIXED** | Screenshot at the PRE[4] rest-at-vacuum state reproduced the garbled "φ/V_min = −1.00" collision at the marker. Fix at `drawStrip`: when the ball's tag x is within 14 px of the V_min marker, the V_min label flips to right-aligned left of the marker. Post-fix screenshots: at-vacuum state fully legible (V_min left, φ right); mid-kick state unchanged (label right of marker as before). |
 | NP-P2-2 | **CONFIRMED + FIXED** | The sim's single `<script>` spans lines 553–1525 and `'use strict';` sat after the Shell IIFE closes — a mid-script bare expression statement, so it enables nothing. Line deleted; zero pageerrors after. |
 | NP-P1-1 | **ALREADY-RESOLVED** | Fixed by the systemic sweep (SYS-2 variant) before this pass — `onReset` now replays the current card's PRE spec (including `pause`); left alone per instruction. |
+
+## Second review scan (2026-08-26)
+
+**Verdict:** All six previously-reported findings hold as fixed under a second headless pass — every canon value matches, the elastic-wall rescale is honest, the symmetry-breaking azimuth is genuinely random, the period label carries "(small oscillations)", the ring-coast prose is softened, and Reset on card 2 preserves the pause. One NEW non-physics finding (P1) surfaces: the boot-in-Lecture-mode change (commit 96b098b) leaves `S.metered` + `S.revealed` `true` for the whole session — the Lecture button OFF and the restore chip both silently retain the mass reveals, so a student who enters the inquiry from the boot Lecture screen sees every predict-card's answer on the 3D plot and mass table before card 4/5 asks them to predict it. Physics: zero new findings. **Console:** clean (only the environment's `/favicon.ico` 404, unchanged). **Combos re-tested:** 5 μ² canon stops via `__audit.at` AND live readouts (`syncUI`) × pre-metered/post-metered; 8-bounce elastic-wall energy trace; Reset on card 2 (both Lecture-OFF flow and inquiry-only flow); 4 symmetry-breaking runs (fresh reload each); Lecture toggle round trip; restore-chip flow.
+
+### Fix verification (all confirmed holding at ?v=rev2)
+| ID | Recheck | Result |
+|---|---|---|
+| PHY-P2-1 | period label at μ² ∈ {−2, −1, −0.5, +1}: `sim-lab-T` reads "radial period 2π/m (small oscillations)" broken / "period 2π/m (small oscillations)" symmetric | holds |
+| PHY-P2-2 | 8-bounce trace at μ²=−2, E₀=1.4200 (leapfrog h=0.002, mirror of `phys()` wall branch): E stays 1.42000528…1.42000547 across every bounce (drift ≈ 3×10⁻⁷/bounce, integrator-level; monotone up) — no per-bounce loss | holds |
+| PHY-P2-3 | card-4 correct-choice fb "stays pinned to the valley floor" and wrong-choice fb "\|φ\| stays at ≈1.00" | holds (grepped) |
+| PHY-P2-4 | 4 fresh-load runs from card 2 answered "roll off": ball reaches ring at four visibly distinct azimuths (wb-rev2-11-sym-run{0..3}); PRE[1] is (0,0,0,0) | holds |
+| NP-P2-1 | slice at μ²=−2 rest-at-vacuum (wb-rev2-01): V_min tag now flipped LEFT of marker, "φ" tag stays right — legible | holds |
+| NP-P2-2 | grep `'use strict'` in sim script: zero hits | holds |
+| NP-P1-1 | fresh load → Lecture OFF → Next to card 2 → Reset: `active=1, playing='▶ Play' (i.e. paused)`; PRE[1].pause honoured (wb-rev2-10-card2-reset.png) | holds |
+
+### Canon values at μ² ∈ {−2, −1, −0.5, 0, +1} — measured vs computed
+| μ² | v (node) | v (readout) | V_min (node) | V_min (readout) | m² radial (node) | m² (readout) | 2π/m (node) | T (readout) | ring m² |
+|---|---|---|---|---|---|---|---|---|---|
+| −2   | 1.000000 | 1.00   | −1.000000 | −1.00   | 8.0 | 8.00 | 2.221441 | 2.22 | 0 (broken) |
+| −1   | 0.707107 | 0.71   | −0.250000 | −0.25   | 4.0 | 4.00 | 3.141593 | 3.14 | 0 (broken) |
+| −0.5 | 0.500000 | 0.50   | −0.062500 | −0.0625 | 2.0 | 2.00 | 4.442883 | 4.44 | 0 (broken) |
+| 0    | 0.0      | 0.00   | 0.0       | 0.00    | 0.0 | 0.00 | ∞ | — | no ring (symmetric) |
+| +1   | 0.0      | 0.00   | 0.0       | 0.00    | 2.0 (=2μ²) | 2.00 | 4.442883 | 4.44 | no ring (symmetric) |
+
+All five stops match exactly to display precision. m²_radial = −4μ² for μ²<0 (sim's own convention, verified internally consistent with the Formal panel's φ→φ/√2 map to the textbook m²=−2μ²) and 2μ² for μ²≥0; ring m² ≡ 0 for every μ²<0 (Goldstone). Small-oscillation period T = 2π/√(m²_radial) matches to 3 sig-figs at every stop.
+
+## PHYSICS
+### P0
+none
+### P1
+none
+### P2
+none
+
+## NON-PHYSICS
+### P0
+none
+### P1
+- **[NP-P1-2] [flow] [high]** Boot-in-Lecture-mode (systemic since commit 96b098b) fires `onComplete` at page load, setting `S.metered = S.revealed = true`. Neither `setLectureMode(false)` nor the sim's `applyPre` / `onStep` clears those flags, so **every subsequent walk of the guided inquiry starts fully spoiled**: on card 1 (μ²=+1) the readout table already shows curvature m² = 2.00 / T = 4.44, and on card 2 the 3D plot already carries the labels "radial · massive · m² = 8.00 at \|φ\| = v" and "ring · Goldstone · m² = 0" — the exact reveals that cards 4 and 5 exist to gate. Repro (both entry paths spoiled):
+  1. Load → click 🎓 Lecture (turn OFF, opens card 1): readout table live (romr = 2.00, romt = 'no ring', v = 0.00, Vmin = 0.00, T = 4.44) — should be em-dashes. Advance to card 4 (μ²=−2, ring-push predict): romt = '0' and mass pills "m² = 8.00 / m² = 0" render **before** the ring push (wb-rev2-13-card4-spoiled.png).
+  2. Load → click the restore chip (aside-inquiry-restore): same leak (romr = 2.00 on card 1). 
+  Anchor: shell `setLectureMode(false)` (line 595) + sim `applyPre` (line 1416) + `onStep` (line 1438) — none reset `S.metered` / `S.revealed`; only `verdict()` (line 1348) and card-5's `data-reveal="meter"` (line 1523) ever set them, and `onComplete` (line 1451) never clears them. Evidence: wb-rev2-09-card2.png (card 2 with revealed pills), wb-rev2-13-card4-spoiled.png (card 4 with romt='0' pre-answer), wb-d.mjs transcript CARD1_AFTER_LEC_OFF vs BOOT_LEC. → **Fix (one line, sim-local):** in `applyPre`, when the current step index is not the last one (Shell.step < Shell.totalSteps − 1), clear the reveal flags: `S.metered = false; S.revealed = false;`. Alternate (shell-side, would fix all 14 sims): have `setLectureMode(false)` also reload the sim's step 0 via `onReset()` or dispatch a "reset reveals" callback. Retains the prior review's "answers preserved" (choice-button state), but drops the spoiler.
+### P2
+none
+
+## Control census (delta from first pass)
+| control | delta | verdict |
+|---|---|---|
+| Hide Text | boot state changed from `unchecked` (first pass) to **`checked`** — follows the shell's `lecture-mode` class per the `ht-toggle` bootstrap (line 428). Registry is still empty, so no visible text is hidden; toggling has zero measured innerText delta (1216 → 1216). Not a bug (design), but the prior review's "boot unchecked" line is stale. | OK (note) |
+| all other controls | re-swept quickly at μ²={−2, −1, 0, +1}, γ={0, 0.6}, plus Reset on card 2 | unchanged (all live) |
+
+## Combination coverage manifest (this pass)
+| combo set | strategy | count | invariants asserted | result |
+|---|---|---|---|---|
+| μ² canon check via `__audit.at` + live `syncUI` readouts | exhaustive | 5 (pre-metered) + 5 (post-metered) | v, V_min, m²_radial, ring m², T match node computation exactly | 10/10 pass |
+| Elastic-wall energy trace (JS mirror of `phys()` wall branch) | targeted | 8 consecutive bounces at μ²=−2, initial E=1.42 | \|ΔE\|/bounce < 5×10⁻⁷ | pass |
+| Reset on card 2 (Lecture-OFF flow) | targeted | 1 | active card stays 1; playing stays paused (button reads '▶ Play') | pass |
+| Symmetry-breaking azimuth after fresh reload | sampled | 4 runs | 4 visibly distinct ball paths, none identical | pass |
+| Lecture toggle round-trip (ON→OFF, and restore chip) | targeted | 2 | reveal-state leak reproduced both ways | fail → NP-P1-2 |
+
+## Inquiry-layer check (delta only)
+- Card 2 hilltop scene stays paused across Reset (NP-P1-1 fix verified working — wb-rev2-10-card2-reset.png).
+- Every card, when entered via Lecture-OFF or restore chip, exposes readouts that its own gate is meant to hide (NP-P1-2, above).
+
+## To verify (human)
+- NP-P1-2 fix option: the sim-local one-line fix (clear metered/revealed in `applyPre` when not at the load step) is minimal but leaves the systemic issue in the other 13 v2 sims that also boot in Lecture mode with reveal-on-completion flags. Please confirm whether to fix here only or push the reset-on-inqShow(0) pattern into the shell for uniformity.
+- The Hide Text checkbox now boots **checked** by design (follows lecture-mode). Registry stays empty so nothing hides — please confirm this new default is intended for the wine-bottle sim (it is documented in the ht-toggle bootstrap comment).
+
+---
+*Second-scan artifacts in scratchpad `wb-rev2/`: driver scripts wb-a/b/c/d.mjs and screenshots wb-rev2-01…13. Headless Chrome 1440×900, `?v=rev2`. Zero pageerrors observed; only the environment's `/favicon.ico` 404 remains.*
+
+## Third review scan (2026-08-26)
+
+No new findings — physics + non-physics core clean on this pass. The only outstanding item is the previously-flagged **NP-P1-2** (boot-in-Lecture leaves `S.metered = S.revealed = true`, spoiling every predict card), which is still live in the file (commit 2ed7b91 did not include the sim-local one-line clear in `applyPre`); reconfirmed live and left listed in the second scan.
+
+**Verdict:** physics core exact at every canonical μ² and every prior fix holds; no new physics, flow, overlap, or dead-control regression under a focused headless re-drive. **Console:** clean (only the environment's `/favicon.ico` 404). **Combos re-tested:** 8 μ² stops via `sim-mu2` slider + live `syncUI` DOM readouts (canon table below); the two cross-sim regression patterns A + B for boot-in-Lecture (both absent here); fresh-load flow through Lecture-OFF → cards 1 → 2 → 3 → 4 (spoiler leak reproduced — NP-P1-2 stands); restore-chip flow; μ² × placement post-boot; Reset in the boot lecture-collapsed state; friction slider; both kick buttons; ∑ Formal (equations grep-verified).
+
+### Cross-sim regression patterns — probed and clear
+- **Pattern A (boot scene wrong because init-order guard no-ops fast-forward `onStep`s):** NOT PRESENT. On fresh load, `setLectureMode(true)` in `Shell.init` runs `finishInquiry`, which walks `onStep(1..4)`; the final `applyPre(PRE[4])` = `{mu2:-2, x:1, y:0, vx:0, vy:0}` matches the sim's intended free-exploration/load state (the same spec `applyPre(PRE[4])` at line 1506 sets before `Shell.init`). Measured boot state (headless, `wb-rev3-30-boot.png`): `mu2=-2, x=1, y=0, vx=0, vy=0`, mass table fully revealed with radial m²=8.00, ring m²=0, T=2.22 — exact match to PRE[4] and to the canon at μ²=−2. `booted`/init-order does not gate `applyPre` here (line 1416 has no early return) so no-op fast-forward is impossible.
+- **Pattern B (first ↻ Reset in lecture-collapsed state lands on wrong card scene):** NOT PRESENT. `Shell.step` sits at `cards.length-1 = 4` post-`finishInquiry`, and `onReset` (line 1442) applies `PRE[Shell.step] = PRE[4]` — the same load-state spec — so the first-Reset target coincides with the boot target. Measured: BOOT_BEFORE_RESET `{step:4, mu2:-2, x:1, y:0}`; BOOT_AFTER_RESET `{step:4, mu2:-2, x:1, y:0}` — no state change (`wb-rev3-03-boot-after-reset.png`). The pattern would bite a sim whose last-card spec is not the intended home state; here PRE[4] is *deliberately* the home state (comment: "at rest (mu2-sweep predict) + load state").
+
+### NP-P1-2 (still open) — reconfirmed
+Headless third-pass evidence (screenshots + driver `probe3.mjs`):
+- BOOT (lecture-on) DOM readouts: `sim-ro-mr = 8.00`, `sim-ro-mt = 0`, `sim-ro-T = 2.22`, `sim-ro-v = 1.00`, `sim-ro-vmin = −1.00`. `S.metered = S.revealed = true`.
+- 🎓 Lecture OFF → card 1 (`wb-rev3-31-card1.png`): `S.metered = S.revealed` **remain true**; readouts show `mr = 2.00, mt = "no ring", T = 4.44, v = 0.00, Vmin = 0.00` — mass table live before any card asks the student to predict it (card 1's own prose says the sim "just falls back and oscillates" — the mass answers are for card 5).
+- Advance to card 4 (predict ring push) via the pager (`wb-rev3-32-card4.png`): mode pills **"radial · massive · m² = 8.00 at |φ| = v"** and **"ring · Goldstone · m² = 0"** and canvas label "ring of minima |φ| = v" are drawn *before* the student clicks any Ring push choice — exactly what the card is meant to gate.
+- Restore chip → same leak on card 1 (`wb-rev3-33-restore.png`).
+
+Anchor + fix stand as written in the second scan (clear `S.metered/S.revealed` in `applyPre` when `Shell.step < Shell.totalSteps − 1`, or fix systemically in `setLectureMode(false)` for all 14 sims).
+
+### Canon values — measured live at eight μ² stops (`sim-ro-*` DOM readouts)
+| μ² | v (node) | v (readout) | V_min (node) | V_min (readout) | m²_radial (node) | m² (readout) | 2π/m (node) | T (readout) | ring m² |
+|---|---|---|---|---|---|---|---|---|---|
+| −2   | 1.000000 | 1.00 | −1.000000 | −1.00   | 8.0 | 8.00 | 2.221441 | 2.22 | 0 (broken) |
+| −1.5 | 0.866025 | 0.87 | −0.562500 | −0.56   | 6.0 | 6.00 | 2.565099 | 2.57 | 0 (broken) |
+| −1   | 0.707107 | 0.71 | −0.250000 | −0.25   | 4.0 | 4.00 | 3.141593 | 3.14 | 0 (broken) |
+| −0.5 | 0.500000 | 0.50 | −0.062500 | −0.0625 | 2.0 | 2.00 | 4.442883 | 4.44 | 0 (broken) |
+| −0.05| 0.158114 | 0.16 | −0.000625 | −0.0006 | 0.2 | 0.20 | 14.049629| 14.05| 0 (broken) |
+| 0    | 0.0      | 0.00 | 0.0       | 0.00    | 0.0 | 0.00 | ∞ | — | no ring (symmetric) |
+| +0.5 | 0.0      | 0.00 | 0.0       | 0.00    | 1.0 | 1.00 | 6.283185 | 6.28 | no ring |
+| +1   | 0.0      | 0.00 | 0.0       | 0.00    | 2.0 | 2.00 | 4.442883 | 4.44 | no ring |
+
+All eight stops match to display precision. m²_radial = −4μ² for μ² < 0 and 2μ² for μ² ≥ 0 (sim's own L = ½(∂φ)² − V normalization, verified consistent with the Formal-panel φ → φ/√2 map to the textbook m² = −2μ²). Ring m² pinned at 0 for every μ² < 0 (Goldstone). Small-oscillation T = 2π/√m² matches to 3 sig-figs. Sig-fig display at μ² = −0.05 (V_min = −0.0006 vs true −0.000625) rounds correctly.
+
+## PHYSICS
+### P0
+none
+### P1
+none
+### P2
+none
+
+## NON-PHYSICS
+### P0
+none
+### P1
+none (NP-P1-2 from the second scan still open — not a new finding, no code change since)
+### P2
+none
+
+## Combination coverage manifest (this pass)
+| combo set | strategy | count | invariants asserted | result |
+|---|---|---|---|---|
+| μ² canon check via live `sim-ro-*` readouts + `syncUI` | exhaustive | 8 | v, V_min, m²_radial, ring m², T match node computation | 8/8 pass |
+| Cross-sim pattern A (boot scene ≟ PRE[last]) | targeted | 1 | boot state fingerprint = PRE[4] spec = load-state target | pass (pattern absent) |
+| Cross-sim pattern B (first-Reset in lecture-collapsed state) | targeted | 1 | Reset target = boot target (both PRE[4]) | pass (pattern absent) |
+| NP-P1-2 spoiler leak — Lecture-OFF entry | targeted | 1 walk to card 4 | mass table masked before card-5 reveal | fail → NP-P1-2 (already listed) |
+| NP-P1-2 spoiler leak — restore-chip entry | targeted | 1 | same | fail → NP-P1-2 (already listed) |
+| Kick buttons | sampled | 2 | Δv radial ≈0.81 at (1,0), Δv tangential ≈0.52 at (1,0) | pass (both live) |
+| Friction slider | sampled | 1 | S.fric updates on input | pass |
+| Formal panel equations | code-read | 4 | V, L, v/V_min, m² match canon in the sim's own convention | pass |
+
+## To verify (human)
+- NP-P1-2 systemic-vs-local fix decision from the second scan still stands — no change since. The three-line sim-local clear in `applyPre` is the shortest correct patch; a shell-side clear in `setLectureMode(false)` fixes all 14 sims at once.
+
+---
+*Third-scan artifacts in scratchpad `wb-rev3/`: driver scripts `probe.mjs`, `probe2.mjs`, `probe3.mjs`; screenshots `wb-rev3-01…41`. Headless Chrome 1440×900, `?v=rev3/rev3b/rev3c`. Zero pageerrors observed; only the environment's `/favicon.ico` 404 remains.*

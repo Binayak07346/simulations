@@ -96,3 +96,58 @@ none
 | PHY-P2-3 | **CONFIRMED + FIXED** | `THR` W⁺W⁻ entry was 160.77 = 2×80.385 (pre-2022 PDG). Updated to 160.74 (2×80.3692, current PDG m_W = 80.3692 ± 0.0133), matching the sim's display precision. Card-5 LEP note "√s = 161 GeV in 1996" remains historically correct and above the new wall. |
 | NP-P2-2 | **CONFIRMED + FIXED** | Card 1 said "√s = 2.00 GeV"; `fmtRS(2)` renders "2.000" (toFixed(3) below 9.995). Card text harmonized to "√s = 2.000 GeV"; verified live that no stale "2.00 GeV" string remains. |
 | NP-P2-1 | **ALREADY-RESOLVED** | Addressed by the systemic sweep (SYS-1): `window.Shell = Shell;` is now exposed at the shell's end (with comment "expose for the sim's window.Shell guards"), so `pauseShell()` is live. Left alone per instruction. |
+
+## Second review scan (2026-08-26)
+**Verdict:** All five prior fixes (PHY-P2-1/2/3, NP-P2-1/2, SYS-1) live-verified end-to-end; one new physics-polish item (Info-modal walkthrough prose calls the W⁺W⁻ "threshold at 170 GeV" when 2m_W = 160.74 GeV — card-5 elsewhere gets it right); nothing above P2.
+**Console:** clean (zero page errors across fresh reload, `sigNb` numeric census over 12 √s values, Formal-panel + Info-modal audit, restore-chip probe).
+**Combos re-tested:** 12 √s spot-checks (0.212, 0.213, 0.22, 0.25, 0.30, 0.50, 1, 2, 3.55372, 10, 91.2, 200) — engine `sigNb` ≡ manual (4πα²/3s)·β(3−β²)/2·(ħc)² at ALL 12 points to machine precision; live readout at card-1 defaults (E₁=E₂=1) matches (σ = 21.7 nb, N = 1.95×10⁷ at L=1 fb⁻¹, ε=0.9); fresh-reload boot state (Lecture-mode ON, inquiry collapsed, restore chip "▸ Guided inquiry" visible, inqStep=4, E₁=E₂=5, √s=10.00 GeV) verified against `setLectureMode(true)` at line 719.
+
+### PHYSICS
+#### P0
+none
+#### P1
+none
+#### P2
+- **[PHY-P2-4] [med]** Info-modal "Recommended lecture path" prose (line 342) reads "…cross the W⁺W⁻ threshold at 170 GeV…". The W⁺W⁻ pair-production threshold is 2m_W = 160.74 GeV (encoded exactly in `THR` line 763 and cited correctly by card 5's `.inq-after`: "LEP crossed the W⁺W⁻ wall (√s = 161 GeV) in 1996"). Read charitably, "170 GeV" is a walkthrough target √s comfortably above the wall — but the phrasing "the W⁺W⁻ threshold at 170 GeV" grammatically implies the threshold itself sits at 170 GeV, contradicting card 5 and the constant. Repro: Info → read the third arrow of the path. Anchor: line 342. → **Fix:** reword to "cross the W⁺W⁻ threshold (2m_W ≈ 160.7 GeV) — try both beams at 85 GeV" (or similar), matching card-5's phrasing.
+
+### NON-PHYSICS
+#### P0
+none
+#### P1
+none
+#### P2
+none
+
+### Re-verification of prior FIXES APPLIED
+| ID | Verdict this scan | Evidence |
+|---|---|---|
+| PHY-P2-1 (β threshold factor) | **HOLDS** | `sigNb` (line 776–780) contains `b*(3-b*b)/2` with `b=sqrt(1-4·MMU²/rs²)`; live `window.sigNb(rs)` ≡ manual formula at 12 √s pts (0.212→232 nb; 0.213→358; 0.22→729; 0.25→1008; 0.30→855; 0.50→343; 1→86.79; 2→21.71; 3.55372→6.88; 10→0.869; 91.2→0.0104; 200→2.17×10⁻³) — matches ref calc to 15 sig figs. Rises from 0 at 2m_μ, peaks ~0.25 GeV, then 1/s. Formal panel (line 504) and Info-modal prose (line 338) show the corrected formula with β = √(1−4m_μ²/s). `window.__audit.at(rs).totalCrossSectionNb` (line 749) also includes β factor. |
+| PHY-P2-2 (closed caption) | **HOLDS** | Line 1052 literal is "μ⁺μ⁻ closed — √s < 2m_μ = 0.2113 GeV". No stale "< 0.21" or "< 0.211" caption anywhere. Consistent with `fmtRS` 3-decimal display: while chip is closed, headline can only show ≤ 0.211 which is < 0.2113. |
+| PHY-P2-3 (m_W → PDG) | **HOLDS** | `THR` line 763 `{ sym: 'W⁺W⁻', m: 160.74 }` (= 2 × 80.3692, current PDG). All other threshold constants also PDG-current: μμ 2·MMU (MMU 0.1056583755), ττ 3.55372, bb̄ 10.558 (B±), ZZ 182.37 (2·91.185), tt̄ 345.4 (2·172.7). Card 5's "LEP … √s = 161 GeV in 1996" remains historically correct and above the new 160.74 wall. |
+| NP-P2-1 (window.Shell) | **HOLDS** | `typeof window.Shell === 'function-ish object'` — `Shell.step`, `Shell.totalSteps`, `Shell.setPlaying` all reachable from the page. `pauseShell()` guard now succeeds. |
+| NP-P2-2 (card-1 precision) | **HOLDS** | Card 1 prose (line 431) contains "**√s = 2.000 GeV**"; live headline at card-1 default (E=1+1) reads exactly "2.000 GeV" via `fmtRS(2)`. Grep for stale "√s = 2.00" in file returns none. |
+
+### Coverage manifest (second scan)
+| combo set | strategy | count | result |
+|---|---|---|---|
+| σ numeric spot-check (0.212 → 500 GeV log-sampled + at every 6 THR values) | exhaustive over named grid | 12 | engine ≡ ref calc to 15 sig figs |
+| Live readouts at card-1 defaults (E₁=E₂=1, L=1, ε=0.9) | one-shot verification | 1 | √s=2.000, σ=21.7 nb, N=1.95×10⁷, waste=0.00 — exact |
+| Boot mode after location.reload() | one-shot | 1 | Lecture ON, inqCollapsed, inqStep=4/5, E₁=E₂=5, √s=10.00 — matches line 719 intent |
+| Slider ranges (E₁ log 0.1–105 GeV; ∫L dt log 0.01–100 fb⁻¹; ε 0–1) | endpoints | 4 | E_max=105.003 (log2.0212), L_max=100, no NaN, all readouts finite |
+| Restore chip DOM audit | one-shot | 1 | `#aside-inquiry-restore` = BUTTON with text "▸ Guided inquiry", rect (1211,80) 283×32.5, visible when Lecture ON |
+| Info-modal + Formal-panel prose sweep for physics-content correctness | grep + read | full | all σ / √s / N / dσ/dΩ expressions match canon; **one prose ambiguity found (PHY-P2-4)** |
+
+### To verify (human, unchanged from first scan)
+- Curriculum-team confirmation that VPC is a live deliverable (empty row next to "Scrapped"; Info modal flags this).
+- Reset-during-reveal rolls scene back to card pre-reveal spec while feedback text remains — deliberate; confirm class-use readability.
+- KaTeX CDN fallback in the Formal panel — plain-text fallback present and correct.
+- Note (new observation, not a defect): `window.__audit.at(rs).differentialCrossSectionNbPerSteradian` (line 750) still returns α²/(4s)·(ħc)² without the (1+cos²θ) angular factor. Dev-only (no user path), student-facing Formal panel line 505 shows the correct dσ/dΩ = α²/(4s)·(1+cos²θ). Optional harmonize.
+
+### FIX-PROMPT ready
+```
+fix PHY-P2-4  →  reword Info-modal line 342 walkthrough
+current: "cross the W⁺W⁻ threshold at 170 GeV"
+new:     "cross the W⁺W⁻ threshold (2m_W ≈ 160.7 GeV; try both beams at 85 GeV)"
+(mirrors card-5's phrasing; unambiguously separates the threshold value from the walk-target √s)
+```
+

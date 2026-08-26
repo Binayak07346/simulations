@@ -81,3 +81,40 @@ none
 ## FIXES APPLIED (2026-08-26)
 - **PHY-P2-1 — CONFIRMED + FIXED.** Source (`TILES` entry, L774) and live tile click (headless Chrome, octet mode, Λ⁰ at centre-right) both showed the note "≈1950 — first “strange” particle." Historically wrong: the first strange particles were the 1947 Rochester–Butler V-particles (neutral kaons); Λ⁰ (~1950, Hopper & Biswas) is the first strange **baryon**. Reworded to "≈1950 — first “strange” baryon (kaons, 1947, were the first strange particles)." — one-line change to the `P('L0',…)` note string. Verified live (?v=efwfix2): Λ⁰ card shows the new note, wraps to two lines inside the card with no overflow (scrollWidth==clientWidth, scrollHeight==clientHeight), zero pageerrors. Screenshot: efw-L0-card-efwfix2.png (scratchpad).
 - NP-P2-1 not touched here — already fixed by the systemic sweep (SYS-5).
+
+## Second review scan (2026-08-26)
+
+**Verdict:** Clean rescan of rev2 — no new PHYSICS or NON-PHYSICS findings. The two prior fixes (PHY-P2-1 Λ⁰ wording + SYS-5 answered-card revisit) are live and behave as intended; every card, feedback string, ∑ Formal panel, GMN readout and Ω⁻ prediction still passes. **Console:** clean (zero pageerrors / console errors across load + full-flow + reset + sweep). **Combos tested:** 22 exhaustive (initial Lecture-ON completed state · Lecture-OFF card1 · card 2/3/4 forward + gate + reveal + feedback · card 4 → back to c2 (answered) → back to c1 → forward to c4 without re-answering · Reset while on card 4 · octet sweep (canvas) · decuplet sweep + Place all + Ω-reveal persistence · Hide-Text on/off · ∑ Formal open) + ~10 sampled (mode/qlines toggles interleaved).
+
+**Method note:** headless puppeteer-core (Chrome 1440×900) against `http://localhost:8765/Sims_v2_lecture_versions/navigating-the-eight-fold-way.html?v=rev2`; screenshots `efw-rev2-*.png` in scratchpad. Curriculum-extract row "Navigating the Eight Fold Way" + Lecture 14 The Quark Model reconfirmed.
+
+### PHYSICS
+#### P0
+none
+#### P1
+none
+#### P2
+none
+
+### NON-PHYSICS
+#### P0
+none
+#### P1
+none
+#### P2
+none
+
+### Prior-finding verification (rev2)
+- **PHY-P2-1 (Λ⁰ note wording) — VERIFIED FIXED.** Selecting Λ⁰ on the octet chart now shows "≈1950 — first "strange" baryon (kaons, 1947, were the first strange particles)." Source (TILES entry L774) matches. Two-line wrap inside the Particle card with no overflow. Evidence: `efw-rev2-rev2-02-lecture-off-card1.png`, `report2.json → afterLectureOff` (proton default) + prior L0 screenshot from rev1 commit.
+- **NP-P2-1 (answered-card revisit re-hid the reveal) — VERIFIED FIXED (via SYS-5).** Sequence: Lecture OFF → card 1 → Next → answer card 2 correct (qlines on) → Next → answer card 3 correct → Next → answer card 4 correct (Ω⁻ revealed, mass 1672 MeV). ‹ ‹ back to answered card 2 → `qlinesChecked=true` (not re-hidden). Forward through c3, c4 without re-answering → qlines stays on, Ω⁻ stays revealed. Reset on card 4 → still dec mode + qlines on + Ω⁻ revealed (Reset re-syncs to the answered spec, per SYS-5 `onStep` path). Evidence: `report2.json → card2_onRevisit / c3fwd / c4fwd / afterResetCard4` + `efw-rev2-rev2-06-back-c2-answered.png`, `efw-rev2-rev2-09-reset-card4.png`.
+
+### Physics spot-checks (rev2)
+- Card 2 correct feedback: "Q = ½ + (1−2)/2 = 0" for Ξ⁰ (uss, B=1, S=−2). Verified: 0.5 + (−1)/2 = 0. ✓
+- Card 3 correct feedback: "Q = 0 + (1−3)/2 = −1" for Ω⁻ (sss, B=1, S=−3, I₃=0). Verified: 0 + (−2)/2 = −1. ✓
+- Card 4 mass-ladder feedback: 1533 + ≈147 → 1680 MeV published 1962; measured 1672 MeV (Brookhaven 1964). Matches PDG (Ω⁻ = 1672.45 MeV) and the standard Gell-Mann prediction narrative. ✓
+- ∑ Formal panel (rev2 screenshot): `Q = I₃ + (B+S)/2  (B=1 for baryons)`, `m_Δ=1232, m_Σ*=1385, m_Ξ*=1533 ⇒ m_Ω ≈ 1680 MeV`, "Ω⁻ measured: 1672 MeV". All consistent with sim tile values and PDG. ✓
+- Q-diagonal labelling on both charts (rev2): octet shows Q=−1, 0, +1; decuplet adds Q=+2. Correct: +2 requires I₃=+3/2 at S=0 which is only in the decuplet (Δ⁺⁺). ✓
+- Λ⁰/Σ⁰ visual doubling on octet centre (offsets ±0.24) still labelled I₃=0 in the Particle card — verified via successive clicks at the two offset positions. ✓
+
+### To verify (human)
+- No new items; the four caveats from the first review remain accepted as designed.

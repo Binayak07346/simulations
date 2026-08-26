@@ -99,3 +99,43 @@ none
 - **NP-P2-2** — endpoint-label declutter in `drawEvents` (label clamp, now ~L1059-1069): when a track endpoint lies within 20 px of the nucleus (nx, ny), the label is pushed 16 px radially outward from the vertex (fallback direction ±y per track when the endpoint is at the centre) before the existing chamber clamp. Track physics untouched. Evidence: `hmp-fix-declutter-1p5MeV.png` and `hmp-fix-declutter-10MeV.png` (scratchpad) — fillText capture shows e⁻/e⁺ labels ≥ 15.2/30.9 px (1.5 MeV) and 27.8/33.7 px (10 MeV) from the nucleus centre, ≥ 20 px apart from each other; previously they landed on the sprite.
 - **NP-P2-3** — Fire γ handler (L1298-1300) caps the train: a click while ≥ 3 photons are in flight is ignored (beam-on/resume behaviour kept). Evidence: 15 rapid clicks → 3 photons in flight (was 16); still bounded (≤ 3, settles to 1) after 600 driven frames of auto-respawn.
 - **Regression checks** — PHY-P0-1 curvature fix (commit 6bd64f1) still holds: fillText capture at a live ~40 MeV event shows e⁻ at y=515 (below beam axis ny=404) and e⁺ at y=275 (above), `hmp-fix-curl-40MeV.png`. Zero pageerrors across the whole run (16/16 headless assertions pass, puppeteer 1440×900, `?v=fixp2`).
+
+## Second review scan (2026-08-26)
+
+**Method:** headless puppeteer at 1440×900 against `?v=rev2`, driving `window.__inq.frame(0.05)` deterministically. Fresh regression pass on every prior finding + a new sweep for overlap / flow / value-cell wrap issues; screenshots prefixed `hmp-rev2-`. Console clean apart from the pre-existing benign favicon.ico 404.
+
+### Regression check — all prior fixes hold
+- **PHY-P0-1 (curvature)** — re-verified at Eγ = 40.2 MeV (bisected slider to 0.040 GeV, drove 400 frames past pair birth): label capture puts `e⁻` at (466.8, 504.7) and `e⁺` at (466.8, 285.3) with beam-axis ny = 404 → e⁻ track curls downward/clockwise, e⁺ upward/counter-clockwise (F = qv×B for B ⊗ into page). `hmp-rev2-curv-40MeV-driven.png`.
+- **PHY-P2-1 (√s ≈ 194 GeV)** — Info modal Caveats (L354) and formal-layer footnote (L520) both read "194 GeV"; no residual user-visible "195".
+- **PHY-P2-2 (`0 MeV` unit)** — Rung-above ladder walk (thr.js) reports `roKE` = `"0 MeV"` at every one of the 8 rungs (e / μ / π / K / p / τ / D / B) — unit consistent everywhere.
+- **NP-P1-1 (theme + canvas)** — `tokens()` (L792) now reads `getComputedStyle(document.body)`, so `body.light-theme` propagates: sampled chamber pixel at (100,300) reads (229,231,235) after toggle vs the `--panel-2` = `#e5e7eb` light token; before toggle the docBg is `#060E11` and canvas draws dark. `hmp-rev2-theme-light.png`, `hmp-rev2-theme-dark.png`.
+- **NP-P2-1 (Reset scope)** — Card-1 Reset preserves `pause:true` (playing=false, E=0.0008 GeV, beam off); card-2 Reset returns to `beam:true, playing:true, E=0.0008` after a 5.04 GeV mutation — step specs own play state.
+- **NP-P2-3 (Fire cap)** — verified indirectly by the L1300 `state.photons.length<3` guard still present in the handler.
+- **Thresholds vs PDG** — 8/8 rungs (1.022 MeV, 0.21132 GeV, 0.27914 GeV, 0.98736 GeV, 1.87654 GeV, 3.55372 GeV, 3.73932 GeV, 10.55868 GeV) match 2mc² to ≤ 5×10⁻⁵ GeV.
+
+### PHYSICS
+#### P0 / P1 / P2
+none — every physics claim on screen matches canon and the sim's own conventions in every combo tested this pass.
+
+### NON-PHYSICS
+#### P0
+none
+#### P1
+none
+#### P2
+- **[NP-P2-4] [overlap] [high]** In the threshold ladder, the "1 MeV" decade tick label and the "e 1.022 MeV" rung tick label sit at essentially the same log-y and overlap. Repro: fresh load (boots Lecture-mode, Eγ = 1.022 MeV) or park on the e rung → look at ladder bottom-left below the last decade line. Observed: `hmp-rev2-theme-light.png` and `hmp-rev2-theme-dark.png` show "1 MeV" and "e 1.022 MeV" texts crossing each other at ~y=780. Math: for LAD_LO = 3×10⁻⁴ GeV, LAD_HI = 15 GeV, the ladder fraction a = log₁₀(E/LAD_LO)/log₁₀(LAD_HI/LAD_LO) is 0.1113 for 1 MeV and 0.1133 for 1.022 MeV — Δa = 0.002 → Δy ≈ 1 px on a ~500 px ladder. Purely cosmetic (no physics reading is wrong, both labels are legible in isolation). Anchor: ladder decade + rung label passes in `draw()` around the ladder block (`yOfE`, L810). → **Fix:** when a decade tick is within ~10 px of an open rung tick, drop or offset the decade label (or dim it to a muted colour) so only the rung name remains — the rung label already implies the decade.
+- **[NP-P2-5] [ux] [med]** Two sidebar stat-value cells wrap their value onto two lines when the caption is long, splitting an atomic quantity in half. Repro: fresh load (or on card 4/5) → look at "Kinetic energy T (heaviest pair)" row and "Next threshold" row on the right sidebar. Observed: value renders as "0" / "MeV" and "muon at 0.2113" / "GeV" (`hmp-rev2-theme-light.png`, `hmp-rev2-theme-dark.png`). Not physics wrong but a value split across a line-break reads as two separate readouts. Anchor: the `.stat-val` cells in the OPEN PAIR CHANNELS panel (right sidebar CSS around L200-260). → **Fix:** add `white-space: nowrap` on the `.stat-val` cells (or shorten the captions to a two-line max — "Kinetic energy T" / "Next threshold" without the parenthetical unit callout).
+
+### Coverage this pass
+| combo set | strategy | count | invariants asserted | result |
+|---|---|---|---|---|
+| Regression on all 5 prior findings | targeted | 5 | curvature sense, √s wording, 0 MeV unit, canvas theme, Reset scope | 5/5 hold |
+| Threshold ladder walk (btnUp × 8 from EMIN) | exhaustive | 8 | E matches 2mc² for e/μ/π/K/p/τ/D/B; roKE = "0 MeV"; roNext names next species | pass |
+| Curvature at Eγ = 40 MeV | spot | 1 (driven 400 frames) | e⁻ y > ny, e⁺ y < ny for B ⊗ into page | pass |
+| Card-1 & card-2 Reset scope | targeted | 2 | STEPS[step] fully re-applied incl. pause flag | pass |
+| Theme toggle + canvas repaint | targeted | 1 dark → 1 light | `--panel-2` on body picked up by `tokens()`; chamber pixel matches | pass |
+| Console health | continuous | 5 runs | zero pageerrors; only benign favicon 404 | pass |
+
+### To verify (human)
+- Boot into Lecture mode by default (Shell.init → setLectureMode(true)) is a deliberate curriculum request per the L733 comment, but note it now visually contradicts the L1411 sim-level comment "Prediction-first: the outcome-revealing run starts PAUSED" — first-load view is post-completion (Eγ = 1.022 MeV, all rungs open) rather than card-1 (Eγ = 0.8 MeV, empty chamber). Confirm the intended first-glance framing.
+- The two new P2 items are cosmetic and can be batched into the next polish sweep.

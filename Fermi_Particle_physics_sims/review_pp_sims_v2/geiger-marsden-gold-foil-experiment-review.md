@@ -103,3 +103,64 @@ Note (deliberate, not filed): pager-revisit of cards 3/4 restores the PRE-answer
 | NP-P2-2 | CONFIRMED + FIXED | Pre-fix load logged `favicon.ico -> 404` (sole console error). Added `<link rel="icon" href="data:,">` after `<title>`. Post-fix: zero favicon requests, zero console errors. |
 
 Post-fix regression sweep: zero pageerrors; Hide-Text boots CHECKED with all 4 registered notes hidden, uncheck→recheck round trip restores/hides all 4; boot still opens in Lecture mode PAUSED. Screenshot: `gf-postfix-restore-paused.png` (scratchpad).
+
+## Second review scan (2026-08-26)
+**Scope:** re-review of `geiger-marsden-gold-foil-experiment.html?v=rev2` post-bb367ae, priority = critical physics bugs; headless puppeteer 25.0.4, 1440×900, `document.hidden=false`, `?v=rev2` cache-bust. **Console:** clean — 0 console errors, 0 pageerrors, 0 requestfailed across three sessions (favicon fix holds). **Verdict:** every prior physics finding still verified clean; four new NEW findings (all P2 — one pedagogy text nit, three flow/UX polish items). No new critical or P0/P1 issues.
+
+Re-verified: all four bb367ae fixes hold — Info modal reads "fall by about 2×10⁵" (PHY-P2-1 confirmed clean); Reset from a card re-syncs the scene to that card's STEPS spec via `onStep(Shell.step)` (SYS-2/NP-P1-1 confirmed — card 2 Reset → gmN=20.0k baseline before firing resumes); Lecture-off / restore chip both reopen `{step:0, playing:false}` (NP-P2-1 confirmed via headless probe); zero `favicon.ico` requests, zero console errors (NP-P2-2 confirmed).
+
+Re-verified physics (screenshots `gf-rev2-boot.png`, `gf-rev2-card{1..5}.png`, `gf-rev2-card5-answered.png`, `gf-rev2-finish.png`, `gf-rev2-restore.png`, `gf-rev2-card1-after-reset.png`, `gf-rev2-finish-from-card5-accel.png`, `gf-rev2-final.png` in scratchpad):
+- `__audit.at(150°)` = 1.4866 b/sr (theory 1.487) ✓; matches `syncUI` live line "1.49 b/sr" ✓.
+- 5-stop slider walk over {0.185, 0.240, 0.310, 0.400, 0.500} GeV/c at Nf=3M seed 4517 reproduced digit-for-digit against a node replay: gmScat {1.80M, 634.5k, 227.9k, 82.2k, 33.6k} vs theory {1.79M, 631k, 227k, 82k, 33.7k} — all within Poisson noise (max |z| ≈ 1.0σ, below 3σ). d_min {49.6, 29.4, 17.6, 10.6, 6.8} fm matches d=227.5/Ek to displayed precision at every stop. gmBack {128, 45, 22, 11, 0} vs theory {115, 48, 17, 6, 2} — max |z| = 1.9σ (p=0.400), below the 3σ flagging threshold and consistent with seed-4517 realisation.
+- **Data invariance under prediction toggles reconfirmed** (was the deliberate-counterfactual check): at p=0.193 the 3M live run gmScat/gmBack stayed exactly identical across NUC↔PLUM overlay and flat off↔on toggles (1.52 M / 110 through all four states — plum-pudding overlay proven not to leak into measured data).
+- Live Monte-Carlo 15 s @ 100 k α/s × 4× speed: 8.99 M incident α → 4.54 M scattered ≥1° (theory 4.541 M, z = −0.09σ) → 325 back-scatters (theory 345.9, z = −1.12σ). Both within 3σ; consistent with seeded MC engine.
+- Pager round trip (5 fwd + 5 back): every per-card fingerprint identical to forward pass (STEPS[0..4] baselines all deterministic).
+- Rapid stress: 40-event slider scrub (paused) + 30× overlay/flatten toggle cycle — no console error, no listener duplication, state self-consistent (final `{p:0.500, gmScat:33.5k, gmBack:0, Nf:3M}` matches slider-final applyRun).
+- Hide-Text: `#shell` innerText length 950 (checked) ↔ 1626 (unchecked) = 676-char delta = exactly the four registered `.ht-hide` notes' lengths + separators, matching the prior review's canvas measure. No unregistered content vanishes.
+- Canvas is painting: 1090×808 backing store, 260,628 non-black pixels; theme-aware colour reads sensible.
+
+### PHYSICS
+#### P0
+none
+#### P1
+none
+#### P2
+- **[PHY-P2-2] [text] [med]** Info-modal Sub-question says "when the large-angle counts sag below the **Rutherford** curve the α is grazing the nuclear surface", but the sim's on-screen labels are `Rutherford × nuclear absorption` (solid, accent) once `d_min < 12 fm` and `point Coulomb (no nuclear size)` (dashed, muted) — the sag the student is asked to see is below the **dashed point-Coulomb** curve, not the solid one (the solid curve already includes the absorption factor and drops with the data). Repro: ⓘ Info at any state. Card 5's own correct-answer feedback gets this right ("sinks below the dashed **point Coulomb** curve"); only the info modal's shorter phrasing is ambiguous. Anchor: info-modal `<dd>` at L334. → **Fix:** replace "sag below the Rutherford curve" with "sag below the dashed point-Coulomb curve" (matches card 5 wording and the on-screen legend).
+
+### NON-PHYSICS
+#### P0
+none
+#### P1
+none
+#### P2
+- **[NP-P2-3] [flow] [high]** Reset while card 1 (predict-first) is active resumes play — the shell's reset handler unconditionally calls `setPlaying(true)` (L679), overriding the paused predict-first affordance that NP-P2-1 protected on Lecture-off/restore. Repro (headless, 1440×900): open sim → Lecture OFF (card 1 paused, gmN=0) → ↻ Reset → observed `{step:0, playing:true, gmN:14.1 k}` in ~1.5 s (screenshot `gf-rev2-card1-after-reset.png`); the "empty apparatus" scene the card 1 prose promises ("Where will they land?") is immediately overwritten by live firing. Anchor: shell handler L679, `if(reset) reset.addEventListener('click',()=>{ onReset(); last=performance.now(); setPlaying(true); });`. → **Fix:** at end of sim `onReset` (~L1227) add `if(SH && SH.step===0) SH.setPlaying(false);` — matches the paused-boot pattern the NP-P2-1 fix established for the same card.
+- **[NP-P2-4] [flow] [high]** Finish (or 🎓 Lecture) after answering card 5 discards the just-committed accelerator-beam evidence. Repro: from restore-chip, pager to card 5 (`{p:0.193, Ek 5.0, d_min 45.5}`) → click correct choice → state jumps to `{p:0.500, Ek 33.5, d_min 6.8, gmBack 0}` (the "large-angle counts sag" that the card just introduced) → click Finish → `onComplete` forcibly runs `applyRun(0.193, 3M, 8)` → state resets to `{p:0.193, Ek 5.0, d_min 45.5, gmBack 115}` (screenshot `gf-rev2-finish-from-card5-accel.png`). The completed free-exploration state discards the last card's evidence; the student who just committed to "sag below point-Coulomb" enters lecture mode with the sag no longer on screen. Anchor: `onComplete` L1222–1223 (`applyRun(0.193,3000000,8)`). → **Fix:** in `onComplete`, keep the current `st.p` if it was set by card 5's answer, e.g. `var p=(st.p>PNAT?st.p:0.193), seed=(st.p>PNAT?2:8);` then `applyRun(p,3000000,seed);`. Alternative: apply the last answered card's data-run instead of the fixed default.
+- **[NP-P2-5] [ux] [med]** `st.nAbs` (α absorbed by the nucleus) is tracked by `record()` at L864 (`if(th<0){ st.nAbs++; return; }`) but never surfaced. Card 5's correct-answer feedback and info-modal Sub-question both talk about "grazing α are absorbed" and the central flash is labelled "α absorbed by nucleus", yet no live readout confirms it. At p=0.500 / 3 M seed 2 (card-5 correct-reveal state), the tail is clearly gone from the histogram but the mechanism has no visible counter; the "sag" is only inferable from the plot. Anchor: `record()` L864 accumulates; `updateCounts()` L911 has no `gmAbs` row (readouts panel L497–500 has four rows only). → **Fix:** add a fifth row `<div class="sim-row"><span>α absorbed by nucleus</span><b id="gmAbs">0</b></div>` in the Live counts panel (~L500) and one `txt('gmAbs',...)` line in `updateCounts` — no new controls, no physics change. Curriculum-adjacent polish.
+
+## Control census (second scan — deltas only)
+| control | new observation this pass |
+|---|---|
+| ↻ Reset | while step=0 (card 1), Reset resumes play — leaves gmN=14.1 k in 1.5 s instead of the paused N=0 the card 1 scene requires (NP-P2-3). |
+| Finish / 🎓 Lecture | after card 5 correct answer, wipes the p=0.500 accelerator configuration back to 0.193 baseline (NP-P2-4). |
+| — | `st.nAbs` internal counter has no bound DOM row (NP-P2-5). |
+
+## Combination coverage manifest (second scan)
+| combo set | strategy | count | invariants asserted | result |
+|---|---|---|---|---|
+| overlay {Ruth, plum} × flatten {off, on} at p=0.193, Nf=3 M live | exhaustive | 4 | gmScat/gmBack byte-identical across all 4 states (1.52 M / 110) | 4/4 pass |
+| momentum walk × seed 4517 at Nf=3 M | 5 stops + reverse | 5 | gmScat matches theory to ≤1σ at every stop; d_min matches 227.5/Ek exactly | pass |
+| card walk (1→5, all correct answers, then Finish) | exhaustive | 5 answers + Finish | reveal fires once per card; STEPS[0..4] applied deterministically | pass (NP-P2-4 exposed on Finish) |
+| pager round trip 0..4..0 | exhaustive | 10 stops | per-card readouts identical fwd vs back | pass |
+| rapid mutations | sampled | 40 slider events + 30 toggle cycles | zero errors, listener count nominal, final state consistent | pass |
+| Lecture/restore cycle | exhaustive | 3 cycles (ON→OFF→ON→OFF) | NP-P2-1 pause-on-reopen holds every cycle | pass |
+| Reset × active card | 2 sampled (card 1, card 2) | 2 | card 2: correct SYS-2 re-sync; card 1: NP-P2-3 exposed | 1/2 pass |
+| live MC 15 s @ 100 k×4 | 1 long run | 6 M new α | scat z=−0.09σ, back z=−1.12σ vs theory | pass |
+| favicon.ico probe | boot + reload | 2 | zero requestfailed events (bb367ae holds) | pass |
+
+## Inquiry-layer check (second scan)
+No changes to the per-card scene≍claim / gate / reveal / feedback mapping recorded in the first scan; all five cards, ∑ Formal, and Finish still verify. Pager restore semantics for cards 3/4 (pre-answer scene shown while answered feedback text remains visible) — blessed by the sim's own code comment — unchanged. Only the two new **flow-only** findings NP-P2-3 (Reset on card 1) and NP-P2-4 (Finish after card 5) affect the inquiry surface.
+
+## To verify (human, second scan)
+- The p=0.500 correct-answer state is retained by history/answers even after `onComplete` wipes the readouts; NP-P2-4 is a UX/pedagogy continuity gap rather than data loss.
+- NP-P2-3 is the same predict-first affordance NP-P2-1 protected — flagging it as P2 (not P1) because Reset is documented as "replay-from-start"; a lecturer using Reset from card 1 will still lose the paused-empty scene the card asks for.
+- All numerical claims verified via `node -e` transcript (EXT90=3.162°, plum crossover at 5 MeV=7.03°, backscatter theory at each slider stop) — see the scratchpad script `gf-rev2.js`/`gf-rev2-b.js`.

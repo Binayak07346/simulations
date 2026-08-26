@@ -98,3 +98,37 @@ All findings re-reproduced live (headless puppeteer, 1440×900 + 700×900, fillT
 | NP-P2-1 | ALREADY-RESOLVED | Fixed by the systemic sweep (SYS-4); not touched per instructions. |
 | NP-P2-2 | CONFIRMED (chip captions) + FIXED; ladder claims not reproduced at 700×900 | At 700×900 (canvas 670 px) the Lagrangian chip captions overlapped and clipped ("W, Z massessymmetry breakin…"). Fix at the caption draw in `drawLagrangian`: caption font now scales with chip size (`min(14, s·0.55)`) and a caption is skipped when wider than its chip + half the inter-chip gap — geometrically no overlap or edge-clip possible at any width; 1440×900 rendering unchanged (all five captions). The ladder-title/tick-label and fact-overflow claims did **not** reproduce at 700×900 (tight but no true overlap — zoomed crop checked); left as-is. |
 | NP-P2-3 | CONFIRMED + FIXED | Probe logged `favicon.ico` 404 on load. Added `<link rel="icon" href="data:,">` to the head; post-fix probe: zero 404s. |
+
+## Second review scan (2026-08-26)
+**Verdict:** All prior findings confirmed applied; PDG-2024 refresh clean across 17 tiles (browser census); condensed Yukawa now signed `−`, KaTeX matches, Higgs inset within its box, Reset re-syncs to the active card, favicon 404 gone. Two new pedagogical imprecisions found in the Yukawa term (P2). No new P0/P1.
+**Console:** clean (0 errors, 0 warnings across load + Lecture toggle + card walk + view round-trip + Reset).  **Combos re-tested:** 17 tiles × charge/spin/year/mass panel census (exhaustive), 5 Lagrangian terms (chip walk + expansion + acts-on chips), 4 cards (walk + choices + feedback text), Reset-from-card-1, Lecture toggle round-trip, Info modal, ∑ Formal (KaTeX render), Higgs-hat rendering, 1440×900 + 350 px forced-narrow shell.
+**Method note:** claude-in-chrome extension; canvas text captured via `fillText` intercept + DOM panel readouts + tile-grid click sweep at replicated pixel geometry; `document.hidden` was `true` in-frame so I drove state changes via user-events rather than relying on rAF idle; screenshots `sm-rev2-*` in the session gallery.
+
+### PHYSICS
+#### P0 — none
+#### P1 — none
+#### P2
+- **[PHY-P2-5] [high]** Yukawa term overreaches to *all* fermions — reads inconsistently against the neutrino tiles. `TERMS[2].desc` says "The Higgs field grips fermions; coupling strength sets each mass.", and the first seg is labelled **"leptons"** (line 797), but the expansion `− y_e L̄ φ e_R` gives a Dirac mass **only to the charged lepton** — in the minimal SM there is no right-handed neutrino, so no ν Yukawa. `TERMS[2].inv` correctly excludes ν_e, ν_μ, ν_τ from the "acts on" row (verified in-browser: chips are u,d,c,s,t,b,e,μ,τ,H — no ν's), which sharpens the contradiction: the text says "all fermions" while the model itself excludes ν's. Meanwhile all three neutrino tiles show mass "< 1 eV" — inviting the student to infer the Higgs gives ν's that mass, which is BSM territory. Repro: Lagrangian view → click "− ψ̄ᵢ y_ij ψ_j φ + h.c." chip; read `desc` + seg 1 label, then click any ν tile. Anchor: `TERMS[2].desc` (L801) and `TERMS[2].segs[0].lab` (L797). → **Fix (one-liner, no scope creep):** desc → "The Higgs gives Dirac mass to the charged fermions; the coupling strength sets each mass (neutrino masses need physics beyond the SM)."; seg label "leptons" → "charged leptons".
+- **[PHY-P2-6] [low]** Z boson raw mass in `CAT` is 91.1876 GeV (line 770) while the current PDG world average is 91.1880 GeV; display strings are identical at the sim's shown precision ("91.19 GeV") so nothing on screen is wrong, but consistency with the PHY-P2-4 refresh (d/s/W/top) is uneven — 91.1876 predates PDG-2024. Verified via `node -e`: |Δ| = 0.4 MeV, well inside 0.002% quoted uncertainty. Anchor: `CAT` Z entry (L770). → **Fix (optional, no display change):** `91.1876 → 91.1880`.
+
+### NON-PHYSICS
+#### P0 — none
+#### P1 — none
+#### P2 — none
+
+### Regression re-checks (spot)
+| prior id | current state | evidence |
+|---|---|---|
+| PHY-P2-1 (D-couples wording) | FIXED — canvas census shows the corrected sentence "D couples each to the forces it feels — quarks to all three, neutrinos only to the weak force." | matter-&-forces chip text-census |
+| PHY-P2-2 (Yukawa sign) | FIXED — condensed canvas shows `− ψ̄ᵢ y_ij ψ_j φ + h.c.`; KaTeX `ℒ_SM` shows `− ψ̄ᵢ y_{ij} ψ_j φ + h.c.`; expansion `− y_e L̄ φ e_R` unchanged. Sign convention consistent | fillText census + ∑ Formal screenshot |
+| PHY-P2-3 (Z tidbit) | FIXED — Z panel now reads "Carrier of the neutral weak current — the boson itself caught 1983 at CERN's proton–antiproton collider." | Z tile click, `pFact` read |
+| PHY-P2-4 (PDG refresh) | FIXED — 17-tile panel census matches PDG-2024 exactly at displayed precision: d 4.70 MeV, s 93.5 MeV, W 80.37 GeV, t 172.6 GeV; card-3 feedbacks now read "172.6 GeV". `node -e` cross-check: worst Δ = 0.0004% (Z, non-display) | full-tile mass table run in-browser |
+| NP-P1-1 (Higgs-hat overflow) | FIXED — inset curve fully contained in its box at 1440×900 and 350 px shell; ball rests at right minimum; `norm=1` in `drawHat` (L1242) | zoom of V(φ) inset |
+| NP-P1-2 (Reset desync) | FIXED — `onStep(Shell.step)` at end of `onReset` (L1348) restores the active card's scene; verified from card 1 (panel: electron / 0.511 MeV / 1897) | Reset-on-card-1 probe |
+| NP-P2-1 (light-theme canvas) | Systemic fix (SYS-4) present — not re-tested this pass | prior review notes |
+| NP-P2-2 (chip-caption overlap) | FIXED — at 700 px canvas captions no longer collide; forced-narrow 350 px canvas: chip captions still readable, no clipping | forced-narrow shell screenshot |
+| NP-P2-3 (favicon 404) | FIXED — `<link rel="icon" href="data:,">` present; no 404 in console | console read |
+
+### To verify (human)
+- Neutrino mass Y/desc rewrite (PHY-P2-5): the "grips fermions" phrasing is a common textbook simplification and may be intentional for pedagogy at Lecture 1; confirm before touching.
+- Z raw-mass digit (PHY-P2-6): cosmetic-only; noted for the next PDG data pass.

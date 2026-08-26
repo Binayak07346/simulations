@@ -125,3 +125,53 @@ none beyond the two P0 root causes (their symptoms above are the P1-class flow b
 *Old → new (card-4 scene, e⁺ 63 MeV, 0.70 T, plate):* ΔE 40.2 → **42.7 MeV**, path 6.0 → **6.4 mm**, p₂ 23.3 → **20.8 MeV/c**, r₂ 11.1 → **9.9 cm** (fine-step reference 42.62 MeV / 6.361 mm / 9.95 cm — now ≤0.1% off instead of ~5%). All displayed values stay internally consistent automatically: roDE/roP2/roR2, the on-canvas r chips, and `window.__audit` all read the same `computeTrack` output (verified on screen: r chips 30.3 cm below / 9.9 cm above). Card-4 prose ("losing ≈ 40 MeV") and the formal caption ("⟨dE/dx⟩·t_Pb ≈ 40 MeV") are approximate/normal-incidence statements and were left as written; no other hardcoded number derives from the path.
 
 *Regression sweep (fixed DS = 1.5 mm vs DS = 2 µm reference, node):* e⁺ 200/3.0 T 45.02 vs 44.94 MeV; μ⁻ 115/0.7 T 10.08 vs 10.09 MeV; p 200/3.0 T 25.17 vs 25.22 MeV; stopped cases (p 63/1.5 T, p̄ 63/0.7 T, e⁺ 63/1.5 T cross-then-stop) all still stop with "all of it" messaging. Browser smoke post-fix: card walk 1→5 + Finish, plus p/μ⁻/e⁺ plate scenes — readouts match the model exactly, **zero pageerrors**. Screenshots card4-post.png / finish-post.png in the session scratchpad.
+
+## Second review scan (2026-08-26)
+
+**Verdict:** NP-P0-1 (draw() crash) and NP-P0-2 (`window.Shell` undefined) are truly fixed — sequential card 1→5 walk completes with zero pageerrors and `typeof window.Shell === 'object'`; the plate-path fix stands (dE = 42.7 MeV / path 6.4 mm / r₂ 9.9 cm at the card-4 spec, exact vs the DS = 2 µm reference). But this pass surfaces two new bugs — one NON-PHYSICS P0 that breaks the "Lecture-mode by default" curriculum request, and one PHYSICS P1 that is the same class as PHY-P2-2 but for **cards 3 and 4** (only card 2 got restage-before-reveal).
+**Console:** clean (only the environment `/favicon.ico` 404).  **Combos tested (this pass):** 4 sequential card walks + 2 mid-answer mutation scenarios (Ek=200/B=0.5 on card 3; p̄/Ek=150/B=3 on card 4) + 3 Lecture-mode boot/toggle sequences, all headless-Chrome (viewport 1440×900).
+
+### PHYSICS
+
+#### P0
+none
+
+#### P1
+- **[PHY-P1-3] [flow/inquiry] [high]** Card 3's "proton" reveal does **not** restage the card-3 spec before firing (only card 2's `bfield` reveal does, via the PHY-P2-2 fix). If the student mutates Ek or B on card 3 *before* answering, the correct-answer feedback still hardcodes "**p jumps 63 → 350 MeV/c, so r grows 14 → 78 cm**" and the card prose still promises "keeps this e⁺ arc (63 MeV, r ≈ 14 cm) as a ghost and fires a proton with the **same 63 MeV**" — while the on-screen readout shows the proton fired at the student's current Ek/B. Repro (fresh session → restore chip → walk to card 3 → set Ek slider to 200, B slider to 0.5, then click the correct choice): on-screen Track readout reads **p · q = +1 e / p = 644.4 MeV/c / r = 4.30 m** (independent: p(938.272, 200) = 644.44, r = 644.44/(0.29979·500) = 4.299 m — exact); ghost tag "e⁺ 200 MeV · 0.50 T" is what the student thinks was "the e⁺ 63 MeV arc kept as a ghost". Evidence: `cc-rev2-fresh-c3-mut.png` (fb tile shows 63→350 MeV/c, 14→78 cm; live proton chip reads "p · 200 MeV"; r-chip reads "r 4.30 m"; ghost tags "e⁺ 200 MeV · 1.50 T" and "e⁺ 200 MeV · 0.50 T"). Anchor: `data-reveal="proton"` handler L1352 (no `stageFor(2)` first); card-3 prose + `data-fb` L462–465. → **Fix:** mirror the card-2 pattern — prepend `stageFor(2);` to the `proton` branch at L1352, so Ek reverts to 63 and B to 1.5 before the proton is fired (fb+prose numbers then always match); OR compute the fb string live at answer time from the actual pre-fire e⁺ readout and the post-fire proton readout.
+
+#### P2
+- **[PHY-P2-3] [flow/inquiry] [med]** Same class for card 4: `revealPlate()` (L1246) only slides the plate in — it does not restage the card-4 spec (e⁺, 63 MeV, 0.70 T). Repro (fresh session → walk to card 4 → switch to p̄, Ek slider to 150, B slider to 3.0, then click the correct choice): the card prose still reads **"the e⁺ (marked ↑) is about to cross it, losing ≈ 40 MeV inside"** and card 4 promises **"B eased to 0.70 T"**, while the sim now shows p̄ · 150 MeV at 3.00 T with ΔE = 33.0 MeV over 6.1 mm (p1 551.3, r1 61.3 cm, p2 483.0, r2 53.7 cm — all independently exact). The physics *relation* (r shrinks after plate) still holds, so this is P2 not P1 — but the "e⁺" and "≈40 MeV" hardcodes now openly contradict the readout, and card 5 then narrates "**Anderson's** signature — one track, a plate crossing, the tighter arc above" while the on-canvas track is a p̄, not an e⁺. Evidence: `cc-rev2-fresh-c4-mut.png` (status chip "lead plate in", readout "p̄ · q = −1 e / 33.0 MeV over 6.1 mm / r 61.3 cm → 53.7 cm"). Anchor: L1246 (`revealPlate`), card-4 prose L468, card-5 prose L474. → **Fix:** prepend `stageFor(3);` to the `plate` branch at L1353 (mirrors the card-2 fix); OR replace the fixed prose "e⁺ … losing ≈ 40 MeV" with `data-live` spans so the sentence always tracks the sim.
+
+### NON-PHYSICS
+
+#### P0
+- **[NP-P0-3] [flow/functional] [high]** **Lecture-mode boot leaves the sim in the card-1 pre-inquiry setup, not the post-completion free-exploration state.** Commit 96b098b requested every sim boot into Lecture mode; the shell wiring runs `setLectureMode(true)` → `finishInquiry()` which fast-forwards by calling `onStep(k)` for k = 1..N-1. But the sim guards `onStep` with `if(!booted)return;` (L1279), and `booted` is set to `true` only *after* `Shell.init(...)` returns (L1379). So during the fast-forward every `onStep(k)` is a **no-op**, `stageFor(1..4)` never runs, and the scene stays exactly where the pre-init `stageFor(0)` (L1373) left it — card 1's spec: B = 1.5 T, no plate, no track, `st.pKey = 'e+'`, `Ek = 63`, the candidate-story arrows "A · e⁺ ↑" and "B · e⁻ ↓" and the "▶ Play (or Fire) to expose the photograph" prompt on the canvas. Worse: right after Shell.init the sim runs `Shell.setPlaying(false)` (L1378), which overrides `finishInquiry`'s `setPlaying(true)`. So on first load the student sees Lecture mode ON, the inquiry collapsed, "▸ Guided inquiry" restore chip present — and an **unfired card-1 setup**, paused. That is the exact opposite of the Anderson-plate-crossing "curriculum request" (`cc-rev2-lec-toggle.png` shows what Lecture mode is *supposed* to show — B = 0.70 T, plate in, e⁺ 63 MeV crossed the lead, r 30.3 → 9.9 cm, ΔE 42.7 MeV, playing = true). Repro: hard-refresh at `?v=rev2` → `Shell.step === 4`, `lecture === true`, `Shell.playing === false`, `__audit.state()` = `{B:1.5, Ek:63, particle:'e+', plate:false, p1:null, r1:null, …}`, canvas shows candidate arrows + "Play to expose" chip (`cc-rev2-01-boot.png`). Verified the very same code path works once `booted` is true: after restore chip → click Lecture again, `__audit.state()` = `{B:0.7, Ek:63, particle:'e+', plate:true, p1:63.51, r1:0.303, p2:20.84, r2:0.0993, dE:42.66}`, `playing = true`, canvas shows Anderson's crossing (`cc-rev2-lec-toggle.png`). Anchors: sim L1266 (`stageFor`), L1278 (`onStep` boot guard), L1372–1380 (init order); shell L649 (`finishInquiry`), L596 (`setLectureMode(true)`), L757 (boot-default Lecture). → **Fix:** flip the init order — set `booted = true` *before* `Shell.init(...)`, and either drop the trailing `Shell.setPlaying(false)` at L1378 or move it inside `stageFor(0)`; the fast-forward's `onStep(1..4)` then runs `stageFor(1..4)`, `onComplete()` opens More/showNums, and the resume-play sticks. (Alt: in `finishInquiry`, call `onStep(N-1)` explicitly *after* the loop, once — safer for other sims that share this pattern.)
+
+#### P1
+none beyond the above.
+
+#### P2
+none new.
+
+### Control census delta (this pass — additions to the prior full census)
+| control | range walked | observable asserted | verdict |
+|---|---|---|---|
+| 🎓 Lecture (at boot) | on (default) | scene = free-exploration Anderson scene, playing=true | **NP-P0-3** (shows card-1 setup, paused) |
+| 🎓 Lecture (post-boot, after restore) | off → on | scene = free-exploration Anderson scene, playing=true | OK (evidence `cc-rev2-lec-toggle.png`) |
+| Card-3 answer with pre-answer Ek/B mutation | Ek 63→200, B 1.5→0.5 | fb text ↔ readout consistency, prose ↔ readout | **PHY-P1-3** |
+| Card-4 answer with pre-answer particle/Ek/B mutation | e⁺→p̄, Ek 63→150, B 0.7→3.0 | prose ↔ readout consistency | **PHY-P2-3** |
+
+### Combination coverage manifest (delta)
+| combo set | strategy | count | invariants asserted | result |
+|---|---|---|---|---|
+| Sequential card walk (fresh) | exhaustive 1→5 + Finish | 1 | zero pageerrors, `__audit` at each stage matches STEPS[k].B/plate + independent p,r | pass (NP-P0-1 gone) |
+| Mid-answer mutation × card × pre-fire delta | sampled | 2 (card 3, card 4) | fb string numbers ↔ live readout | fail — PHY-P1-3, PHY-P2-3 |
+| Lecture boot / post-boot toggle | exhaustive | 3 (boot, restore→lecture, cards-answered→lecture) | scene = card-5 spec, playing=true | fail on boot only (NP-P0-3) |
+
+### Inquiry-layer check (delta)
+- Card 3: prose + `data-fb` numbers are **hardcoded** ("63 MeV", "63 → 350 MeV/c", "14 → 78 cm") — no `data-live` spans and no `stageFor(2)` in the reveal → mid-answer mutation makes the reveal narrate the wrong track.
+- Card 4: prose hardcodes "e⁺ (marked ↑)", "≈ 40 MeV", "0.70 T" — no restage → same failure mode.
+- Card 2: correctly restages (`stageFor(1)` at L1351, per the PHY-P2-2 fix) → **OK** (independently reverified: Ek stays 63 MeV, r goes 14.1 → 7.1 cm exactly).
+- Card 5 (Finish): unchanged, works.
+
+*Reviewed read-only; screenshots `cc-rev2-01-boot.png`, `cc-rev2-fresh-c3-mut.png`, `cc-rev2-fresh-c4-mut.png`, `cc-rev2-lec-toggle.png` in the session scratchpad; independent physics values reproduced with `node -e` (see transcript).*

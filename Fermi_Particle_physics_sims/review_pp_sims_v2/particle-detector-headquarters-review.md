@@ -99,3 +99,45 @@ none
 | NP-P2-2 | **ALREADY-RESOLVED** (systemic sweep) | Not touched. |
 
 Post-fix regression: zero pageerrors; readout spot-checks (E, β/γ, TOF, Cherenkov) string-exact vs the review-verified values for π⁺@1, p@1, K⁺@2.5, n@0.6, μ⁻@1/5, e⁻@1/5, γ@1, ν@1.
+
+## Second review scan (2026-08-26)
+
+**Verdict:** Physics layer remains fully clean — full 40-cell species×momentum matrix re-verified string-exact vs `node -e` (E=√(p²+m²), β=p/E, γ=E/m, TOF=10 m/βc, Δt, Cherenkov β>1/n): 40/40 pass. All rev1 fixes intact — soft-clamp bend (L878 `mag = geo*(0.34/p)/(0.34/p+geo)`), TOF `<0.001` floor (L1206), race-lane always keeps π/K/p (L1132-1138), `window.Shell = Shell` (L755), `onReset` re-syncs via `onStep(Shell.step)` (L1314). Cherenkov threshold walk re-verified: K⁺ off@0.5 → ON@0.6 (p_thr = 0.5630 GeV); p off@1.0 → ON@1.1 (p_thr = 1.0700 GeV). Console clean; no NaN/undefined in any readout.
+
+**Combos re-tested:** 40 exhaustive species×momentum + 4 Cherenkov-threshold boundary walks + boot/lecture/reset flow probes.
+
+New findings all belong to one issue class — boot-state changes since rev1 introduced `setLectureMode(true)` at shell init (L734, "curriculum request"). No physics regressions.
+
+### PHYSICS
+#### P0 none  #### P1 none  #### P2 none new
+
+### NON-PHYSICS
+
+#### P0 none
+
+#### P1 none
+
+#### P2
+- **[NP-P2-3] [ux] [med]** Fresh boot lands in **Lecture mode** with the STEPS[5] free-exploration scene (proton@1 GeV, roE 1.371 GeV, TOF 45.74 ns, Cherenkov off, Signature "track → HCAL shower") — this is by design (`setLectureMode(true)` at L734, comment "curriculum request"), but has two side-effects worth noting: (a) a first-time student sees the "answer key" for card 5 pre-populated (E = 1.371 GeV, TOF gap 12.4 ns are exactly card 5's quoted numbers), reducing the predict-then-reveal surprise if they later open Guided Inquiry via the ▶ chip; (b) after `finishInquiry` fast-forwards, `Shell.step` = 5 but `.inq-step.active` is left on card 1 (finishInquiry only updates `.inq-dot` classes, not `.inq-step.active`) — benign because the inquiry zone is hidden by `inquiry-collapsed`, but a DOM/state inconsistency. Repro: fresh load `?v=fresh1` → `Shell.step === 5`, `sel === "proton · m = 0.9383 GeV"`, `htmlClasses` contains `lecture-mode inquiry-collapsed`, but `[...cards].findIndex(c=>c.classList.contains('active')) === 0`. Restore chip / 🎓 click correctly reopens at card 1 with e⁻@1 GeV (`Shell.step=0`, roE 1.000 GeV, roSig "curved track → EM shower") — that path is fine. Evidence: dhq-rev2-boot-lecture.png. → **Fix (optional):** in `finishInquiry` add `inqCards().forEach((c,i)=>c.classList.toggle('active',i===inqStep));` after the dot update loop, to keep the DOM `.active` class in sync with `inqStep`.
+- **[NP-P2-4] [flow] [low]** Hide-Text boot state is a race between the Lecture-mode-follower onload handler (L415-419: `window.load` → `rAF(rAF(...box.checked = shell.classList.contains('lecture-mode'); apply()))`) and Shell's synchronous `setLectureMode(true)`. In a backgrounded tab (`document.hidden === true`), rAF is throttled/frozen, so the double-rAF callback never fires until the tab is focused — box.checked stays `false` and shell has NO `hide-text` class. In a foreground tab the rAF fires and shell picks up `hide-text`. Registry is empty so no visible effect either way, but this makes the boot state non-deterministic w.r.t. tab focus. Additionally, the pre-existing comment at L413-414 ("Default: follow lecture mode at boot. Inert in the PP sims (they boot into the guided inquiry, so the class is absent and the box starts unchecked — correct)") is now inaccurate for THIS sim — the sim boots into Lecture mode, so the class IS present and the box does become checked in the foreground path. Repro: `document.hidden=true` fresh loads at `?v=fresh1&t=1`, `?v=fresh2&t=2` → both `{htToggleChecked:false, shellHasHideText:false, htmlClasses:"...lecture-mode inquiry-collapsed"}` (no `hide-text`); manually running `box.checked = shell.classList.contains('lecture-mode'); apply();` flips to `{checked:true, hasHideText:true}`. Anchor: L415-419. → **Fix (optional):** run the sync eagerly rather than on `load`+2rAF — e.g., invoke apply after `DOMContentLoaded` or fold the Lecture-follow default into `setLectureMode` itself (`box.checked=on; shell.classList.toggle('hide-text',on)` inside setLectureMode) so the checkbox state deterministically tracks Lecture regardless of tab focus. Then update the L413-414 comment to match.
+
+### Notes on things checked and re-confirmed clean
+- Toggle Lecture OFF (or restore chip) → `Shell.step=0`, e⁻@1 GeV scene, `htmlClasses="hide-formal"` (both lecture-mode and inquiry-collapsed cleared). Toggle Lecture ON → returns to pr@1 GeV/step=5. All matches the "post-completion free exploration" contract.
+- Reset in Lecture mode → stays in Lecture mode, scene resyncs to STEPS[5] = pr@1 GeV (via the L1314 `onStep(Shell.step)`). Reset outside Lecture with an answered card → SYS-5 branch restores the answered card's revealed particle (verified card 2 answered → after Reset: photon@1 GeV, roSig "no track → EM shower"). Both correct.
+- μ⁻@1 GeV race strip shows all 5 lanes correctly (light 33.36 / μ⁻ 33.54 / π⁺ 33.68 / K⁺ 37.20 / p 45.74 ns — every finish time matches kinematics to the last digit) and the μ⁻ track crosses all layers with the three chamber ✗ hits. dhq-rev2-mu-race.png.
+- Muon MIP-like deposits (ECAL 0.10 GeV + HCAL 0.20 GeV at μ⁻@1 GeV) are the documented idealization (L934: `dep.ecal = Math.min(0.10, 0.3*KE); dep.hcal = Math.min(0.20, 0.3*KE)`), physically correct sign/scale for a minimum-ionizing particle. Not re-flagged.
+
+### Combination coverage manifest (second scan)
+| combo set | strategy | count | invariants | result |
+|---|---|---|---|---|
+| species × momentum {0.2, 0.6, 1, 2.5, 5} | exhaustive | 40 | E=√(p²+m²), β=p/E, γ=E/m, TOF=10 m/βc, Δt, Cherenkov β≷1/n, signature, sel-name mass = PDG | 40/40 pass (string-exact vs node -e) |
+| Cherenkov threshold walk | boundary | 4 (K⁺ 0.5/0.6, p 1.0/1.1) | flips off↔ON across p_thr = m/√(n²−1) | 4/4 pass |
+| boot / Lecture-toggle / restore | flow | 6 | Shell.step, sel, roE, htmlClasses cycle correctly across boot → 🎓 off → 🎓 on → restore | pass — see NP-P2-3/NP-P2-4 for observations |
+| Reset in Lecture mode + Reset with answered card | flow | 2 | scene re-syncs to `onStep(Shell.step)`, SYS-5 revisit re-applies answered card's reveal | pass |
+| Cherenkov threshold + race lane μ⁻@1 | animation | 1 | all 5 finish times match kinematics; μ track crosses all layers | pass |
+
+### Curriculum re-check
+- All curriculum requirements from rev1 remain met (species set, layer interactions, momentum/energy/species-ID visualisations, guided inquiry). No regression. Lecture-mode-on-boot is a curriculum-owner-requested behaviour (L734 comment) and is respected.
+
+### To verify (human)
+- **NP-P2-3 vs NP-P2-4** are stylistic/latent — no student-visible physics or flow bug, but both would matter if the Hide Text registry is later populated or if a lecturer expects "fresh load = card 1". Confirm whether the boot-into-Lecture behaviour is the desired student-facing default (screenshot dhq-rev2-boot-lecture.png shows what they see) or only the lecturer-facing default (in which case the boot behaviour might warrant a query parameter e.g. `?mode=inquiry`).
