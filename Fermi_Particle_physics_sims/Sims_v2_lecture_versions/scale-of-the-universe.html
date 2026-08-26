@@ -552,7 +552,7 @@ const Shell = (function(){
   let inqStep=0, inqTotal=0;   // guided-inquiry stepper (shell-owned)
 
   function loop(now){
-    let dt=(now-last)/1000; if(dt>0.1)dt=0.1; last=now;
+    let dt=(now-last)/1000; if(dt>0.1)dt=0.1; if(!(dt>=0))dt=0; /* first frame after setPlaying can predate the stamp */ last=now;
     if(playing) onFrame(dt*speed);
     requestAnimationFrame(loop);
   }
@@ -768,6 +768,7 @@ const Shell = (function(){
     setPlaying, refit
   };
 })();
+window.Shell = Shell; /* expose for the sim's window.Shell guards (const is lexical-only) */
 
 window.__audit = { at(resolutionMeters) {
   const momentumGeV = 1.9732698e-16 / resolutionMeters;
@@ -1522,7 +1523,7 @@ function updateUI(){
 /* ---------- sizing ---------- */
 function readAcc(){
   try{
-    const v=getComputedStyle(document.documentElement).getPropertyValue('--accent').trim();
+    const v=getComputedStyle(document.body).getPropertyValue('--accent').trim();
     if (v) ACC=v;
   }catch(e){}
 }
@@ -1654,6 +1655,8 @@ function onFrame(dt){
 function onReset(){
   S.logd=S.view=HOME; S.t=0; S.ghost=null;
   updateUI(); draw();
+
+  onStep(Shell.step); /* re-sync the scene to the ACTIVE card (SYS-2) */
 }
 function onResize(){ sizeCanvas(); updateUI(); draw(); }
 function onStep(i){
