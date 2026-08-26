@@ -545,7 +545,7 @@ const Shell = (function(){
   let inqStep=0, inqTotal=0;   // guided-inquiry stepper (shell-owned)
 
   function loop(now){
-    let dt=(now-last)/1000; if(dt>0.1)dt=0.1; last=now;
+    let dt=(now-last)/1000; if(dt>0.1)dt=0.1; if(!(dt>=0))dt=0; /* first frame after setPlaying can predate the stamp */ last=now;
     if(playing) onFrame(dt*speed);
     requestAnimationFrame(loop);
   }
@@ -664,7 +664,7 @@ const Shell = (function(){
 
     if(play) play.addEventListener('click',()=>setPlaying(!playing));
     // Reset zeroes state AND ensures the loop is running (replay-from-start).
-    if(reset) reset.addEventListener('click',()=>{ onReset(); last=performance.now(); setPlaying(true); });
+    if(reset) reset.addEventListener('click',()=>{ onReset(); last=performance.now(); /* play state is owned by the step specs (SYS-2): onReset re-applies the active card, incl. its pause flag */ });
     if(spd) spd.addEventListener('change',e=>{ speed=parseFloat(e.target.value)||1; });
 
     if(maxBtn) maxBtn.addEventListener('click',()=>setMaximized(!root.classList.contains('shell-max')));
@@ -1297,6 +1297,8 @@ function onFrame(dt){
 function onReset(){
   S.pred=null;                               // prediction lives in the inquiry cards now
   setState(OPEN);                            // back to the OPENING state, not the finale
+
+  onStep(Shell.step); /* re-sync the scene to the ACTIVE card (SYS-2) */
 }
 function onResize(){
   fitCanvas(stage); fitCanvas(distCv);
@@ -1304,9 +1306,17 @@ function onResize(){
   drawAll(); drawDist();
 }
 function onStep(i){
-  const s = STEPS[Math.max(0,Math.min(STEPS.length-1,i|0))];
+  const k = Math.max(0,Math.min(STEPS.length-1,i|0));
+  const s = STEPS[k];
   setState(s);
   Shell.setPlaying(!s.pause);
+  /* SYS-5: an answered card's reveal (mirror / CP view) must survive revisits and Reset */
+  const c = document.querySelectorAll('#inq-cards .inq-step')[k];
+  if(c && c.dataset.answered){
+    const spec = c.dataset.build;
+    if(spec==='mirror'){ S.mirror=true; syncControls(); drawAll(); }
+    else if(spec==='cp'){ S.mirror=true; S.anti=true; syncControls(); drawAll(); }
+  }
 }
 function onComplete(){
   /* Free exploration begins from the neutral single-apparatus entry point:
