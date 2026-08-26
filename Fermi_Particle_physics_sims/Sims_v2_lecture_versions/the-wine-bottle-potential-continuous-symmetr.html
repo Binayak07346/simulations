@@ -466,8 +466,8 @@ body.light-theme .predict-eval .answer,body.light-theme .predict-eval strong,htm
   <h4>4 · Predict: push along the ring</h4>
   <p>The field rests in the valley at |φ| = 1.00. Your answer fires the green <strong>Ring push</strong> — along the valley floor. The ball will…</p>
   <button class="choice" data-ans="0" data-fb="Watch the dashed ghost do that while the real ball coasts past it: V is flat along the ring — no restoring force.">spring back and oscillate</button>
-  <button class="choice" data-correct data-ans="1" data-fb="The slice dot never climbs — V is constant along the ring: no force, m² = 0. The massless Goldstone mode.">coast round the valley freely</button>
-  <button class="choice" data-ans="2" data-fb="The slice dot stays on the valley floor — |φ| holds at 1.00; only the phase advances, and V ignores the phase.">spiral down and fall inward</button>
+  <button class="choice" data-correct data-ans="1" data-fb="The slice dot stays pinned to the valley floor — V is constant along the ring: no force, m² = 0. The massless Goldstone mode.">coast round the valley freely</button>
+  <button class="choice" data-ans="2" data-fb="The slice dot stays on the valley floor — |φ| stays at ≈1.00; only the phase advances, and V ignores the phase.">spiral down and fall inward</button>
   <div class="predict-eval"></div>
 </div>
 <div class="inq-step" data-step="4" data-gate data-reveal="meter">
@@ -528,7 +528,7 @@ body.light-theme .predict-eval .answer,body.light-theme .predict-eval strong,htm
           <tr><td>V at minimum <span class="sim-dim">(rel. to V(0) = 0)</span></td><td id="sim-ro-vmin">—</td></tr>
           <tr><td id="sim-lab-mr" style="border-left:3px solid #ff9430;padding-left:7px">radial mode m²</td><td id="sim-ro-mr">—</td></tr>
           <tr><td id="sim-lab-mt" style="border-left:3px solid #2fd07f;padding-left:7px">ring mode m² (Goldstone)</td><td id="sim-ro-mt">—</td></tr>
-          <tr><td id="sim-lab-T">radial period 2π/m</td><td id="sim-ro-T">—</td></tr>
+          <tr><td id="sim-lab-T">radial period 2π/m (small oscillations)</td><td id="sim-ro-T">—</td></tr>
         </table>
         <div class="sim-dim sim-note" id="sim-note-inv" style="display:none">ring m² stays 0 for every μ² &lt; 0 — one flat direction for the one broken symmetry.</div>
         <div class="sim-dim sim-units">Model units, ħ = c = 1: the curvature of V <em>is</em> ω², so m² = ω² and the radial period is 2π/m. The top-bar speed selector rescales the period you observe, not the physics.</div>
@@ -779,8 +779,6 @@ const Shell = (function(){
   };
 })();
 
-'use strict';
-
 /* ---------- engine-verified formulas (lambda = 1) ---------- */
 window.__audit = { at(muSquared) {
   const vacuumRadius     = muSquared < 0 ? Math.sqrt(-muSquared / 2) : 0;
@@ -878,7 +876,7 @@ function syncUI() {
     el.rovm.textContent = m ? fmtV(S.Vmin) : '—';
     el.romr.textContent = m ? fmt(S.m2r, 2) : '—';
     el.romt.textContent = (m || S.revealed) ? '0' : '—';
-    el.labT.textContent = 'radial period 2π/m';
+    el.labT.textContent = 'radial period 2π/m (small oscillations)';
     el.roT.textContent = (m && S.m2r > 1e-6) ? fmt(TWO_PI / Math.sqrt(S.m2r), 2) : '—';
   } else {
     el.labv.textContent = 'vacuum |φ|min';
@@ -888,7 +886,7 @@ function syncUI() {
     el.rovm.textContent = m ? '0.00' : '—';
     el.romr.textContent = m ? fmt(S.m2r, 2) : '—';
     el.romt.textContent = m ? 'no ring' : '—';
-    el.labT.textContent = 'period 2π/m';
+    el.labT.textContent = 'period 2π/m (small oscillations)';
     el.roT.textContent = (m && S.m2r > 1e-6) ? fmt(TWO_PI / Math.sqrt(S.m2r), 2) : '—';
   }
   el.noteInv.style.display = S.metered ? '' : 'none';
@@ -935,9 +933,12 @@ function phys(dt) {
     }
     const r = Math.hypot(S.x, S.y);
     if (r > RWALL) {                                 // genuine elastic reflection off the plot edge
+      const dV = Vp2(r * r) - Vp2(RWALL * RWALL);    // potential the r -> RWALL projection would discard
       const s = RWALL / r; S.x *= s; S.y *= s;
       const nx = S.x / RWALL, ny = S.y / RWALL, vr = S.vx * nx + S.vy * ny;
       if (vr > 0) { S.vx -= 2 * vr * nx; S.vy -= 2 * vr * ny; S.wall = 1.4; }
+      const k2 = S.vx * S.vx + S.vy * S.vy;          // return that ΔV to kinetic energy: bounce truly elastic
+      if (dV > 0 && k2 > 1e-12) { const f = Math.sqrt(1 + 2 * dV / k2); S.vx *= f; S.vy *= f; }
     }
   }
 }
@@ -1308,7 +1309,11 @@ function drawStrip(P, y0, h, compact) {
     ctx.setLineDash([]);
     ctx.fillStyle = COL_RING;
     ctx.beginPath(); ctx.arc(xr(S.v), yv(S.Vmin), 3.5, 0, TWO_PI); ctx.fill();
-    if (!compact) haloText(S.metered ? 'V_min = ' + fmtV(S.Vmin) : 'V_min', xr(S.v) + 10, yv(S.Vmin) + 1, COL_RING, P.bg, 'left', '600 13px ' + FS);
+    if (!compact) {
+      const bxr = xr(Math.min(Math.hypot(S.x, S.y), R)), vlx = xr(S.v);
+      const flip = Math.abs(bxr - vlx) < 14;         // ball's φ tag would collide — put V_min on the other side
+      haloText(S.metered ? 'V_min = ' + fmtV(S.Vmin) : 'V_min', flip ? vlx - 10 : vlx + 10, yv(S.Vmin) + 1, COL_RING, P.bg, flip ? 'right' : 'left', '600 13px ' + FS);
+    }
   }
   /* the field, honestly placed — or flagged off-scale instead of pinned to the edge */
   const rb = Math.min(Math.hypot(S.x, S.y), R);
@@ -1403,7 +1408,7 @@ function placeField(px, py) {
 /* ---------- guided-inquiry step states (one per card, self-contained) ---------- */
 const PRE = [
   { mu2:  1, fric: 0, x: 0.85, y: 0,     vx: 0,    vy: 0                 },  // 1 symmetric bowl, oscillates about 0
-  { mu2: -2, fric: 0, x: 0.03, y: 0.018, vx: 0,    vy: 0,   pause: true  },  // 2 balanced on the hilltop, PAUSED (predict)
+  { mu2: -2, fric: 0, x: 0,    y: 0,     vx: 0,    vy: 0,   pause: true  },  // 2 balanced EXACTLY on the hilltop, PAUSED — the random-direction vacuum fluctuation supplies the seed
   { mu2: -2, fric: 0, x: 1.00, y: 0,     vx: 0.90, vy: 0                 },  // 3 radial kick — massive mode
   { mu2: -2, fric: 0, x: 1.00, y: 0,     vx: 0,    vy: 0                 },  // 4 at rest in the valley (ring-push predict)
   { mu2: -2, fric: 0, x: 1.00, y: 0,     vx: 0,    vy: 0                 }   // 5 at rest (mu2-sweep predict) + load state
