@@ -64,14 +64,14 @@ detail — this file is the validation checklist). Findings are listed **in prio
 
 **Physics bugs (priority order):**
 - ~~PHY-P0-1 — **Both pair tracks curve the wrong way** for the declared "B = 1 T ⊗ into page" (e⁻ label curls with positron sense); proven numerically + visually. One-line sign fix (L911).~~ **FIXED (6bd64f1)** — `sg=k?-1:1;` in `buildTracks`; browser-verified: e⁻ endpoint now below the axis (clockwise-as-seen), e⁺ above (counterclockwise), exact mirror of the pre-fix capture, zero console errors.
-- PHY-P2-1 — "√s ≈ 195 GeV for γ+Pb" in Info/formal; true Pb-208 value 193.7 GeV.
-- PHY-P2-2 — Kinetic-energy readout shows unitless "0" at exact thresholds.
+- ~~PHY-P2-1 — "√s ≈ 195 GeV for γ+Pb" in Info/formal; true Pb-208 value 193.7 GeV.~~ **FIXED (7fc2ffe)** — "≈ 194 GeV" in both places (node-verified: 193.730 GeV at Eγ = 1 MeV).
+- ~~PHY-P2-2 — Kinetic-energy readout shows unitless "0" at exact thresholds.~~ **FIXED (7fc2ffe)** — `fmtE` zero branch returns "0 MeV".
 
 **Non-physics bugs (priority order):**
-- NP-P1-1 — Light theme never reaches the canvas (SYS-4): ladder/decade labels near-invisible on the light plot.
-- NP-P2-1 — Reset on card 1 leaves the sim playing, defeating the deliberate boot-paused staging.
-- NP-P2-2 — Endpoint labels pile onto the nucleus in the tight-spiral regime.
-- NP-P2-3 — Unbounded photon train under rapid Fire γ clicks (cosmetic; no listener duplication).
+- NP-P1-1 — Light theme never reaches the canvas (SYS-4): ladder/decade labels near-invisible on the light plot. *(resolved by the SYS-4 sweep)*
+- ~~NP-P2-1 — Reset on card 1 leaves the sim playing, defeating the deliberate boot-paused staging.~~ **FIXED (7fc2ffe)** — shell reset no longer forces play; the card's step spec owns pause (wu/wine-bottle pattern). Verified: Reset on card 1 stays paused; Reset in completed state still resumes.
+- ~~NP-P2-2 — Endpoint labels pile onto the nucleus in the tight-spiral regime.~~ **FIXED (7fc2ffe)** — labels within 20 px of the nucleus pushed 16 px radially outward; verified at 1.5 and 10 MeV.
+- ~~NP-P2-3 — Unbounded photon train under rapid Fire γ clicks (cosmetic; no listener duplication).~~ **FIXED (7fc2ffe)** — Fire ignored while ≥ 3 photons in flight (15 rapid clicks → 3, was 16).
 
 *Physics core: all 8 pair thresholds exact (2mc², PDG); T = Eγ − 2mc² everywhere; r = p/qB magnitudes confirmed.*
 
