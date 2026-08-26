@@ -1373,10 +1373,8 @@ if(window.ResizeObserver){new ResizeObserver(function(){onResize();}).observe(cv
 stageFor(0);
 onResize();
 renderFormal(0);
+booted=true;                                        /* flip BEFORE Shell.init so setLectureMode(true)->finishInquiry->onStep(k) can execute */
 Shell.init({onFrame:onFrame,onReset:onReset,onResize:onResize,onStep:onStep,onComplete:onComplete});
-/* Prediction-first: the outcome-bearing exposure waits on the ENABLED Play button. */
-Shell.setPlaying(false);
-booted=true;
 syncControls();draw();
 })();
 </script>
