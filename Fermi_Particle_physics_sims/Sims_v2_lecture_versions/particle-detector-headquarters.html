@@ -535,7 +535,7 @@ const Shell = (function(){
   let inqStep=0, inqTotal=0;   // guided-inquiry stepper (shell-owned)
 
   function loop(now){
-    let dt=(now-last)/1000; if(dt>0.1)dt=0.1; last=now;
+    let dt=(now-last)/1000; if(dt>0.1)dt=0.1; if(!(dt>=0))dt=0; /* first frame after setPlaying can predate the stamp */ last=now;
     if(playing) onFrame(dt*speed);
     requestAnimationFrame(loop);
   }
@@ -751,6 +751,7 @@ const Shell = (function(){
     setPlaying, refit
   };
 })();
+window.Shell = Shell; /* expose for the sim's window.Shell guards (const is lexical-only) */
 
 window.__audit = { at(momentumGeV) {
   const m = 0.13957;
@@ -836,7 +837,7 @@ window.__audit = { at(momentumGeV) {
     return { E, KE: E - m, beta, gamma: m > 0 ? E / m : Infinity, t: TOF_D / (beta * C), tL: TOF_D / C };
   }
   function theme() {
-    const cs = getComputedStyle(document.documentElement);
+    const cs = getComputedStyle(document.body);
     const g = (n, f) => (cs.getPropertyValue(n) || '').trim() || f;
     return {
       text: g('--text', '#26303a'), muted: g('--muted', '#5f6b78'),
@@ -1305,14 +1306,27 @@ window.__audit = { at(momentumGeV) {
     syncChips(); updateReadouts();
     ev = buildEvent(false);
     drawAll();
-  }
+  
+  onStep(Shell.step); /* re-sync the scene to the ACTIVE card (SYS-2) */
+}
   function onStep(i) {
-    const st = STEPS[Math.max(0, Math.min(STEPS.length - 1, i | 0))];
+    const k = Math.max(0, Math.min(STEPS.length - 1, i | 0));
+    const st = STEPS[k];
     state.part = st.part; state.p = st.p || 1; state.fireCount = (i | 0);
     momEl.value = String(state.p);
     syncChips(); updateReadouts();
     ev = buildEvent(false);
     drawAll();
+    /* SYS-5: an answered card's reveal must survive revisits and Reset */
+    const c = document.querySelectorAll('#inq-cards .inq-step')[k];
+    if (c && c.dataset.answered) {
+      const r = c.dataset.reveal;
+      if (r === 'choice') {
+        const picked = c.querySelector('.choice.wrong') || c.querySelector('.choice[data-correct]');
+        if (picked && picked.dataset.ans) selectParticle(picked.dataset.ans);
+      } else if (r && r.slice(0, 5) === 'fire:') selectParticle(r.slice(5));
+      else if (r === 'mom5') { state.p = 5; momEl.value = '5'; ev = buildEvent(false); updateReadouts(); drawAll(); }
+    }
   }
   function resizeNow() {
     const d = window.devicePixelRatio || 1;
