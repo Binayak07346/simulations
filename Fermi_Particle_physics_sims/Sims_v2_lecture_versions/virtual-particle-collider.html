@@ -335,7 +335,7 @@ body.light-theme .predict-eval .answer,body.light-theme .predict-eval strong,htm
       <div class="shell-modal-body">
         <dl class="shell-info-dl">
   <dt>Concept</dt>
-  <dd>Head-on e⁺e⁻ collisions: the Lorentz-invariant energy √s = √((E₁+E₂)² − (p₁−p₂)²) is the creation budget — a particle pair is accessible only if √s ≥ 2m. Above threshold, the QED annihilation rate σ(e⁺e⁻→μ⁺μ⁻) = 4πα²/3s <em>falls</em> as 1/s, and the expected yield is N = σ·∫L dt·ε. (Spec inferred from engine capabilities — curriculum row was blank; flagged for curriculum review.)</dd>
+  <dd>Head-on e⁺e⁻ collisions: the Lorentz-invariant energy √s = √((E₁+E₂)² − (p₁−p₂)²) is the creation budget — a particle pair is accessible only if √s ≥ 2m. Above threshold, the QED annihilation rate σ(e⁺e⁻→μ⁺μ⁻) = (4πα²/3s)·β(3−β²)/2 rises from zero at √s = 2m_μ, then <em>falls</em> as 1/s, and the expected yield is N = σ·∫L dt·ε. (Spec inferred from engine capabilities — curriculum row was blank; flagged for curriculum review.)</dd>
   <dt>Serves</dt>
   <dd>Intro particle / modern physics units on colliders and cross-sections; works pre-formalism (thresholds unlock visually) and post-formalism via the equation toggle. Numbers are engine-exact: √s = 10 GeV gives σ = 0.869 nb; 1 nb × 1 fb⁻¹ × ε = 0.9 gives 9.0×10⁵ events.</dd>
   <dt>Inquiry</dt>
@@ -428,7 +428,7 @@ body.light-theme .predict-eval .answer,body.light-theme .predict-eval strong,htm
       <div id="inq-cards" class="aside-zone-body">
         <div class="inq-step">
   <h4>1 · The creation budget</h4>
-  <p>Two 1 GeV beams meet head-on. The headline <strong>√s = 2.00 GeV</strong> is the budget for creating new particles: on the chart, the solid <strong>μ⁺μ⁻</strong> chip is open — every dashed chip is still too expensive.</p>
+  <p>Two 1 GeV beams meet head-on. The headline <strong>√s = 2.000 GeV</strong> is the budget for creating new particles: on the chart, the solid <strong>μ⁺μ⁻</strong> chip is open — every dashed chip is still too expensive.</p>
 </div>
 <div class="inq-step" data-gate data-reveal="tau">
   <h4>2 · What does τ⁺τ⁻ cost?</h4>
@@ -501,7 +501,7 @@ body.light-theme .predict-eval .answer,body.light-theme .predict-eval strong,htm
   <section class="shell-formal">
     <div class="sim-formal">
   <div class="sim-eq"><span class="sim-eqlab">energy budget</span><span class="sim-ktx" data-tex="\sqrt{s}=\sqrt{(E_1+E_2)^2-(p_1-p_2)^2}\;=\;2E_{\text{beam}}\ (E_1{=}E_2)">√s = √((E₁+E₂)² − (p₁−p₂)²) = 2E_beam for equal beams</span></div>
-  <div class="sim-eq"><span class="sim-eqlab">QED rate</span><span class="sim-ktx" data-tex="\sigma(e^+e^-\!\to\mu^+\mu^-)=\dfrac{4\pi\alpha^2}{3s}">σ = 4πα²/(3s)</span></div>
+  <div class="sim-eq"><span class="sim-eqlab">QED rate</span><span class="sim-ktx" data-tex="\sigma(e^+e^-\!\to\mu^+\mu^-)=\dfrac{4\pi\alpha^2}{3s}\,\dfrac{\beta(3-\beta^2)}{2},\quad\beta=\sqrt{1-4m_\mu^2/s}">σ = 4πα²/(3s) · β(3−β²)/2, β = √(1−4m_μ²/s)</span></div>
   <div class="sim-eq"><span class="sim-eqlab">angular shape</span><span class="sim-ktx" data-tex="\dfrac{d\sigma}{d\Omega}=\dfrac{\alpha^2}{4s}\,(1+\cos^2\theta)">dσ/dΩ = α²/(4s)(1+cos²θ)</span></div>
   <div class="sim-eq"><span class="sim-eqlab">yield</span><span class="sim-ktx" data-tex="N=\sigma\cdot\!\int\! L\,dt\cdot\varepsilon">N = σ · ∫L dt · ε</span></div>
 </div>
@@ -746,7 +746,7 @@ window.__audit = { at(centerOfMassEnergyGeV) {
   return {
     centerOfMassEnergyGeV: centerOfMassEnergyGeV,
     cosTheta: 0,
-    totalCrossSectionNb: 4 * Math.PI * (7.2973525693e-3 * 7.2973525693e-3) / (3 * centerOfMassEnergyGeV * centerOfMassEnergyGeV) * 3.893793721e5,
+    totalCrossSectionNb: (function(){ var betaMu = Math.sqrt(Math.max(0, 1 - 4 * 0.1056583755 * 0.1056583755 / (centerOfMassEnergyGeV * centerOfMassEnergyGeV))); return 4 * Math.PI * (7.2973525693e-3 * 7.2973525693e-3) / (3 * centerOfMassEnergyGeV * centerOfMassEnergyGeV) * 3.893793721e5 * betaMu * (3 - betaMu * betaMu) / 2; })(),
     differentialCrossSectionNbPerSteradian: (7.2973525693e-3 * 7.2973525693e-3) / (4 * centerOfMassEnergyGeV * centerOfMassEnergyGeV) * 3.893793721e5
   };
 } };
@@ -760,7 +760,7 @@ var THR = [
   { sym: 'μ⁺μ⁻', m: 2 * MMU },
   { sym: 'τ⁺τ⁻', m: 3.55372 },
   { sym: 'bb̄',  m: 10.558 },
-  { sym: 'W⁺W⁻', m: 160.77 },
+  { sym: 'W⁺W⁻', m: 160.74 },
   { sym: 'ZZ',   m: 182.37 },
   { sym: 'tt̄',  m: 345.4 }
 ];
@@ -773,7 +773,11 @@ function clamp(v, a, b){ return Math.max(a, Math.min(b, v)); }
 function c01(v){ return clamp(v, 0, 1); }
 function pOf(E){ return Math.sqrt(Math.max(0, E * E - ME * ME)); }
 function sqrtS(a, b){ var E = a + b, dp = pOf(a) - pOf(b); return Math.sqrt(Math.max(0, E * E - dp * dp)); }
-function sigNb(rs){ return rs > 0 ? 4 * Math.PI * ALPHA * ALPHA / (3 * rs * rs) * HBC2NB : 0; }
+function sigNb(rs){
+  if (!(rs > 0)) return 0;
+  var b = Math.sqrt(Math.max(0, 1 - 4 * MMU * MMU / (rs * rs))); /* muon velocity β in CM */
+  return 4 * Math.PI * ALPHA * ALPHA / (3 * rs * rs) * HBC2NB * b * (3 - b * b) / 2;
+}
 
 /* ===== DOM ===== */
 function $id(i){ return document.getElementById(i); }
@@ -1045,7 +1049,7 @@ function draw(){
       track(-pOf(S.E2) * Math.cos(0.2), -pOf(S.E2) * Math.sin(0.2), P.ep, 'e⁺', 1);
       ctx.font = '600 ' + fs + FAM; ctx.fillStyle = P.muted; ctx.textAlign = 'center';
       ctx.globalAlpha = fade;
-      ctx.fillText('μ⁺μ⁻ closed — √s < 0.21 GeV', xIP, sceneBot - 6);
+      ctx.fillText('μ⁺μ⁻ closed — √s < 2m_μ = 0.2113 GeV', xIP, sceneBot - 6);
       ctx.globalAlpha = 1;
     }
   }
