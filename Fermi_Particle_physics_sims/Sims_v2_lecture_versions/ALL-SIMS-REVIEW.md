@@ -63,7 +63,7 @@ detail — this file is the validation checklist). Findings are listed **in prio
 ## 2 · how-to-make-a-particle.html  (review: how-to-make-a-particle-review.md)
 
 **Physics bugs (priority order):**
-- PHY-P0-1 — **Both pair tracks curve the wrong way** for the declared "B = 1 T ⊗ into page" (e⁻ label curls with positron sense); proven numerically + visually. One-line sign fix (L911).
+- ~~PHY-P0-1 — **Both pair tracks curve the wrong way** for the declared "B = 1 T ⊗ into page" (e⁻ label curls with positron sense); proven numerically + visually. One-line sign fix (L911).~~ **FIXED (6bd64f1)** — `sg=k?-1:1;` in `buildTracks`; browser-verified: e⁻ endpoint now below the axis (clockwise-as-seen), e⁺ above (counterclockwise), exact mirror of the pre-fix capture, zero console errors.
 - PHY-P2-1 — "√s ≈ 195 GeV for γ+Pb" in Info/formal; true Pb-208 value 193.7 GeV.
 - PHY-P2-2 — Kinetic-energy readout shows unitless "0" at exact thresholds.
 

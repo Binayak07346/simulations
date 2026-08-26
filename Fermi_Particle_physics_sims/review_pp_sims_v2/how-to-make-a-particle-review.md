@@ -10,6 +10,8 @@
 ### P0
 - **[PHY-P0-1] [high]** Track curvature sense is inverted for BOTH pair members relative to the declared field ("B = 1 T ⊗ into page" is drawn in the chamber). A negative particle moving +x in B-into-page must bend DOWN (screen) / clockwise; the sim's track k=0 — labelled `lab[0]` = e⁻/μ⁻/… — gets `sg=-1` and curls UP/counterclockwise (and the positive twin the mirror). Repro: Lecture mode → set Eγ = 10 MeV → Fire γ → watch the two e spirals. Observed: e⁻ track points go (341.2,404) → (365.7,388.9) → (341.9,344.4) — canvas-y decreasing = upward = positron sense; screenshot `hmp-G-curvature-10MeV.png` (e⁻ is the upper circle). Expected: F = qv×B (canon: curvature sense from qv×B; Anderson signature) → e⁻ lower/clockwise. A student applying the right-hand rule to the on-screen ⊗ label reads every particle/antiparticle assignment backwards — this is the same sign convention the Lecture-10 cloud-chamber sim teaches. Anchor: `buildTracks`, L911 `var sg=k?1:-1;`. → **Fix:** flip the sign–track binding: `var sg=k?-1:1;` (labels `lab[k]` and everything else already follow `tracks[k]`, so this one line corrects both twins).
 
+> **FIXED — commit 6bd64f1 (2026-08-26).** Applied exactly the one-line fix above: `var sg=k?-1:1;` in `buildTracks`. Independently re-confirmed as genuine before fixing (physics+code chain, fresh fillText label capture at a live ~40 MeV event: e⁻ at y=340 / e⁺ at y=449 — inverted). Post-fix browser verification: e⁻ label now at y=449 (below the beam axis, clockwise-as-seen) and e⁺ at y=340 (above, counterclockwise) — the exact mirror — matching F = qv×B for B ⊗ into page; screenshot `htmp-curl-fixed.png`; zero page errors; inquiry cards reference no emission sides, so nothing else was affected.
+
 ### P1
 none
 
