@@ -331,7 +331,7 @@ body.light-theme .sim-hot,html[data-theme="light"] .sim-hot{color:#c2410c}
   <dt>Concept</dt>
   <dd>Scintillation counts at scattering angle θ follow 1/sin⁴(θ/2), so they fall by about 2×10⁵ between 5° and 150° yet never vanish. Because roughly 1 in 26,000 incident α turns through more than 90° — impossible if the positive charge were spread through the whole atom — that charge must sit in a tiny, massive nucleus.</dd>
   <dt>Sub-question</dt>
-  <dd>Nuclear size: the head-on closest approach is d_min = zZ·α_em·ħc/Eₖ = 45.5 fm at 5 MeV. Raising the beam momentum shrinks d_min; when the large-angle counts sag below the Rutherford curve the α is grazing the nuclear surface at d_touch = R_Au + R_α ≈ 8.9 fm, so R_Au ≈ 7 fm (diameter ≈ 1.4×10⁻¹⁴ m).</dd>
+  <dd>Nuclear size: the head-on closest approach is d_min = zZ·α_em·ħc/Eₖ = 45.5 fm at 5 MeV. Raising the beam momentum shrinks d_min; when the large-angle counts sag below the dashed point-Coulomb curve the α is grazing the nuclear surface at d_touch = R_Au + R_α ≈ 8.9 fm, so R_Au ≈ 7 fm (diameter ≈ 1.4×10⁻¹⁴ m).</dd>
   <dt>Model notes</dt>
   <dd>Plum pudding is modelled as ≈2.5×10³ random ≈0.02° kicks, so the random walk gives σ = √2500 × 0.02° ≈ 1° at 5 MeV and essentially no counts past a few degrees. The measured (green) points are always generated from the nuclear model — the switch only chooses which prediction curve is drawn over them. Single scattering only: sub-degree multiple scattering is not simulated. Foil: 0.40 µm gold, n·t = 2.4×10²² m⁻².</dd>
   <dt>Serves</dt>
@@ -497,6 +497,7 @@ body.light-theme .sim-hot,html[data-theme="light"] .sim-hot{color:#c2410c}
             <div class="sim-row"><span>α fired (incident)</span><b id="gmN">0</b></div>
             <div class="sim-row"><span>scattered ≥ 1°</span><b id="gmScat">0</b></div>
             <div class="sim-row"><span>counts θ &gt; 90°</span><b id="gmBack" class="sim-hot">0</b></div>
+            <div class="sim-row"><span>absorbed by nucleus</span><b id="gmAbs">0</b></div>
             <div class="sim-row"><span>odds of θ &gt; 90°</span><b id="gmOdds">—</b></div>
           </div>
           <div class="sim-note ht-hide">Odds are per <b>incident</b> α. The 1° line is only where this model starts counting; sub-degree deflections are not simulated.</div>
@@ -886,11 +887,15 @@ function applyRun(p,N,seed){
   st.Nf=N; st.nScat=0; st.nBack=0; st.nAbs=0; st.acc=0; st.trAcc=0; st.t=0; st.bins.fill(0);
   dots.length=0; dotPtr=0; tracers.length=0; flashes.length=0;
   if(N>0){ var Ek=EkOf(st.p), rnd=mul32(seed||1), b, i;
+    var absAcc=0;
     for(b=0;b<NBINS;b++){
-      var lam=N*NT*sigBin(TLO[b],(b+1)*BINW*D2R,Ek)*suppress(TEFF[b],Ek);
-      var c=poisson(lam,rnd);                       /* always Poisson: no hidden smoothing */
+      var suppB=suppress(TEFF[b],Ek);
+      var lamRaw=N*NT*sigBin(TLO[b],(b+1)*BINW*D2R,Ek);
+      var c=poisson(lamRaw*suppB,rnd);              /* always Poisson: no hidden smoothing */
       st.bins[b]=c; st.nScat+=c; if(b>=18) st.nBack+=c;
+      absAcc+=lamRaw*(1-suppB);                     /* expected absorbed count in this bin (nucleus absorption, matches suppress()) */
     }
+    st.nAbs=Math.round(absAcc);
     var K=Math.min(2400,Math.round(st.nScat*0.01*dotP()));
     for(i=0;i<K;i++){ var r=rnd(), u=Math.sqrt(1/(1+G10*(1-r))); if(u>1)u=1;
       var th=2*Math.asin(u), S=suppress(th,Ek); if(S<1&&rnd()>S)continue;
@@ -912,6 +917,7 @@ function updateCounts(){
   txt('gmN',fmtN(st.Nf));
   txt('gmScat',fmtN(st.nScat));
   txt('gmBack',Math.round(st.nBack).toLocaleString('en-US'));
+  txt('gmAbs',Math.round(st.nAbs).toLocaleString('en-US'));
   txt('gmOdds',oddsStr());
 }
 function syncUI(){ var Ek=EkOf(st.p), n;
