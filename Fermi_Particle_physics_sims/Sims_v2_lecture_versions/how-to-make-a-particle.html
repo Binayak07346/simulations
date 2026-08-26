@@ -172,7 +172,7 @@ body{background:var(--bg);color:var(--ink);font-family:var(--font-sans);overflow
 .ctrl-box .stat-row:first-child{padding-top:0;}
 .ctrl-box .stat-row:last-child{padding-bottom:0;}
 .stat-label{color:var(--muted);display:flex;align-items:center;font-weight:600;}
-.stat-value{color:var(--text);font-weight:600;font-family:var(--font-nums);font-variant-numeric:tabular-nums;}
+.stat-value{color:var(--text);font-weight:600;font-family:var(--font-nums);font-variant-numeric:tabular-nums;white-space:nowrap;}
 .stat-value.highlight{font-size:18px;}
 .divider{height:1px;background:var(--border);}
 .note-text{font-size:13px;line-height:1.6;color:var(--muted);font-family:var(--font-sans);}
@@ -312,7 +312,7 @@ body.light-theme .predict-eval .answer,body.light-theme .predict-eval strong,htm
 .sim-tbl{display:flex;flex-direction:column;gap:6px;}
 .sim-tr{display:flex;justify-content:space-between;align-items:baseline;gap:10px;font-size:13.5px;border-bottom:1px dashed var(--border);padding-bottom:4px;}
 .sim-tr span{color:var(--muted);min-width:96px;}
-.sim-tr b{font-size:15px;color:var(--text);text-align:right;overflow-wrap:anywhere;font-family:var(--font-nums);font-variant-numeric:tabular-nums;}
+.sim-tr b{font-size:15px;color:var(--text);text-align:right;white-space:nowrap;font-family:var(--font-nums);font-variant-numeric:tabular-nums;}
 .sim-formal{display:flex;flex-direction:column;gap:2px;}
 .sim-frow{display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin:4px 0;}
 .sim-fcap{color:var(--muted);font-size:14px;min-width:180px;display:inline-block;}
@@ -1141,6 +1141,10 @@ function draw(){
     if(dy<lad.yT-1||dy>lad.yB+1) continue;
     ctx.globalAlpha=0.22; ctx.strokeStyle=T.muted; ctx.lineWidth=1;
     ctx.beginPath(); ctx.moveTo(lad.ax+10,dy); ctx.lineTo(lad.x1,dy); ctx.stroke();
+    /* skip the decade label when a rung sits within 6 px — the rung readout carries the same y anyway */
+    var rungCollide=false;
+    for(var j=0;j<SPECIES.length;j++){ if(Math.abs(yOfE(lad,SPECIES[j].thr)-dy)<6){rungCollide=true;break;} }
+    if(rungCollide) continue;
     ctx.globalAlpha=0.75; ctx.fillStyle=T.muted; ctx.font=T.f(600,9.5,true);
     ctx.textAlign='right'; ctx.textBaseline='middle';
     ctx.fillText(decs[i][1], lad.ax-10, dy);
