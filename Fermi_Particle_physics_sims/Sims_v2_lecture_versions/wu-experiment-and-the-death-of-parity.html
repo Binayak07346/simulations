@@ -312,7 +312,7 @@ body.light-theme .predict-eval .answer,body.light-theme .predict-eval strong,htm
 .sim-formal{display:flex;flex-direction:column;gap:12px;}
 .sim-formal-col{display:flex;flex-direction:column;gap:8px;min-width:0;}
 .sim-eqrow{display:flex;flex-wrap:wrap;gap:8px 24px;font-size:15px;color:var(--text);}
-.sim-eqrow>span{flex:1 1 220px;min-width:200px;overflow-wrap:anywhere;}
+.sim-eqrow>span{flex:0 0 auto;white-space:nowrap;} /* never wrap mid-formula — the row wraps between formulas */
 .sim-eqnote{font-size:12.5px;line-height:1.5;color:var(--muted);}
 .sim-anchor{font-size:13px;line-height:1.5;color:var(--muted);}
 .sim-distwrap{min-width:0;}
@@ -766,18 +766,19 @@ const Shell = (function(){
 'use strict';
 
 /* ===== MANDATORY AUDIT HOOK (engine-verified, pure arithmetic) =====
-   Self-contained reference model: density per unit cosθ = ½(1 + A·P·(v/c)·cosθ)
-   with the reference values A = −1, P = 1 and v/c → 1 inlined as numeric
-   literals (slope = A·P·(v/c) = −1). The body uses ONLY numeric literals and
-   its own parameter — no outer variables. The live simulation physics below is
-   unchanged (it samples P from the slider and β per decay). */
+   Live reporter: density per unit cosθ = ½(1 + A·P·(v/c)·cosθ) evaluated at
+   the sim's CURRENT slider polarization S.P with A = A_COEF (−1) and the mean
+   beta VC (0.60) — slope = A·P·⟨v/c⟩, matching the on-screen theory line.
+   (S/A_COEF/VC are defined below; at() only runs after init.) */
 window.__audit = { at(cosTheta) {
+  const slope = A_COEF * S.P * VC;
   return {
     cosTheta: cosTheta,
-    polarization: 1,
-    asymmetryCoefficient: -1,
-    probabilityDensityPerUnitCosTheta: 0.5 * (1 + (-1 * 1 * 1) * cosTheta),
-    slope: -1 * 1 * 1,
+    polarization: S.P,
+    asymmetryCoefficient: A_COEF,
+    meanBeta: VC,
+    probabilityDensityPerUnitCosTheta: 0.5 * (1 + slope * cosTheta),
+    slope: slope,
     normalization: 1
   };
 } };
@@ -982,9 +983,18 @@ function measured(){
   const s=Math.sqrt(Math.max(1e-9,(1-a*a)/t));
   return {a:a,s:s,t:t};
 }
-function revealReady(){
+/* Sign-aware significance: the Wu signal is 𝒜 ≥ 2σ from zero, signed like
+   A·P·β (A = −1 ⇒ negative), and closer to the theory value A·P·(v/c)/2 than
+   to zero. A magnitude-only cut let +2σ fluctuations at P = 0 (the mirror
+   world's sign!) read as parity violation. */
+function wuSignal(){
   const m=measured();
-  return S.pred!==null && m.t>=REVEAL_N && Math.abs(m.a) >= 2*m.s;
+  if(m.t<REVEAL_N || Math.abs(m.a) < 2*m.s) return false;
+  const aTh = A_COEF*S.P*VC/2;
+  return m.a*A_COEF > 0 && Math.abs(m.a-aTh) < Math.abs(m.a);
+}
+function revealReady(){
+  return S.pred!==null && wuSignal();
 }
 
 /* ===== main scene ===== */
@@ -1099,7 +1109,7 @@ function drawApp(cx, mir, weight){
     tcol = revealReady()? GOOD : TH.muted;
   } else {
     tag = 'MIRROR IMAGE — what parity predicts';
-    sub = 'P: momenta flip · spin and B do not';
+    sub = 'reflection: tracks mirrored · axial J, B and I reverse';
     tcol = revealReady()? BAD : TH.muted;
   }
   const availW = (S.mirror? LG.w/2 : LG.w) - 18;
@@ -1142,6 +1152,8 @@ function verdict(){
   if(Math.abs(m.a) < 2*m.s)
     return {t:'𝒜 = '+m.a.toFixed(3)+' ± '+m.s.toFixed(3)+' — consistent with zero', c:TH.muted};
   if(S.pred===null) return {t:'𝒜 = '+m.a.toFixed(3)+' ± '+m.s.toFixed(3), c:TH.text};
+  if(!wuSignal())  /* significant magnitude but not the A·P·β signal (wrong sign / P≈0 fluctuation) — stay numeric */
+    return {t:'𝒜 = '+m.a.toFixed(3)+' ± '+m.s.toFixed(3), c:TH.text};
   return S.anti ? {t:'✓ CP mirror matches the data', c:GOOD}
                 : {t:'✗ Mirror disagrees with the data', c:BAD};
 }
@@ -1238,8 +1250,12 @@ function syncControls(){
   antiBtn.setAttribute('aria-pressed', S.anti?'true':'false');
 }
 function setState(o){
+  /* o.keep: preserve the accumulated counts when P is unchanged (same physics
+     configuration — cards 3/4 cite the counts the student just collected). */
+  const wipe = !(o.keep && S.P===o.p);
   S.P=o.p; S.mirror=o.m; S.anti=o.a;
-  syncControls(); resampleSpins(); clearCounts();
+  syncControls();
+  if(wipe){ resampleSpins(); clearCounts(); }
   updateReadouts(); drawAll(); drawDist();
 }
 /* Guided-inquiry step specs — absolute state per card (self-contained, pager-safe).
@@ -1247,8 +1263,8 @@ function setState(o){
 const STEPS = [
   {p:0, m:false, a:false, pause:true },   // 1 · warm crystal, zero counts, paused
   {p:1, m:false, a:false, pause:true },   // 2 · fully polarized, paused until commit
-  {p:1, m:false, a:false, pause:false},   // 3 · counters running; mirror revealed on commit
-  {p:1, m:true,  a:false, pause:false}    // 4 · mirror view; C applied on commit
+  {p:1, m:false, a:false, pause:false, keep:true},   // 3 · counters running (kept from card 2); mirror revealed on commit
+  {p:1, m:true,  a:false, pause:false, keep:true}    // 4 · mirror view, counts kept; C applied on commit
 ];
 
 /* ===== controls (every one live from load) ===== */
