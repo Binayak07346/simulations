@@ -1,5 +1,20 @@
 # Review — virtual-cloud-chamber.html ("Virtual Cloud Chamber", curriculum: Simulation Descriptions row "Virtual Cloud Chamber" · Syllabus V2 Lecture 10 Antiparticles)
 
+**FIXES APPLIED (2026-08-26, headless-verified):** NP-P0-1/2 were resolved by the earlier
+systemic sweep (negative-dt shell clamp + `window.Shell=Shell`); this pass added the
+reviewer's belt-and-braces guards (`ii ≥ 0`, `st.s ≥ 0`) — cards 1–4 sequential walk now
+crash-free with the rAF loop alive after card 4 (dE 40.2 / r₂ 11.1 as claimed).
+PHY-P2-2 → the card-2 reveal restages the card's spec (e⁺/63 MeV) before forcing B = 3 T,
+so the quoted 14.1 → 7.1 cm always matches (verified after sabotaging to p̄ mid-card).
+NP-P2-1 → revealed mysteries show "N MeV (revealed)" (verified: "130 MeV (revealed)").
+NP-P2-2 → ghost tags nudge below one another (rLab's proven pattern). NP-P2-3 → a
+crossed-then-absorbed track keeps its first crossing's numbers ("13.3 MeV/c then
+absorbed", "63 MeV (all of it, over 1 crossing)" verified at 1.1 T/63 MeV). NP-P2-4 →
+unreachable "trapped" status branch removed. NP-P2-5 → `window.__audit.state()` now
+reports live sim state (B, Eₖ, particle, plate, p₁/r₁/p₂/r₂/dE/stopped). NOT fixed by
+request scope: PHY-P2-1 (plate-path DS quantization — engine model, internally
+consistent, not inquiry-flow). Zero page errors across all verification runs.
+
 **Verdict:** Physics layer is fully clean — all 108 particle×B×Eₖ×plate readout combos reproduce an independent relativistic r = p/(|q|B) + dE/dx integration exactly, curvature senses and the Anderson staging (30.3 → 11.1 cm, ΔE 40.2 MeV) are correct — but two NON-PHYSICS P0s: an intermittent negative-dt crash in `draw()` that permanently kills the animation loop (triggered by answering card 4 in normal sequence, hit in 4 of 6 sessions), and `window.Shell` being undefined, which silently disables Fire-while-paused (blank chamber at the boot state), per-card Reset staging, and pause-on-scrub.
 **Console:** clean except (a) an environment `/favicon.ico` 404 (not a sim asset) and (b) the NP-P0-1 pageerror when it triggers.  **Combos tested:** 108 exhaustive (6 particles × {0.2, 0.7, 1.5, 3.0} T × {10, 63, 200} MeV plate-out, + 6 × {0.7, 1.5} T × {10, 63, 200} MeV plate-in) — 108/108 readouts match the independent model — plus ~60 sampled (full card walk ×3 paths, pager round trip, 15 mystery cycles, stress scrubs, flow-mutation set, theme/maximize/1100 px).
 
