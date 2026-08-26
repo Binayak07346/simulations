@@ -93,3 +93,13 @@ Note (deliberate, not filed): pager-revisit of cards 3/4 restores the PRE-answer
 - Historical default of 5.0 MeV (0.193 GeV/c) is a pedagogical choice; the actual 1909 runs used RaC/RaC′ (~7.7 MeV) — the sim flags natural-source range honestly. Accepted.
 - One green point can sit visibly above the suppressed curve at extreme angles in flatten view at intermediate p (single-count Poisson bins, e.g. 1 count at ~170°, λ ≈ 0.5–1) — statistical, not a bug; a lecturer should expect it.
 - Layout at ≤900 px width was not exercised beyond the 1000×700 probe.
+
+## FIXES APPLIED (2026-08-26)
+| ID | Verdict | Evidence / fix |
+|---|---|---|
+| PHY-P2-1 | CONFIRMED + FIXED | Info-modal `<dd>` (~L331) read "fall by about 10⁵ between 5° and 150°"; exact ratio `(sin 75°/sin 2.5°)⁴ = 2.40×10⁵` (node). Text corrected to "fall by about 2×10⁵ between 5° and 150°" — verified on-screen post-fix. |
+| NP-P1-1 | ALREADY-RESOLVED | Fixed by the systemic sweep (SYS-2): `onReset` ends with `onStep(Shell.step)` (~L1226), re-syncing the scene to the active card. Left untouched. |
+| NP-P2-1 | CONFIRMED + FIXED | Repro (headless, 1440×900): with beam playing, restore chip → `Shell.playing` stayed `true` at step 0 (predict card firing); same via 🎓 Lecture OFF. Fix at `setLectureMode` else-branch (~L595): `setPlaying(false)` after `inqShow(0)`, matching the paused boot staging. Post-fix: restore → `{playing:false, step:0}`; Lecture OFF → `{playing:false, step:0}`; Play and Reset from card 1 still behave (Reset resumes play by design). |
+| NP-P2-2 | CONFIRMED + FIXED | Pre-fix load logged `favicon.ico -> 404` (sole console error). Added `<link rel="icon" href="data:,">` after `<title>`. Post-fix: zero favicon requests, zero console errors. |
+
+Post-fix regression sweep: zero pageerrors; Hide-Text boots CHECKED with all 4 registered notes hidden, uncheck→recheck round trip restores/hides all 4; boot still opens in Lecture mode PAUSED. Screenshot: `gf-postfix-restore-paused.png` (scratchpad).

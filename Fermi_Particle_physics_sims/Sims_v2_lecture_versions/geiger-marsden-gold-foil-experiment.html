@@ -5,6 +5,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Geiger–Marsden Gold Foil Experiment</title>
+<link rel="icon" href="data:,">
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
 <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
 <style>
@@ -328,7 +329,7 @@ body.light-theme .sim-hot,html[data-theme="light"] .sim-hot{color:#c2410c}
       <div class="shell-modal-body">
         <dl class="shell-info-dl">
   <dt>Concept</dt>
-  <dd>Scintillation counts at scattering angle θ follow 1/sin⁴(θ/2), so they fall by about 10⁵ between 5° and 150° yet never vanish. Because roughly 1 in 26,000 incident α turns through more than 90° — impossible if the positive charge were spread through the whole atom — that charge must sit in a tiny, massive nucleus.</dd>
+  <dd>Scintillation counts at scattering angle θ follow 1/sin⁴(θ/2), so they fall by about 2×10⁵ between 5° and 150° yet never vanish. Because roughly 1 in 26,000 incident α turns through more than 90° — impossible if the positive charge were spread through the whole atom — that charge must sit in a tiny, massive nucleus.</dd>
   <dt>Sub-question</dt>
   <dd>Nuclear size: the head-on closest approach is d_min = zZ·α_em·ħc/Eₖ = 45.5 fm at 5 MeV. Raising the beam momentum shrinks d_min; when the large-angle counts sag below the Rutherford curve the α is grazing the nuclear surface at d_touch = R_Au + R_α ≈ 8.9 fm, so R_Au ≈ 7 fm (diameter ≈ 1.4×10⁻¹⁴ m).</dd>
   <dt>Model notes</dt>
@@ -592,7 +593,7 @@ const Shell = (function(){
     const b=document.getElementById('shell-lecture');
     if(b) b.classList.toggle('active', on);
     if(on){ finishInquiry(); }
-    else { setInquiryCollapsed(false); if(inqCards().length) inqShow(0); }
+    else { setInquiryCollapsed(false); if(inqCards().length){ inqShow(0); setPlaying(false); /* card 1 is predict-first — reopen paused, matching boot */ } }
   }
 
   // ---- Guided-inquiry stepper (shell-owned, so Next/Finish are always wired) ----
