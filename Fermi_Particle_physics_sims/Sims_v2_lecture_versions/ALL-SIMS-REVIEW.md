@@ -182,7 +182,7 @@ detail — this file is the validation checklist). Findings are listed **in prio
 
 ## 9 · particle-detector-headquarters.html  (review: particle-detector-headquarters-review.md)
 
-> **e2d003f** (confirmed genuine before fixing): PHY-P2-1 (bend clamp softened — proton bend now strictly monotone 0.2→5 GeV while containment holds), PHY-P2-3 (TOF shows "(<0.001)" instead of "+0.000"), NP-P2-1 (race strip keeps the proton reference lane for e/μ/n) fixed. **PHY-P2-2 CLOSED** (user chose the caption option): HCAL meter now shows "ECAL + HCAL = kinetic energy" under its value for hadron events only (reworded from "kinetic energy deposited" so the caption names the sum, not the HCAL value alone); deposit numbers unchanged, verified per species.
+> **e2d003f** (confirmed genuine before fixing): PHY-P2-1 (bend clamp softened — proton bend now strictly monotone 0.2→5 GeV while containment holds), PHY-P2-3 (TOF shows "(<0.001)" instead of "+0.000"), NP-P2-1 (race strip keeps the proton reference lane for e/μ/n) fixed. **PHY-P2-2 — caption options tried and reverted per user**: two caption wordings ("kinetic energy deposited", then "ECAL + HCAL = kinetic energy") were shipped and both judged misleading; reverted to no caption. The KE-for-all-hadrons deposit stays as the documented idealization (deposit numbers were never changed). Remaining option if ever wanted: the fuller fix — deposit ≈E for π/K, KE for p/n.
 
 **Physics bugs (priority order):**
 - PHY-P2-1 — Track bend saturates at a geometric clamp below p ≈ 1.06 GeV (0.2 GeV proton pixel-identical to 1.0 GeV); r = p/qB trend only visible 1→5 GeV.
@@ -285,8 +285,8 @@ calculation) before fixing; each sim committed separately (revert per hash).
 | geiger-marsden-gold-foil | bb367ae | closed (3 confirmed+fixed) |
 | build-a-baryon | 65368df | closed (earlier) |
 
-**Open items remaining (1):**
+**Open items remaining (2, both deliberate judgement calls):**
 1. scale NP-P1-4 — curriculum's forces-strength panel was deliberately cut per the sim's change-log; recommendation: keep the cut, amend the curriculum row.
-2. ~~detector-hq PHY-P2-2~~ **CLOSED** — user chose the caption option: HCAL meter now says "ECAL + HCAL = kinetic energy" for hadron events (deposit numbers unchanged).
+2. detector-hq PHY-P2-2 — HCAL deposits show kinetic energy for mesons (exact for p/n, an idealization for π/K). Both caption wordings were tried and reverted per user (misleading); accepted as the documented idealization with no on-screen caption. Reopen only if the fuller fix (deposit ≈E for π/K) is wanted.
 
 Console: clean in all 14 sims; the in-sim favicon 404s were silenced where they originated (standard-model, gold-foil).
