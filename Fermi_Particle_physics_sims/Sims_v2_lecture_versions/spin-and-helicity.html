@@ -1035,18 +1035,21 @@ window.__audit = {
     if (pSlider) pSlider.value = String(Math.max(-1.31, Math.min(1.31, Math.log10(pMeV))));
     if (bSlider) bSlider.value = String(beta);
   }
-  function pauseForScrub() {
-    try { if (Shell && Shell.setPlaying) Shell.setPlaying(false); } catch (e) { }
+  /* User-driven parameter change: rewind the animation state (phase, positions) so
+     the new configuration starts from t = 0 in view, and (re)start playback. */
+  function restartAnim() {
+    state.phase = 0; state.xe = 0.35; state.labOff = 0;
+    try { if (Shell && Shell.setPlaying) Shell.setPlaying(true); } catch (e) { }
   }
 
   // ---------- events ----------
   if (pSlider) pSlider.addEventListener('input', function () {
     state.pMeV = Math.pow(10, parseFloat(pSlider.value));
-    pauseForScrub(); tick();
+    restartAnim(); tick();
   });
   if (bSlider) bSlider.addEventListener('input', function () {
     state.betaObs = parseFloat(bSlider.value);
-    pauseForScrub(); tick();
+    restartAnim(); tick();
   });
   var jLab = $('jLab'), jMatch = $('jMatch'), jOver = $('jOver');
   function setBeta(b) {
@@ -1054,9 +1057,9 @@ window.__audit = {
     if (bSlider) bSlider.value = String(state.betaObs);
     tick();
   }
-  if (jLab) jLab.addEventListener('click', function () { pauseForScrub(); setBeta(0); });
-  if (jMatch) jMatch.addEventListener('click', function () { pauseForScrub(); setBeta(Math.round(phys().bP / 0.0005) * 0.0005); });
-  if (jOver) jOver.addEventListener('click', function () { pauseForScrub(); setBeta(0.9995); });
+  if (jLab) jLab.addEventListener('click', function () { restartAnim(); setBeta(0); });
+  if (jMatch) jMatch.addEventListener('click', function () { restartAnim(); setBeta(Math.round(phys().bP / 0.0005) * 0.0005); });
+  if (jOver) jOver.addEventListener('click', function () { restartAnim(); setBeta(0.9995); });
 
   // ---------- KaTeX (guarded, retried) ----------
   var mathTries = 0;
