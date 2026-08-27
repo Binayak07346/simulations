@@ -347,9 +347,9 @@ body.light-theme .predict-eval .answer,body.light-theme .predict-eval strong,htm
       <div class="shell-modal-body">
         <dl class="shell-info-dl">
   <dt>Concept</dt>
-  <dd>Helicity h = S·p̂ is frame-dependent for massive particles: boost past the electron and its momentum reverses while its spin does not, so h flips sign. Chirality is the frame-independent notion; for a right-handed-helicity state the chiral mix is P<sub>R,L</sub> = (1±β<sub>e</sub>)/2, so helicity and chirality only coincide as E ≫ mc².</dd>
+  <dd>Helicity h = S·p̂ is frame-dependent for massive particles: boost past the electron and its momentum reverses while its spin does not, so h flips sign. Chirality is the Lorentz-invariant label (a left-chiral state is left-chiral in every frame), but a helicity eigenstate is a mixture of both: P<sub>R,L</sub> = (1±β′)/2 with β′ the electron's signed velocity in the observer's frame — 50 : 50 at rest, so helicity and chirality only coincide as E ≫ mc².</dd>
   <dt>Serves</dt>
-  <dd>Intro particle physics / early quantum field theory: why "left-handed neutrino" statements are about chirality, why massive fermions have no invariant handedness, and how p′ = γ(p − βE), E′ = γ(E − βp) drive the flip. Engine-verified anchor: a p = 1 MeV electron (E = 1.123 MeV, β = 0.8905) boosted at β = 0.9 has p′ = −24.5 keV, E′ = 0.512 MeV, h: +1 → −1; its chiral content is 94.5% R, 5.5% L.</dd>
+  <dd>Intro particle physics / early quantum field theory: why "left-handed neutrino" statements are about chirality, why massive fermions have no invariant handedness, and how p′ = γ(p − βE), E′ = γ(E − βp) drive the flip. Engine-verified anchor: a p = 1 MeV electron (E = 1.123 MeV, β = 0.8905) boosted at β = 0.9 has p′ = −24.5 keV, E′ = 0.512 MeV, h: +1 → −1; its chiral content is 94.5% R in the lab and 47.6% R in the overtaking frame.</dd>
   <dt>Inquiry</dt>
   <dd>Optionally predict what overtaking does to h, then drag the boost slider across the marked flip point (β = 0.890 at 1 MeV) and compare the verdict against your choice. Then raise p and watch the chirality bar approach 100% R.</dd>
   <dt>Misconception</dt>
@@ -359,8 +359,8 @@ body.light-theme .predict-eval .answer,body.light-theme .predict-eval strong,htm
   <tr><th>Principle</th><th>How it appears here</th></tr>
   <tr><td>Predict first, never blocking</td><td>An optional three-chip prediction sits above the controls; the sim runs fully without it.</td></tr>
   <tr><td>Targeted cognitive conflict</td><td>The "stay +1" chip encodes the intrinsic-helicity misconception; its rebuttal appears only when that student crosses the flip.</td></tr>
-  <tr><td>Invariant vs. varying</td><td>The spin arrow, rotation sense and chirality bar never respond to the boost slider; p′, the helix handedness and h do.</td></tr>
-  <tr><td>Operational quantities</td><td>E′, p′, relative speed and chiral fractions update live from p′ = γ(p − βE), E′ = γ(E − βp), P<sub>R,L</sub> = (1±β<sub>e</sub>)/2.</td></tr>
+  <tr><td>Invariant vs. varying</td><td>The spin arrow and rotation sense never respond to the boost slider; p′, the helix handedness, h and the chirality bar do — and the bar reads 50 : 50 whenever p′ = 0.</td></tr>
+  <tr><td>Operational quantities</td><td>E′, p′, relative speed and chiral fractions update live from p′ = γ(p − βE), E′ = γ(E − βp), P<sub>R,L</sub> = (1±β′)/2 with β′ = p′/E′.</td></tr>
   <tr><td>Formal layer on demand</td><td>The helicity definition, boost transform and chiral-fraction formulas live behind the formal-tools toggle.</td></tr>
 </table>
       </div>
@@ -444,10 +444,10 @@ body.light-theme .predict-eval .answer,body.light-theme .predict-eval strong,htm
           <button class="choice" data-fb="No fade: +1, one undefined instant at p′ = 0, then −1 — drag <strong>β</strong> slowly across 0.890 and watch the badge.">Fade smoothly to 0</button>
           <div class="predict-eval"></div></div>
 <div class="inq-step" data-gate data-reveal="raisep"><h4>3 · Chirality ≠ helicity</h4>
-          <p>Overtaken at β = 0.9, h = −1. Yet the bottom bar still reads <strong>R-chiral 94.5%</strong> — exactly what it read before the flip. Which slider can move that chirality bar?</p>
-          <button class="choice" data-fb="It has ignored every boost so far — chirality is frame-invariant: P_R = (1+β_e)/2 contains no observer.">observer boost β</button>
-          <button class="choice" data-fb="It isn't fixed: chirality tracks the electron's own speed β_e, and momentum sets that speed.">Neither — it is fixed for electrons</button>
-          <button class="choice" data-correct data-fb="P_R = (1+β_e)/2 knows only the electron's own speed — p just jumped to 20 MeV: watch R hit ≈100%.">electron momentum p</button>
+          <p>Overtaken at β = 0.9, h = −1, and the bottom bar has slid from <strong>R-chiral 94.5%</strong> to <strong>47.6%</strong>. Chirality is often called Lorentz-invariant — so which slider can move that chirality bar?</p>
+          <button class="choice" data-fb="Only half the story: the electron's speed in your frame depends on BOTH sliders. Slide p up and watch R climb too.">observer boost β only</button>
+          <button class="choice" data-fb="Only half the story: ride along (p′ = 0) and the bar reads 50 : 50 whatever p is — the observer boost moves it too.">electron momentum p only</button>
+          <button class="choice" data-correct data-fb="Both — the weights are (1 ± β′)/2 with β′ the electron's signed velocity in <em>your</em> frame. What is invariant is the chiral projector, not the mix. p just jumped to 20 MeV: watch R hit ≈100%.">Both — it depends on the electron's speed in my frame</button>
           <div class="predict-eval"></div></div>
 <div class="inq-step" data-gate data-reveal="maxboost"><h4>4 · The massless limit</h4>
           <p>At p = 20 MeV the electron outruns even your β = 0.9 chase: h = +1 again, the bar ≈100% R, and <strong>h flips at β =</strong> 0.9997. At the slider's maximum, β = 0.9995, h will…</p>
@@ -499,7 +499,7 @@ body.light-theme .predict-eval .answer,body.light-theme .predict-eval strong,htm
     <div class="sim-formal">
   <div class="sim-eq"><div class="sim-eq-c">helicity</div><span id="eqH">h = S·p̂ / (ħ/2) = ±1</span></div>
   <div class="sim-eq"><div class="sim-eq-c">boost along p</div><span id="eqB">p′ = γ(p − βE),  E′ = γ(E − βp)</span></div>
-  <div class="sim-eq"><div class="sim-eq-c">chiral content of h = +1</div><span id="eqC">P_R = (1+β_e)/2, P_L = (1−β_e)/2 → {1, 0} as E ≫ mc²</span></div>
+  <div class="sim-eq"><div class="sim-eq-c">chiral content of h = +1</div><span id="eqC">P_R = (1+β′)/2, P_L = (1−β′)/2, β′ = p′/E′ → {1, 0} as E ≫ mc²</span></div>
 </div>
   </section>
 
@@ -786,7 +786,7 @@ window.__audit = {
     var g = 1 / Math.sqrt(1 - b * b);
     var pT = g * (p - b * E);
     var ET = g * (E - b * p);
-    var fR = (1 + bP) / 2;
+    var fR = (1 + pT / ET) / 2;   /* chiral weight of this helicity state in the OBSERVER frame: (1 + beta'_signed)/2; 50/50 at p' = 0 */
     return { p: p, E: E, bP: bP, pT: pT, ET: ET, betaRel: pT / ET, fR: fR, fL: 1 - fR };
   }
 
@@ -984,7 +984,7 @@ window.__audit = {
     else { t2 = short ? 'h = −1' : 'h = −1 · left-handed'; c2 = C.left; }
     chipBox(W - 12, 10, t2, c2, C, fsB, true);
 
-    // chirality panel (bottom band — boost-invariant)
+    // chirality panel (bottom band — L/R weights follow the electron's signed velocity in the observer frame)
     var px0 = W * 0.07, pwd = W * 0.86, py0 = H * 0.75, ph = H * 0.19;
     ctx.save(); ctx.globalAlpha = 0.55; ctx.fillStyle = C.surface; rr(px0, py0, pwd, ph, 10); ctx.fill(); ctx.restore();
     ctx.strokeStyle = C.border; ctx.lineWidth = 1.5; rr(px0, py0, pwd, ph, 10); ctx.stroke();
@@ -1071,7 +1071,7 @@ window.__audit = {
     }
     put('eqH', 'h=\\dfrac{\\vec S\\cdot\\hat p}{\\hbar/2}=\\pm 1');
     put('eqB', "p'=\\gamma\\,(p-\\beta E),\\qquad E'=\\gamma\\,(E-\\beta p)");
-    put('eqC', 'P_{R,L}=\\dfrac{1\\pm\\beta_e}{2}\\ \\xrightarrow{\\;E\\gg mc^{2}\\;}\\ \\{1,\\,0\\}');
+    put('eqC', 'P_{R,L}=\\dfrac{1\\pm\\beta^{\\prime}}{2},\\quad \\beta^{\\prime}=\\dfrac{p^{\\prime}}{E^{\\prime}}\\ \\xrightarrow{\\;E\\gg mc^{2}\\;}\\ \\{1,\\,0\\}');
   }
   renderMath();
 

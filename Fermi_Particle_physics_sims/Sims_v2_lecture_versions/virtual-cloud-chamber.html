@@ -344,7 +344,7 @@ body.light-theme .predict-eval .answer,body.light-theme .predict-eval strong,htm
 </style>
 </head>
 <body>
-<!-- POLISH: [physics] plate loss is now integrated along the path actually travelled inside the lead and is species/β dependent (effective 6.7 GeV/m for e± ⇒ Anderson's 63→23 MeV, disclosed in the formal caption + info modal; 1/β² collision term for μ/p/p̄ so slow protons stop inside instead of being emitted with a printed "p out"); curvature re-integrated step-by-step inside the plate; every plate crossing recorded and labelled "(1 of N)"; playback speed uses per-point β (no floor) so the head slows after the plate; plate drawn at exactly 6 mm; chamber pinned to 0.32 m × 0.20 m with letterboxing so geometry no longer changes on resize; kinematic chain E=Ek+mc², pc=√(E²−(mc²)²) added to the formal layer; plate thickness renamed d→t_Pb; ghosts carry species/E/B tags; "q = +1 e" units; droplet density/alpha now scale as 1/β² and the unphysical every-8th-point white pip is gone; a labelled 5 cm scale bar was added; the finished track holds instead of silently re-firing; mystery mode shows Ek as "hidden" (no control is ever disabled). ; [pedagogy] one claim only — curvature alone cannot give the sign of a charge, direction of travel comes first: entry state is an unfired chamber, plate out, PAUSED with Play enabled; the prediction strip moved ABOVE the stage and became a three-step commit → reveal → check sequence with "change my answer" and answers preserved (and announced) across Reset; both candidate entries (e⁺↑ / e⁻↓) are sketched on canvas before answering; with the plate out the track renders as a static developing photograph (no chevron, no ↑, no moving head) so the ambiguity is felt, direction cues return only with the plate in; the misconception is now drawn as a dashed mirror arc that visibly misses while the true e⁻↓ track slides in full-weight onto the photo; prompt text is bound to plate state and every scene change the handler makes is announced on canvas and in the feedback; numbers and on-track r chips appear when the r-before/r-after comparison is asked; μ/p/p̄/? and the energy slider live in an always-openable "More particles" group; the Dirac row was dropped; inquiry cards rewritten as questions with choices and live values; an in-hero progress trail marks committed actions; the info modal was trimmed to one sentence per entry and the standing "Misconception" card removed; the Anderson claim is now a question. ; [visuals] sidebar panels padded via .sim-pad, beam chips carry colour swatches, user ghosts are tagged, the stage has a plot title, a 5 cm scale bar, canvas chips use tabular mono numerals, the status chip is right-aligned so it cannot collide with the B chip, the mystery chip has a fixed width, formal columns widened, stage min-height lowered to 150px, canvas theme colours read from body so light theme works, the Speed label inherits 13px, and labels renamed ("Clear old tracks", "? unknown", "p before plate" …). -->
+<!-- POLISH: [physics] plate loss is now integrated along the path actually travelled inside the lead and is species/β dependent (e± radiative loss E/X₀ (X₀,eff = 8 mm) + 1.3 GeV/m collision ⇒ Anderson's 63→23 MeV, disclosed in the formal caption + info modal; 1/β² collision term for μ/p/p̄ so slow protons stop inside instead of being emitted with a printed "p out"); curvature re-integrated step-by-step inside the plate; every plate crossing recorded and labelled "(1 of N)"; playback speed uses per-point β (no floor) so the head slows after the plate; plate drawn at exactly 6 mm; chamber pinned to 0.32 m × 0.20 m with letterboxing so geometry no longer changes on resize; kinematic chain E=Ek+mc², pc=√(E²−(mc²)²) added to the formal layer; plate thickness renamed d→t_Pb; ghosts carry species/E/B tags; "q = +1 e" units; droplet density/alpha now scale as 1/β² and the unphysical every-8th-point white pip is gone; a labelled 5 cm scale bar was added; the finished track holds instead of silently re-firing; mystery mode shows Ek as "hidden" (no control is ever disabled). ; [pedagogy] one claim only — curvature alone cannot give the sign of a charge, direction of travel comes first: entry state is an unfired chamber, plate out, PAUSED with Play enabled; the prediction strip moved ABOVE the stage and became a three-step commit → reveal → check sequence with "change my answer" and answers preserved (and announced) across Reset; both candidate entries (e⁺↑ / e⁻↓) are sketched on canvas before answering; with the plate out the track renders as a static developing photograph (no chevron, no ↑, no moving head) so the ambiguity is felt, direction cues return only with the plate in; the misconception is now drawn as a dashed mirror arc that visibly misses while the true e⁻↓ track slides in full-weight onto the photo; prompt text is bound to plate state and every scene change the handler makes is announced on canvas and in the feedback; numbers and on-track r chips appear when the r-before/r-after comparison is asked; μ/p/p̄/? and the energy slider live in an always-openable "More particles" group; the Dirac row was dropped; inquiry cards rewritten as questions with choices and live values; an in-hero progress trail marks committed actions; the info modal was trimmed to one sentence per entry and the standing "Misconception" card removed; the Anderson claim is now a question. ; [visuals] sidebar panels padded via .sim-pad, beam chips carry colour swatches, user ghosts are tagged, the stage has a plot title, a 5 cm scale bar, canvas chips use tabular mono numerals, the status chip is right-aligned so it cannot collide with the B chip, the mystery chip has a fixed width, formal columns widened, stage min-height lowered to 150px, canvas theme colours read from body so light theme works, the Speed label inherits 13px, and labels renamed ("Clear old tracks", "? unknown", "p before plate" …). -->
 <div id="shell" class="hide-formal">
 
   <div id="shell-info-modal" class="shell-modal-backdrop">
@@ -359,7 +359,7 @@ body.light-theme .predict-eval .answer,body.light-theme .predict-eval strong,htm
   <dt>Serves</dt><dd>Reading a cloud-chamber photograph the way a lead plate lets you read it.</dd>
   <dt>Inquiry</dt><dd>What photograph would an e⁺ going up and an e⁻ going down each leave, and what does a lead plate add?</dd>
   <dt>Model</dt><dd>r = p/(|q|B) is integrated step by step, and the lead takes energy along the path actually travelled inside it.</dd>
-  <dt>Idealisation</dt><dd>e± use one effective stopping power in lead (6.7 GeV/m, collision + radiative), which reproduces the 63 → 23 MeV that Anderson measured across 6 mm; heavier particles use a collision term ∝ 1/β², so a slow proton stops inside the plate.</dd>
+  <dt>Idealisation</dt><dd>e± lose energy in lead mainly by bremsstrahlung, dE/dx ≈ E/X₀ plus ≈1.3 GeV/m of ionisation; the sim uses an effective X₀ of 8 mm (true value 5.6 mm) so that one typical track reproduces the 63 → 23 MeV Anderson measured across 6 mm. Heavier particles use a collision term ∝ 1/β², so a slow proton stops inside the plate. Multiple scattering in the lead is not modelled.</dd>
 </dl>
         <table class="shell-info-table">
   <tr><th>Principle</th><th>Where it appears</th></tr>
@@ -541,7 +541,7 @@ body.light-theme .predict-eval .answer,body.light-theme .predict-eval strong,htm
     <div class="sim-formal">
   <div class="sim-eq"><div class="sim-eqbox" id="sim-eq1">r = p/(|q|B)</div><p>Read the radius off the photograph, know B, and you have the momentum.</p></div>
   <div class="sim-eq"><div class="sim-eqbox" id="sim-eq2">E = Ek + mc², pc = √(E² − (mc²)²)</div><p>The chain the kinetic-energy slider uses: this is where “p before plate” comes from.</p></div>
-  <div class="sim-eq"><div class="sim-eqbox" id="sim-eq3">ΔE_Pb = ⟨dE/dx⟩_eff · t_Pb ≈ 40 MeV</div><p>Idealised: one effective stopping power for e± in lead (6.7 GeV/m, collision + radiative), applied along the path actually taken inside the plate. Anderson's own 1932 track lost 63 → 23 MeV. Heavier particles use a collision term ∝ 1/β², so a slow proton stops inside the lead instead of crossing it.</p></div>
+  <div class="sim-eq"><div class="sim-eqbox" id="sim-eq3">dE/dx (e±) ≈ E/X₀ + 1.3 GeV/m,  X₀,eff = 8 mm ⇒ ΔE(63 MeV, 6 mm) ≈ 40 MeV</div><p>Idealised: bremsstrahlung ∝ E (true X₀ in lead = 5.6 mm; 8 mm here stands in for a typical rather than mean single-track loss) plus ionisation, integrated along the path actually taken inside the plate. Anderson's own 1932 track lost 63 → 23 MeV. Heavier particles use a collision term ∝ 1/β², so a slow proton stops inside the lead instead of crossing it.</p></div>
 </div>
   </section>
 
@@ -785,8 +785,10 @@ var CC=0.299792458;          /* r[m] = (p[GeV]) / (CC * B[T]) for |q|=1 */
 var HALF_H=0.10;             /* chamber half-height, m  (fixed apparatus) */
 var HALF_W=0.16;             /* chamber half-width, m   (fixed apparatus) */
 var PLATE_T=0.006;           /* 6 mm lead */
-var DEDX_E=6.7;              /* GeV/m — effective (collision+radiative) stopping power for e± in Pb.
-                                6 mm  ->  ~40 MeV, i.e. Anderson's measured 63 -> 23 MeV. */
+var X0_EFF=0.0080;           /* m — effective radiation length for e± in Pb used here (true X0 = 5.6 mm).
+                                Radiative loss dE/dx = E_total/X0_EFF; 8.0 mm makes one deterministic
+                                track reproduce Anderson's typical 63 -> ~23 MeV across 6 mm. */
+var DEDX_COLL_E=1.3;         /* GeV/m — collision (ionisation) term for e± in Pb, ~1 MIP */
 var DEDX_MIP=1.27;           /* GeV/m — collision minimum for a singly charged heavy particle in Pb */
 var DS=0.0015;               /* integration step, m */
 var FSANS="'DMSansUser','DM Sans',-apple-system,system-ui,sans-serif";
@@ -822,7 +824,7 @@ function radiusM(pMeV,B){return (pMeV/1000)/(CC*B);}
    Heavier singly charged particles: a Bethe-like collision term rising as 1/beta^2,
    which is what stops slow protons inside the plate instead of letting them cross. */
 function dEdxPb(P,Ek){
- if(P.m<10)return DEDX_E;
+ if(P.m<10)return (P.m+Ek)/1000/X0_EFF+DEDX_COLL_E;   /* GeV/m: E_total[GeV]/X0_eff + collision */
  var b=kin(P.m,Math.max(0.05,Ek)).beta,b2=Math.max(3e-4,b*b);
  return Math.min(150,DEDX_MIP/b2);
 }
@@ -1359,7 +1361,7 @@ window.__audit={state(){var t=st.track;return{B:st.B,Ek:st.Ek,particle:st.pKey,p
 var EQS=[
  ['sim-eq1','r=\\dfrac{p}{|q|\\,B}'],
  ['sim-eq2','E=E_k+mc^{2},\\qquad pc=\\sqrt{E^{2}-(mc^{2})^{2}}'],
- ['sim-eq3','\\Delta E_{\\mathrm{Pb}}=\\left\\langle\\tfrac{dE}{dx}\\right\\rangle_{\\mathrm{eff}}\\,t_{\\mathrm{Pb}}\\approx 6.7\\,\\tfrac{\\mathrm{GeV}}{\\mathrm{m}}\\times 6\\,\\mathrm{mm}\\approx 40\\ \\mathrm{MeV}']
+ ['sim-eq3','\\tfrac{dE}{dx}\\big|_{e^{\\pm}}\\approx\\tfrac{E}{X_{0}}+1.3\\,\\tfrac{\\mathrm{GeV}}{\\mathrm{m}},\\quad X_{0,\\mathrm{eff}}=8\\,\\mathrm{mm}\\ \\Rightarrow\\ \\Delta E(63\\,\\mathrm{MeV},\\,6\\,\\mathrm{mm})\\approx 40\\ \\mathrm{MeV}']
 ];
 function renderFormal(nTry){
  if(!window.katex){if(nTry<24)setTimeout(function(){renderFormal(nTry+1);},300);return;}

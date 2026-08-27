@@ -335,13 +335,13 @@ body.light-theme .predict-eval .answer,body.light-theme .predict-eval strong,htm
       <div class="shell-modal-body">
         <dl class="shell-info-dl">
   <dt>Concept</dt>
-  <dd>Head-on e⁺e⁻ collisions: the Lorentz-invariant energy √s = √((E₁+E₂)² − (p₁−p₂)²) is the creation budget — a particle pair is accessible only if √s ≥ 2m. Above threshold, the QED annihilation rate σ(e⁺e⁻→μ⁺μ⁻) = (4πα²/3s)·β(3−β²)/2 rises from zero at √s = 2m_μ, then <em>falls</em> as 1/s, and the expected yield is N = σ·∫L dt·ε. (Spec inferred from engine capabilities — curriculum row was blank; flagged for curriculum review.)</dd>
+  <dd>Head-on e⁺e⁻ collisions: the Lorentz-invariant energy √s = √((E₁+E₂)² − (p₁−p₂)²) is the creation budget — a particle pair is accessible only if √s ≥ 2m. Above threshold, the annihilation rate σ(e⁺e⁻→μ⁺μ⁻) = (4πα²/3s)·β(3−β²)/2·F_Z(s) rises from zero at √s = 2m_μ, then <em>falls</em> as 1/s through the photon — until the Z⁰ takes over: at √s = M_Z = 91.19 GeV the rate leaps ~200× (≈2 nb at Born level; LEP measured ≈1.5 nb) and then falls away again. The expected yield is N = σ·∫L dt·ε. The model is improved Born (γ/Z interference, no initial-state radiation). Threshold chips are labelled by the particles that emerge: BB̄ marks the open-flavour B⁺B⁻ threshold at 2m_B = 10.56 GeV; bound bb̄ already appears as the Υ(1S) resonance at 9.46 GeV, and tt̄ is a free-quark threshold because the top decays before it can hadronise.</dd>
   <dt>Serves</dt>
   <dd>Intro particle / modern physics units on colliders and cross-sections; works pre-formalism (thresholds unlock visually) and post-formalism via the equation toggle. Numbers are engine-exact: √s = 10 GeV gives σ = 0.869 nb; 1 nb × 1 fb⁻¹ × ε = 0.9 gives 9.0×10⁵ events.</dd>
   <dt>Inquiry</dt>
   <dd>Open the muon channel at √s = 2 GeV → raise both beams to 10 GeV and watch reach grow while rate drops ×25 → compare 25+1 GeV vs 5+5 GeV (same √s = 10: asymmetry only buys a boost) → cross the W⁺W⁻ threshold at 161 GeV → plan a run: luminosity and efficiency set the count.</dd>
   <dt>Misconception</dt>
-  <dd>“More energy ⇒ more events.” Wrong twice: (1) above threshold this s-channel rate scales as 1/s — energy widens the menu of particles, luminosity buys statistics; (2) beam energies don’t simply add — unequal beams waste energy on center-of-mass motion, visible as E₁+E₂ − √s.</dd>
+  <dd>“More energy ⇒ more events.” Wrong twice: (1) away from the Z⁰ pole this s-channel rate scales as 1/s — energy widens the menu of particles, luminosity buys statistics (the one exception, the Z⁰ resonance, is a narrow 2.5 GeV window at 91 GeV); (2) beam energies don’t simply add — unequal beams waste energy on center-of-mass motion, visible as E₁+E₂ − √s.</dd>
 </dl>
         <table class="shell-info-table">
   <tr><th>Principle</th><th>Where it appears</th></tr>
@@ -349,7 +349,7 @@ body.light-theme .predict-eval .answer,body.light-theme .predict-eval strong,htm
   <tr><td>Misconception encoded in a choice</td><td>“≈4× more” carries the intuition; picking it triggers the rebuttal (σ = 4πα²/3s), which is never shown as standing prose.</td></tr>
   <tr><td>Invariant vs. varying</td><td>25+1 GeV and 5+5 GeV give the same √s = 10 GeV: √s is the invariant that matters; E₁+E₂ and the boost are not, shown as “lost to boost”.</td></tr>
   <tr><td>Operational quantities</td><td>Every claim is a labelled readout — √s, σ in nb, expected events — computed with the exact engine formulas.</td></tr>
-  <tr><td>Formal layer on demand</td><td>Invariant mass, QED cross-section, angular distribution and yield equations sit behind the shell’s formal toggle.</td></tr>
+  <tr><td>Formal layer on demand</td><td>Invariant mass, γ/Z cross-section with the Z⁰ factor, angular distribution and yield equations sit behind the shell’s formal toggle.</td></tr>
 </table>
       </div>
     </div>
@@ -457,11 +457,11 @@ body.light-theme .predict-eval .answer,body.light-theme .predict-eval strong,htm
 <div class="inq-step" data-gate data-reveal="lum10">
   <h4>5 · Count events, not hopes</h4>
   <p>At 5 + 5 GeV you log 7.82×10⁵ muon pairs per fb⁻¹. Your measurement needs ten times more. Which knob delivers?</p>
-  <button class="choice" data-fb="σ ∝ 1/s: tenfold beams mean ×100 fewer muon pairs. Energy is for reach, never rate.">Beams ×10 — 50 + 50 GeV</button>
+  <button class="choice" data-fb="Not ×10 more: at √s = 100 GeV you sit just above the Z⁰ pole and log ≈ 6× <em>fewer</em> muon pairs than at 10 GeV (0.05 nb). Only parking exactly on M_Z = 91.19 GeV would beat the 1/s fall — and that is a resonance, not a rule. Energy is for reach; luminosity is for rate.">Beams ×10 — 50 + 50 GeV</button>
   <button class="choice" data-correct data-fb="N = σ·∫L dt·ε: tenfold luminosity, tenfold pairs — <strong>μ⁺μ⁻ events</strong> jumps to 7.82×10⁶.">Run longer — ∫L dt to 10 fb⁻¹</button>
   <button class="choice" data-fb="ε can never exceed 1 — from 0.90 even a perfect detector adds only 11%.">Detector upgrade — ε ×10</button>
   <div class="predict-eval"></div>
-  <p class="inq-after">Energy sets what you can make; luminosity sets how many you record. LEP crossed the W⁺W⁻ wall (√s = 161 GeV) in 1996 — drag both beams to 85 GeV and cross it yourself. Can any setting here reach tt̄?</p>
+  <p class="inq-after">Energy sets what you can make; luminosity sets how many you record. Park the beams at 45.6 GeV and watch the Z⁰ pole lift σ(μ⁺μ⁻) ~200×; LEP crossed the W⁺W⁻ wall (√s = 161 GeV) in 1996 — drag both beams to 85 GeV and cross it yourself. Can any setting here reach tt̄?</p>
 </div>
       </div>
       <div class="inq-nav">
@@ -501,7 +501,9 @@ body.light-theme .predict-eval .answer,body.light-theme .predict-eval strong,htm
   <section class="shell-formal">
     <div class="sim-formal">
   <div class="sim-eq"><span class="sim-eqlab">energy budget</span><span class="sim-ktx" data-tex="\sqrt{s}=\sqrt{(E_1+E_2)^2-(p_1-p_2)^2}\;=\;2E_{\text{beam}}\ (E_1{=}E_2)">√s = √((E₁+E₂)² − (p₁−p₂)²) = 2E_beam for equal beams</span></div>
-  <div class="sim-eq"><span class="sim-eqlab">QED rate</span><span class="sim-ktx" data-tex="\sigma(e^+e^-\!\to\mu^+\mu^-)=\dfrac{4\pi\alpha^2}{3s}\,\dfrac{\beta(3-\beta^2)}{2},\quad\beta=\sqrt{1-4m_\mu^2/s}">σ = 4πα²/(3s) · β(3−β²)/2, β = √(1−4m_μ²/s)</span></div>
+  <div class="sim-eq"><span class="sim-eqlab">γ/Z rate</span><span class="sim-ktx" data-tex="\sigma(e^+e^-\!\to\mu^+\mu^-)=\dfrac{4\pi\alpha^2}{3s}\,\dfrac{\beta(3-\beta^2)}{2}\;F_Z(s),\quad\beta=\sqrt{1-4m_\mu^2/s}">σ = 4πα²/(3s) · β(3−β²)/2 · F_Z(s), β = √(1−4m_μ²/s)</span></div>
+  <div class="sim-eq"><span class="sim-eqlab">Z⁰ factor</span><span class="sim-ktx" data-tex="F_Z=1+2g_v^2\,\mathrm{Re}\,\chi+(g_v^2+g_a^2)^2|\chi|^2,\quad \chi=\dfrac{G_F M_Z^2}{2\sqrt2\,\pi\alpha}\,\dfrac{s}{s-M_Z^2+iM_Z\Gamma_Z}">F_Z = 1 + 2g_v²Re χ + (g_v²+g_a²)²|χ|², χ = (G_F M_Z²/2√2πα)·s/(s−M_Z²+iM_ZΓ_Z)</span></div>
+  <div class="sim-eq"><span class="sim-eqlab">limits</span><span class="sim-ktx" data-tex="F_Z\to1\ (\sqrt s\ll M_Z:\ \sigma\propto1/s),\qquad \sigma_{\text{peak}}\approx\dfrac{12\pi}{M_Z^2}\dfrac{\Gamma_{ee}\Gamma_{\mu\mu}}{\Gamma_Z^2}\approx2\ \text{nb (Born; LEP measured }\approx1.5\text{ nb after ISR)}">F_Z → 1 for √s ≪ M_Z (σ ∝ 1/s); σ_peak ≈ 12πΓ_eeΓ_μμ/(M_Z²Γ_Z²) ≈ 2 nb Born (LEP: ≈1.5 nb after ISR)</span></div>
   <div class="sim-eq"><span class="sim-eqlab">angular shape</span><span class="sim-ktx" data-tex="\dfrac{d\sigma}{d\Omega}=\dfrac{\alpha^2}{4s}\,(1+\cos^2\theta)">dσ/dΩ = α²/(4s)(1+cos²θ)</span></div>
   <div class="sim-eq"><span class="sim-eqlab">yield</span><span class="sim-ktx" data-tex="N=\sigma\cdot\!\int\! L\,dt\cdot\varepsilon">N = σ · ∫L dt · ε</span></div>
 </div>
@@ -746,7 +748,8 @@ window.__audit = { at(centerOfMassEnergyGeV) {
   return {
     centerOfMassEnergyGeV: centerOfMassEnergyGeV,
     cosTheta: 0,
-    totalCrossSectionNb: (function(){ var betaMu = Math.sqrt(Math.max(0, 1 - 4 * 0.1056583755 * 0.1056583755 / (centerOfMassEnergyGeV * centerOfMassEnergyGeV))); return 4 * Math.PI * (7.2973525693e-3 * 7.2973525693e-3) / (3 * centerOfMassEnergyGeV * centerOfMassEnergyGeV) * 3.893793721e5 * betaMu * (3 - betaMu * betaMu) / 2; })(),
+    totalCrossSectionNb: (function(){ var s = centerOfMassEnergyGeV * centerOfMassEnergyGeV; var betaMu = Math.sqrt(Math.max(0, 1 - 4 * 0.1056583755 * 0.1056583755 / s)); var qed = 4 * Math.PI * (7.2973525693e-3 * 7.2973525693e-3) / (3 * s) * 3.893793721e5 * betaMu * (3 - betaMu * betaMu) / 2; var MZ = 91.1876, GZ = 2.4952, gv = -0.5 + 2 * 0.23122, ga = -0.5, k = 1.1663788e-5 * MZ * MZ / (2 * Math.SQRT2 * Math.PI * 7.2973525693e-3); var d = s - MZ * MZ, den = d * d + MZ * MZ * GZ * GZ; var F = 1 + 2 * gv * gv * k * s * d / den + (gv * gv + ga * ga) * (gv * gv + ga * ga) * k * k * s * s / den; return qed * F; })(),
+    qedOnlyCrossSectionNb: (function(){ var s = centerOfMassEnergyGeV * centerOfMassEnergyGeV; var betaMu = Math.sqrt(Math.max(0, 1 - 4 * 0.1056583755 * 0.1056583755 / s)); return 4 * Math.PI * (7.2973525693e-3 * 7.2973525693e-3) / (3 * s) * 3.893793721e5 * betaMu * (3 - betaMu * betaMu) / 2; })(),
     differentialCrossSectionNbPerSteradian: (7.2973525693e-3 * 7.2973525693e-3) / (4 * centerOfMassEnergyGeV * centerOfMassEnergyGeV) * 3.893793721e5
   };
 } };
@@ -759,7 +762,7 @@ var MMU = 0.1056583755;
 var THR = [
   { sym: 'μ⁺μ⁻', m: 2 * MMU },
   { sym: 'τ⁺τ⁻', m: 3.55372 },
-  { sym: 'bb̄',  m: 10.558 },
+  { sym: 'BB̄',  m: 10.558 },   /* open-flavour B⁺B⁻ threshold = 2 m_B±; bb̄ itself appears earlier as the Υ(1S) resonance at 9.460 GeV */
   { sym: 'W⁺W⁻', m: 160.74 },
   { sym: 'ZZ',   m: 182.37 },
   { sym: 'tt̄',  m: 345.4 }
@@ -773,11 +776,26 @@ function clamp(v, a, b){ return Math.max(a, Math.min(b, v)); }
 function c01(v){ return clamp(v, 0, 1); }
 function pOf(E){ return Math.sqrt(Math.max(0, E * E - ME * ME)); }
 function sqrtS(a, b){ var E = a + b, dp = pOf(a) - pOf(b); return Math.sqrt(Math.max(0, E * E - dp * dp)); }
-function sigNb(rs){
+/* Z boson (PDG) and the electroweak factor for e+e- -> mu+mu- (improved Born, no ISR).
+   sigma = sigma_QED * F_Z(s),  F_Z = 1 + 2 g_v^2 Re chi + (g_v^2 + g_a^2)^2 |chi|^2,
+   chi(s) = (G_F M_Z^2 / (2*sqrt2*pi*alpha)) * s / (s - M_Z^2 + i M_Z Gamma_Z),
+   g_v = -1/2 + 2 sin^2(theta_W), g_a = -1/2 for charged leptons.
+   F_Z -> 1 for sqrt(s) << M_Z; ~190 at the pole: sigma_peak ~ 2.0 nb Born
+   (= 12 pi Gamma_ee Gamma_mumu / (M_Z^2 Gamma_Z^2)); LEP measured ~1.5 nb after ISR. */
+var MZ = 91.1876, GZ = 2.4952, SW2 = 0.23122, GF = 1.1663788e-5;
+var GV = -0.5 + 2 * SW2, GA = -0.5;
+var KCHI = GF * MZ * MZ / (2 * Math.SQRT2 * Math.PI * ALPHA);
+function zFactor(s){
+  var d = s - MZ * MZ, den = d * d + MZ * MZ * GZ * GZ;
+  var reChi = KCHI * s * d / den, chi2 = KCHI * KCHI * s * s / den;
+  return 1 + 2 * GV * GV * reChi + (GV * GV + GA * GA) * (GV * GV + GA * GA) * chi2;
+}
+function sigQedNb(rs){
   if (!(rs > 0)) return 0;
   var b = Math.sqrt(Math.max(0, 1 - 4 * MMU * MMU / (rs * rs))); /* muon velocity β in CM */
   return 4 * Math.PI * ALPHA * ALPHA / (3 * rs * rs) * HBC2NB * b * (3 - b * b) / 2;
 }
+function sigNb(rs){ return sigQedNb(rs) * zFactor(rs * rs); }
 
 /* ===== DOM ===== */
 function $id(i){ return document.getElementById(i); }
@@ -1126,12 +1144,21 @@ function draw(){
     ctx.textBaseline = 'alphabetic';
   }
 
-  /* QED curve (from muon threshold up) */
+  /* Z⁰ resonance marker (a resonance, not a pair threshold) */
+  var xz = xOf(MZ);
+  if (xz > plotL && xz < plotR){
+    ctx.save(); ctx.strokeStyle = P.m2; ctx.globalAlpha = 0.55; ctx.lineWidth = 1.5; ctx.setLineDash([2, 4]);
+    ctx.beginPath(); ctx.moveTo(xz, plotTop); ctx.lineTo(xz, plotBot); ctx.stroke(); ctx.setLineDash([]);
+    ctx.globalAlpha = 1; ctx.fillStyle = P.m2; ctx.font = '600 ' + tickFs + FAM; ctx.textAlign = 'center';
+    ctx.fillText('Z\u2070 pole ' + MZ.toFixed(1) + ' GeV', xz, plotTop + 12);
+    ctx.restore();
+  }
+  /* γ/Z curve (from muon threshold up); sampled every px so the 2.5 GeV-wide Z peak is resolved */
   var xs = Math.max(plotL, xOf(THR[0].m));
   ctx.strokeStyle = P.accent; ctx.lineWidth = 2.5;
   ctx.beginPath();
   var first = true, px2, v2;
-  for (px2 = xs; px2 <= plotR; px2 += 3){
+  for (px2 = xs; px2 <= plotR; px2 += 1){
     v2 = Math.pow(10, X0 + (px2 - plotL) / LX * (X1 - X0));
     y = yOf(sigNb(v2));
     if (first){ ctx.moveTo(px2, y); first = false; } else ctx.lineTo(px2, y);

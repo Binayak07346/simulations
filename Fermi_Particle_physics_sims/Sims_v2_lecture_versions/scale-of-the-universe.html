@@ -465,7 +465,7 @@ body.light-theme .predict-eval .answer,body.light-theme .predict-eval strong,htm
 <div class="inq-step" data-gate><h4>5 · Why no one has seen a quark</h4>
           <p>d = 10⁻¹⁸ m — quark scale. <strong>E<sub>min</sub></strong> reads 197 GeV, and the ruler band says <span style="color:#b26ef7">collider</span>. Why will no microscope ever photograph a quark?</p>
           <button class="choice" data-fb="No size is too small for a short-enough wave — the barrier is the energy that wave costs.">Quarks are simply too small for any wave</button>
-          <button class="choice" data-correct data-fb="Right — only colliders reach 197 GeV, and they reconstruct collision debris, never an image; below 2×10⁻¹⁹ m, no machine at all.">That wave costs ~197 GeV — collider territory</button>
+          <button class="choice" data-correct data-fb="Right — only colliders reach 197 GeV, and they reconstruct collision debris, never an image; the LHC probes down to about 10⁻²⁰ m — below that, no machine at all.">That wave costs ~197 GeV — collider territory</button>
           <button class="choice" data-fb="Scattering does probe quarks inside protons — confinement bars free quarks, not high-momentum probing.">Confinement hides quarks from probes</button>
           <div class="predict-eval"></div>
           <p class="inq-after">Nine decades of size cost nine decades of energy: d·E<sub>min</sub> never leaves ħc ≈ 0.197 GeV·fm. Drag the ruler cursor anywhere and watch <strong>d</strong> fall as <strong>E<sub>min</sub></strong> climbs, decade for decade.</p></div>
@@ -840,17 +840,17 @@ function techBand(d){
   if (d >= 7e-5)    return { name:'naked eye',            col:'#f2b23d', note:'a hair\u2019s width is your limit' };
   if (d >= 1.05e-7) return { name:'light microscope',     col:'#5fcb72', note:'visible-light waves resolve living cells' };
   if (d >= 4e-11)   return { name:'electron microscope',  col:'#41c8dd', note:'electron waves image viruses and atoms' };
-  if (d >= 2e-19)   return { name:'accelerator · collider', col:'#b26ef7',
+  if (d >= 1e-20)   return { name:'accelerator · collider', col:'#b26ef7',
     note: d >= 1e-16 ? 'beams scatter off nuclei — images reconstructed' : 'collision debris only — never a photograph' };
-  return { name:'beyond any machine', col:'#8b93a3', note:'no device reaches this energy yet' };
+  return { name:'beyond any machine', col:'#8b93a3', note:'below ~10⁻²⁰ m — beyond the LHC\u2019s reach' };
 }
 /* [hi, lo, colour, [name candidates, longest first]] */
 const BANDS = [
   [1e8,7e-5,'#f2b23d',['imaging technology · naked eye','naked eye','eye']],
   [7e-5,1.05e-7,'#5fcb72',['light microscope','light micro.','light']],
   [1.05e-7,4e-11,'#41c8dd',['electron microscope','electron micro.','electron']],
-  [4e-11,2e-19,'#b26ef7',['accelerator · collider','collider','coll.']],
-  [2e-19,1e-19,'#8b93a3',[]]
+  [4e-11,1e-20,'#b26ef7',['accelerator · collider','collider','coll.']],
+  [1e-20,1e-20,'#8b93a3',[]]
 ];
 function probeBand(eV){
   if (eV < 1.7e-3) return ['radio wave', '#8fb3c9'];
