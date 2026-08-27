@@ -283,14 +283,17 @@
     sims.forEach(file => {
       const card = document.createElement("article");
       card.className = "card";
-      card.dataset.title = prettifyFilename(file).toLowerCase();
+      const title = prettifyFilename(file);
+      card.dataset.title = title.toLowerCase();
+      const viewerHref = "./viewer.html?sim=" + encodeURIComponent(file) +
+                         "&title=" + encodeURIComponent(title);
       card.innerHTML = `
         <div>
-          <h2>${prettifyFilename(file)}</h2>
+          <h2>${title}</h2>
           <p></p>
         </div>
         <div class="actions">
-          <a class="btn" href="./${file}">Open <span aria-hidden="true">→</span></a>
+          <a class="btn" href="${viewerHref}">Open <span aria-hidden="true">→</span></a>
         </div>
       `;
       grid.appendChild(card);

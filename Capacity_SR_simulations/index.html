@@ -689,19 +689,22 @@
       { file: "L07-s1-Michelson_Morley_experiment_3D.html", title: "Michelson–Morley Experiment · 3D", desc: "An interactive 3D reconstruction of the interferometer — split-beam paths, the aether fringe-shift prediction, and the relativistic null result." },
     ];
 
-    function renderCards(sims, gridId, pathPrefix = "./") {
+    function renderCards(sims, gridId, pathPrefix = "./", useViewer = false) {
       const grid = document.getElementById(gridId);
       sims.forEach(sim => {
         const card = document.createElement('article');
         card.className = 'card' + (sim.supplemental ? ' is-supplemental' : '') + (sim.new ? ' is-new' : '');
         card.dataset.search = `${sim.title} ${sim.desc}${sim.supplemental ? ' supplemental' : ''}${sim.new ? ' new' : ''}`.toLowerCase();
+        const href = useViewer
+          ? `${pathPrefix}viewer.html?sim=${encodeURIComponent(sim.file)}&title=${encodeURIComponent(sim.title)}`
+          : encodeURI(pathPrefix + sim.file);
         card.innerHTML = `
           ${sim.new ? '<span class="tag-new">New</span>' : ''}
           ${sim.supplemental ? '<span class="tag-supplemental">Supplemental</span>' : ''}
           <h3>${sim.title}</h3>
           <p>${sim.desc}</p>
           <div class="actions">
-            <a class="btn" href="${encodeURI(pathPrefix + sim.file)}">Open simulation →</a>
+            <a class="btn" href="${href}">Open simulation →</a>
           </div>
         `;
         grid.appendChild(card);
@@ -745,7 +748,7 @@
 
     renderCards(simsV1, 'grid-v1');
     renderCards(simsLecture, 'grid-lecture', shellBase);
-    renderCards(simsV2, 'grid-v2', shellBase);
+    renderCards(simsV2, 'grid-v2', shellBase, true);
     renderCards(simsUser, 'grid-user', shellBase);
     bindSearch('search-v1', 'grid-v1');
     bindSearch('search-lecture', 'grid-lecture');

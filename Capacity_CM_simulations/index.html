@@ -231,6 +231,8 @@
     sims.forEach(sim => {
       const card = document.createElement('article');
       card.className = 'card';
+      const viewerHref = './viewer.html?sim=' + encodeURIComponent(sim.file) +
+                         '&title=' + encodeURIComponent(sim.title);
       card.innerHTML = `
         <div>
           <span class="lecture-tag">${sim.lecture}</span>
@@ -238,7 +240,7 @@
           <p>${sim.desc}</p>
         </div>
         <div class="actions">
-          <a class="btn" href="${encodeURI('./' + sim.file)}">Open simulation →</a>
+          <a class="btn" href="${viewerHref}">Open simulation →</a>
         </div>
       `;
       grid.appendChild(card);

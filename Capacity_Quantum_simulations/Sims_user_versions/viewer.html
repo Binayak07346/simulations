@@ -1,0 +1,234 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Simulation viewer</title>
+  <style>
+    :root {
+      --text: #eef2ff;
+      --muted: rgba(203, 213, 255, 0.72);
+      --accent-2: #22d3ee;
+      --stroke-2: rgba(255, 255, 255, 0.16);
+      --shadow: 0 18px 60px rgba(0,0,0,0.55);
+    }
+    * { box-sizing: border-box; }
+    html, body { margin: 0; height: 100%; background: #070914; }
+    #simFrame {
+      position: fixed;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      border: 0;
+      display: block;
+    }
+    .fb-pill {
+      position: fixed;
+      right: 18px;
+      bottom: 18px;
+      z-index: 40;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 10px 14px;
+      border-radius: 999px;
+      background: rgba(34, 211, 238, 0.92);
+      color: rgba(7, 9, 20, 0.94);
+      font: 700 13px/1 ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial;
+      border: 0;
+      cursor: pointer;
+      box-shadow: 0 14px 28px rgba(0,0,0,0.35);
+      transition: transform 0.06s ease, filter 0.18s ease, box-shadow 0.18s ease;
+      user-select: none;
+    }
+    .fb-pill:hover { filter: brightness(1.06) saturate(1.06); box-shadow: 0 18px 34px rgba(0,0,0,0.42); }
+    .fb-pill:active { transform: translateY(1px) scale(0.99); }
+    .fb-pill .fb-ico { font-size: 15px; line-height: 1; }
+    .fb-backdrop {
+      position: fixed;
+      inset: 0;
+      background: rgba(3, 5, 15, 0.72);
+      backdrop-filter: blur(4px);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 60;
+      padding: 20px;
+      font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial;
+      color: var(--text);
+    }
+    .fb-backdrop.show { display: flex; }
+    .fb-modal {
+      width: 100%;
+      max-width: 520px;
+      background: linear-gradient(180deg, #101430 0%, #0a0d22 100%);
+      border: 1px solid var(--stroke-2);
+      border-radius: 18px;
+      padding: 22px;
+      box-shadow: var(--shadow);
+    }
+    .fb-modal h3 { margin: 0 0 4px; font-size: 1.05rem; letter-spacing: -0.01em; }
+    .fb-modal .fb-sub { color: var(--muted); font-size: 0.85rem; margin: 0 0 14px; }
+    .fb-modal textarea {
+      width: 100%;
+      min-height: 140px;
+      padding: 11px 12px;
+      border-radius: 10px;
+      border: 1px solid var(--stroke-2);
+      background: rgba(0,0,0,0.32);
+      color: var(--text);
+      font: inherit;
+      font-size: 0.95rem;
+      resize: vertical;
+      outline: none;
+    }
+    .fb-modal textarea:focus { border-color: rgba(34, 211, 238, 0.55); }
+    .fb-hp { position: absolute; left: -9999px; opacity: 0; pointer-events: none; }
+    .fb-row {
+      margin-top: 14px;
+      display: flex;
+      gap: 10px;
+      justify-content: flex-end;
+      align-items: center;
+    }
+    .fb-msg { flex: 1; font-size: 0.85rem; color: var(--muted); }
+    .fb-msg.ok { color: rgba(163, 255, 189, 0.95); }
+    .fb-msg.err { color: #ff9a9a; }
+    .fb-btn-secondary {
+      background: transparent;
+      color: var(--muted);
+      border: 1px solid var(--stroke-2);
+      padding: 9px 14px;
+      border-radius: 999px;
+      cursor: pointer;
+      font-weight: 600;
+    }
+    .fb-btn-secondary:hover { color: var(--text); border-color: var(--text); }
+    .fb-btn-primary {
+      background: var(--accent-2);
+      color: rgba(7, 9, 20, 0.92);
+      border: 0;
+      padding: 10px 16px;
+      border-radius: 999px;
+      cursor: pointer;
+      font-weight: 800;
+    }
+    .fb-btn-primary:disabled { opacity: 0.55; cursor: not-allowed; }
+  </style>
+</head>
+<body>
+  <iframe id="simFrame" title="Simulation" allow="fullscreen"></iframe>
+
+  <button class="fb-pill" id="fbPill" type="button" title="Report a bug or leave feedback">
+    <span class="fb-ico">💬</span><span>Feedback</span>
+  </button>
+
+  <div class="fb-backdrop" id="fbBackdrop" role="dialog" aria-modal="true" aria-labelledby="fbTitle">
+    <div class="fb-modal">
+      <h3 id="fbTitle">Feedback</h3>
+      <p class="fb-sub" id="fbSub">Simulation</p>
+      <textarea id="fbText" placeholder="Describe the issue or suggestion. Include steps to reproduce if it is a bug."></textarea>
+      <input class="fb-hp" id="fbHp" tabindex="-1" autocomplete="off" aria-hidden="true" />
+      <div class="fb-row">
+        <span class="fb-msg" id="fbMsg"></span>
+        <button class="fb-btn-secondary" id="fbCancel" type="button">Cancel</button>
+        <button class="fb-btn-primary" id="fbSubmit" type="button">Submit</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Google Apps Script Web App URL — paste your deployed /exec URL here.
+    // (Same value used in index.html; keep them in sync.)
+    const FEEDBACK_URL = "https://script.google.com/macros/s/AKfycbwxBcHhN-7GirEIJ3_CSSWGRo6R73CL_CRIaFrMCXY1Zgv7NGUsRfRSsm-ef0oZPPC5fg/exec";
+    const FEEDBACK_COURSE = "QM";
+
+    const params = new URLSearchParams(location.search);
+    const simFile = (params.get('sim') || '').trim();
+    const simTitle = (params.get('title') || '').trim() || simFile.replace(/\.html?$/i,'');
+
+    if (!simFile || /^https?:/i.test(simFile) || simFile.includes('/') || simFile.includes('..')) {
+      document.body.innerHTML = '<div style="color:#eef2ff;font-family:sans-serif;padding:40px;">Missing or invalid <code>?sim=</code> parameter.</div>';
+    } else {
+      document.getElementById('simFrame').src = './' + encodeURIComponent(simFile);
+      document.title = simTitle + ' — simulation';
+    }
+
+    const fbPill = document.getElementById('fbPill');
+    const fbBackdrop = document.getElementById('fbBackdrop');
+    const fbSub = document.getElementById('fbSub');
+    const fbText = document.getElementById('fbText');
+    const fbHp = document.getElementById('fbHp');
+    const fbMsg = document.getElementById('fbMsg');
+    const fbSubmit = document.getElementById('fbSubmit');
+    const fbCancel = document.getElementById('fbCancel');
+
+    function openFeedback() {
+      fbSub.textContent = simTitle;
+      fbText.value = "";
+      fbHp.value = "";
+      fbMsg.textContent = "";
+      fbMsg.className = "fb-msg";
+      fbSubmit.disabled = false;
+      fbBackdrop.classList.add('show');
+      setTimeout(() => fbText.focus(), 30);
+    }
+    function closeFeedback() { fbBackdrop.classList.remove('show'); }
+
+    fbPill.addEventListener('click', openFeedback);
+    fbCancel.addEventListener('click', closeFeedback);
+    fbBackdrop.addEventListener('click', (e) => { if (e.target === fbBackdrop) closeFeedback(); });
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' && fbBackdrop.classList.contains('show')) closeFeedback();
+    });
+
+    async function submitFeedback() {
+      const message = fbText.value.trim();
+      if (!message) {
+        fbMsg.textContent = "Please type your feedback first.";
+        fbMsg.className = "fb-msg err";
+        return;
+      }
+      if (!FEEDBACK_URL) {
+        fbMsg.textContent = "Feedback endpoint not configured yet.";
+        fbMsg.className = "fb-msg err";
+        return;
+      }
+      fbSubmit.disabled = true;
+      fbMsg.textContent = "Sending…";
+      fbMsg.className = "fb-msg";
+      const fd = new FormData();
+      fd.append('course', FEEDBACK_COURSE);
+      fd.append('sim', simTitle);
+      fd.append('message', message);
+      fd.append('hp', fbHp.value);
+      try {
+        const resp = await fetch(FEEDBACK_URL, { method: 'POST', body: fd });
+        let data = null;
+        try { data = await resp.json(); } catch (_) {}
+        if (data && data.ok) {
+          fbMsg.textContent = "Recorded as " + data.version + ". Thanks!";
+          fbMsg.className = "fb-msg ok";
+          setTimeout(closeFeedback, 1100);
+        } else if (data && data.err) {
+          fbMsg.textContent = "Error: " + data.err;
+          fbMsg.className = "fb-msg err";
+          fbSubmit.disabled = false;
+        } else {
+          fbMsg.textContent = "Sent. Check the sheet.";
+          fbMsg.className = "fb-msg ok";
+          setTimeout(closeFeedback, 1100);
+        }
+      } catch (err) {
+        fbMsg.textContent = "Network error. Try again.";
+        fbMsg.className = "fb-msg err";
+        fbSubmit.disabled = false;
+      }
+    }
+    fbSubmit.addEventListener('click', submitFeedback);
+    fbText.addEventListener('keydown', (e) => {
+      if ((e.metaKey || e.ctrlKey) && e.key === 'Enter') submitFeedback();
+    });
+  </script>
+</body>
+</html>
