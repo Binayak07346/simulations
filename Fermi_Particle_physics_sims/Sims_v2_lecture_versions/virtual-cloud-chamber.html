@@ -311,6 +311,16 @@ body.light-theme .predict-eval .answer,body.light-theme .predict-eval strong,htm
 /* Question strip — sits ABOVE the stage: the question precedes the reveal. */
 
 .sim-ptitle{margin:0 0 8px;font-size:14px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.05em}
+.sim-drop{margin:0}
+.sim-drop>summary{list-style:none;cursor:pointer;display:flex;align-items:center;gap:6px;margin:0 0 8px}
+.sim-drop>summary::-webkit-details-marker{display:none}
+.sim-drop>summary::after{content:"▸";color:var(--muted);font-size:12px;transition:transform .15s ease;margin-left:auto}
+.sim-drop[open]>summary::after{transform:rotate(90deg)}
+.sim-drop>summary>.sim-ptitle{margin:0}
+.sim-box{background:var(--bg,transparent);border:1px solid var(--border);border-radius:8px;padding:10px 12px;margin:10px 0}
+.sim-box>*:first-child{margin-top:0}
+.sim-box>*:last-child{margin-bottom:0}
+.sim-box+.sim-box{margin-top:10px}
 .sim-chips{display:flex;flex-wrap:wrap;gap:6px}
 .sim-chip{min-width:44px;font-size:15px;padding:4px 10px;border-radius:999px;border:1.5px solid var(--border);background:transparent;color:var(--text);cursor:pointer;box-sizing:border-box;display:inline-flex;align-items:center}
 .sim-chip:hover{border-color:var(--accent)}
@@ -405,7 +415,7 @@ body.light-theme .predict-eval .answer,body.light-theme .predict-eval strong,htm
      DOM items:    add class "ht-hide" to the element.
      Canvas items: wrap the draw call in  if(!HT()){ ... }
      Keep this list current when registering items:
-     (empty — nothing registered yet)
+     - [dom] "? unknown fires an unlabelled particle: read its momentum…" — p.sim-hint under "More particles & energy", ~L512
 -->
 <script>
 /* Hide Text toggle — empty registry; hides .ht-hide DOM nodes and gates HT() canvas labels. */
@@ -491,48 +501,62 @@ body.light-theme .predict-eval .answer,body.light-theme .predict-eval strong,htm
       <div class="shell-panel"><div class="sim-pad">
   <h3 class="sim-ptitle">Beam</h3>
   <div id="simBeam">
-    <div class="sim-chips" id="simChips">
-      <button class="sim-chip" type="button" data-p="e-"><span class="sim-swatch" style="background:#5ac8ff"></span>e⁻</button>
-      <button class="sim-chip sim-on" type="button" data-p="e+"><span class="sim-swatch" style="background:#ffa14e"></span>e⁺</button>
+    <div class="sim-box">
+      <div class="sim-chips" id="simChips">
+        <button class="sim-chip" type="button" data-p="e-"><span class="sim-swatch" style="background:#5ac8ff"></span>e⁻</button>
+        <button class="sim-chip sim-on" type="button" data-p="e+"><span class="sim-swatch" style="background:#ffa14e"></span>e⁺</button>
+      </div>
     </div>
-    <div class="sim-rowflex">
-      <button class="sim-btn" id="simFire" type="button">▶ Fire</button>
-      <button class="sim-btn" id="simMoreBtn" type="button" aria-expanded="false">＋ More particles &amp; energy</button>
+    <div class="sim-box">
+      <div class="sim-rowflex">
+        <button class="sim-btn" id="simFire" type="button">▶ Fire</button>
+        <button class="sim-btn" id="simMoreBtn" type="button" aria-expanded="false">＋ More particles &amp; energy</button>
+      </div>
     </div>
     <div id="simMore" class="sim-more sim-hidden">
-      <div class="sim-chips">
-        <button class="sim-chip" type="button" data-p="mu-"><span class="sim-swatch" style="background:#93a0ff"></span>μ⁻</button>
-        <button class="sim-chip" type="button" data-p="mu+"><span class="sim-swatch" style="background:#ff6ee0"></span>μ⁺</button>
-        <button class="sim-chip" type="button" data-p="p"><span class="sim-swatch" style="background:#ffdf6b"></span>p</button>
-        <button class="sim-chip" type="button" data-p="pbar"><span class="sim-swatch" style="background:#6ef0ae"></span>p̄</button>
-        <button class="sim-chip sim-mys" type="button" data-p="?" id="simMysChip">? unknown</button>
+      <div class="sim-box">
+        <div class="sim-chips">
+          <button class="sim-chip" type="button" data-p="mu-"><span class="sim-swatch" style="background:#93a0ff"></span>μ⁻</button>
+          <button class="sim-chip" type="button" data-p="mu+"><span class="sim-swatch" style="background:#ff6ee0"></span>μ⁺</button>
+          <button class="sim-chip" type="button" data-p="p"><span class="sim-swatch" style="background:#ffdf6b"></span>p</button>
+          <button class="sim-chip" type="button" data-p="pbar"><span class="sim-swatch" style="background:#6ef0ae"></span>p̄</button>
+          <button class="sim-chip sim-mys" type="button" data-p="?" id="simMysChip">? unknown</button>
+        </div>
       </div>
-      <label class="sim-lab" for="simEk">Kinetic energy <output id="simEkVal">63 MeV</output></label>
-      <input type="range" class="sim-slider" id="simEk" min="10" max="200" step="1" value="63">
-      <p class="sim-hint">“? unknown” fires an unlabelled particle: read its momentum and its bending, then press it again to reveal what it was.</p>
+      <div class="sim-box">
+        <label class="sim-lab" for="simEk">Kinetic energy <output id="simEkVal">63 MeV</output></label>
+        <input type="range" class="sim-slider" id="simEk" min="10" max="200" step="1" value="63">
+        <p class="sim-hint ht-hide">“? unknown” fires an unlabelled particle: read its momentum and its bending, then press it again to reveal what it was.</p>
+      </div>
     </div>
   </div>
 </div></div>
 <div class="shell-panel"><div class="sim-pad">
   <h3 class="sim-ptitle">Chamber</h3>
-  <label class="sim-lab" for="simB">Field B (out of the page) <output id="simBVal">1.50 T</output></label>
-  <input type="range" class="sim-slider" id="simB" min="0.2" max="3" step="0.05" value="1.5">
-  <div class="sim-rowflex">
-    <label class="sim-check"><input type="checkbox" id="simPlate"> Lead plate (6 mm)</label>
-    <button class="sim-btn" id="simClear" type="button">Clear old tracks</button>
+  <div class="sim-box">
+    <label class="sim-lab" for="simB">Field B (out of the page) <output id="simBVal">1.50 T</output></label>
+    <input type="range" class="sim-slider" id="simB" min="0.2" max="3" step="0.05" value="1.5">
+  </div>
+  <div class="sim-box">
+    <div class="sim-rowflex">
+      <label class="sim-check"><input type="checkbox" id="simPlate"> Lead plate (6 mm)</label>
+      <button class="sim-btn" id="simClear" type="button">Clear old tracks</button>
+    </div>
   </div>
 </div></div>
 <div class="shell-panel"><div class="sim-pad">
-  <h3 class="sim-ptitle">Track readout</h3>
-  <p class="sim-hint" id="roHint">Slide the lead plate in (or open “More particles”) to compare the arc before and after the lead.</p>
-  <dl class="sim-ro sim-hidden" id="roList">
-    <dt>Particle</dt><dd id="roPart">—</dd>
-    <dt>p before plate</dt><dd id="roP1">—</dd>
-    <dt>r before plate</dt><dd id="roR1">—</dd>
-    <dt>ΔE in plate</dt><dd id="roDE">—</dd>
-    <dt>p after plate</dt><dd id="roP2">—</dd>
-    <dt>r after plate</dt><dd id="roR2">—</dd>
-  </dl>
+  <details class="sim-drop">
+    <summary><h3 class="sim-ptitle">Track readout</h3></summary>
+    <p class="sim-hint" id="roHint">Slide the lead plate in (or open “More particles”) to compare the arc before and after the lead.</p>
+    <dl class="sim-ro sim-hidden" id="roList">
+      <dt>Particle</dt><dd id="roPart">—</dd>
+      <dt>p before plate</dt><dd id="roP1">—</dd>
+      <dt>r before plate</dt><dd id="roR1">—</dd>
+      <dt>ΔE in plate</dt><dd id="roDE">—</dd>
+      <dt>p after plate</dt><dd id="roP2">—</dd>
+      <dt>r after plate</dt><dd id="roR2">—</dd>
+    </dl>
+  </details>
 </div></div>
     </div>
   </aside>
@@ -913,7 +937,7 @@ function pushGhost(hidden){
  var t=st.track;
  st.ghosts.push({key:t.key,Ek:t.Ek0,B:t.B,plate:t.plateOn,rev:false,mirror:false,dash:false,solid:false,
   special:false,slide:0,col:hidden?'#c9d2df':t.col,
-  tag:hidden?'?':(t.sym+' '+t.Ek0+' MeV \u00B7 '+t.B.toFixed(2)+' T'),pts:t.pts});
+  tag:hidden?'?':(t.sym+' '+t.Ek0+' MeV, '+t.B.toFixed(2)+' T'),pts:t.pts});
  if(st.ghosts.length>6)st.ghosts.shift();
 }
 function cancelMystery(){st.mystery=null;mysChip.textContent='? unknown';setActive(st.pKey);syncEkOut();}
@@ -983,6 +1007,46 @@ function chipRect(x,y,txt,align){
  X=Math.max(3,Math.min(W-w-3,X));
  var Y=Math.max(3,Math.min(H-h-3,y));
  return {X:X,Y:Y,w:w,h:h};
+}
+/* single pill with multiple text lines — one box, one particle's info.
+   Lines may embed {sub} markup — the braced part renders as a subscript. */
+function _lineParts(s){return s.split(/\{([^}]*)\}/);}
+function _lineWidth(s){
+ var parts=_lineParts(s),w=0;
+ for(var i=0;i<parts.length;i++){
+  if(!parts[i])continue;
+  ctx.font=(i%2?'600 10px ':'600 14px ')+(/\d/.test(parts[i])?FMONO:FSANS);
+  w+=ctx.measureText(parts[i]).width;
+ }
+ return w;
+}
+function chipStackRect(x,y,lines,align){
+ ctx.save();var maxW=0;
+ for(var i=0;i<lines.length;i++){var lw=_lineWidth(lines[i]);if(lw>maxW)maxW=lw;}
+ var w=maxW+16,h=lines.length===1?22:(22+18*(lines.length-1));
+ ctx.restore();
+ var X=align==='center'?x-w/2:(align==='right'?x-w:x);
+ X=Math.max(3,Math.min(W-w-3,X));var Y=Math.max(3,Math.min(H-h-3,y));
+ return {X:X,Y:Y,w:w,h:h};
+}
+function chipStack(x,y,lines,align,colr){
+ var r=chipStackRect(x,y,lines,align);
+ ctx.save();
+ ctx.fillStyle='rgba(6,9,14,0.78)';rr(r.X,r.Y,r.w,r.h,6);ctx.fill();
+ ctx.strokeStyle='rgba(255,255,255,0.18)';ctx.lineWidth=1;ctx.stroke();
+ ctx.fillStyle=colr||'#eef2f8';
+ for(var i=0;i<lines.length;i++){
+  var parts=_lineParts(lines[i]),cx2=r.X+8,baseY=r.Y+15.5+i*18;
+  for(var j=0;j<parts.length;j++){
+   if(!parts[j])continue;
+   var isSub=j%2===1;
+   ctx.font=(isSub?'600 10px ':'600 14px ')+(/\d/.test(parts[j])?FMONO:FSANS);
+   ctx.fillText(parts[j],cx2,baseY+(isSub?3:0));
+   cx2+=ctx.measureText(parts[j]).width;
+  }
+ }
+ ctx.restore();
+ return r;
 }
 function rectsHit(a,b,pad){
  pad=pad||5;
@@ -1096,13 +1160,6 @@ function draw(){
   ctx.fillStyle=pg;ctx.fillRect(x0,cy-ph/2,cw,ph);
   ctx.strokeStyle='rgba(0,0,0,0.55)';ctx.lineWidth=1;ctx.strokeRect(x0+0.5,cy-ph/2+0.5,cw-1,Math.max(1,ph-1));
  }
- /* scale bar — the canvas now carries a length reference */
- var sbL=0.05*scale,sbx=x0+16,sby=y0+chh-16;
- ctx.save();ctx.strokeStyle='rgba(205,222,245,0.6)';ctx.lineWidth=2;
- ctx.beginPath();ctx.moveTo(sbx,sby);ctx.lineTo(sbx+sbL,sby);
- ctx.moveTo(sbx,sby-5);ctx.lineTo(sbx,sby+5);ctx.moveTo(sbx+sbL,sby-5);ctx.lineTo(sbx+sbL,sby+5);ctx.stroke();
- ctx.fillStyle='rgba(225,236,250,0.9)';ctx.font='600 14px '+FMONO;
- ctx.fillText('5 cm',sbx+sbL+8,sby+5);ctx.restore();
  ctx.restore();
  /* rim */
  rr(x0,y0,cw,chh,14);ctx.strokeStyle='rgba(200,215,240,0.35)';ctx.lineWidth=2;ctx.stroke();
@@ -1133,11 +1190,21 @@ function draw(){
    ctx.save();ctx.strokeStyle=liveCol;ctx.lineWidth=2.5;
    ctx.beginPath();ctx.moveTo(cx-6,ey-6);ctx.lineTo(cx,ey-14);ctx.lineTo(cx+6,ey-6);ctx.stroke();
    ctx.restore();
-   var entryTxt=(st.mystery&&st.mystery.phase===1)?'? \u2191':(t.sym+' '+t.Ek0+' MeV \u2191');
-   energyBoxes.push(chip(cx+14,ey-32,entryTxt,'left',liveCol));
-  }else{
-   var pTxt=(st.mystery&&st.mystery.phase===1)?'?':(t.sym+' \u00B7 '+t.Ek0+' MeV');
-   energyBoxes.push(chip(x0+cw-10,y0+chh-40,pTxt,'right',liveCol));
+  }
+  /* on-arc info pill for the current shot \u2014 identity + r bundled in one box so the
+     student cannot mis-attribute r to a ghost arc */
+  if(t.pts&&t.pts.length>=4){
+   var lines=[(st.mystery&&st.mystery.phase===1)?'?':(t.sym+' '+t.Ek0+' MeV, '+t.B.toFixed(2)+' T')];
+   var showR=st.showNums && (st.mode==='track' ? st.s>0 : st.expo>=0.65);
+   if(showR){
+    if(t.crossed) lines.push('r{before} = '+fmtR(t.r1)+', r{after} = '+fmtR(t.r2));
+    else lines.push('r = '+fmtR(t.r1));
+   }
+   var cIdx=Math.floor(t.pts.length*0.55);
+   var cp=t.pts[cIdx];
+   var extraH=(lines.length-1)*18;
+   var cb=nudgeChipDown(chipStackRect(cx+cp.x*scale,cy-cp.y*scale-26-extraH,lines,'center'),energyBoxes);
+   energyBoxes.push(chipStack(cb.X+cb.w/2,cb.Y,lines,'center',liveCol));
   }
   var gnPre=st.ghosts.length;
   st.ghosts.forEach(function(g,gi){
@@ -1146,22 +1213,7 @@ function draw(){
    var gp=g.pts[Math.floor(g.pts.length*(g.rev?0.12:0.55))];
    energyBoxes.push(chipRect(cx+(gp.x+(g.slide||0))*scale,cy-gp.y*scale-26,g.tag,'center'));
   });
-  /* radius labels — drop below an energy chip when B tightens and they collide */
-  var rLab=function(idx,rv){
-   if(!st.showNums)return;
-   if(idx<1||idx>=t.pts.length-1)return;
-   var P=t.pts[idx];
-   if(st.mode==='track'){if(P.s>st.s)return;}else if(st.expo<0.65)return;
-   var A=t.pts[idx-1],B2=t.pts[idx+1];
-   var tx=B2.x-A.x,ty=B2.y-A.y,LL=Math.hypot(tx,ty)||1;tx/=LL;ty/=LL;
-   var nx=-ty,ny=tx;if(t.qs<0){nx=-nx;ny=-ny;}
-   var off=24/scale, rTxt='r '+fmtR(rv);
-   var rx=cx+(P.x+nx*off)*scale, ry=cy-(P.y+ny*off)*scale-11;
-   var box=nudgeChipDown(chipRect(rx,ry,rTxt,'center'),energyBoxes);
-   energyBoxes.push(chip(box.X+box.w/2,box.Y,rTxt,'center'));
-  };
-  if(t.crossed){rLab(Math.floor(t.iCross*0.55),t.r1);rLab(Math.floor(t.iCross+(t.pts.length-1-t.iCross)*0.5),t.r2);}
-  else rLab(Math.floor((t.pts.length-1)*0.55),t.r1);
+  /* r values now live in the identity pill above — one box per particle */
   /* status — right aligned so it can never collide with the B chip */
   var stat=null,scol='#ffd479';
   if(st.mystery)stat=(st.mystery.phase===1)?'which particle?':(t.sym+' \u00B7 '+st.mystery.Ek+' MeV');
@@ -1171,7 +1223,7 @@ function draw(){
   if(stat)chip(W-10,8,stat,'right',scol);
  }
  /* ghost tags — newest two, plus every reveal overlay */
- var gn=st.ghosts.length,gBoxes=[];
+ var gn=st.ghosts.length,gBoxes=energyBoxes?energyBoxes.slice():[];
  st.ghosts.forEach(function(g,gi){
   if(!g.tag||!g.pts||g.pts.length<4)return;
   if(!g.special&&gi<gn-2)return;

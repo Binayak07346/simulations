@@ -885,7 +885,11 @@ function startFuse(instant){state.resolved=resolveCurrent();if(!state.resolved)r
   state.fusing=true;state.fuseT=instant?1:0;if(instant)finalize();}
 function finalize(){const r=state.resolved;if(!r)return;state.fusing=false;state.fuseT=1;
   libAdd(r);updateReadout();updateFormal();}
-function libAdd(r){let key,sym,yr=null;
+function libAdd(r){
+  /* In lecture mode the library must stay empty — the demo view shouldn't ship
+     scripted STEPS-driven baryons as pre-discovered entries. */
+  if(state.suppressLib)return;
+  let key,sym,yr=null;
   if(r.kind==='imp'){key='TOPX';sym='⊘ top';}
   else{key=r.key;sym=r.anti?conjSym(r.e.sym):r.e.sym;yr=r.e.yr||null;}
   if(state.libKeys.has(key))return;state.libKeys.add(key);
@@ -1142,8 +1146,16 @@ function onFrame(dt){if(dt>0.1)dt=0.1;state.t+=dt;
   draw();}
 function onStep(i){const s=STEPS[i];if(!s)return;
   if(s.heavy)state.heavy=true;
-  if(s.q)buildCombo(s.m,s.q,true);
-  else setMode(s.m);
+  /* Lecture mode keeps the library empty; guided-inquiry keeps the original behaviour. */
+  var shellEl=document.getElementById('shell');
+  var lecture=!!(shellEl&&shellEl.classList.contains('lecture-mode'));
+  if(lecture!==state.wasLecture){
+    if(lecture){ state.lib.length=0; state.libKeys.clear(); }
+    state.wasLecture=lecture;
+  }
+  state.suppressLib=lecture;
+  try{ if(s.q)buildCombo(s.m,s.q,true); else setMode(s.m); }
+  finally{ state.suppressLib=false; }
   syncControls();updateReadout();updateFormal();draw();}
 function onComplete(){state.completed=true;draw();}
 function onReset(){state.lib=[];state.libKeys.clear();state.frontI=0;

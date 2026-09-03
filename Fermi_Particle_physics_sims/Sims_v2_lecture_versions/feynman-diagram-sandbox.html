@@ -398,6 +398,7 @@ body.light-theme .predict-eval .answer,body.light-theme .predict-eval strong,htm
      - [dom]    "Arrows = fermion-number flow (backwards on antiparticles). Slopes are schematic." — .sim-note under the diagram-build panel, ~L489
      - [canvas] "Arrows = fermion-number flow …" (L2L / L2S) — drawNote() below the main diagram, ~L1060
      - [dom]    "σ = (4πα²/3s)·β(3−β²)/2 with fixed α = 1/137.036 (no running) — LO QED, one s-channel γ*, massless beams." — .sim-note under the Result panel, ~L508
+     - [dom]    "Drag or click a chip onto a leg. Click a filled leg to clear." — .sim-hint-line in diagram-build panel, ~L486
 -->
 <script>
 /* Hide Text toggle — hides .ht-hide DOM nodes and gates HT() canvas labels. Registry: two prose notes (fermion-arrow explainer + sigma-formula explainer) plus the below-diagram fermion-arrow caption; see HIDE-TEXT REGISTRY comment above. */
@@ -483,7 +484,7 @@ body.light-theme .predict-eval .answer,body.light-theme .predict-eval strong,htm
     <button class="sim-chip" data-p="tau-">τ⁻</button>
     <button class="sim-chip" data-p="tau+">τ⁺</button>
   </div>
-  <div class="sim-hint-line">Drag or click a chip onto a leg. Click a filled leg to clear.</div>
+  <div class="sim-hint-line ht-hide">Drag or click a chip onto a leg. Click a filled leg to clear.</div>
   <div class="sim-btnrow">
     <button class="sim-btn" id="btnAuto">e⁻e⁺ → μ⁻μ⁺</button>
     <button class="sim-btn" id="btnClear">Clear legs</button>
@@ -493,21 +494,33 @@ body.light-theme .predict-eval .answer,body.light-theme .predict-eval strong,htm
 
 <div class="shell-panel sim-panel">
   <h3 class="sim-h">Collider</h3>
-  <label class="sim-lab">√s <span class="sim-val" id="vS">3.00 GeV</span>
-    <input type="range" id="slS" min="0" max="1000" step="1" value="438"></label>
-  <label class="sim-lab">sweep position <span class="sim-val" id="vT">0.00</span>
-    <input type="range" id="slT" min="0" max="1000" step="1" value="0"></label>
+  <div class="ctrl-box">
+    <label class="sim-lab">√s <span class="sim-val" id="vS">3.00 GeV</span>
+      <input type="range" id="slS" min="0" max="1000" step="1" value="438"></label>
+  </div>
+  <div class="ctrl-box">
+    <label class="sim-lab">sweep position <span class="sim-val" id="vT">0.00</span>
+      <input type="range" id="slT" min="0" max="1000" step="1" value="0"></label>
+  </div>
+  <div class="ctrl-box">
+    <label style="display:flex;align-items:center;gap:8px;cursor:pointer;font-size:13px;color:var(--muted);margin:0;">
+      <input type="checkbox" id="bandToggle">
+      Show σ(√s) plot
+    </label>
+  </div>
 </div>
 
 <div class="shell-panel sim-panel" id="resultPanel" style="display:none">
-  <h3 class="sim-h">Result</h3>
-  <div class="sim-ro">
-    <div class="sim-ro-row"><span>process</span><b id="roProc">—</b></div>
-    <div class="sim-ro-row"><span>σ (this diagram)</span><b id="roSig">—</b></div>
-    <div class="sim-ro-row sim-inv"><span>s·σ</span><b id="roInv">—</b></div>
+  <div class="shell-panel-head"><h3 class="sim-h" style="margin:0;flex:1">Result</h3><span class="shell-caret">▾</span></div>
+  <div class="shell-panel-body">
+    <div class="sim-ro">
+      <div class="sim-ro-row"><span>process</span><b id="roProc">—</b></div>
+      <div class="sim-ro-row"><span>σ (this diagram)</span><b id="roSig">—</b></div>
+      <div class="sim-ro-row sim-inv"><span>s·σ</span><b id="roInv">—</b></div>
+    </div>
+    <div class="sim-note" id="roLock">σ and s·σ unlock at the σ prediction in the guided inquiry.</div>
+    <div class="sim-note ht-hide">σ = (4πα²/3s)·β(3−β²)/2 with fixed α = 1/137.036 (no running) — LO QED, one s-channel γ*, massless beams.</div>
   </div>
-  <div class="sim-note" id="roLock">σ and s·σ unlock at the σ prediction in the guided inquiry.</div>
-  <div class="sim-note ht-hide">σ = (4πα²/3s)·β(3−β²)/2 with fixed α = 1/137.036 (no running) — LO QED, one s-channel γ*, massless beams.</div>
 </div>
 
     </div>
@@ -807,6 +820,7 @@ window.__audit = {
   const cvM = $('cvMain'), cvB = $('cvBand');
   const xM = cvM.getContext('2d'), xB = cvB.getContext('2d');
   let MW = 0, MH = 0, BW = 0, BH = 0;
+  let hoverX = null, hoverY = null; /* cursor in band-canvas CSS px for hover tooltip */
   const els = {
     stage: $('simStage'), bandBox: $('bandBox'), resultPanel: $('resultPanel'),
     slS: $('slS'), slT: $('slT'), vS: $('vS'), vT: $('vT'),
@@ -869,14 +883,23 @@ window.__audit = {
   function setBandUnlocked(v) {
     if (v === bandUnlocked) return;
     bandUnlocked = v;
-    els.stage.classList.toggle('sim-band-off', !v);
-    requestAnimationFrame(onResize);
+    /* band visibility is now driven by the sidebar checkbox — do not auto-toggle here */
   }
   function updateAll() {
     AN = analyze();
     const shown = D.pred !== null || inqDone;
     if (AN.valid) setBandUnlocked(true);
-    if (els.resultPanel) els.resultPanel.style.display = (AN.n === 4) ? '' : 'none';
+    if (els.resultPanel){
+      els.resultPanel.style.display = (AN.n === 4) ? '' : 'none';
+      /* first reveal in lecture mode → default collapsed (user can then expand) */
+      if (AN.n === 4 && !els.resultPanel.dataset.shown){
+        els.resultPanel.dataset.shown = '1';
+        var shellEl = document.getElementById('shell');
+        if (shellEl && shellEl.classList.contains('lecture-mode')){
+          els.resultPanel.classList.add('collapsed');
+        }
+      }
+    }
     els.roProc.textContent = AN.n === 0 ? '—' : AN.proc + (AN.mark === '✗' ? '  ✗' : '');
     els.roSig.textContent = (AN.valid && shown) ? fmt(AN.sigma) + ' nb' : '—';
     els.roInv.textContent = (AN.valid && shown) ? (D.sqrtS * D.sqrtS * AN.sigma).toFixed(2) + ' nb·GeV²' : '—';
@@ -886,10 +909,10 @@ window.__audit = {
   /* ---------- geometry ---------- */
   function computeGeom(c, r) {
     const fs = Math.max(1, Math.min(1.3, MW / 950));
-    const fpx = Math.max(14, Math.round(15 * fs));
+    const fpx = Math.max(11, Math.round(12 * fs));
     c.font = F(fpx, 650);
-    const tW = c.measureText(r.title).width + 20, sW = c.measureText(r.status).width + 20;
-    const rowH = fpx + 11;
+    const tW = c.measureText(r.title).width + 14, sW = c.measureText(r.status).width + 14;
+    const rowH = fpx + 8;
     const twoRow = (tW + sW + 34) > MW;
     const top = 8 + (twoRow ? rowH * 2 + 10 : rowH + 8);
     const mx = Math.max(22, MW * 0.07);
@@ -963,13 +986,13 @@ window.__audit = {
     c.lineWidth = 2; c.strokeStyle = th.bg; c.stroke(); c.restore();
   }
   function chipDraw(c, x, y, txt, col, th, right) {
-    const fpx = Math.max(14, Math.round(15 * G.fs));
+    const fpx = Math.max(11, Math.round(12 * G.fs));
     c.font = F(fpx, 650);
-    const w = c.measureText(txt).width + 20, h = fpx + 11, rx = right ? x - w : x;
+    const w = c.measureText(txt).width + 14, h = fpx + 8, rx = right ? x - w : x;
     c.save(); c.globalAlpha = 0.92; c.fillStyle = th.surface; rr(c, rx, y, w, h, h / 2); c.fill();
     c.globalAlpha = 0.75; c.strokeStyle = th.muted; c.lineWidth = 1.2; rr(c, rx, y, w, h, h / 2); c.stroke();
     c.globalAlpha = 1; c.fillStyle = col; c.textAlign = 'left'; c.textBaseline = 'middle';
-    c.fillText(txt, rx + 10, y + h / 2 + 1); c.restore();
+    c.fillText(txt, rx + 7, y + h / 2 + 1); c.restore();
   }
 
   /* ---------- main scene ---------- */
@@ -1055,13 +1078,9 @@ window.__audit = {
     const px = g.notePx, w = MW - 20;
     c.save(); c.fillStyle = th.muted; c.globalAlpha = 0.95;
     c.font = F(px, 500);
-    const L1 = 'Sweep = reading aid, not a trajectory.';
     const L2L = 'Arrows = fermion-number flow (backwards on antiparticles). Slopes are schematic.';
     const L2S = 'Arrows = fermion-number flow; slopes ≠ velocities.';
-    /* L1 (Sweep): bottom-right corner of the top canvas */
-    c.textAlign = 'right'; c.textBaseline = 'bottom';
-    c.fillText(L1, MW - 10, MH - 8);
-    /* L2 (Arrows): unchanged position (below axis, left-aligned); still hidden by HT */
+    /* L2 (Arrows): below axis, left-aligned; still hidden by HT */
     if (g.noteLines > 1 && !HT()) {
       c.textAlign = 'left'; c.textBaseline = 'top';
       c.fillText(c.measureText(L2L).width <= w ? L2L : L2S, 10, g.axisY + 10 + px + 4);
@@ -1182,12 +1201,6 @@ window.__audit = {
     c.font = F(13, 650); c.fillStyle = th.muted; c.textAlign = 'left'; c.textBaseline = 'top';
     if (c.measureText(ttl).width > BW - 20) ttl = 'σ(' + procTxt + '), log–log';
     c.fillText(ttl, 10, 5);
-    /* bottom validity caption */
-    c.font = F(11, 500); c.fillStyle = th.muted; c.textAlign = 'left'; c.textBaseline = 'bottom';
-    const capL = '◆ reference anchors · LO QED, one s-channel γ*, massless beams, fixed α = 1/137.036, no Z exchange (√s ≪ M_Z)';
-    const capS = 'LO QED · one s-channel γ* · no Z exchange (√s ≪ M_Z)';
-    c.fillText(c.measureText(capL).width <= BW - 20 ? capL : capS, 10, BH - 5);
-
     if (!shown) {
       const x = lx(D.sqrtS), mid = (px0 + px1) / 2;
       c.save(); c.strokeStyle = th.accent; c.globalAlpha = 0.9; c.setLineDash([4, 4]); c.lineWidth = 2;
@@ -1204,10 +1217,6 @@ window.__audit = {
     const invV = sigma0(1), yi = ly(invV);
     c.save(); c.strokeStyle = th.text; c.globalAlpha = 0.5; c.setLineDash([6, 5]); c.lineWidth = 1.7;
     c.beginPath(); c.moveTo(px0, yi); c.lineTo(px1, yi); c.stroke(); c.restore();
-    c.font = F(12, 650); c.fillStyle = th.text; c.textAlign = 'right'; c.textBaseline = 'bottom';
-    const invLong = 's·σ = ' + invV.toFixed(2) + ' nb·GeV² (constant in √s, massless limit)  ≡  σ at √s = 1 GeV';
-    const invShort = 's·σ = ' + invV.toFixed(2) + ' nb·GeV² (massless limit)';
-    c.fillText(c.measureText(invLong).width < (px1 - px0) * 0.85 ? invLong : invShort, px1 - 4, yi - 3);
     /* curve for the built final state (threshold-cut σ(√s)); massless 1/s reference when none is built */
     const cf = r.outOK ? (v => sigmaOf(v, r.mf)) : sigma0;
     const thrS = r.outOK ? 2 * r.mf : 0;
@@ -1234,12 +1243,10 @@ window.__audit = {
       onC = true;
     }
     c.stroke();
-    /* labelled reference anchors */
+    /* reference anchors — diamonds only; values revealed on hover */
     for (const rv of [1, 3, 10]) {
       const X = lx(rv), Y = ly(sigma0(rv));
       c.save(); c.fillStyle = th.muted; c.translate(X, Y); c.rotate(Math.PI / 4); c.fillRect(-3.5, -3.5, 7, 7); c.restore();
-      c.font = F(11.5, 600, true); c.fillStyle = th.muted; c.textAlign = 'left'; c.textBaseline = 'top';
-      c.fillText(ANCH[rv] + ' nb', X + 7, Y + 4);
     }
     /* s·σ marker: slides horizontally, never vertically */
     const sx = lx(D.sqrtS);
@@ -1247,22 +1254,33 @@ window.__audit = {
     c.beginPath(); c.arc(sx, yi, 4.5, 0, 7); c.stroke(); c.restore();
     c.font = F(11.5, 650); c.fillStyle = th.text; c.textAlign = 'left'; c.textBaseline = 'top';
     c.fillText('s·σ', sx + 8, yi + 3);
-    /* current point — dimmed and relabelled when the diagram is forbidden */
+    /* current point — dot only; textual σ value revealed on hover */
     const sigNow = r.valid ? r.sigma : sigma0(D.sqrtS);
     const mX = lx(D.sqrtS), mY = ly(sigNow);
     c.save(); if (!r.valid) c.globalAlpha = 0.4;
     c.fillStyle = th.accent; c.beginPath(); c.arc(mX, mY, 5.5, 0, 7); c.fill();
     c.strokeStyle = th.bg; c.lineWidth = 2; c.stroke();
-    const mt = (r.valid ? 'σ = ' : 'reference curve: ') + fmt(sigNow) + ' nb';
-    c.font = F(14, 700, true);
-    const mw2 = c.measureText(mt).width;
-    let tx = mX + 10, ty = mY - 9;
-    if (tx + mw2 > px1 - 4) tx = mX - 10 - mw2;
-    if (ty - 14 < py0) ty = mY + 22;
-    /* dodge the s·σ ring + label (short band, √s near an anchor); +34 also clears the ◆ anchor caption */
-    if (tx < sx + 40 && tx + mw2 > sx - 9 && ty > yi - 6 && ty - 14 < yi + 16) ty = Math.min(mY + 34, py1 - 2);
-    c.fillStyle = th.text; c.textAlign = 'left'; c.textBaseline = 'alphabetic'; c.fillText(mt, tx, ty);
     c.restore();
+    /* hover tooltip: read σ at any √s the cursor visits */
+    if (hoverX !== null && hoverX >= px0 && hoverX <= px1 && hoverY >= py0 && hoverY <= py1) {
+      const vH = Math.exp(LS0 + (hoverX - px0) / (px1 - px0) * (LS1 - LS0));
+      const cf = r.outOK ? (v => sigmaOf(v, r.mf)) : sigma0;
+      const sigH = cf(vH);
+      const hX = lx(vH), hY = ly(sigH);
+      c.save(); c.strokeStyle = th.text; c.globalAlpha = 0.35; c.setLineDash([3, 3]); c.lineWidth = 1;
+      c.beginPath(); c.moveTo(hX, py0); c.lineTo(hX, py1); c.stroke(); c.restore();
+      const tip = '√s = ' + fmtS(vH) + ' GeV · σ = ' + fmt(sigH) + ' nb';
+      c.font = F(11, 650, true);
+      const tw = c.measureText(tip).width + 12, tth = 20;
+      let tx = hX + 10, ty = hY - tth - 6;
+      if (tx + tw > px1 - 4) tx = hX - 10 - tw;
+      if (ty < py0 + 4) ty = hY + 12;
+      c.save(); c.globalAlpha = 0.94; c.fillStyle = th.surface; rr(c, tx, ty, tw, tth, tth / 2); c.fill();
+      c.globalAlpha = 0.75; c.strokeStyle = th.muted; c.lineWidth = 1; rr(c, tx, ty, tw, tth, tth / 2); c.stroke();
+      c.globalAlpha = 1; c.fillStyle = th.text; c.textAlign = 'left'; c.textBaseline = 'middle';
+      c.fillText(tip, tx + 6, ty + tth / 2 + 1); c.restore();
+      c.save(); c.fillStyle = th.text; c.globalAlpha = 0.75; c.beginPath(); c.arc(hX, hY, 3.5, 0, 7); c.fill(); c.restore();
+    }
     /* the student's own prediction, drawn against the measured curve */
     if (D.pred) {
       const mult = D.pred === 'x4' ? 4 : (D.pred === 'same' ? 1 : 0.25);
@@ -1315,6 +1333,21 @@ window.__audit = {
     pause(); cyc = +els.slT.value / 1000; D.t = cyc;
     els.vT.textContent = D.t.toFixed(2); drawAll();
   });
+  const bandToggle = document.getElementById('bandToggle');
+  if (bandToggle) bandToggle.addEventListener('change', () => {
+    const stage = document.getElementById('simStage');
+    if (stage) stage.classList.toggle('sim-band-off', !bandToggle.checked);
+    if (window.Shell && window.Shell.refit) window.Shell.refit();
+    else if (typeof onResize === 'function') onResize();
+    drawAll();
+  });
+  cvB.addEventListener('mousemove', (e) => {
+    const rect = cvB.getBoundingClientRect();
+    hoverX = e.clientX - rect.left;
+    hoverY = e.clientY - rect.top;
+    drawBand();
+  });
+  cvB.addEventListener('mouseleave', () => { hoverX = null; hoverY = null; drawBand(); });
   els.btnAuto.addEventListener('click', () => {
     D.slots = { in1: 'e-', in2: 'e+', out1: 'mu-', out2: 'mu+' };
     sel = null; updSel(); updateAll(); drawAll();

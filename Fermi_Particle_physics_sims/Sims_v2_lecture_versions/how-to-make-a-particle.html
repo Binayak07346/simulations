@@ -381,8 +381,8 @@ body.light-theme .predict-eval .answer,body.light-theme .predict-eval strong,htm
         <button id="toggle-formal" class="shell-btn">∑ Formal</button>
         <label style="font-size:11px;">Speed</label>
         <select id="shell-speed" class="shell-select">
-          <option value="0.25">0.25×</option><option value="0.5">0.5×</option>
-          <option value="1" selected>1×</option><option value="2">2×</option><option value="4">4×</option>
+          <option value="0.25">0.25×</option><option value="0.5" selected>0.5×</option>
+          <option value="1">1×</option><option value="2">2×</option><option value="4">4×</option>
         </select>
       </div>
       <div class="shell-sep"></div>
@@ -397,7 +397,7 @@ body.light-theme .predict-eval .answer,body.light-theme .predict-eval strong,htm
      DOM items:    add class "ht-hide" to the element.
      Canvas items: wrap the draw call in  if(!HT()){ ... }
      Keep this list current when registering items:
-     (empty — nothing registered yet)
+     - [dom] "Rung above / below parks the beam exactly on a threshold…" — span.sim-mini in Beam panel, ~L493
 -->
 <script>
 /* Hide Text toggle — empty registry; hides .ht-hide DOM nodes and gates HT() canvas labels. */
@@ -478,7 +478,6 @@ body.light-theme .predict-eval .answer,body.light-theme .predict-eval strong,htm
       <div class="shell-panel">
         <div class="shell-panel-head"><h3>Photon energy E<sub>γ</sub> · chamber frame</h3><span class="shell-caret">▾</span></div>
         <div class="shell-panel-body">
-          <div class="sim-bigread" id="eReadout">Eγ = 0.8 MeV</div>
           <div class="ctrl-box ctrl-box--slider">
             <div class="ctrl-slider-row">
               <input type="range" id="eSlider" min="0" max="1000" step="1" value="47" aria-label="Photon energy in the chamber frame">
@@ -490,13 +489,14 @@ body.light-theme .predict-eval .answer,body.light-theme .predict-eval strong,htm
             <button class="sim-chip" id="btnDown">↓ Rung below</button>
             <button class="sim-chip" id="btnUp">↑ Rung above</button>
           </div>
-          <span class="sim-mini">"Rung above / below" parks the beam <i>exactly</i> on a threshold — there the pair is born at rest (T = 0).</span>
+          <span class="sim-mini ht-hide">"Rung above / below" parks the beam <i>exactly</i> on a threshold — there the pair is born at rest (T = 0).</span>
         </div>
       </div>
 
-      <div class="shell-panel sim-hidden" id="panelOpen">
+      <div class="shell-panel" id="panelOpen">
         <div class="shell-panel-head"><h3>Open pair channels</h3><span class="shell-caret">▾</span></div>
         <div class="shell-panel-body">
+          <div class="sim-bigread" id="eReadout">Eγ = 0.8 MeV</div>
           <div class="sim-tbl">
             <div class="sim-tr"><span>Pairs open</span><b id="roOpen">—</b></div>
             <div class="sim-tr"><span>Heaviest pair</span><b id="roHeavy">—</b></div>
@@ -530,7 +530,7 @@ body.light-theme .predict-eval .answer,body.light-theme .predict-eval strong,htm
 const Shell = (function(){
   const root = document.getElementById('shell');
   let onFrame=()=>{}, onReset=()=>{}, onResize=()=>{}, onStep=()=>{}, onComplete=()=>{};
-  let playing=true, speed=1, last=performance.now(), started=false;
+  let playing=true, speed=0.5, last=performance.now(), started=false;
   let inqStep=0, inqTotal=0;   // guided-inquiry stepper (shell-owned)
 
   function loop(now){
@@ -1100,24 +1100,12 @@ function draw(){
   ctx.fillText('B = 1 T \u2297 into page', ch.x+ch.w-12, ch.y+22);
   ctx.textAlign='left';
   ctx.fillText('beam axis', ch.x+12, g.ny+15);
-  var sbW=ch.w*0.25, sbY=ch.y+ch.h-16, sbX=ch.x+14;
-  ctx.strokeStyle=T.muted; ctx.lineWidth=1.4; ctx.globalAlpha=0.75;
-  ctx.beginPath();
-  ctx.moveTo(sbX,sbY); ctx.lineTo(sbX+sbW,sbY);
-  ctx.moveTo(sbX,sbY-4); ctx.lineTo(sbX,sbY+4);
-  ctx.moveTo(sbX+sbW,sbY-4); ctx.lineTo(sbX+sbW,sbY+4);
-  ctx.stroke();
-  ctx.globalAlpha=0.9; ctx.fillStyle=T.muted;
-  ctx.textAlign='center'; ctx.textBaseline='bottom';
-  ctx.fillText('10 cm', sbX+sbW/2, sbY-6);
-  ctx.textAlign='right'; ctx.textBaseline='middle';
-  ctx.fillText('\u03b3: \u03bb not to scale', ch.x+ch.w-12, sbY);
   ctx.globalAlpha=1;
 
   /* chamber pills (clamped to the chamber, never into the ladder gutter) */
   var cLo=ch.x+4, cHi=ch.x+ch.w-4;
-  pill('Pb nucleus', g.nx, g.ny+30, 'c', T, false, null, cLo, cHi);
-  if(!o.length) pill('no pair \u2014 beam below every rung', g.nx, g.ny+58, 'c', T, true, null, cLo, cHi);
+  pill('Pb nucleus', g.nx, g.ny+58, 'c', T, false, null, cLo, cHi);
+  if(!o.length) pill('no pair \u2014 beam below every rung', g.nx, g.ny+82, 'c', T, true, null, cLo, cHi);
   if(!state.photons.length && !state.events.length){
     pill('\u26a1 press "Fire \u03b3" in the sidebar', g.nx, Math.max(ch.y+48, g.ny-52), 'c', T, true, T.accent, cLo, cHi);
   }

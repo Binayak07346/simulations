@@ -490,6 +490,16 @@ body.light-theme .predict-eval .answer,body.light-theme .predict-eval strong,htm
       </div>
 
       <div class="shell-panel">
+        <div class="shell-panel-head"><h3>Optional extension — the mirror test</h3><span class="shell-caret">▾</span></div>
+        <div class="shell-panel-body">
+          <div class="sim-btnrow">
+            <button id="mirrorBtn" class="sim-btn" aria-pressed="false">Mirror image: OFF</button>
+            <button id="antiBtn" class="sim-btn" aria-pressed="false">+ Charge conjugation: OFF</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="shell-panel">
         <div class="shell-panel-head"><h3>Detector counts</h3><span class="shell-caret">▾</span></div>
         <div class="shell-panel-body">
           <table class="sim-tbl">
@@ -499,16 +509,6 @@ body.light-theme .predict-eval .answer,body.light-theme .predict-eval strong,htm
             <tr><td>Theory 𝒜 = A·P·(v/c)/2</td><td id="aTheo">—</td></tr>
           </table>
           <div class="sim-note ht-hide">Each counter takes a full 2π hemisphere about <b>B</b>. Negative 𝒜 ⇒ the excess is emitted <b>opposite B</b> (opposite the spin). A(⁶⁰Co) = −1 is fixed by the weak interaction and v/c ≈ 0.60 by the decay energy — only P varies. The theory value appears once you commit a prediction (or after N &gt; 200).</div>
-        </div>
-      </div>
-
-      <div class="shell-panel">
-        <div class="shell-panel-head"><h3>Optional extension — the mirror test</h3><span class="shell-caret">▾</span></div>
-        <div class="shell-panel-body">
-          <div class="sim-btnrow">
-            <button id="mirrorBtn" class="sim-btn" aria-pressed="false">Mirror image: OFF</button>
-            <button id="antiBtn" class="sim-btn" aria-pressed="false">+ Charge conjugation: OFF</button>
-          </div>
         </div>
       </div>
 
@@ -820,7 +820,7 @@ function themeRefresh(){
   TH = { text:g('--text','#222'), muted:g('--muted','#777'), accent:g('--accent','#3b9b8f'),
          border:g('--border','#ccc'), surface:g('--surface','#fff'), bg:g('--bg','#0b0b0b'),
          sans:g('--font-sans','system-ui,sans-serif'), nums:g('--font-nums','ui-monospace,monospace'),
-         spin: light ? '#6d28d9' : '#a78bfa' };
+         spin: light ? '#6d28d9' : '#c084fc' };
 }
 function fSans(px,w){ return (w||600)+' '+px+'px '+TH.sans; }
 function fNums(px,w){ return (w||700)+' '+px+'px '+TH.nums; }
@@ -950,9 +950,9 @@ function txt(c,x,y,str,font,color,align,base){
   c.fillStyle = color; c.fillText(str,x,y);
   c.textBaseline = 'alphabetic';
 }
-function arrow(c,x1,y1,x2,y2,lw,col,hs){
+function arrow(c,x1,y1,x2,y2,lw,col,hs,headCol){
   const ang = Math.atan2(y2-y1,x2-x1);
-  c.strokeStyle=col; c.fillStyle=col; c.lineWidth=lw; c.lineCap='round';
+  c.strokeStyle=col; c.fillStyle=headCol||col; c.lineWidth=lw; c.lineCap='round';
   c.beginPath(); c.moveTo(x1,y1); c.lineTo(x2,y2); c.stroke();
   c.beginPath(); c.moveTo(x2,y2);
   c.lineTo(x2-hs*Math.cos(ang-0.42), y2-hs*Math.sin(ang-0.42));
@@ -1027,13 +1027,17 @@ function drawApp(cx, mir, weight){
   c.restore();
 
   /* nuclear spins (pseudovectors: x kept, z flipped in mirror) */
-  const aw = Math.max(1.5,1.9*sc), al = 13*sc, hs = Math.max(4,4.5*sc);
+  const aw = Math.max(1.1,1.3*sc), al = 12*sc, hs = Math.max(6,6.5*sc);
+  const nucR = Math.max(2.0,2.4*sc);
+  const headCol = TH.accent; /* teal head against the thin violet shaft — clearer direction */
   c.save(); c.globalAlpha=W;
   for(const sp of S.spins){
     const dx = Math.sin(sp.th), dz = spinM*Math.cos(sp.th);
     const bx = PX(sp.x), by = PY(sp.z);
-    c.fillStyle=TH.muted; c.beginPath(); c.arc(bx,by,Math.max(1.5,1.8*sc),0,6.2832); c.fill();
-    arrow(c, bx-dx*al, by+dz*al, bx+dx*al, by-dz*al, aw, TH.spin, hs);
+    arrow(c, bx-dx*al, by+dz*al, bx+dx*al, by-dz*al, aw, TH.spin, hs, headCol);
+    /* draw the nucleus AFTER the arrow so it sits above the shaft — makes each nucleus a clear anchor */
+    c.fillStyle = TH.text; c.beginPath(); c.arc(bx,by,nucR,0,6.2832); c.fill();
+    c.strokeStyle = TH.bg;  c.lineWidth = 1.2; c.stroke();
   }
   c.restore();
 
@@ -1098,7 +1102,7 @@ function drawApp(cx, mir, weight){
 
   /* B arrow — CONSTANT size (schematic): I and B are held fixed, only T (→P) varies */
   const L=42*sc, bx=PX(104);
-  arrow(c, bx, cy+bM*L, bx, cy-bM*L, 3.5, TH.accent, 8);
+  arrow(c, bx, cy+bM*L, bx, cy-bM*L, 3.5, TH.accent, 12);
   txt(c, bx, cy-bM*L + (bM>0?-9:20), mir?'B':'B (fixed)', fSans(13,700), TH.accent);
 
   /* panel tag (+ transformation subtitle) */
@@ -1126,23 +1130,50 @@ function drawApp(cx, mir, weight){
   }
 }
 
-/* on-canvas key (D3): what each colour/arrow means */
+/* on-canvas key (D3): what each colour/arrow means — top-right, boxed */
 function drawKey(){
-  const c = sctx, y = LG.h - 13;
+  const c = sctx;
   const f = fSans(11,600);
   const items = [{k:'dot',col:E_COL,t:'e⁻'}];
   if(S.mirror && S.anti) items.push({k:'dot',col:P_COL,t:'e⁺'});
-  items.push({k:'arr',col:TH.spin,t:'J (⁶⁰Co spin)'});
+  items.push({k:'arr',col:TH.spin,head:TH.accent,t:'J (⁶⁰Co spin)'});
   items.push({k:'arr',col:TH.accent,t:'B (field, schematic)'});
-  let x = 14;
   c.font = f;
+  /* measure total intrinsic width so we can right-align inside a box */
+  const padX = 10, padY = 6, gap = 14, iconW = 12;
+  let inner = 0;
+  for(let i=0;i<items.length;i++){
+    inner += iconW + c.measureText(items[i].t).width;
+    if(i<items.length-1) inner += gap;
+  }
+  const boxW = Math.min(LG.w-16, inner + 2*padX);
+  const boxH = 24;
+  const boxX = Math.max(8, LG.w - 8 - boxW);
+  const boxY = 8;
+  /* box outline */
+  c.save();
+  c.fillStyle = 'rgba(0,0,0,0.35)';
+  c.strokeStyle = TH.border || 'rgba(255,255,255,0.25)';
+  c.lineWidth = 1;
+  const rad = 6;
+  c.beginPath();
+  c.moveTo(boxX+rad, boxY);
+  c.arcTo(boxX+boxW, boxY, boxX+boxW, boxY+boxH, rad);
+  c.arcTo(boxX+boxW, boxY+boxH, boxX, boxY+boxH, rad);
+  c.arcTo(boxX, boxY+boxH, boxX, boxY, rad);
+  c.arcTo(boxX, boxY, boxX+boxW, boxY, rad);
+  c.closePath();
+  c.fill(); c.stroke();
+  c.restore();
+  /* items */
+  let x = boxX + padX;
+  const y = boxY + boxH/2;
   for(const it of items){
-    if(x > LG.w-70) break;
     if(it.k==='dot'){ c.fillStyle=it.col; c.beginPath(); c.arc(x+4,y,4,0,6.2832); c.fill(); }
-    else { arrow(c,x+4,y+6,x+4,y-6,1.8,it.col,5); }
-    x += 12;
+    else { arrow(c,x+4,y+6,x+4,y-6,1.8,it.col,5,it.head); }
+    x += iconW;
     txt(c, x, y, it.t, f, TH.muted, 'left', 'middle');
-    x += c.measureText(it.t).width + 16;
+    x += c.measureText(it.t).width + gap;
   }
 }
 

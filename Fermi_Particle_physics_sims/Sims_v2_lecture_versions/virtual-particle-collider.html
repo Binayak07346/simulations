@@ -296,6 +296,18 @@ body.light-theme .predict-eval .answer,body.light-theme .predict-eval strong,htm
 .sim-stagebox{display:flex;flex-direction:column;flex:1 1 auto;min-height:0}
 #simMainCv{flex:1 1 auto;width:100%;min-height:200px;display:block}
 .sim-ptitle{font-size:14px;font-weight:700;letter-spacing:.05em;text-transform:uppercase;color:var(--muted);margin:0 0 8px}
+.sim-box{background:var(--bg,transparent);border:1px solid var(--border);border-radius:8px;padding:10px 12px;margin:0 0 10px}
+.sim-box:last-child{margin-bottom:0}
+.sim-box>*:first-child{margin-top:0}
+.sim-box>*:last-child{margin-bottom:0}
+.sim-drop{margin:0}
+.sim-drop>summary{list-style:none;cursor:pointer;display:flex;align-items:center;gap:6px;padding:8px 0 0 8px}
+.sim-drop>summary::-webkit-details-marker{display:none}
+.sim-drop>summary::after{content:"▸";color:var(--muted);font-size:12px;transition:transform .15s ease;margin-left:auto}
+.sim-drop[open]>summary::after{transform:rotate(90deg)}
+.sim-drop>summary>.sim-ptitle{margin-bottom:0;flex:1}
+.sim-drop[open]>summary{margin-bottom:8px}
+.sim-drop .sim-table{width:calc(100% - 16px);margin:0 8px 8px}
 .sim-row{display:flex;justify-content:space-between;align-items:baseline;gap:10px;margin:8px 0 2px;font-size:14px;color:var(--text);min-width:0;box-sizing:border-box}
 .sim-row span{overflow-wrap:anywhere}
 .sim-row b{font-variant-numeric:tabular-nums;white-space:nowrap;color:var(--accent);font-size:15px}
@@ -476,24 +488,39 @@ body.light-theme .predict-eval .answer,body.light-theme .predict-eval strong,htm
     <div id="aside-controls" class="aside-zone">
       <div class="shell-panel">
   <div class="sim-ptitle">Beams</div>
-  <label class="sim-row" for="simE1"><span>e⁻ energy E₁</span><b id="simE1Val">5.00 GeV</b></label>
-  <input class="sim-slider" type="range" id="simE1" min="-1" max="2.0212" step="0.0001" value="0.69897" aria-label="electron beam energy">
-  <label class="sim-row" for="simE2"><span>e⁺ energy E₂</span><b id="simE2Val">5.00 GeV</b></label>
-  <input class="sim-slider" type="range" id="simE2" min="-1" max="2.0212" step="0.0001" value="0.69897" aria-label="positron beam energy">
-  <label class="sim-check"><input type="checkbox" id="simLink" checked><span>link beams (symmetric)</span></label>
+  <div class="sim-box">
+    <label class="sim-row" for="simE1"><span>e⁻ energy E₁</span><b id="simE1Val">5.00 GeV</b></label>
+    <input class="sim-slider" type="range" id="simE1" min="-1" max="2.0212" step="0.0001" value="0.69897" aria-label="electron beam energy">
+  </div>
+  <div class="sim-box">
+    <label class="sim-row" for="simE2"><span>e⁺ energy E₂</span><b id="simE2Val">5.00 GeV</b></label>
+    <input class="sim-slider" type="range" id="simE2" min="-1" max="2.0212" step="0.0001" value="0.69897" aria-label="positron beam energy">
+  </div>
+  <div class="sim-box">
+    <label class="sim-check"><input type="checkbox" id="simLink" checked><span>link beams (symmetric)</span></label>
+  </div>
 </div>
 <div class="shell-panel">
   <div class="sim-ptitle">Run plan</div>
-  <label class="sim-row" for="simLum"><span>∫L dt</span><b id="simLumVal">1.0 fb⁻¹</b></label>
-  <input class="sim-slider" type="range" id="simLum" min="-2" max="2" step="0.001" value="0" aria-label="integrated luminosity">
-  <label class="sim-row" for="simEff"><span>efficiency ε</span><b id="simEffVal">0.90</b></label>
-  <input class="sim-slider" type="range" id="simEff" min="0" max="1" step="0.01" value="0.9" aria-label="detection efficiency">
-  <table class="sim-table">
-    <tr><td>√s</td><td id="simRoots">10.00 GeV</td></tr>
-    <tr><td>σ(μ⁺μ⁻)</td><td id="simSigma">0.869 nb</td></tr>
-    <tr><td>μ⁺μ⁻ events</td><td id="simEvents">7.82×10⁵</td></tr>
-    <tr><td>lost to boost</td><td id="simWaste">0.00 GeV</td></tr>
-  </table>
+  <div class="sim-box">
+    <label class="sim-row" for="simLum"><span>∫L dt</span><b id="simLumVal">1.0 fb⁻¹</b></label>
+    <input class="sim-slider" type="range" id="simLum" min="-2" max="2" step="0.001" value="0" aria-label="integrated luminosity">
+  </div>
+  <div class="sim-box">
+    <label class="sim-row" for="simEff"><span>efficiency ε</span><b id="simEffVal">0.90</b></label>
+    <input class="sim-slider" type="range" id="simEff" min="0" max="1" step="0.01" value="0.9" aria-label="detection efficiency">
+  </div>
+</div>
+<div class="shell-panel">
+  <details class="sim-drop" open>
+    <summary><div class="sim-ptitle">Readouts</div></summary>
+    <table class="sim-table">
+      <tr><td>√s</td><td id="simRoots">10.00 GeV</td></tr>
+      <tr><td>σ(μ⁺μ⁻)</td><td id="simSigma">0.869 nb</td></tr>
+      <tr><td>μ⁺μ⁻ events</td><td id="simEvents">7.82×10⁵</td></tr>
+      <tr><td>lost to boost</td><td id="simWaste">0.00 GeV</td></tr>
+    </table>
+  </details>
 </div>
     </div>
   </aside>
@@ -933,7 +960,7 @@ function draw(){
   }
 
   /* ---- scene geometry ---- */
-  var pipeY = sceneTop + (sceneBot - sceneTop) * 0.6;
+  var pipeY = sceneTop + (sceneBot - sceneTop) * 0.5;   /* IP centered: equal room up/down so back-to-back pairs never clip asymmetrically */
   var R = Math.max(14, Math.min((sceneBot - sceneTop) * 0.42, W * 0.12));
   var xIP = W / 2;
 
@@ -953,6 +980,11 @@ function draw(){
     ctx.lineWidth = rings[ri][1]; ctx.strokeStyle = P.border; ctx.stroke();
   }
   ctx.globalAlpha = 1;
+
+  /* solenoid field declaration — the track curvature (opposite for e⁺/e⁻, tighter at low p) is this B via r = p/qB */
+  ctx.font = '600 ' + Math.max(11, fs - 2) + FAM;
+  ctx.fillStyle = P.muted; ctx.textAlign = 'left';
+  ctx.fillText('B ⊙ out of screen (detector solenoid, schematic)', xIP + R * 0.98 + 8, pipeY - R * 0.72);
 
   /* direction chevrons */
   function chevronRow(xa, xb, dir, col){
@@ -1018,7 +1050,9 @@ function draw(){
       if (!(pm > 0)) return;
       var dx = pz / pm, dy = -px / pm;
       var fmom = c01((Math.log10(Math.max(pm, 1e-3)) + 1.5) / 3.6);
-      var len = R * 2.35 * (0.16 + 0.84 * fmom) * ease;
+      /* base length capped to the half-band so equal-|p| pairs draw equal at every angle */
+      var lenMax = Math.min(R * 2.35, (sceneBot - sceneTop) / 2 - 10);
+      var len = lenMax * (0.16 + 0.84 * fmom) * ease;
       var ex = xIP + dx * len, ey = pipeY + dy * len;
       var minY = sceneTop + 8, maxY = sceneBot - 6, minX = padX + 4, maxX = W - padX - 4, tt = 1;
       if (len > 0){
@@ -1028,7 +1062,7 @@ function draw(){
         if (ey > maxY) tt = Math.min(tt, (maxY - pipeY) / (dy * len));
       }
       len *= Math.max(0, tt); ex = xIP + dx * len; ey = pipeY + dy * len;
-      var bend = q * clamp(70 / Math.max(pm, 0.3), 1.5, 14) * (len / (R * 2.35));
+      var bend = q * clamp(70 / Math.max(pm, 0.3), 1.5, 14) * (len / lenMax);
       var mx = (xIP + ex) / 2 - dy * bend, my = (pipeY + ey) / 2 + dx * bend;
       ctx.globalAlpha = fade; ctx.strokeStyle = col; ctx.lineWidth = 3; ctx.lineCap = 'round';
       ctx.beginPath(); ctx.moveTo(xIP, pipeY); ctx.quadraticCurveTo(mx, my, ex, ey); ctx.stroke();

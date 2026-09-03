@@ -307,6 +307,12 @@ body.light-theme .predict-eval .answer,body.light-theme .predict-eval strong,htm
 .sim-pad{padding:12px;}
 .sim-hidden{display:none;}
 .sim-ptitle{font-size:14px;font-weight:700;letter-spacing:.05em;text-transform:uppercase;color:var(--muted);margin:0 0 10px;}
+.sim-drop{margin:0;}
+.sim-drop>summary{list-style:none;cursor:pointer;display:flex;align-items:center;justify-content:space-between;gap:8px;margin:0 0 10px;}
+.sim-drop>summary::-webkit-details-marker{display:none;}
+.sim-drop>summary .sim-ptitle{margin:0;}
+.sim-drop>summary::after{content:"▸";font-size:12px;color:var(--muted);transition:transform 0.15s ease;line-height:1;}
+.sim-drop[open]>summary::after{transform:rotate(90deg);}
 .sim-ctl{margin:0 0 12px;}
 .sim-ctl-head{display:flex;justify-content:space-between;align-items:baseline;gap:8px;font-size:14px;color:var(--text);min-width:0;}
 .sim-val{font-variant-numeric:tabular-nums;font-weight:700;color:var(--accent);font-size:15px;text-align:right;min-width:74px;overflow-wrap:anywhere;}
@@ -382,8 +388,8 @@ body.light-theme .predict-eval .answer,body.light-theme .predict-eval strong,htm
         <button id="toggle-formal" class="shell-btn">∑ Formal</button>
         <label style="font-size:11px;">Speed</label>
         <select id="shell-speed" class="shell-select">
-          <option value="0.25">0.25×</option><option value="0.5">0.5×</option>
-          <option value="1" selected>1×</option><option value="2">2×</option><option value="4">4×</option>
+          <option value="0.25" selected>0.25×</option><option value="0.5">0.5×</option>
+          <option value="1">1×</option><option value="2">2×</option><option value="4">4×</option>
         </select>
       </div>
       <div class="shell-sep"></div>
@@ -399,6 +405,7 @@ body.light-theme .predict-eval .answer,body.light-theme .predict-eval strong,htm
      Canvas items: wrap the draw call in  if(!HT()){ ... }
      Keep this list current when registering items:
      - [dom] "E_min is the smallest energy that can resolve d … target's rest frame." — ruler panel p.sim-note, ~L498
+     - [canvas] "probe wave · drawn period = ƛ = λ/2π · phase animation, not to time scale" (and its short form "probe wave · period = ƛ (phase not to scale)") — capChip call inside the probe-wave draw fn, ~L1363
      NOTE: default flipped — Hide Text boots CHECKED in this sim (curriculum request).
 -->
 <script>
@@ -428,7 +435,6 @@ body.light-theme .predict-eval .answer,body.light-theme .predict-eval strong,htm
 
   <main class="shell-hero">
     <div class="plot-box">
-  <div class="plot-title">Zoom view <span class="plot-inline">size ruler · minimum probe energy</span></div>
   <div class="sim-stage-wrap">
     <canvas id="sim-stage" aria-label="Zoom view from Earth down to quarks with a log size ruler and a locked probe-energy ruler"></canvas>
   </div>
@@ -504,26 +510,28 @@ body.light-theme .predict-eval .answer,body.light-theme .predict-eval strong,htm
 
       <div class="shell-panel sim-hidden" id="sim-panel-scale">
         <div class="sim-pad">
-          <div class="sim-ptitle">At this scale</div>
-          <p class="sim-note" style="margin-top:0">Drag smaller until the technology below has to change — those hand-offs are the real limits.</p>
+          <details class="sim-drop">
+            <summary><span class="sim-ptitle">At this scale</span></summary>
+          <p class="sim-note" style="margin-top:0">Drag <b>smaller</b> — the technology hand-offs mark the real limits.</p>
           <div class="sim-tech">
             <span class="sim-tech-dot" id="sim-tech-dot"></span>
             <span><span class="sim-tech-name" id="sim-tech-name">naked eye</span><br>
             <span class="sim-tech-note" id="sim-tech-note">a hair’s width is your limit</span></span>
           </div>
-          <div class="sim-bandkey">Ruler strip = imaging technology:
+          <div class="sim-bandkey">Ruler colours:
             <span><i style="background:#f2b23d"></i>eye</span>
             <span><i style="background:#5fcb72"></i>light</span>
             <span><i style="background:#41c8dd"></i>electron</span>
             <span><i style="background:#b26ef7"></i>collider</span>
           </div>
-          <p class="sim-note">ƛ = λ/2π is the <b>reduced wavelength</b>. The resolution limit is ƛ ≈ d: no lens separates detail finer than about one probe wavelength.</p>
+          <p class="sim-note">Resolution limit: <b>ƛ ≈ d</b> &nbsp;(ƛ = λ/2π).</p>
           <div class="sim-hidden" id="sim-formal-extra">
             <div class="sim-table">
               <span class="sim-k">Momentum p</span><span class="sim-v" id="sim-ro-p">116 neV/c</span>
             </div>
             <p class="sim-note">p and E<sub>min</sub> are the momentum transfer in the target's rest frame (qc), not a beam energy.</p>
           </div>
+          </details>
         </div>
       </div>
 
@@ -548,7 +556,7 @@ body.light-theme .predict-eval .answer,body.light-theme .predict-eval strong,htm
 const Shell = (function(){
   const root = document.getElementById('shell');
   let onFrame=()=>{}, onReset=()=>{}, onResize=()=>{}, onStep=()=>{}, onComplete=()=>{};
-  let playing=true, speed=1, last=performance.now(), started=false;
+  let playing=true, speed=0.25, last=performance.now(), started=false;
   let inqStep=0, inqTotal=0;   // guided-inquiry stepper (shell-owned)
 
   function loop(now){
@@ -1253,9 +1261,6 @@ function drawQuark(cx,cy,R,t){
   g.addColorStop(0,'rgba(255,255,255,0.95)'); g.addColorStop(0.35,'rgba(190,120,255,0.4)'); g.addColorStop(1,'rgba(190,120,255,0)');
   ctx.fillStyle=g; ctx.beginPath(); ctx.arc(cx,cy,12,0,7); ctx.fill();
   ctx.fillStyle='#fff'; ctx.beginPath(); ctx.arc(cx,cy,2.6,0,7); ctx.fill();
-  ctx.font='600 12px ' + FONT; ctx.textAlign='center'; ctx.textBaseline='middle';
-  ctx.fillStyle='rgba(214,226,244,0.85)';
-  ctx.fillText('point-like — marker size not to scale', cx, Math.min(cy+R+18, sceneH-42));
 }
 
 /* ---------- pinned scales ---------- */
@@ -1274,18 +1279,14 @@ const pins=[
 
 /* ---------- scene overlays ---------- */
 function scaleBar(d){
-  const x0=14, y=52, w=CW/K;
-  ctx.strokeStyle='rgba(240,246,255,0.9)'; ctx.lineWidth=2;
-  ctx.beginPath(); ctx.moveTo(x0,y); ctx.lineTo(x0+w,y); ctx.stroke();
-  ctx.beginPath(); ctx.moveTo(x0,y-6); ctx.lineTo(x0,y+6); ctx.stroke();
-  ctx.beginPath(); ctx.moveTo(x0+w,y-6); ctx.lineTo(x0+w,y+6); ctx.stroke();
+  const x0=14, y=22;
   const label=(formalOn() ? 'ƛ ≈ d = ' : 'd = ') + fmtLen(d);
   ctx.font='600 14px ' + FONT;
   const tw=ctx.measureText(label).width;
-  rrPath(x0-6, y+10, tw+16, 23, 11);
+  rrPath(x0-6, y-11, tw+16, 23, 11);
   ctx.fillStyle='rgba(6,12,24,0.62)'; ctx.fill();
   ctx.fillStyle='#eaf0fa'; ctx.textAlign='left'; ctx.textBaseline='middle';
-  ctx.fillText(label, x0+2, y+22);
+  ctx.fillText(label, x0+2, y);
 }
 function probeChip(d){
   const eV = HBARC/d*1e9;
@@ -1302,11 +1303,19 @@ function probeChip(d){
   ctx.fillText(txt, x0+24, 21);
 }
 function labelFeat(p, x, y, px, alpha, prefix){
-  const ty=Math.min(y+px/2+24, sceneH-18);
+  const caption = p.n==='quark' ? 'point-like — marker size not to scale' : '';
+  const ty=Math.min(y+px/2+24+(caption?22:0), sceneH-18);
   const txt=(prefix||'') + p.n + ' · ' + p.lbl;
   ctx.font='600 15px ' + FONT;
   const tw=ctx.measureText(txt).width;
   const tx=clamp(x, tw/2+10, CW-tw/2-10);
+  if (caption){
+    ctx.font='600 12px ' + FONT;
+    ctx.fillStyle='rgba(214,226,244,' + (0.85*alpha).toFixed(3) + ')';
+    ctx.textAlign='center'; ctx.textBaseline='middle';
+    ctx.fillText(caption, tx, ty-28);
+  }
+  ctx.font='600 15px ' + FONT;
   rrPath(tx-tw/2-10, ty-13, tw+20, 26, 13);
   ctx.fillStyle='rgba(6,12,24,' + (0.62*alpha).toFixed(3) + ')'; ctx.fill();
   ctx.fillStyle='rgba(234,240,250,' + alpha.toFixed(3) + ')';
@@ -1352,10 +1361,12 @@ function drawWaves(d){
     ctx.stroke();
   }
   ctx.restore(); ctx.globalAlpha=1;
-  const cap = CW<620
-    ? 'probe wave · period = ƛ (phase not to scale)'
-    : 'probe wave · drawn period = ƛ = λ/2π · phase animation, not to time scale';
-  capChip(cap, CW-10, yM + A + 13, 'right');
+  if(!HT()){
+    const cap = CW<620
+      ? 'probe wave · period = ƛ (phase not to scale)'
+      : 'probe wave · drawn period = ƛ = λ/2π · phase animation, not to time scale';
+    capChip(cap, CW-10, yM + A + 13, 'right');
+  }
 }
 
 /* ---------- ruler band ---------- */

@@ -296,6 +296,13 @@ body.light-theme .predict-eval .answer,body.light-theme .predict-eval strong,htm
 .sim-stage{ flex:1 1 auto; min-height:0; display:flex; flex-direction:column; }
 .sim-stage canvas{ flex:1 1 auto; min-height:0; width:100%; display:block; border-radius:8px; touch-action:none; cursor:grab; }
 .sim-ptitle{ font-size:14px; font-weight:700; letter-spacing:0.04em; text-transform:uppercase; color:var(--muted); margin-bottom:8px; }
+.sim-drop{margin:0}
+.sim-drop>summary{list-style:none;cursor:pointer;display:flex;align-items:center;gap:6px}
+.sim-drop>summary::-webkit-details-marker{display:none}
+.sim-drop>summary::after{content:"▸";color:var(--muted);font-size:12px;transition:transform .15s ease;margin-left:auto}
+.sim-drop[open]>summary::after{transform:rotate(90deg)}
+.sim-drop>summary>.sim-ptitle{margin-bottom:0;flex:1}
+.sim-drop[open]>summary{margin-bottom:8px}
 .sim-ctl{ display:flex; flex-direction:column; gap:4px; margin-top:8px; min-width:0; }
 .sim-ctl input[type=range]{ width:100%; margin:0; accent-color:var(--accent); }
 .sim-lab{ display:flex; justify-content:space-between; align-items:baseline; font-size:14px; color:var(--muted); overflow-wrap:anywhere; }
@@ -355,11 +362,11 @@ body.light-theme .predict-eval .answer,body.light-theme .predict-eval strong,htm
       <div class="shell-modal-body">
         <dl class="shell-info-dl">
   <dt>Concept</dt>
-  <dd>A complex scalar field with V(φ) = μ²|φ|² + λ|φ|⁴ (λ = 1 here), evolved as a unit-mass point in the plane (Re φ, Im φ) — i.e. with the normalisation L = ½(∂φ₁)² + ½(∂φ₂)² − V, so that m² is exactly the curvature of V and exactly ω² of the small oscillation you watch. For μ² &gt; 0 there is one symmetric vacuum at φ = 0. Driving μ² negative turns the origin into a hilltop and produces a whole ring of equivalent vacua at |φ|min = √(−μ²/2λ); the field's arbitrary choice of a point on that ring spontaneously breaks the continuous U(1) symmetry. Curvature across the valley, V″(|φ|min) = −4μ², is the mass² of the radial (Higgs-like) mode; motion along the valley feels no force at all — the massless Goldstone mode. Both the 3-D vertical scale and the bottom slice use FIXED axes (V from −1.05 to +1.55 in the 3-D view, −1.3 to +2.5 on the slice), so sweeping μ² visibly changes the depth; the rim simply leaves the frame. The plot boundary at |φ| = 1.47 is a hard elastic wall, not physics.</dd>
+  <dd>A complex scalar field with V(φ) = μ²|φ|² + λ|φ|⁴ (λ = 1 here), evolved as a unit-mass point in the plane (Re φ, Im φ) — i.e. with the normalisation L = ½(∂φ₁)² + ½(∂φ₂)² − V, so that m² is exactly the curvature of V and exactly ω² of the small oscillation you watch. For μ² &gt; 0 there is one symmetric vacuum at φ = 0. Driving μ² negative turns the origin into a hilltop and produces a whole ring of equivalent vacua at |φ|min = √(−μ²/2λ); the field's arbitrary choice of a point on that ring spontaneously breaks the continuous U(1) symmetry. Curvature across the valley, V″(|φ|min) = −4μ², is the mass² of the radial (Higgs-like) mode; motion along the valley feels no force at all — the massless Goldstone mode. Both the 3-D vertical scale and the bottom cross-section (V along Re φ at Im φ = 0, showing the double well) use FIXED axes (V from −1.05 to +1.55 in the 3-D view, −1.3 to +1.2 on the cross-section), so sweeping μ² visibly changes the depth; the rim simply leaves the frame. The plot boundary at |φ| = 1.47 is a hard elastic wall, not physics.</dd>
   <dt>Serves</dt>
   <dd>Introductory particle physics / QFT: the spontaneous-symmetry-breaking unit, immediately before gauging the symmetry (Higgs mechanism). Also useful in condensed matter for superfluid phase modes.</dd>
   <dt>Inquiry</dt>
-  <dd>A five-card guided inquiry drives the scene: symmetric bowl → gated hilltop prediction (the stage pauses, the answer releases it) → the massive radial kick → gated ring-push prediction (the answer fires the push) → gated μ²-sweep question that unmasks the mass table. The radial-slice strip is the operational check: during a Goldstone coast the slice dot sits still (V never changes) while the 3-D ball circulates; during a radial kick the dot climbs the well walls. Nothing is disabled — the reveals are withheld, not the controls.</dd>
+  <dd>A five-card guided inquiry drives the scene: symmetric bowl → gated hilltop prediction (the stage pauses, the answer releases it) → the massive radial kick → gated ring-push prediction (the answer fires the push) → gated μ²-sweep question that unmasks the mass table. The cross-section strip is the operational check: during a Goldstone coast the slice dot glides at constant height (V never changes) while the 3-D ball circulates; during a radial kick the dot climbs the well walls. Nothing is disabled — the reveals are withheld, not the controls.</dd>
   <dt>Misconception</dt>
   <dd>"Anything displaced oscillates back." A restoring force requires curvature of V; along a symmetry direction the potential is exactly flat, so the mode has zero frequency and zero mass. The misconception is encoded in the "springs back" choice of the ring-push prediction card; choosing it draws a dashed ghost marker that reverses at the push point while the real ball coasts straight past it.</dd>
 </dl>
@@ -471,8 +478,8 @@ body.light-theme .predict-eval .answer,body.light-theme .predict-eval strong,htm
   <h4>4 · Predict: push along the ring</h4>
   <p>The field rests in the valley at |φ| = 1.00. Your answer fires the green <strong>Ring push</strong> — along the valley floor. The ball will…</p>
   <button class="choice" data-ans="0" data-fb="Watch the dashed ghost do that while the real ball coasts past it: V is flat along the ring — no restoring force.">spring back and oscillate</button>
-  <button class="choice" data-correct data-ans="1" data-fb="The slice dot stays pinned to the valley floor — V is constant along the ring: no force, m² = 0. The massless Goldstone mode.">coast round the valley freely</button>
-  <button class="choice" data-ans="2" data-fb="The slice dot stays on the valley floor — |φ| stays at ≈1.00; only the phase advances, and V ignores the phase.">spiral down and fall inward</button>
+  <button class="choice" data-correct data-ans="1" data-fb="The slice dot glides at the valley-floor height — V is constant along the ring: no force, m² = 0. The massless Goldstone mode.">coast round the valley freely</button>
+  <button class="choice" data-ans="2" data-fb="The slice dot holds the valley-floor height — |φ| stays at ≈1.00; only the phase advances, and V ignores the phase.">spiral down and fall inward</button>
   <div class="predict-eval"></div>
 </div>
 <div class="inq-step" data-step="4" data-gate data-reveal="meter">
@@ -527,17 +534,19 @@ body.light-theme .predict-eval .answer,body.light-theme .predict-eval strong,htm
       </div></div>
 
       <div class="shell-panel"><div class="sim-pad">
-        <div class="sim-ptitle">Vacuum and mode masses</div>
-        <table class="sim-table">
-          <tr><td id="sim-lab-v">vacuum radius |φ|min</td><td id="sim-ro-v">—</td></tr>
-          <tr><td>V at minimum <span class="sim-dim">(rel. to V(0) = 0)</span></td><td id="sim-ro-vmin">—</td></tr>
-          <tr><td id="sim-lab-mr" style="border-left:3px solid #ff9430;padding-left:7px">radial mode m²</td><td id="sim-ro-mr">—</td></tr>
-          <tr><td id="sim-lab-mt" style="border-left:3px solid #2fd07f;padding-left:7px">ring mode m² (Goldstone)</td><td id="sim-ro-mt">—</td></tr>
-          <tr><td id="sim-lab-T">radial period 2π/m (small oscillations)</td><td id="sim-ro-T">—</td></tr>
-        </table>
-        <div class="sim-dim sim-note ht-hide" id="sim-note-inv" style="display:none">ring m² stays 0 for every μ² &lt; 0 — one flat direction for the one broken symmetry.</div>
-        <div class="sim-dim sim-units ht-hide">Model units, ħ = c = 1: the curvature of V <em>is</em> ω², so m² = ω² and the radial period is 2π/m. The top-bar speed selector rescales the period you observe, not the physics.</div>
-        <div class="sim-dim sim-note ht-hide">∑ Formal (top bar) shows the equations and draws the curvature fit on the slice.</div>
+        <details class="sim-drop" open>
+          <summary><div class="sim-ptitle">Vacuum and mode masses</div></summary>
+          <table class="sim-table">
+            <tr><td id="sim-lab-v">vacuum radius |φ|min</td><td id="sim-ro-v">—</td></tr>
+            <tr><td>V at minimum <span class="sim-dim">(rel. to V(0) = 0)</span></td><td id="sim-ro-vmin">—</td></tr>
+            <tr><td id="sim-lab-mr" style="border-left:3px solid #ff9430;padding-left:7px">radial mode m²</td><td id="sim-ro-mr">—</td></tr>
+            <tr><td id="sim-lab-mt" style="border-left:3px solid #2fd07f;padding-left:7px">ring mode m² (Goldstone)</td><td id="sim-ro-mt">—</td></tr>
+            <tr><td id="sim-lab-T">radial period 2π/m (small oscillations)</td><td id="sim-ro-T">—</td></tr>
+          </table>
+          <div class="sim-dim sim-note ht-hide" id="sim-note-inv" style="display:none">ring m² stays 0 for every μ² &lt; 0 — one flat direction for the one broken symmetry.</div>
+          <div class="sim-dim sim-units ht-hide">Model units, ħ = c = 1: the curvature of V <em>is</em> ω², so m² = ω² and the radial period is 2π/m. The top-bar speed selector rescales the period you observe, not the physics.</div>
+          <div class="sim-dim sim-note ht-hide">∑ Formal (top bar) shows the equations and draws the curvature fit on the slice.</div>
+        </details>
       </div></div>
 
     </div>
@@ -799,7 +808,7 @@ const TWO_PI = Math.PI * 2;
    indistinguishable from the field circulating the vacuum ring. Orbit by drag. */
 const RWALL = 1.47;                       // hard, ELASTIC plot boundary
 const ZBOT = -1.05, ZSPAN = 2.6;          // FIXED 3-D vertical mapping (V units)
-const VLO = -1.3, VHI = 2.5;              // FIXED slice axes (V units)
+const VLO = -1.3, VHI = 1.2;              // FIXED slice axes (V units) — tightened so the well depth fills the frame
 const COL_RADIAL = '#ff9430', COL_RING = '#2fd07f', COL_BALL = '#ff5642';
 const RING_RGB = [47, 208, 127];
 const RAMP = [[46, 42, 124], [38, 98, 170], [64, 168, 150], [238, 213, 116]];
@@ -1019,6 +1028,20 @@ function haloText(txt, x, y, fill, halo, align, font) {
   ctx.lineWidth = 3; ctx.lineJoin = 'round'; ctx.strokeStyle = halo;
   ctx.strokeText(txt, x, y);
   ctx.fillStyle = fill; ctx.fillText(txt, x, y);
+}
+/* haloed label with a real subscript: main + _sub + rest (e.g. V, min, " = −1.00") */
+function haloSubText(main, sub, rest, x, y, fill, halo, align) {
+  const fMain = '600 13px ' + FS, fSub = '600 9.5px ' + FS;
+  ctx.textBaseline = 'middle';
+  ctx.font = fMain; const wM = ctx.measureText(main).width, wR = ctx.measureText(rest).width;
+  ctx.font = fSub;  const wS = ctx.measureText(sub).width;
+  const total = wM + wS + wR;
+  let sx = align === 'right' ? x - total : (align === 'center' ? x - total / 2 : x);
+  ctx.textAlign = 'left';
+  ctx.lineWidth = 3; ctx.lineJoin = 'round'; ctx.strokeStyle = halo; ctx.fillStyle = fill;
+  ctx.font = fMain; ctx.strokeText(main, sx, y); ctx.fillText(main, sx, y); sx += wM;
+  ctx.font = fSub;  ctx.strokeText(sub, sx, y + 4); ctx.fillText(sub, sx, y + 4); sx += wS;
+  ctx.font = fMain; ctx.strokeText(rest, sx, y); ctx.fillText(rest, sx, y);
 }
 function head(x, y, ang, col) {
   ctx.fillStyle = col; ctx.beginPath();
@@ -1265,13 +1288,13 @@ function drawStrip(P, y0, h, compact) {
   ctx.strokeStyle = P.border; ctx.lineWidth = 1.5; ctx.stroke();
   const pX0 = x0 + 48, pX1 = x1 - 14, pY0 = y0 + 22, pY1 = y0 + h - 26;
   if (pY1 - pY0 < 16 || pX1 - pX0 < 40) return;
-  const xr = r => pX0 + (r / R) * (pX1 - pX0);
+  const xr = x => pX0 + ((x + R) / (2 * R)) * (pX1 - pX0);   // SIGNED axis: Re φ from −R to +R
   const yv = V => pY1 - (V - VLO) / (VHI - VLO) * (pY1 - pY0);
   const formalOn = !document.getElementById('shell').classList.contains('hide-formal');
 
   ctx.font = '600 13px ' + FS; ctx.textAlign = 'left'; ctx.textBaseline = 'alphabetic';
   ctx.fillStyle = P.muted;
-  ctx.fillText(compact ? 'slice V(|φ|)' : 'radial slice  V(|φ|)  —  fixed axes', pX0, y0 + 15);
+  ctx.fillText(compact ? 'V(Re φ)' : 'cross-section  V(Re φ, Im φ = 0)  —  fixed axes', pX0, y0 + 15);
   if (formalOn && S.m2r > 0.02 && !compact) {
     ctx.fillStyle = COL_RADIAL; ctx.textAlign = 'right';
     ctx.fillText('dashed: V″ fit at the minimum — curvature = m²', pX1, y0 + 15);
@@ -1291,38 +1314,45 @@ function drawStrip(P, y0, h, compact) {
   ctx.setLineDash([4, 4]); ctx.strokeStyle = P.border; ctx.lineWidth = 1.5;
   ctx.beginPath(); ctx.moveTo(pX0, yv(0)); ctx.lineTo(pX1, yv(0)); ctx.stroke();
 
-  if (formalOn && S.m2r > 0.02) {                    // curvature parabola — formal layer only
+  if (formalOn && S.m2r > 0.02) {                    // curvature parabola — formal layer only, mirrored to both minima
     ctx.setLineDash([5, 4]); ctx.strokeStyle = COL_RADIAL; ctx.lineWidth = 2;
-    ctx.beginPath(); let started = false;
-    for (let dr = -0.34; dr <= 0.341; dr += 0.02) {
-      const rp = S.v + dr; if (rp < 0 || rp > R) continue;
-      const X = xr(rp), Y = yv(S.Vmin + 0.5 * S.m2r * dr * dr);
-      if (!started) { ctx.moveTo(X, Y); started = true; } else ctx.lineTo(X, Y);
+    for (const sgn of (S.v > 0.02 ? [1, -1] : [1])) {
+      ctx.beginPath(); let started = false;
+      for (let dr = -0.34; dr <= 0.341; dr += 0.02) {
+        const rp = S.v + dr; if (rp < 0 || rp > R) continue;
+        const X = xr(sgn * rp), Y = yv(S.Vmin + 0.5 * S.m2r * dr * dr);
+        if (!started) { ctx.moveTo(X, Y); started = true; } else ctx.lineTo(X, Y);
+      }
+      ctx.stroke();
     }
-    ctx.stroke();
   }
   ctx.setLineDash([]);
   ctx.strokeStyle = P.text; ctx.lineWidth = 2.5; ctx.beginPath();
-  for (let n = 0; n <= 120; n++) {
-    const rp = R * n / 120, X = xr(rp), Y = yv(Vp2(rp * rp));
+  for (let n = 0; n <= 160; n++) {                   // full signed sweep → the double well is drawn
+    const xp = -R + 2 * R * n / 160, X = xr(xp), Y = yv(Vp2(xp * xp));
     n ? ctx.lineTo(X, Y) : ctx.moveTo(X, Y);
   }
   ctx.stroke();
   if (S.broken) {
-    ctx.setLineDash([3, 3]); ctx.strokeStyle = COL_RING; ctx.lineWidth = 1.5;
-    ctx.beginPath(); ctx.moveTo(xr(S.v), yv(S.Vmin)); ctx.lineTo(xr(S.v), pY1); ctx.stroke();
-    ctx.setLineDash([]);
-    ctx.fillStyle = COL_RING;
-    ctx.beginPath(); ctx.arc(xr(S.v), yv(S.Vmin), 3.5, 0, TWO_PI); ctx.fill();
+    for (const sgn of [1, -1]) {                     // both minima of the cross-section
+      ctx.setLineDash([3, 3]); ctx.strokeStyle = COL_RING; ctx.lineWidth = 1.5;
+      ctx.beginPath(); ctx.moveTo(xr(sgn * S.v), yv(S.Vmin)); ctx.lineTo(xr(sgn * S.v), pY1); ctx.stroke();
+      ctx.setLineDash([]);
+      ctx.fillStyle = COL_RING;
+      ctx.beginPath(); ctx.arc(xr(sgn * S.v), yv(S.Vmin), 3.5, 0, TWO_PI); ctx.fill();
+    }
     if (!compact) {
-      const bxr = xr(Math.min(Math.hypot(S.x, S.y), R)), vlx = xr(S.v);
+      const bxr = xr(Math.max(-R, Math.min(R, S.x))), vlx = xr(S.v);
       const flip = Math.abs(bxr - vlx) < 14;         // ball's φ tag would collide — put V_min on the other side
-      haloText(S.metered ? 'V_min = ' + fmtV(S.Vmin) : 'V_min', flip ? vlx - 10 : vlx + 10, yv(S.Vmin) + 1, COL_RING, P.bg, flip ? 'right' : 'left', '600 13px ' + FS);
+      haloSubText('V', 'min', S.metered ? ' = ' + fmtV(S.Vmin) : '', flip ? vlx - 10 : vlx + 10, yv(S.Vmin) + 1, COL_RING, P.bg, flip ? 'right' : 'left');
     }
   }
-  /* the field, honestly placed — or flagged off-scale instead of pinned to the edge */
+  /* the field, honestly placed — SIGNED Re φ so inter-well traversals cross the hump;
+     height stays the true V(|φ|²). Off-slice (Im φ ≠ 0) is tagged, not hidden. */
   const rb = Math.min(Math.hypot(S.x, S.y), R);
-  const Vb = Vp2(rb * rb), bx = xr(rb);
+  const Vb = Vp2(rb * rb), bx = xr(Math.max(-R, Math.min(R, S.x)));
+  const offSlice = Math.abs(S.y) > 0.08;
+  const ballTag = offSlice ? 'φ (Im φ ≠ 0)' : 'φ';
   if (Vb > VHI) {
     ctx.fillStyle = COL_BALL;
     ctx.beginPath(); ctx.moveTo(bx, pY0 - 2); ctx.lineTo(bx - 7, pY0 + 10); ctx.lineTo(bx + 7, pY0 + 10); ctx.closePath(); ctx.fill();
@@ -1332,7 +1362,9 @@ function drawStrip(P, y0, h, compact) {
     ctx.fillStyle = COL_BALL;
     ctx.beginPath(); ctx.arc(bx, by, 5.5, 0, TWO_PI); ctx.fill();
     ctx.strokeStyle = 'rgba(0,0,0,0.45)'; ctx.lineWidth = 1.5; ctx.stroke();
-    haloText('φ', bx + 11, by - 2, P.text, P.bg, 'left', '700 13px ' + FS);
+    /* long off-slice tag near the +v V_min label → draw it on the LEFT of the ball */
+    const tagLeft = offSlice && S.broken && (xr(S.v) - bx) > -20 && (xr(S.v) - bx) < 110;
+    haloText(ballTag, tagLeft ? bx - 11 : bx + 11, by - 2, P.text, P.bg, tagLeft ? 'right' : 'left', '700 13px ' + FS);
   }
   ctx.restore();
 
@@ -1344,7 +1376,7 @@ function drawStrip(P, y0, h, compact) {
     const lx = Math.min(Math.max(xr(S.v) - w / 2, pX0), pX1 - w - 40);
     ctx.textAlign = 'left'; ctx.fillText(t, lx, y0 + h - 8);
   }
-  if (!compact) { ctx.textAlign = 'right'; ctx.fillText('|φ|', pX1, y0 + h - 8); ctx.textAlign = 'left'; }
+  if (!compact) { ctx.textAlign = 'right'; ctx.fillText('Re φ', pX1, y0 + h - 8); ctx.textAlign = 'left'; }
 }
 
 /* ---------- prediction / kicks ---------- */

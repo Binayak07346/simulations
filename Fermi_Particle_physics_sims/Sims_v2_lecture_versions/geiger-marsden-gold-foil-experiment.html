@@ -294,6 +294,10 @@ body.light-theme .predict-eval .answer,body.light-theme .predict-eval strong,htm
 .sim-seg-btn{flex:1 1 0;min-width:0;padding:7px 4px;font-size:13.5px;font-weight:600;border:1.5px solid var(--border);border-radius:8px;background:var(--surface);color:var(--muted);cursor:pointer;box-sizing:border-box}
 .sim-seg-btn.sim-on{background:var(--accent);color:var(--bg);border-color:var(--accent)}
 .sim-ctl{margin:6px 0 2px}
+.sim-ctl.sim-box{background:var(--bg,transparent);border:1px solid var(--border);border-radius:8px;padding:10px 12px;margin:10px 0}
+.sim-ctl.sim-box:first-child{margin-top:0}
+.sim-ctl.sim-box:last-child{margin-bottom:0}
+.sim-ctl.sim-box>.sim-note:last-child{margin-bottom:0}
 .sim-ctl label{display:flex;justify-content:space-between;align-items:baseline;gap:8px;font-size:14px;color:var(--text);min-width:120px;overflow-wrap:anywhere}
 .sim-ctl input[type=range]{width:100%;accent-color:var(--accent)}
 .sim-val{font-weight:700;font-variant-numeric:tabular-nums;white-space:nowrap;color:var(--text)}
@@ -481,18 +485,35 @@ body.light-theme .sim-hot,html[data-theme="light"] .sim-hot{color:#c2410c}
     <div id="aside-controls" class="aside-zone">
 
       <div class="shell-panel">
-        <div class="shell-panel-head"><h3>Beam</h3><span class="shell-caret">▾</span></div>
+        <div class="shell-panel-head"><h3>Controls</h3><span class="shell-caret">▾</span></div>
         <div class="shell-panel-body">
-          <div class="sim-seg" role="group" aria-label="beam rate">
-            <button type="button" id="gmRateSlow" class="sim-seg-btn sim-on">10 k α/s</button>
-            <button type="button" id="gmRateFast" class="sim-seg-btn">100 k α/s</button>
+          <div class="sim-ctl sim-box">
+            <label><span>Beam rate</span></label>
+            <div class="sim-seg" role="group" aria-label="beam rate">
+              <button type="button" id="gmRateSlow" class="sim-seg-btn sim-on">10 k α/s</button>
+              <button type="button" id="gmRateFast" class="sim-seg-btn">100 k α/s</button>
+            </div>
+            <div class="sim-note ht-hide">5.0 MeV α on a 0.40 µm gold foil (n·t = 2.4×10²² m⁻²). At 10 k α/s the rare flashes past 90° arrive about one every few seconds — Geiger and Marsden counted them by eye in a darkened room. Use 100 k α/s to build the pattern quickly.</div>
           </div>
-          <div class="sim-note ht-hide">5.0 MeV α on a 0.40 µm gold foil (n·t = 2.4×10²² m⁻²). At 10 k α/s the rare flashes past 90° arrive about one every few seconds — Geiger and Marsden counted them by eye in a darkened room. Use 100 k α/s to build the pattern quickly.</div>
+          <div class="sim-ctl sim-box">
+            <label><span>Overlay prediction</span></label>
+            <div class="sim-seg" role="group" aria-label="overlay prediction">
+              <button type="button" id="gmModeNuc" class="sim-seg-btn sim-on">Rutherford only</button>
+              <button type="button" id="gmModePlum" class="sim-seg-btn">+ plum pudding</button>
+            </div>
+            <label class="sim-check"><input type="checkbox" id="gmFlat"> Multiply counts by sin⁴(θ/2)</label>
+            <div class="sim-note ht-hide">The green points are the measurement — this switch never changes them. It only chooses which <b>prediction</b> is drawn over them.</div>
+          </div>
+          <div class="sim-ctl sim-box">
+            <label for="gmMomentum"><span>α momentum</span> <span class="sim-val" id="gmPVal">0.193 GeV/c</span></label>
+            <input type="range" id="gmMomentum" min="0.185" max="0.500" step="0.001" value="0.193">
+            <div class="sim-note ht-hide" id="gmBeamNote">Natural α sources run 4–9 MeV (RaC′ 7.7 MeV = 0.240 GeV/c).</div>
+          </div>
         </div>
       </div>
 
-      <div class="shell-panel">
-        <div class="shell-panel-head"><h3>Live counts</h3><span class="shell-caret">▾</span></div>
+      <div class="shell-panel collapsed">
+        <div class="shell-panel-head"><h3>Readouts</h3><span class="shell-caret">▾</span></div>
         <div class="shell-panel-body">
           <div class="sim-rows">
             <div class="sim-row"><span>α fired (incident)</span><b id="gmN">0</b></div>
@@ -500,36 +521,11 @@ body.light-theme .sim-hot,html[data-theme="light"] .sim-hot{color:#c2410c}
             <div class="sim-row"><span>counts θ &gt; 90°</span><b id="gmBack" class="sim-hot">0</b></div>
             <div class="sim-row"><span>absorbed by nucleus</span><b id="gmAbs">0</b></div>
             <div class="sim-row"><span>odds of θ &gt; 90°</span><b id="gmOdds">—</b></div>
-          </div>
-          <div class="sim-note ht-hide">Odds are per <b>incident</b> α. The 1° line is only where this model starts counting; sub-degree deflections are not simulated.</div>
-          <div class="sim-note ht-hide" id="gmDotNote">Screen: upper and lower arcs are opposite azimuthal sides of the same θ.</div>
-        </div>
-      </div>
-
-      <div class="shell-panel">
-        <div class="shell-panel-head"><h3>Compare models</h3><span class="shell-caret">▾</span></div>
-        <div class="shell-panel-body">
-          <div class="sim-note ht-hide">The green points are the measurement — this switch never changes them. It only chooses which <b>prediction</b> is drawn over them.</div>
-          <div class="sim-seg" role="group" aria-label="overlay prediction">
-            <button type="button" id="gmModeNuc" class="sim-seg-btn sim-on">Rutherford only</button>
-            <button type="button" id="gmModePlum" class="sim-seg-btn">+ plum pudding</button>
-          </div>
-          <label class="sim-check"><input type="checkbox" id="gmFlat"> Multiply counts by sin⁴(θ/2)</label>
-        </div>
-      </div>
-
-      <div class="shell-panel">
-        <div class="shell-panel-head"><h3>Sub-question · how big is the nucleus?</h3><span class="shell-caret">▾</span></div>
-        <div class="shell-panel-body">
-          <div class="sim-ctl">
-            <label for="gmMomentum"><span>α momentum</span> <span class="sim-val" id="gmPVal">0.193 GeV/c</span></label>
-            <input type="range" id="gmMomentum" min="0.185" max="0.500" step="0.001" value="0.193">
-            <div class="sim-note ht-hide" id="gmBeamNote">Natural α sources run 4–9 MeV (RaC′ 7.7 MeV = 0.240 GeV/c).</div>
-          </div>
-          <div class="sim-rows">
             <div class="sim-row"><span>kinetic energy Eₖ</span><b id="gmEk">5.0 MeV</b></div>
             <div class="sim-row"><span>d<sub>min</sub> (head-on, θ = 180°)</span><b id="gmDmin">45.5 fm</b></div>
           </div>
+          <div class="sim-note ht-hide">Odds are per <b>incident</b> α. The 1° line is only where this model starts counting; sub-degree deflections are not simulated.</div>
+          <div class="sim-note ht-hide" id="gmDotNote">Screen: upper and lower arcs are opposite azimuthal sides of the same θ.</div>
         </div>
       </div>
 
@@ -659,7 +655,7 @@ const Shell = (function(){
     }
     onComplete();
     setInquiryCollapsed(true);
-    setPlaying(true);
+    setPlaying(false);   /* lecture entry stays paused so the student can click ▶ Play to fire */
   }
   // SIM may call this to satisfy a data-gate step's requirement (e.g. "watched").
   function stepReady(){
@@ -763,7 +759,7 @@ const Shell = (function(){
         onResize(); onReset();
         onComplete();
       }
-      setPlaying(true);
+      setPlaying(inqTotal===0); /* inquiry sims boot paused so students click ▶ Play deliberately; retired-inquiry sims auto-play */
       last=performance.now();
       if(!started){ started=true; requestAnimationFrame(loop); }
     },
@@ -867,7 +863,8 @@ function record(th){
   var deg=th/D2R, b=Math.floor(deg/BINW); if(b>=NBINS)b=NBINS-1; if(b<0)b=0;
   st.bins[b]++; st.nScat++;
   var sg=(Math.random()<0.5?1:-1);
-  if(deg>10&&Math.random()<dotP()) pushDot(sg*th,st.t);
+  if(deg>1){ var sK=Math.sin(th/2)/Math.sin(5*D2R), keep=Math.min(1,sK*sK*sK*sK);
+    if(Math.random()<0.05*keep*dotP()) pushDot(sg*th,st.t); }
   if(deg>=90){ st.nBack++;
     if(flashes.length<36)flashes.push({a:sg*th,t:st.t});
     if(Math.random()<0.25)spawnTracer(th,true); }
@@ -898,9 +895,19 @@ function applyRun(p,N,seed){
     }
     st.nAbs=Math.round(absAcc);
     var K=Math.min(2400,Math.round(st.nScat*0.01*dotP()));
-    for(i=0;i<K;i++){ var r=rnd(), u=Math.sqrt(1/(1+G10*(1-r))); if(u>1)u=1;
-      var th=2*Math.asin(u), S=suppress(th,Ek); if(S<1&&rnd()>S)continue;
-      pushDot((rnd()<0.5?1:-1)*th,-30,rnd); }
+    for(i=0;i<K;i++){
+      var th;
+      if(rnd()<0.5){
+        /* uniform in θ ∈ [THMIN, 180°] — fills the whole visible arc, incl. the 1°–10° gap */
+        th=THMIN+(Math.PI-THMIN)*rnd();
+      } else {
+        /* G10 physical sampling — retains extra density for θ > 10° */
+        var r=rnd(), u=Math.sqrt(1/(1+G10*(1-r))); if(u>1)u=1;
+        th=2*Math.asin(u);
+      }
+      var S=suppress(th,Ek); if(S<1&&rnd()>S)continue;
+      pushDot((rnd()<0.5?1:-1)*th,-30,rnd);
+    }
   }
 }
 
@@ -929,8 +936,7 @@ function syncUI(){ var Ek=EkOf(st.p), n;
   n=el('gmBeamNote'); if(n) n.innerHTML = st.p>PNAT
     ? '<b>Accelerator beam</b> ('+(Ek*1000).toFixed(1)+' MeV) — beyond any natural α source. Natural α: 4–9 MeV (RaC′ 7.7 MeV = 0.240 GeV/c).'
     : 'Natural α sources run 4–9 MeV (RaC′ 7.7 MeV = 0.240 GeV/c).';
-  n=el('gmDotNote'); if(n) n.innerHTML='Screen: upper and lower arcs are opposite azimuthal sides of the same θ. Dots show '+
-    (dotP()===1?'every α with θ &gt; 10°':'1 in 3 of the α with θ &gt; 10°')+' (same size at every angle); the drawn tracks are a small sample with large angles over-shown.';
+  n=el('gmDotNote'); if(n) n.innerHTML='Screen: upper and lower arcs are opposite azimuthal sides of the same θ. Dots light up wherever α land (θ ≥ 1° — the 0°–1° direct-beam cone is unmeasurable); a sub-sample is drawn to keep the arc readable (same size at every angle, large angles over-shown in the tracks).';
   n=el('gmModeNuc'); if(n)n.classList.toggle('sim-on',!st.showPlum);
   n=el('gmModePlum'); if(n)n.classList.toggle('sim-on',st.showPlum);
   n=el('gmRateSlow'); if(n)n.classList.toggle('sim-on',st.rate<=RSLOW);
@@ -1014,21 +1020,18 @@ function draw(){
   /* chamber */
   X.globalAlpha=0.05; X.fillStyle=C.text; X.beginPath(); X.arc(cx,cy,R+16,0,TAU); X.fill(); X.globalAlpha=1;
   X.lineWidth=13; X.strokeStyle=C.band; X.beginPath(); X.arc(cx,cy,R,-170*D2R,170*D2R,false); X.stroke();
-  X.strokeStyle=C.ring;
-  X.beginPath(); X.arc(cx,cy,R,-168*D2R,-90*D2R,false); X.stroke();
-  X.beginPath(); X.arc(cx,cy,R,90*D2R,168*D2R,false); X.stroke();
   X.lineWidth=1.5; X.strokeStyle=C.border;
   X.beginPath(); X.arc(cx,cy,R+7,-170*D2R,170*D2R,false); X.stroke();
   X.beginPath(); X.arc(cx,cy,R-7,-170*D2R,170*D2R,false); X.stroke();
   X.lineWidth=1.5; X.strokeStyle=C.muted;
+  /* ticks + labels at every 30° on BOTH hemispheres (upper = +θ, lower = mirror azimuth of same |θ|).
+     Small-mode falls back to just 0° and ±90° so tight layouts don't crowd. */
   for(var td=-150;td<=150;td+=30){ var aa=-td*D2R, c1=Math.cos(aa), s1=Math.sin(aa);
-    X.globalAlpha=0.8; X.beginPath(); X.moveTo(cx+(R+9)*c1,cy+(R+9)*s1); X.lineTo(cx+(R+15)*c1,cy+(R+15)*s1); X.stroke(); X.globalAlpha=1; }
-  label('0°',cx+R+24,cy+5,'center',C.muted,small?12:14);
-  label('90°',cx,cy-R-22,'center',C.muted,small?12:14);
-  /* lower arc is the SAME unsigned theta on the opposite azimuth — offset so it clears the tick */
-  label('90°',cx+44,Math.min(cy+R+24,appH-4),'center',C.muted,small?12:14);
-  if(!small){
-    label('150°',cx+(R+28)*Math.cos(150*D2R),Math.max(cy-(R+24)*Math.sin(150*D2R),14),'center',C.muted);
+    X.globalAlpha=0.8; X.beginPath(); X.moveTo(cx+(R+9)*c1,cy+(R+9)*s1); X.lineTo(cx+(R+15)*c1,cy+(R+15)*s1); X.stroke(); X.globalAlpha=1;
+    var absDeg=Math.abs(td);
+    if(small && absDeg!==0 && absDeg!==90) continue;
+    var lx=cx+(R+24)*c1, ly=cy+(R+24)*s1+5;
+    label(absDeg+'°', lx, ly, 'center', C.muted, 12);
   }
   /* collimator + beam */
   X.strokeStyle=C.border; X.lineWidth=3;
@@ -1048,11 +1051,6 @@ function draw(){
   gg.addColorStop(0,'#8a6914'); gg.addColorStop(0.5,'#f3d158'); gg.addColorStop(1,'#a97e1c');
   X.fillStyle=gg; X.fillRect(cx-2.5,cy-fh,5,fh*2);
   label('gold foil',cx+2,Math.min(cy+fh+18,appH-6),'center',C.text,small?12:14);
-  /* forward beam spot: half-width = angle containing 90% of the >1 deg events */
-  var extDeg=EXT90;
-  var gA=0.12+0.55*Math.min(1,st.Nf/300000);
-  X.strokeStyle='rgba('+C.glow+','+gA.toFixed(3)+')'; X.lineWidth=9;
-  X.beginPath(); X.arc(cx,cy,R,-extDeg*D2R,extDeg*D2R,false); X.stroke();
   /* scintillation dots — equal size at every angle */
   X.fillStyle=C.dot;
   var i2;
@@ -1085,7 +1083,6 @@ function draw(){
   if(dmin<=RTOUCH) chip('α now grazes the nuclear surface',C.hot);
   if(st.showPlum) chip('overlay: plum-pudding prediction (dashed)',C.muted);
   if(!small){
-    label('θ > 90°',cx+(R+28)*Math.cos(128*D2R),Math.max(cy-(R+26)*Math.sin(128*D2R),14),'center',C.hot);
     label('ZnS screen',cx+(R+26)*Math.cos(-38*D2R),Math.min(cy+(R+26)*Math.sin(38*D2R)+4,appH-4),'center',C.muted,small?12:14);
     label('tracks: sampled beam — large angles over-shown',12,Math.min(appH-6,cy+fh+44),'left',C.muted,11.5,500);
   }
@@ -1226,9 +1223,11 @@ var STEPS=[
 function onStep(i){ i=Math.max(0,Math.min(STEPS.length-1,i|0)); var s=STEPS[i];
   st.showPlum=!!s.plum; st.flat=!!s.flat; applyRun(s.p,s.N,s.seed); syncUI(); updateCounts(); draw(); }
 
-/* Completed / lecture state: the full 3 M measurement on screen, every control live. */
+/* Completed / lecture state: open EMPTY and PAUSED (same scene as Card 1) — the student clicks ▶ Play to fire.
+   Pre-populating dots + histogram was flagged as confusing; the blank chamber makes the "watch it happen" moment explicit. */
 function onComplete(){ st.showPlum=false; st.flat=false;
-  applyRun(0.193,3000000,8); syncUI(); updateCounts(); draw(); }
+  applyRun(0.193,0,1); syncUI(); updateCounts(); draw();
+}
 function onReset(){ st.showPlum=false; st.flat=false; st.rate=RSLOW;
   var f=el('gmFlat'); if(f)f.checked=false;
   applyRun(0.193,0,1); syncUI(); updateCounts(); draw(); 

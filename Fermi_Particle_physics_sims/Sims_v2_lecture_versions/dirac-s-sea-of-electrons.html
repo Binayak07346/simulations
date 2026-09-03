@@ -305,7 +305,17 @@ body.light-theme .predict-eval .answer,body.light-theme .predict-eval strong,htm
 /* padding wrapper: the shell's .shell-panel has none, so sim content needs its own */
 .sim-pad{padding:12px}
 .sim-h{margin:0 0 8px;font-size:14px;font-weight:700;letter-spacing:.05em;text-transform:uppercase;color:var(--muted)}
+.sim-drop{margin:0;}
+.sim-drop>summary{list-style:none;cursor:pointer;display:flex;align-items:center;justify-content:space-between;gap:8px;margin:0 0 8px;}
+.sim-drop>summary::-webkit-details-marker{display:none;}
+.sim-drop>summary .sim-h{margin:0;}
+.sim-drop>summary::after{content:"▸";font-size:12px;color:var(--muted);transition:transform 0.15s ease;line-height:1;}
+.sim-drop[open]>summary::after{transform:rotate(90deg);}
+.sim-drop[open]>summary{margin-bottom:8px;}
 .sim-row{display:block;margin-bottom:10px;box-sizing:border-box}
+.sim-box{background:var(--bg,transparent);border:1px solid var(--border);border-radius:8px;padding:10px 12px;margin:10px 0}
+.sim-box>.sim-row:last-child, .sim-box>.sim-sub:last-child{margin-bottom:0}
+.sim-box-first{margin-top:16px}
 .sim-lab{display:flex;justify-content:space-between;align-items:baseline;gap:8px;margin-bottom:4px}
 .sim-row label{font-size:14px;color:var(--text);overflow-wrap:anywhere}
 .sim-row input[type=range]{width:100%;min-width:56px;accent-color:var(--accent)}
@@ -401,7 +411,9 @@ body.light-theme .predict-eval .answer,body.light-theme .predict-eval strong,htm
      DOM items:    add class "ht-hide" to the element.
      Canvas items: wrap the draw call in  if(!HT()){ ... }
      Keep this list current when registering items:
-     (empty — nothing registered yet)
+     - [dom] "Sign alternates each click — or click any point on the sea to pick p yourself." — Controls panel div.sim-sub after #exciteBtn, ~L495
+     - [dom] "ℰ = applied electric field." — Controls panel #fieldNote, ~L500
+     - [dom] live "≈ NN×10⁹ K" (kT→Kelvin conversion) — Controls panel #ktKelvin, ~L509
 -->
 <script>
 /* Hide Text toggle — empty registry; hides .ht-hide DOM nodes and gates HT() canvas labels. */
@@ -492,31 +504,39 @@ body.light-theme .predict-eval .answer,body.light-theme .predict-eval strong,htm
       <div class="shell-panel"><div class="sim-pad">
   <h3 class="sim-h">Controls</h3>
   <button class="sim-btn" id="exciteBtn">⚡ Excite a pair at p = +1 MeV/c</button>
-  <div class="sim-sub" style="margin-top:8px">Sign alternates each click — or click any point on the sea to pick p yourself.</div>
-  <div class="sim-row">
-    <div class="sim-lab"><label for="fieldRange">Field ℰ</label><span class="sim-val" id="fieldVal">off</span></div>
-    <input id="fieldRange" type="range" min="-1" max="1" step="0.05" value="0">
+  <div class="sim-sub ht-hide" style="margin-top:8px">Sign alternates each click — or click any point on the sea to pick p yourself.</div>
+  <div class="sim-box sim-box-first">
+    <div class="sim-row">
+      <div class="sim-lab"><label for="fieldRange">Field ℰ</label><span class="sim-val" id="fieldVal">off</span></div>
+      <input id="fieldRange" type="range" min="-1" max="1" step="0.05" value="0">
+    </div>
+    <div class="sim-sub ht-hide" id="fieldNote">ℰ = applied electric field.</div>
   </div>
-  <div class="sim-sub" id="fieldNote">ℰ = applied electric field.</div>
-  <div class="sim-row">
-    <div class="sim-lab"><label for="depthRange">Axis depth</label><span class="sim-val" id="depthVal">±3.0 MeV</span></div>
-    <input id="depthRange" type="range" min="2" max="15" step="0.1" value="3">
+  <div class="sim-box">
+    <div class="sim-row">
+      <div class="sim-lab"><label for="depthRange">Axis depth</label><span class="sim-val" id="depthVal">±3.0 MeV</span></div>
+      <input id="depthRange" type="range" min="2" max="15" step="0.1" value="3">
+    </div>
   </div>
-  <div class="sim-row">
-    <div class="sim-lab"><label for="ktRange">Temperature kT</label><span class="sim-val" id="ktVal">0.25 MeV</span></div>
-    <input id="ktRange" type="range" min="0.05" max="1.5" step="0.01" value="0.25">
+  <div class="sim-box">
+    <div class="sim-row">
+      <div class="sim-lab"><label for="ktRange">Temperature kT</label><span class="sim-val" id="ktVal">0.25 MeV</span></div>
+      <input id="ktRange" type="range" min="0.05" max="1.5" step="0.01" value="0.25">
+    </div>
+    <div class="sim-sub ht-hide" id="ktKelvin">≈ 2.9×10⁹ K</div>
   </div>
-  <div class="sim-sub" id="ktKelvin">≈ 2.9×10⁹ K</div>
 </div></div>
 <div class="shell-panel"><div class="sim-pad">
-  <h3 class="sim-h">Readouts</h3>
-  <table class="sim-table">
-    <tr><td id="labPairs">pairs made (electron + hole)</td><td id="roPairs">0</td></tr>
-    <tr><td id="labCost">cost to make the last pair</td><td id="roCost">—</td></tr>
-    <tr><td>net charge</td><td id="roQ">0 e</td></tr>
-    <tr><td id="labMom">net momentum (matter)</td><td id="roP">0 MeV/c</td></tr>
-  </table>
-  <div class="sim-sub">Try it: make a pair near p = 0, then click far out on the branch</div>
+  <details class="sim-drop">
+    <summary><h3 class="sim-h">Readouts</h3></summary>
+    <table class="sim-table">
+      <tr><td id="labPairs">pairs made (electron + hole)</td><td id="roPairs">0</td></tr>
+      <tr><td id="labCost">cost to make the last pair</td><td id="roCost">—</td></tr>
+      <tr><td>net charge</td><td id="roQ">0 e</td></tr>
+      <tr><td id="labMom">net momentum (matter)</td><td id="roP">0 MeV/c</td></tr>
+    </table>
+    <div class="sim-sub">Try it: make a pair near p = 0, then click far out on the branch</div>
+  </details>
 </div></div>
     </div>
   </aside>
@@ -792,7 +812,10 @@ const EL='#3f97ff', HO='#ff6257', GOLD='#ffc94d';
 const S = {
   ktMeV:0.25, field:0, depthMeV:3.0,
   electrons:[], holes:[], flights:[], flashes:[], chips:[], ghosts:[],
-  lastCostMeV:null, sign:1, map:null, t:0
+  lastCostMeV:null, sign:1, map:null, t:0,
+  /* low-passed vacancy momentum for the on-canvas "vacancy" / "h⁺" label anchors —
+     particles keep their true jittering p, but labels sit at a smoothed p so they stay readable */
+  p0Smooth:0, p0SmoothInit:false
 };
 
 function g(id){ return document.getElementById(id); }
@@ -1132,14 +1155,19 @@ function drawMain(){
   ctx.beginPath(); ctx.moveTo(gx-4,gy2-6); ctx.lineTo(gx,gy2); ctx.lineTo(gx+4,gy2-6); ctx.stroke();
   drawChip(ctx,'gap 2mc² = 1.022 MeV',gx-9,cy,'right',C.text,C,1,W,H);
 
-  /* one-time identification of the vacancy ↔ positron pair */
+  /* one-time identification of the vacancy ↔ positron pair — anchor the labels at a
+     low-passed p (τ ≈ 0.25 s) so thermal jitter doesn't shake the text, while the
+     hole/positron dots themselves stay at the true jittering p */
   if(vac.length){
-    const p0=vac[0];
+    const p0raw=vac[0];
+    if(!S.p0SmoothInit){ S.p0Smooth=p0raw; S.p0SmoothInit=true; }
+    else { const dtSm=S.lastDt||0.0167, aSm=Math.min(1,4*dtSm); S.p0Smooth+=aSm*(p0raw-S.p0Smooth); }
+    const p0=S.p0Smooth;
     if(Epos(p0)<=Emax){
       drawChip(ctx,'vacancy (p, −E)',xOf(p0)+10,yOf(-Epos(p0))+17,'left',C.ho,C,0.95,W,H);
       drawChip(ctx,'h⁺ : (−p, +E)',xOf(-p0)+10,yOf(Epos(p0))+17,'left',C.ho,C,0.85,W,H);
     }
-  }
+  } else { S.p0SmoothInit=false; }
 
   /* applied field ℰ (bottom-left) and the bottomless note (bottom-right) */
   if(Math.abs(S.field)>0.03)
@@ -1370,7 +1398,7 @@ function renderFormal(tries){
 /* ===== shell hooks ===== */
 function onFrame(dt){
   if(!(dt>0)) dt=0; if(dt>0.1) dt=0.1;
-  S.t+=dt; physics(dt); draw();
+  S.t+=dt; S.lastDt=dt; physics(dt); draw();
 }
 function onReset(){ applyOpening(); 
   onStep(Shell.step); /* re-sync the scene to the ACTIVE card (SYS-2) */
