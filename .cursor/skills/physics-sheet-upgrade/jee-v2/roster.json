@@ -1,0 +1,1823 @@
+[
+ {
+  "slug": "C021",
+  "file": "C021-equations-of-motion-for-uniform-acceleration",
+  "module": "Module-01-Kinematics",
+  "shell": true,
+  "formal": true,
+  "welcome": true,
+  "bytes": 178327,
+  "family": {
+   "play": "text",
+   "static": false,
+   "three": false,
+   "scene_fn": false,
+   "no_seesim_possible": false,
+   "live_controls": 2
+  }
+ },
+ {
+  "slug": "C023",
+  "file": "C023-reading-x-t-v-t-and-a-t-graphs",
+  "module": "Module-01-Kinematics",
+  "shell": true,
+  "formal": true,
+  "welcome": true,
+  "bytes": 188244,
+  "family": {
+   "play": "text",
+   "static": false,
+   "three": false,
+   "scene_fn": false,
+   "no_seesim_possible": false,
+   "live_controls": 2
+  }
+ },
+ {
+  "slug": "C024",
+  "file": "C024-relative-velocity-in-one-dimension",
+  "module": "Module-01-Kinematics",
+  "shell": true,
+  "formal": false,
+  "welcome": true,
+  "bytes": 179818,
+  "family": {
+   "play": "text",
+   "static": false,
+   "three": false,
+   "scene_fn": false,
+   "no_seesim_possible": false,
+   "live_controls": 2
+  }
+ },
+ {
+  "slug": "C025-projectile-motion-ground-to-ground--with-air-drag",
+  "file": "C025-projectile-motion-ground-to-ground--with-air-drag",
+  "module": "Module-01-Kinematics",
+  "shell": true,
+  "formal": true,
+  "welcome": true,
+  "bytes": 384432,
+  "family": {
+   "play": "text",
+   "static": false,
+   "three": false,
+   "scene_fn": true,
+   "no_seesim_possible": false,
+   "live_controls": 6
+  }
+ },
+ {
+  "slug": "C025",
+  "file": "C025-projectile-motion-ground-to-ground",
+  "module": "Module-01-Kinematics",
+  "shell": true,
+  "formal": true,
+  "welcome": true,
+  "bytes": 388850,
+  "family": {
+   "play": "text",
+   "static": false,
+   "three": false,
+   "scene_fn": true,
+   "no_seesim_possible": false,
+   "live_controls": 3
+  }
+ },
+ {
+  "slug": "C028",
+  "file": "C028-relative-velocity-in-2d-river-boat-rain-man",
+  "module": "Module-01-Kinematics",
+  "shell": true,
+  "formal": true,
+  "welcome": true,
+  "bytes": 192670,
+  "family": {
+   "play": "text",
+   "static": false,
+   "three": false,
+   "scene_fn": false,
+   "no_seesim_possible": false,
+   "live_controls": 3
+  }
+ },
+ {
+  "slug": "C030",
+  "file": "C030-newtons-first-law-and-inertia",
+  "module": "Module-02-Laws-of-Motion-and-Friction",
+  "shell": true,
+  "formal": true,
+  "welcome": true,
+  "bytes": 407186,
+  "family": {
+   "play": "text",
+   "static": false,
+   "three": false,
+   "scene_fn": true,
+   "no_seesim_possible": false,
+   "live_controls": 2
+  }
+ },
+ {
+  "slug": "C031",
+  "file": "C031-newtons-second-law-f-ma",
+  "module": "Module-02-Laws-of-Motion-and-Friction",
+  "shell": true,
+  "formal": true,
+  "welcome": true,
+  "bytes": 406025,
+  "family": {
+   "play": "text",
+   "static": false,
+   "three": false,
+   "scene_fn": true,
+   "no_seesim_possible": false,
+   "live_controls": 2
+  }
+ },
+ {
+  "slug": "C032",
+  "file": "C032-newtons-third-law-pairs",
+  "module": "Module-02-Laws-of-Motion-and-Friction",
+  "shell": true,
+  "formal": true,
+  "welcome": true,
+  "bytes": 406955,
+  "family": {
+   "play": "text",
+   "static": false,
+   "three": false,
+   "scene_fn": true,
+   "no_seesim_possible": false,
+   "live_controls": 2
+  }
+ },
+ {
+  "slug": "C033",
+  "file": "C033-free-body-diagrams-the-master-skill",
+  "module": "Module-02-Laws-of-Motion-and-Friction",
+  "shell": true,
+  "formal": true,
+  "welcome": true,
+  "bytes": 413359,
+  "family": {
+   "play": "text",
+   "static": false,
+   "three": false,
+   "scene_fn": false,
+   "no_seesim_possible": false,
+   "live_controls": 3
+  }
+ },
+ {
+  "slug": "C036",
+  "file": "C036-pseudo-forces-and-non-inertial-frames",
+  "module": "Module-02-Laws-of-Motion-and-Friction",
+  "shell": true,
+  "formal": true,
+  "welcome": true,
+  "bytes": 405523,
+  "family": {
+   "play": "text",
+   "static": false,
+   "three": true,
+   "scene_fn": true,
+   "no_seesim_possible": false,
+   "live_controls": 2
+  }
+ },
+ {
+  "slug": "C037",
+  "file": "C037-static-and-kinetic-friction",
+  "module": "Module-02-Laws-of-Motion-and-Friction",
+  "shell": true,
+  "formal": true,
+  "welcome": true,
+  "bytes": 209581,
+  "family": {
+   "play": "text",
+   "static": false,
+   "three": false,
+   "scene_fn": false,
+   "no_seesim_possible": false,
+   "live_controls": 4
+  }
+ },
+ {
+  "slug": "C039",
+  "file": "C039-motion-on-inclined-planes-with-friction",
+  "module": "Module-02-Laws-of-Motion-and-Friction",
+  "shell": true,
+  "formal": true,
+  "welcome": true,
+  "bytes": 403024,
+  "family": {
+   "play": "text",
+   "static": false,
+   "three": false,
+   "scene_fn": true,
+   "no_seesim_possible": false,
+   "live_controls": 2
+  }
+ },
+ {
+  "slug": "C041",
+  "file": "C041-banking-of-roads",
+  "module": "Module-02-Laws-of-Motion-and-Friction",
+  "shell": true,
+  "formal": true,
+  "welcome": true,
+  "bytes": 235780,
+  "family": {
+   "play": "text",
+   "static": false,
+   "three": false,
+   "scene_fn": false,
+   "no_seesim_possible": false,
+   "live_controls": 3
+  }
+ },
+ {
+  "slug": "C042",
+  "file": "C042-vertical-circular-motion",
+  "module": "Module-02-Laws-of-Motion-and-Friction",
+  "shell": true,
+  "formal": true,
+  "welcome": true,
+  "bytes": 221516,
+  "family": {
+   "play": "text",
+   "static": false,
+   "three": false,
+   "scene_fn": false,
+   "no_seesim_possible": false,
+   "live_controls": 2
+  }
+ },
+ {
+  "slug": "C046",
+  "file": "C046-work-energy-theorem",
+  "module": "Module-03-Work-Energy-and-Power",
+  "shell": true,
+  "formal": true,
+  "welcome": true,
+  "bytes": 175603,
+  "family": {
+   "play": "text",
+   "static": false,
+   "three": false,
+   "scene_fn": false,
+   "no_seesim_possible": false,
+   "live_controls": 3
+  }
+ },
+ {
+  "slug": "C051",
+  "file": "C051-conservation-of-mechanical-energy",
+  "module": "Module-03-Work-Energy-and-Power",
+  "shell": true,
+  "formal": true,
+  "welcome": true,
+  "bytes": 174276,
+  "family": {
+   "play": "text",
+   "static": false,
+   "three": false,
+   "scene_fn": false,
+   "no_seesim_possible": false,
+   "live_controls": 2
+  }
+ },
+ {
+  "slug": "C053",
+  "file": "C053-potential-energy-curves-and-equilibrium-stable-unstable",
+  "module": "Module-03-Work-Energy-and-Power",
+  "shell": true,
+  "formal": true,
+  "welcome": true,
+  "bytes": 379999,
+  "family": {
+   "play": "text",
+   "static": false,
+   "three": false,
+   "scene_fn": true,
+   "no_seesim_possible": false,
+   "live_controls": 3
+  }
+ },
+ {
+  "slug": "C054-elastic-and-inelastic-collisions-in-1d--momentum-and-energy",
+  "file": "C054-elastic-and-inelastic-collisions-in-1d--momentum-and-energy",
+  "module": "Module-03-Work-Energy-and-Power",
+  "shell": true,
+  "formal": true,
+  "welcome": true,
+  "bytes": 380866,
+  "family": {
+   "play": "text",
+   "static": false,
+   "three": false,
+   "scene_fn": false,
+   "no_seesim_possible": false,
+   "live_controls": 7
+  }
+ },
+ {
+  "slug": "C054",
+  "file": "C054-elastic-and-inelastic-collisions-in-1d",
+  "module": "Module-03-Work-Energy-and-Power",
+  "shell": true,
+  "formal": true,
+  "welcome": true,
+  "bytes": 378631,
+  "family": {
+   "play": "text",
+   "static": false,
+   "three": false,
+   "scene_fn": false,
+   "no_seesim_possible": false,
+   "live_controls": 14
+  }
+ },
+ {
+  "slug": "C055",
+  "file": "C055-collisions-in-2d-and-coefficient-of-restitution",
+  "module": "Module-03-Work-Energy-and-Power",
+  "shell": true,
+  "formal": true,
+  "welcome": true,
+  "bytes": 209230,
+  "family": {
+   "play": "text",
+   "static": false,
+   "three": false,
+   "scene_fn": false,
+   "no_seesim_possible": false,
+   "live_controls": 3
+  }
+ },
+ {
+  "slug": "C059",
+  "file": "C059-impulse-momentum-theorem",
+  "module": "Module-04-Centre-of-Mass-Momentum-and-Rotation",
+  "shell": true,
+  "formal": true,
+  "welcome": true,
+  "bytes": 179620,
+  "family": {
+   "play": "text",
+   "static": false,
+   "three": false,
+   "scene_fn": false,
+   "no_seesim_possible": false,
+   "live_controls": 4
+  }
+ },
+ {
+  "slug": "C062",
+  "file": "C062-torque-moment-of-force",
+  "module": "Module-04-Centre-of-Mass-Momentum-and-Rotation",
+  "shell": true,
+  "formal": true,
+  "welcome": true,
+  "bytes": 191443,
+  "family": {
+   "play": "none",
+   "static": true,
+   "three": false,
+   "scene_fn": false,
+   "no_seesim_possible": false,
+   "live_controls": 2
+  }
+ },
+ {
+  "slug": "C063",
+  "file": "C063-moment-of-inertia-and-radius-of-gyration",
+  "module": "Module-04-Centre-of-Mass-Momentum-and-Rotation",
+  "shell": true,
+  "formal": true,
+  "welcome": true,
+  "bytes": 194733,
+  "family": {
+   "play": "text",
+   "static": false,
+   "three": false,
+   "scene_fn": false,
+   "no_seesim_possible": false,
+   "live_controls": 3
+  }
+ },
+ {
+  "slug": "C064",
+  "file": "C064-parallel-and-perpendicular-axis-theorems",
+  "module": "Module-04-Centre-of-Mass-Momentum-and-Rotation",
+  "shell": true,
+  "formal": true,
+  "welcome": true,
+  "bytes": 195425,
+  "family": {
+   "play": "text",
+   "static": false,
+   "three": false,
+   "scene_fn": false,
+   "no_seesim_possible": false,
+   "live_controls": 3
+  }
+ },
+ {
+  "slug": "C067",
+  "file": "C067-conservation-of-angular-momentum",
+  "module": "Module-04-Centre-of-Mass-Momentum-and-Rotation",
+  "shell": true,
+  "formal": true,
+  "welcome": true,
+  "bytes": 189624,
+  "family": {
+   "play": "text",
+   "static": false,
+   "three": false,
+   "scene_fn": false,
+   "no_seesim_possible": false,
+   "live_controls": 2
+  }
+ },
+ {
+  "slug": "C069",
+  "file": "C069-rolling-motion-without-slipping",
+  "module": "Module-04-Centre-of-Mass-Momentum-and-Rotation",
+  "shell": true,
+  "formal": true,
+  "welcome": true,
+  "bytes": 194325,
+  "family": {
+   "play": "text",
+   "static": false,
+   "three": false,
+   "scene_fn": false,
+   "no_seesim_possible": false,
+   "live_controls": 3
+  }
+ },
+ {
+  "slug": "C070",
+  "file": "C070-rolling-on-an-inclined-plane",
+  "module": "Module-04-Centre-of-Mass-Momentum-and-Rotation",
+  "shell": true,
+  "formal": true,
+  "welcome": true,
+  "bytes": 196781,
+  "family": {
+   "play": "text",
+   "static": false,
+   "three": false,
+   "scene_fn": false,
+   "no_seesim_possible": false,
+   "live_controls": 2
+  }
+ },
+ {
+  "slug": "C072",
+  "file": "C072-toppling-vs-sliding-combined-equilibrium",
+  "module": "Module-04-Centre-of-Mass-Momentum-and-Rotation",
+  "shell": true,
+  "formal": true,
+  "welcome": true,
+  "bytes": 188943,
+  "family": {
+   "play": "text",
+   "static": false,
+   "three": false,
+   "scene_fn": false,
+   "no_seesim_possible": false,
+   "live_controls": 3
+  }
+ },
+ {
+  "slug": "cm-conical-pendulum",
+  "file": "cm-conical-pendulum",
+  "module": "Module-04-Centre-of-Mass-Momentum-and-Rotation",
+  "shell": true,
+  "formal": true,
+  "welcome": true,
+  "bytes": 1747059,
+  "family": {
+   "play": "text",
+   "static": false,
+   "three": false,
+   "scene_fn": false,
+   "no_seesim_possible": false,
+   "live_controls": 4
+  }
+ },
+ {
+  "slug": "cm-slide-or-topple",
+  "file": "cm-slide-or-topple",
+  "module": "Module-04-Centre-of-Mass-Momentum-and-Rotation",
+  "shell": true,
+  "formal": true,
+  "welcome": true,
+  "bytes": 1027773,
+  "family": {
+   "play": "text",
+   "static": false,
+   "three": false,
+   "scene_fn": false,
+   "no_seesim_possible": false,
+   "live_controls": 4
+  }
+ },
+ {
+  "slug": "cm-wheel-step",
+  "file": "cm-wheel-step",
+  "module": "Module-04-Centre-of-Mass-Momentum-and-Rotation",
+  "shell": true,
+  "formal": true,
+  "welcome": true,
+  "bytes": 1225341,
+  "family": {
+   "play": "text",
+   "static": false,
+   "three": false,
+   "scene_fn": false,
+   "no_seesim_possible": false,
+   "live_controls": 3
+  }
+ },
+ {
+  "slug": "extinguishers",
+  "file": "extinguishers-slide-them-and-watch-the-equation-not-move.v2",
+  "module": "Module-04-Centre-of-Mass-Momentum-and-Rotation",
+  "shell": true,
+  "formal": true,
+  "welcome": true,
+  "bytes": 685752,
+  "family": {
+   "play": "none",
+   "static": true,
+   "three": false,
+   "scene_fn": false,
+   "no_seesim_possible": false,
+   "live_controls": 3
+  }
+ },
+ {
+  "slug": "C077",
+  "file": "C077-escape-velocity",
+  "module": "Module-05-Gravitation",
+  "shell": true,
+  "formal": true,
+  "welcome": true,
+  "bytes": 214957,
+  "family": {
+   "play": "text",
+   "static": false,
+   "three": false,
+   "scene_fn": false,
+   "no_seesim_possible": false,
+   "live_controls": 3
+  }
+ },
+ {
+  "slug": "C078",
+  "file": "C078-orbital-velocity-and-satellite-time-period",
+  "module": "Module-05-Gravitation",
+  "shell": true,
+  "formal": true,
+  "welcome": true,
+  "bytes": 212331,
+  "family": {
+   "play": "text",
+   "static": false,
+   "three": false,
+   "scene_fn": false,
+   "no_seesim_possible": false,
+   "live_controls": 2
+  }
+ },
+ {
+  "slug": "C079",
+  "file": "C079-geostationary-and-polar-satellites",
+  "module": "Module-05-Gravitation",
+  "shell": true,
+  "formal": true,
+  "welcome": true,
+  "bytes": 233693,
+  "family": {
+   "play": "text",
+   "static": false,
+   "three": false,
+   "scene_fn": false,
+   "no_seesim_possible": false,
+   "live_controls": 3
+  }
+ },
+ {
+  "slug": "C080-keplers-three-laws--solar-system",
+  "file": "C080-keplers-three-laws--solar-system",
+  "module": "Module-05-Gravitation",
+  "shell": true,
+  "formal": true,
+  "welcome": true,
+  "bytes": 374916,
+  "family": {
+   "play": "text",
+   "static": false,
+   "three": true,
+   "scene_fn": false,
+   "no_seesim_possible": false,
+   "live_controls": 0
+  }
+ },
+ {
+  "slug": "C080",
+  "file": "C080-keplers-three-laws",
+  "module": "Module-05-Gravitation",
+  "shell": true,
+  "formal": true,
+  "welcome": true,
+  "bytes": 380067,
+  "family": {
+   "play": "text",
+   "static": false,
+   "three": false,
+   "scene_fn": false,
+   "no_seesim_possible": false,
+   "live_controls": 1
+  }
+ },
+ {
+  "slug": "C081",
+  "file": "C081-energy-of-a-satellite-and-binding-energy",
+  "module": "Module-05-Gravitation",
+  "shell": true,
+  "formal": true,
+  "welcome": true,
+  "bytes": 374916,
+  "family": {
+   "play": "text",
+   "static": false,
+   "three": false,
+   "scene_fn": false,
+   "no_seesim_possible": false,
+   "live_controls": 1
+  }
+ },
+ {
+  "slug": "C088",
+  "file": "C088-buoyancy-and-archimedes-principle",
+  "module": "Module-06-Properties-of-Matter-and-Thermal",
+  "shell": true,
+  "formal": true,
+  "welcome": true,
+  "bytes": 175898,
+  "family": {
+   "play": "text",
+   "static": false,
+   "three": false,
+   "scene_fn": false,
+   "no_seesim_possible": false,
+   "live_controls": 3
+  }
+ },
+ {
+  "slug": "C090",
+  "file": "C090-equation-of-continuity",
+  "module": "Module-06-Properties-of-Matter-and-Thermal",
+  "shell": true,
+  "formal": true,
+  "welcome": true,
+  "bytes": 174642,
+  "family": {
+   "play": "text",
+   "static": false,
+   "three": false,
+   "scene_fn": false,
+   "no_seesim_possible": false,
+   "live_controls": 2
+  }
+ },
+ {
+  "slug": "C092",
+  "file": "C092-viscosity-stokes-law-and-terminal-velocity--raindrop-in-air",
+  "module": "Module-06-Properties-of-Matter-and-Thermal",
+  "shell": true,
+  "formal": true,
+  "welcome": true,
+  "bytes": 458153,
+  "family": {
+   "play": "text",
+   "static": false,
+   "three": false,
+   "scene_fn": false,
+   "no_seesim_possible": false,
+   "live_controls": 2
+  }
+ },
+ {
+  "slug": "C097",
+  "file": "C097-thermal-expansion-linear-areal-volumetric",
+  "module": "Module-06-Properties-of-Matter-and-Thermal",
+  "shell": true,
+  "formal": true,
+  "welcome": true,
+  "bytes": 202355,
+  "family": {
+   "play": "none",
+   "static": true,
+   "three": false,
+   "scene_fn": false,
+   "no_seesim_possible": false,
+   "live_controls": 3
+  }
+ },
+ {
+  "slug": "C099",
+  "file": "C099-latent-heat-and-change-of-state",
+  "module": "Module-06-Properties-of-Matter-and-Thermal",
+  "shell": true,
+  "formal": true,
+  "welcome": true,
+  "bytes": 203937,
+  "family": {
+   "play": "text",
+   "static": false,
+   "three": false,
+   "scene_fn": false,
+   "no_seesim_possible": false,
+   "live_controls": 2
+  }
+ },
+ {
+  "slug": "C100",
+  "file": "C100-heat-conduction-steady-state-thermal-resistance",
+  "module": "Module-06-Properties-of-Matter-and-Thermal",
+  "shell": true,
+  "formal": true,
+  "welcome": true,
+  "bytes": 196413,
+  "family": {
+   "play": "none",
+   "static": true,
+   "three": false,
+   "scene_fn": false,
+   "no_seesim_possible": false,
+   "live_controls": 3
+  }
+ },
+ {
+  "slug": "C103",
+  "file": "C103-black-body-radiation-stefan-boltzmann-and-wiens-law",
+  "module": "Module-06-Properties-of-Matter-and-Thermal",
+  "shell": true,
+  "formal": true,
+  "welcome": true,
+  "bytes": 205463,
+  "family": {
+   "play": "none",
+   "static": true,
+   "three": false,
+   "scene_fn": false,
+   "no_seesim_possible": false,
+   "live_controls": 2
+  }
+ },
+ {
+  "slug": "C104",
+  "file": "C104-ideal-gas-equation-and-the-gas-laws",
+  "module": "Module-07-Kinetic-Theory-and-Thermodynamics",
+  "shell": true,
+  "formal": true,
+  "welcome": true,
+  "bytes": 384560,
+  "family": {
+   "play": "text",
+   "static": false,
+   "three": false,
+   "scene_fn": false,
+   "no_seesim_possible": false,
+   "live_controls": 6
+  }
+ },
+ {
+  "slug": "C106",
+  "file": "C106-rms-average-and-most-probable-speeds",
+  "module": "Module-07-Kinetic-Theory-and-Thermodynamics",
+  "shell": true,
+  "formal": true,
+  "welcome": true,
+  "bytes": 170374,
+  "family": {
+   "play": "text",
+   "static": false,
+   "three": false,
+   "scene_fn": false,
+   "no_seesim_possible": false,
+   "live_controls": 2
+  }
+ },
+ {
+  "slug": "C108",
+  "file": "C108-degrees-of-freedom-and-equipartition-of-energy",
+  "module": "Module-07-Kinetic-Theory-and-Thermodynamics",
+  "shell": true,
+  "formal": true,
+  "welcome": true,
+  "bytes": 176452,
+  "family": {
+   "play": "text",
+   "static": false,
+   "three": false,
+   "scene_fn": false,
+   "no_seesim_possible": false,
+   "live_controls": 1
+  }
+ },
+ {
+  "slug": "C113",
+  "file": "C113-thermodynamic-processes-isothermal-adiabatic-isobaric-isochoric",
+  "module": "Module-07-Kinetic-Theory-and-Thermodynamics",
+  "shell": true,
+  "formal": true,
+  "welcome": true,
+  "bytes": 194225,
+  "family": {
+   "play": "text",
+   "static": false,
+   "three": false,
+   "scene_fn": false,
+   "no_seesim_possible": false,
+   "live_controls": 1
+  }
+ },
+ {
+  "slug": "C118",
+  "file": "C118-the-carnot-cycle",
+  "module": "Module-07-Kinetic-Theory-and-Thermodynamics",
+  "shell": true,
+  "formal": true,
+  "welcome": true,
+  "bytes": 184375,
+  "family": {
+   "play": "text",
+   "static": false,
+   "three": false,
+   "scene_fn": false,
+   "no_seesim_possible": false,
+   "live_controls": 2
+  }
+ },
+ {
+  "slug": "C120",
+  "file": "C120-shm-defining-relation-and-phasor-picture",
+  "module": "Module-08-Oscillations-and-Waves",
+  "shell": true,
+  "formal": true,
+  "welcome": true,
+  "bytes": 380303,
+  "family": {
+   "play": "text",
+   "static": false,
+   "three": false,
+   "scene_fn": true,
+   "no_seesim_possible": false,
+   "live_controls": 6
+  }
+ },
+ {
+  "slug": "C123",
+  "file": "C123-spring-block-systems-series-and-parallel-springs",
+  "module": "Module-08-Oscillations-and-Waves",
+  "shell": true,
+  "formal": true,
+  "welcome": true,
+  "bytes": 198002,
+  "family": {
+   "play": "text",
+   "static": false,
+   "three": false,
+   "scene_fn": false,
+   "no_seesim_possible": false,
+   "live_controls": 2
+  }
+ },
+ {
+  "slug": "C124",
+  "file": "C124-the-simple-pendulum",
+  "module": "Module-08-Oscillations-and-Waves",
+  "shell": true,
+  "formal": true,
+  "welcome": true,
+  "bytes": 381352,
+  "family": {
+   "play": "text",
+   "static": false,
+   "three": false,
+   "scene_fn": true,
+   "no_seesim_possible": false,
+   "live_controls": 3
+  }
+ },
+ {
+  "slug": "C126",
+  "file": "C126-damped-oscillations--three-regimes",
+  "module": "Module-08-Oscillations-and-Waves",
+  "shell": true,
+  "formal": true,
+  "welcome": true,
+  "bytes": 376856,
+  "family": {
+   "play": "text",
+   "static": false,
+   "three": false,
+   "scene_fn": true,
+   "no_seesim_possible": false,
+   "live_controls": 1
+  }
+ },
+ {
+  "slug": "C127",
+  "file": "C127-forced-oscillations-and-resonance",
+  "module": "Module-08-Oscillations-and-Waves",
+  "shell": true,
+  "formal": true,
+  "welcome": true,
+  "bytes": 214733,
+  "family": {
+   "play": "text",
+   "static": false,
+   "three": false,
+   "scene_fn": false,
+   "no_seesim_possible": false,
+   "live_controls": 3
+  }
+ },
+ {
+  "slug": "C132",
+  "file": "C132-principle-of-superposition",
+  "module": "Module-08-Oscillations-and-Waves",
+  "shell": true,
+  "formal": true,
+  "welcome": true,
+  "bytes": 186858,
+  "family": {
+   "play": "text",
+   "static": false,
+   "three": false,
+   "scene_fn": false,
+   "no_seesim_possible": false,
+   "live_controls": 3
+  }
+ },
+ {
+  "slug": "C134",
+  "file": "C134-standing-waves-on-strings-and-harmonics",
+  "module": "Module-08-Oscillations-and-Waves",
+  "shell": true,
+  "formal": true,
+  "welcome": true,
+  "bytes": 180432,
+  "family": {
+   "play": "text",
+   "static": false,
+   "three": false,
+   "scene_fn": false,
+   "no_seesim_possible": false,
+   "live_controls": 3
+  }
+ },
+ {
+  "slug": "C135",
+  "file": "C135-standing-waves-in-air-columns-open-and-closed-pipes",
+  "module": "Module-08-Oscillations-and-Waves",
+  "shell": true,
+  "formal": true,
+  "welcome": true,
+  "bytes": 183504,
+  "family": {
+   "play": "text",
+   "static": false,
+   "three": false,
+   "scene_fn": false,
+   "no_seesim_possible": false,
+   "live_controls": 2
+  }
+ },
+ {
+  "slug": "C136",
+  "file": "C136-beats",
+  "module": "Module-08-Oscillations-and-Waves",
+  "shell": true,
+  "formal": true,
+  "welcome": true,
+  "bytes": 177655,
+  "family": {
+   "play": "text",
+   "static": false,
+   "three": false,
+   "scene_fn": false,
+   "no_seesim_possible": false,
+   "live_controls": 2
+  }
+ },
+ {
+  "slug": "C137",
+  "file": "C137-the-doppler-effect-sound",
+  "module": "Module-08-Oscillations-and-Waves",
+  "shell": true,
+  "formal": true,
+  "welcome": true,
+  "bytes": 178525,
+  "family": {
+   "play": "text",
+   "static": false,
+   "three": false,
+   "scene_fn": false,
+   "no_seesim_possible": false,
+   "live_controls": 3
+  }
+ },
+ {
+  "slug": "C139",
+  "file": "C139-electric-charge-quantisation-and-coulombs-law",
+  "module": "Module-09-Electrostatics",
+  "shell": true,
+  "formal": true,
+  "welcome": true,
+  "bytes": 369288,
+  "family": {
+   "play": "none",
+   "static": true,
+   "three": false,
+   "scene_fn": false,
+   "no_seesim_possible": false,
+   "live_controls": 5
+  }
+ },
+ {
+  "slug": "C140",
+  "file": "C140-electric-field-and-field-lines",
+  "module": "Module-09-Electrostatics",
+  "shell": true,
+  "formal": true,
+  "welcome": true,
+  "bytes": 197323,
+  "family": {
+   "play": "none",
+   "static": true,
+   "three": false,
+   "scene_fn": false,
+   "no_seesim_possible": false,
+   "live_controls": 2
+  }
+ },
+ {
+  "slug": "C142",
+  "file": "C142-electric-dipole-and-its-field",
+  "module": "Module-09-Electrostatics",
+  "shell": true,
+  "formal": true,
+  "welcome": true,
+  "bytes": 184706,
+  "family": {
+   "play": "none",
+   "static": true,
+   "three": false,
+   "scene_fn": false,
+   "no_seesim_possible": false,
+   "live_controls": 3
+  }
+ },
+ {
+  "slug": "C143",
+  "file": "C143-dipole-in-a-uniform-field-torque-and-energy",
+  "module": "Module-09-Electrostatics",
+  "shell": true,
+  "formal": true,
+  "welcome": true,
+  "bytes": 192844,
+  "family": {
+   "play": "text",
+   "static": false,
+   "three": false,
+   "scene_fn": false,
+   "no_seesim_possible": false,
+   "live_controls": 3
+  }
+ },
+ {
+  "slug": "C144",
+  "file": "C144-electric-flux-and-gausss-law",
+  "module": "Module-09-Electrostatics",
+  "shell": true,
+  "formal": true,
+  "welcome": true,
+  "bytes": 173782,
+  "family": {
+   "play": "none",
+   "static": true,
+   "three": false,
+   "scene_fn": false,
+   "no_seesim_possible": false,
+   "live_controls": 3
+  }
+ },
+ {
+  "slug": "C148",
+  "file": "C148-relation-between-field-and-potential-gradient",
+  "module": "Module-09-Electrostatics",
+  "shell": true,
+  "formal": true,
+  "welcome": true,
+  "bytes": 205033,
+  "family": {
+   "play": "none",
+   "static": true,
+   "three": false,
+   "scene_fn": false,
+   "no_seesim_possible": false,
+   "live_controls": 2
+  }
+ },
+ {
+  "slug": "C149",
+  "file": "C149-equipotential-surfaces",
+  "module": "Module-09-Electrostatics",
+  "shell": true,
+  "formal": true,
+  "welcome": true,
+  "bytes": 211731,
+  "family": {
+   "play": "none",
+   "static": true,
+   "three": false,
+   "scene_fn": false,
+   "no_seesim_possible": false,
+   "live_controls": 3
+  }
+ },
+ {
+  "slug": "C152",
+  "file": "C152-capacitors-in-series-and-parallel",
+  "module": "Module-09-Electrostatics",
+  "shell": true,
+  "formal": true,
+  "welcome": true,
+  "bytes": 205745,
+  "family": {
+   "play": "text",
+   "static": false,
+   "three": false,
+   "scene_fn": false,
+   "no_seesim_possible": false,
+   "live_controls": 3
+  }
+ },
+ {
+  "slug": "C154",
+  "file": "C154-dielectrics-polarisation-and-capacitance-change",
+  "module": "Module-09-Electrostatics",
+  "shell": true,
+  "formal": true,
+  "welcome": true,
+  "bytes": 197565,
+  "family": {
+   "play": "none",
+   "static": true,
+   "three": false,
+   "scene_fn": false,
+   "no_seesim_possible": false,
+   "live_controls": 2
+  }
+ },
+ {
+  "slug": "C156",
+  "file": "C156-electric-current-drift-velocity-and-mobility",
+  "module": "Module-10-Current-Electricity",
+  "shell": true,
+  "formal": true,
+  "welcome": true,
+  "bytes": 202291,
+  "family": {
+   "play": "text",
+   "static": false,
+   "three": false,
+   "scene_fn": false,
+   "no_seesim_possible": false,
+   "live_controls": 2
+  }
+ },
+ {
+  "slug": "C157",
+  "file": "C157-ohms-law-and-resistance",
+  "module": "Module-10-Current-Electricity",
+  "shell": true,
+  "formal": true,
+  "welcome": true,
+  "bytes": 364769,
+  "family": {
+   "play": "text",
+   "static": false,
+   "three": false,
+   "scene_fn": false,
+   "no_seesim_possible": false,
+   "live_controls": 4
+  }
+ },
+ {
+  "slug": "C159",
+  "file": "C159-resistors-in-series-and-parallel",
+  "module": "Module-10-Current-Electricity",
+  "shell": true,
+  "formal": true,
+  "welcome": true,
+  "bytes": 203476,
+  "family": {
+   "play": "text",
+   "static": false,
+   "three": false,
+   "scene_fn": false,
+   "no_seesim_possible": false,
+   "live_controls": 3
+  }
+ },
+ {
+  "slug": "C160",
+  "file": "C160-emf-internal-resistance-and-terminal-voltage",
+  "module": "Module-10-Current-Electricity",
+  "shell": true,
+  "formal": true,
+  "welcome": true,
+  "bytes": 444019,
+  "family": {
+   "play": "text",
+   "static": false,
+   "three": false,
+   "scene_fn": false,
+   "no_seesim_possible": false,
+   "live_controls": 3
+  }
+ },
+ {
+  "slug": "C161-kirchhoffs-laws-schematic",
+  "file": "C161-kirchhoffs-laws-schematic",
+  "module": "Module-10-Current-Electricity",
+  "shell": false,
+  "formal": false,
+  "welcome": true,
+  "bytes": 312535
+ },
+ {
+  "slug": "C161",
+  "file": "C161-kirchhoffs-laws",
+  "module": "Module-10-Current-Electricity",
+  "shell": false,
+  "formal": false,
+  "welcome": true,
+  "bytes": 276968
+ },
+ {
+  "slug": "C166",
+  "file": "C166-rc-circuits-charging-and-discharging",
+  "module": "Module-10-Current-Electricity",
+  "shell": true,
+  "formal": true,
+  "welcome": true,
+  "bytes": 200075,
+  "family": {
+   "play": "text",
+   "static": false,
+   "three": false,
+   "scene_fn": false,
+   "no_seesim_possible": false,
+   "live_controls": 2
+  }
+ },
+ {
+  "slug": "C169",
+  "file": "C169-charged-particle-in-a-magnetic-field-circular-and-helical",
+  "module": "Module-11-Magnetic-Effects-and-Magnetism",
+  "shell": true,
+  "formal": true,
+  "welcome": true,
+  "bytes": 208271,
+  "family": {
+   "play": "text",
+   "static": false,
+   "three": false,
+   "scene_fn": false,
+   "no_seesim_possible": false,
+   "live_controls": 2
+  }
+ },
+ {
+  "slug": "C170",
+  "file": "C170-the-cyclotron",
+  "module": "Module-11-Magnetic-Effects-and-Magnetism",
+  "shell": true,
+  "formal": true,
+  "welcome": true,
+  "bytes": 211147,
+  "family": {
+   "play": "text",
+   "static": false,
+   "three": false,
+   "scene_fn": false,
+   "no_seesim_possible": false,
+   "live_controls": 3
+  }
+ },
+ {
+  "slug": "C171",
+  "file": "C171-force-on-a-current-carrying-conductor",
+  "module": "Module-11-Magnetic-Effects-and-Magnetism",
+  "shell": true,
+  "formal": true,
+  "welcome": true,
+  "bytes": 182110,
+  "family": {
+   "play": "none",
+   "static": true,
+   "three": false,
+   "scene_fn": false,
+   "no_seesim_possible": false,
+   "live_controls": 3
+  }
+ },
+ {
+  "slug": "C173",
+  "file": "C173-torque-on-a-current-loop-magnetic-moment",
+  "module": "Module-11-Magnetic-Effects-and-Magnetism",
+  "shell": true,
+  "formal": true,
+  "welcome": true,
+  "bytes": 187600,
+  "family": {
+   "play": "text",
+   "static": false,
+   "three": false,
+   "scene_fn": false,
+   "no_seesim_possible": false,
+   "live_controls": 3
+  }
+ },
+ {
+  "slug": "C175",
+  "file": "C175-field-due-to-a-straight-wire-and-a-circular-loop",
+  "module": "Module-11-Magnetic-Effects-and-Magnetism",
+  "shell": true,
+  "formal": true,
+  "welcome": true,
+  "bytes": 187798,
+  "family": {
+   "play": "none",
+   "static": true,
+   "three": false,
+   "scene_fn": false,
+   "no_seesim_possible": false,
+   "live_controls": 3
+  }
+ },
+ {
+  "slug": "C183",
+  "file": "C183-magnetic-flux-and-faradays-law",
+  "module": "Module-12-EMI-AC-and-EM-Waves",
+  "shell": true,
+  "formal": true,
+  "welcome": true,
+  "bytes": 371965,
+  "family": {
+   "play": "text",
+   "static": false,
+   "three": false,
+   "scene_fn": false,
+   "no_seesim_possible": false,
+   "live_controls": 6
+  }
+ },
+ {
+  "slug": "C185",
+  "file": "C185-motional-emf",
+  "module": "Module-12-EMI-AC-and-EM-Waves",
+  "shell": true,
+  "formal": true,
+  "welcome": true,
+  "bytes": 191824,
+  "family": {
+   "play": "text",
+   "static": false,
+   "three": false,
+   "scene_fn": false,
+   "no_seesim_possible": false,
+   "live_controls": 3
+  }
+ },
+ {
+  "slug": "C190",
+  "file": "C190-growth-and-decay-of-current-in-an-lr-circuit",
+  "module": "Module-12-EMI-AC-and-EM-Waves",
+  "shell": true,
+  "formal": true,
+  "welcome": true,
+  "bytes": 216423,
+  "family": {
+   "play": "text",
+   "static": false,
+   "three": false,
+   "scene_fn": false,
+   "no_seesim_possible": false,
+   "live_controls": 2
+  }
+ },
+ {
+  "slug": "C192",
+  "file": "C192-ac-through-r-l-and-c-separately",
+  "module": "Module-12-EMI-AC-and-EM-Waves",
+  "shell": true,
+  "formal": true,
+  "welcome": true,
+  "bytes": 209923,
+  "family": {
+   "play": "text",
+   "static": false,
+   "three": false,
+   "scene_fn": false,
+   "no_seesim_possible": false,
+   "live_controls": 2
+  }
+ },
+ {
+  "slug": "C193",
+  "file": "C193-series-lcr-circuit-and-impedance",
+  "module": "Module-12-EMI-AC-and-EM-Waves",
+  "shell": true,
+  "formal": true,
+  "welcome": true,
+  "bytes": 232873,
+  "family": {
+   "play": "text",
+   "static": false,
+   "three": false,
+   "scene_fn": false,
+   "no_seesim_possible": false,
+   "live_controls": 3
+  }
+ },
+ {
+  "slug": "C194",
+  "file": "C194-resonance-in-a-series-lcr-circuit",
+  "module": "Module-12-EMI-AC-and-EM-Waves",
+  "shell": true,
+  "formal": true,
+  "welcome": true,
+  "bytes": 208314,
+  "family": {
+   "play": "text",
+   "static": false,
+   "three": false,
+   "scene_fn": false,
+   "no_seesim_possible": false,
+   "live_controls": 2
+  }
+ },
+ {
+  "slug": "C197",
+  "file": "C197-lc-oscillations",
+  "module": "Module-12-EMI-AC-and-EM-Waves",
+  "shell": true,
+  "formal": true,
+  "welcome": true,
+  "bytes": 209926,
+  "family": {
+   "play": "text",
+   "static": false,
+   "three": false,
+   "scene_fn": false,
+   "no_seesim_possible": false,
+   "live_controls": 3
+  }
+ },
+ {
+  "slug": "C198",
+  "file": "C198-displacement-current",
+  "module": "Module-12-EMI-AC-and-EM-Waves",
+  "shell": true,
+  "formal": true,
+  "welcome": true,
+  "bytes": 212629,
+  "family": {
+   "play": "text",
+   "static": false,
+   "three": false,
+   "scene_fn": false,
+   "no_seesim_possible": false,
+   "live_controls": 1
+  }
+ },
+ {
+  "slug": "C199",
+  "file": "C199-electromagnetic-waves-nature-and-properties",
+  "module": "Module-12-EMI-AC-and-EM-Waves",
+  "shell": true,
+  "formal": true,
+  "welcome": true,
+  "bytes": 200012,
+  "family": {
+   "play": "text",
+   "static": false,
+   "three": false,
+   "scene_fn": false,
+   "no_seesim_possible": false,
+   "live_controls": 2
+  }
+ },
+ {
+  "slug": "C202",
+  "file": "C202-spherical-mirrors-and-the-mirror-formula",
+  "module": "Module-13-Optics",
+  "shell": true,
+  "formal": true,
+  "welcome": true,
+  "bytes": 187378,
+  "family": {
+   "play": "none",
+   "static": true,
+   "three": false,
+   "scene_fn": false,
+   "no_seesim_possible": false,
+   "live_controls": 2
+  }
+ },
+ {
+  "slug": "C203",
+  "file": "C203-refraction-and-snells-law",
+  "module": "Module-13-Optics",
+  "shell": true,
+  "formal": true,
+  "welcome": true,
+  "bytes": 192046,
+  "family": {
+   "play": "text",
+   "static": false,
+   "three": false,
+   "scene_fn": false,
+   "no_seesim_possible": false,
+   "live_controls": 3
+  }
+ },
+ {
+  "slug": "C204",
+  "file": "C204-total-internal-reflection-and-applications",
+  "module": "Module-13-Optics",
+  "shell": true,
+  "formal": true,
+  "welcome": true,
+  "bytes": 408293,
+  "family": {
+   "play": "none",
+   "static": true,
+   "three": false,
+   "scene_fn": false,
+   "no_seesim_possible": false,
+   "live_controls": 3
+  }
+ },
+ {
+  "slug": "C206",
+  "file": "C206-thin-lens-formula-and-lensmakers-equation",
+  "module": "Module-13-Optics",
+  "shell": true,
+  "formal": true,
+  "welcome": true,
+  "bytes": 184719,
+  "family": {
+   "play": "none",
+   "static": true,
+   "three": false,
+   "scene_fn": false,
+   "no_seesim_possible": false,
+   "live_controls": 3
+  }
+ },
+ {
+  "slug": "C208",
+  "file": "C208-prism-deviation-and-dispersion",
+  "module": "Module-13-Optics",
+  "shell": true,
+  "formal": true,
+  "welcome": true,
+  "bytes": 186057,
+  "family": {
+   "play": "text",
+   "static": false,
+   "three": false,
+   "scene_fn": false,
+   "no_seesim_possible": false,
+   "live_controls": 2
+  }
+ },
+ {
+  "slug": "C209",
+  "file": "C209-the-compound-microscope",
+  "module": "Module-13-Optics",
+  "shell": true,
+  "formal": true,
+  "welcome": true,
+  "bytes": 198156,
+  "family": {
+   "play": "none",
+   "static": true,
+   "three": false,
+   "scene_fn": false,
+   "no_seesim_possible": false,
+   "live_controls": 4
+  }
+ },
+ {
+  "slug": "C210",
+  "file": "C210-the-astronomical-and-terrestrial-telescope",
+  "module": "Module-13-Optics",
+  "shell": true,
+  "formal": true,
+  "welcome": true,
+  "bytes": 210834,
+  "family": {
+   "play": "none",
+   "static": true,
+   "three": false,
+   "scene_fn": false,
+   "no_seesim_possible": false,
+   "live_controls": 3
+  }
+ },
+ {
+  "slug": "C213",
+  "file": "C213-interference-and-youngs-double-slit-experiment",
+  "module": "Module-13-Optics",
+  "shell": false,
+  "formal": false,
+  "welcome": true,
+  "bytes": 199244
+ },
+ {
+  "slug": "C215",
+  "file": "C215-single-slit-diffraction",
+  "module": "Module-13-Optics",
+  "shell": true,
+  "formal": true,
+  "welcome": true,
+  "bytes": 198266,
+  "family": {
+   "play": "none",
+   "static": true,
+   "three": false,
+   "scene_fn": false,
+   "no_seesim_possible": false,
+   "live_controls": 2
+  }
+ },
+ {
+  "slug": "C216",
+  "file": "C216-resolving-power-of-instruments",
+  "module": "Module-13-Optics",
+  "shell": true,
+  "formal": true,
+  "welcome": true,
+  "bytes": 197609,
+  "family": {
+   "play": "none",
+   "static": true,
+   "three": false,
+   "scene_fn": false,
+   "no_seesim_possible": false,
+   "live_controls": 3
+  }
+ },
+ {
+  "slug": "C217",
+  "file": "C217-polarisation-and-maluss-law",
+  "module": "Module-13-Optics",
+  "shell": true,
+  "formal": true,
+  "welcome": true,
+  "bytes": 425594,
+  "family": {
+   "play": "text",
+   "static": false,
+   "three": false,
+   "scene_fn": false,
+   "no_seesim_possible": false,
+   "live_controls": 5
+  }
+ },
+ {
+  "slug": "C219",
+  "file": "C219-the-photoelectric-effect-observations",
+  "module": "Module-14-Modern-Physics",
+  "shell": true,
+  "formal": true,
+  "welcome": true,
+  "bytes": 167525,
+  "family": {
+   "play": "text",
+   "static": false,
+   "three": false,
+   "scene_fn": false,
+   "no_seesim_possible": false,
+   "live_controls": 3
+  }
+ },
+ {
+  "slug": "C222",
+  "file": "C222-de-broglie-waves-and-the-davisson-germer-experiment",
+  "module": "Module-14-Modern-Physics",
+  "shell": true,
+  "formal": true,
+  "welcome": true,
+  "bytes": 188219,
+  "family": {
+   "play": "none",
+   "static": true,
+   "three": false,
+   "scene_fn": false,
+   "no_seesim_possible": false,
+   "live_controls": 3
+  }
+ },
+ {
+  "slug": "C223",
+  "file": "C223-rutherfords-model-and-alpha-particle-scattering",
+  "module": "Module-14-Modern-Physics",
+  "shell": true,
+  "formal": true,
+  "welcome": true,
+  "bytes": 427989,
+  "family": {
+   "play": "text",
+   "static": false,
+   "three": false,
+   "scene_fn": false,
+   "no_seesim_possible": false,
+   "live_controls": 3
+  }
+ },
+ {
+  "slug": "C224",
+  "file": "C224-bohrs-model-of-the-hydrogen-atom",
+  "module": "Module-14-Modern-Physics",
+  "shell": true,
+  "formal": true,
+  "welcome": true,
+  "bytes": 188422,
+  "family": {
+   "play": "none",
+   "static": true,
+   "three": false,
+   "scene_fn": false,
+   "no_seesim_possible": false,
+   "live_controls": 2
+  }
+ },
+ {
+  "slug": "C225-energy-levels-and-the-hydrogen-spectral-series--emission-and-absorption",
+  "file": "C225-energy-levels-and-the-hydrogen-spectral-series--emission-and-absorption",
+  "module": "Module-14-Modern-Physics",
+  "shell": false,
+  "formal": false,
+  "welcome": true,
+  "bytes": 165142
+ },
+ {
+  "slug": "C225",
+  "file": "C225-energy-levels-and-the-hydrogen-spectral-series",
+  "module": "Module-14-Modern-Physics",
+  "shell": true,
+  "formal": true,
+  "welcome": true,
+  "bytes": 186891,
+  "family": {
+   "play": "none",
+   "static": true,
+   "three": false,
+   "scene_fn": false,
+   "no_seesim_possible": false,
+   "live_controls": 2
+  }
+ },
+ {
+  "slug": "C230",
+  "file": "C230-radioactive-decay-law-and-half-life",
+  "module": "Module-14-Modern-Physics",
+  "shell": true,
+  "formal": true,
+  "welcome": true,
+  "bytes": 187295,
+  "family": {
+   "play": "text",
+   "static": false,
+   "three": false,
+   "scene_fn": false,
+   "no_seesim_possible": false,
+   "live_controls": 2
+  }
+ }
+]

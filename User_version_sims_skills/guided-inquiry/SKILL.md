@@ -5,6 +5,8 @@ description: Restructure, refine, or add a Guided Inquiry card zone (a FRAME car
 
 # Guided Inquiry for Simulation Pages
 
+> **Look:** on a finished user-version sim, the colours and type of this part come from the shared stylesheet. Run `../ui-stylesheet/SKILL.md` and then `../mobile-app-mode/SKILL.md` as the last steps. Don't restyle chrome colours here; change the stylesheet (`design-system/fermi-sim-css/`).
+
 Restructure or add the Guided Inquiry zone of an L-series shell sim to the
 SME card grammar. **The canonical exemplar set is
 `references/golden-flows.md`** — ten flows written by the senior physics
@@ -24,7 +26,7 @@ Hard max 6. Never pad to reach a count — the SME's decks run 3–5 cards.
 
 | Type | Job | Hard rules | Budget |
 |---|---|---|---|
-| FRAME | Define the apparatus and its physical quantities, symbolically | Physics first, UI never (the Controls Guide owns UI reading); one situating clause if a sibling sim precedes this one ("…instead of just a single stage"); shown before the spectacle — the boot state must not decide any pending question | ≤3 sentences |
+| FRAME | Define the apparatus and its physical quantities, symbolically | Physics first, UI never (the Simulation guide owns UI reading — its scene tour explains the window, its control steps the controls); one situating clause if a sibling sim precedes this one ("…instead of just a single stage"); shown before the spectacle — the boot state must not decide any pending question | ≤3 sentences |
 | QUESTION | One committed question about ONE observable | `data-gate`d; 3–4 choices; each question changes exactly ONE thing in the apparatus vs the previous card; tests an inference or a representation-reading, never a lookup, never trivia, never a UI operation; stem is neutral — no classifying word that entails the answer; answers concrete and countable where possible ("how many regions are lit?") | stem ≤40 words, choices ≤ ~8 words |
 | INTERSTITIAL | One connective fact between questions | A single declarative sentence that sets up the next question's premise | 1 sentence |
 | OBSERVE-COMPARE | Post-question observation as a comparison task | Asks the student to notice or compare ("How is it different from the critically damped case?"); NEVER states the conclusion; pins the state it assumes | ≤40 words |
@@ -220,9 +222,21 @@ every build from a non-L-series stack, and after any sidebar restructure.
 ## The Guided Inquiry button and the two-button template (validated)
 
 Visibility of the inquiry zone is owned by ONE top-bar button, 🧭 Guided
-Inquiry (boots active). When the sim also gets a Controls Guide (see the
-controls-tutorial skill), the two buttons are mutually exclusive:
-activating one deactivates the other; both off = clean sim.
+Inquiry (boots active). When the sim also gets a Simulation guide (the
+renamed Controls Guide — see the controls-tutorial skill), the two buttons
+are mutually exclusive: activating one deactivates the other; both off =
+clean sim.
+
+**Entry since 2026-10-01 (two-mode landing).** The welcome overlay offers
+only *Simulation guide* and *Free exploration* — there is NO Guided Inquiry
+card on the landing. The inquiry still boots active BEHIND the overlay, but
+either landing choice turns it off (`__setMode('controls'|'free')`); the
+student reaches the inquiry from the 🧭 header button, which resumes it at
+its current card (`__giResume`). So: the 🧭 button must stay visible and
+un-veiled whenever the guide is closed; never assume a student meets card 1
+straight from the landing; and the FRAME card must still work as a cold
+entry from free exploration (state is the post-completion `__freeExplore`
+scene until card 1's `onStep` restages it — make card 1's step self-contained).
 
 - **No Lecture mode, no restore strip.** Delete any 🎓 Lecture button,
   `setLectureMode`, and "▸ Guided inquiry" restore strip. The inquiry's own
@@ -241,14 +255,25 @@ activating one deactivates the other; both off = clean sim.
   current card's state (reveals, pinned selection/mode/view, pause on a
   gate). Progress is intact; the step counter is never reset by hiding.
 - **Reset = first-load** — `window.__fullReset`: inquiry on at card 1
-  (`inqShow(0)`), controls-guide progress cleared, sim defaults restored,
-  paused/playing as on boot. Expose `inqShow`/`step` on the shell object
+  (`inqShow(0)`), guide progress cleared, sim defaults restored,
+  paused/playing as on boot. (Fleet builds since 2026-09-22 make Reset
+  MODE-LOCAL — inquiry → card 1, guide → step 1, free → experiment only;
+  see the reset-mode-local skill.) Expose `inqShow`/`step` on the shell object
   if they're private.
 - **Boot paused when running would spoil a prediction.** If the author's
   sim boots playing and the first PREDICT concerns what the running sim
   shows, the first-load state pauses it; the Orient card says to press
   Play.
-- The Controls Guide, when entered, lifts inquiry reveals
+- **Answer-leak boundary with the Simulation guide.** The guide's scene
+  steps describe the window and must never state a card's answer; give
+  the guide author this deck's answer list. Known leak class to flag (not
+  fix silently): the guide opens on the `__freeExplore` post-completion
+  scene, which can DISPLAY answers (a revealed readout, a finished
+  construction, a spacelike badge) — many fleet sims do (2026-10-01 rollout
+  flags list); and old control
+  steps / the closing "That's every control" card often state answers
+  ("d does not change", "r never budges"). List them in the report.
+- The Simulation guide, when entered, lifts inquiry reveals
   (`window.__cgReveals(99)`) and hands them back on exit. Publish
   `applyStepReveals` as `window.__cgReveals` — it lives in the sim's IIFE
   and is otherwise invisible to the template script (a `typeof` guard
