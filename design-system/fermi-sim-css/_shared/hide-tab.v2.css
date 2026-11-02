@@ -1,0 +1,12 @@
+
+html.sb-collapsed .sb-target{display:none !important;}
+
+#sb-hide-tab{position:fixed;top:50%;right:0;transform:translateY(-50%);z-index:150;
+  display:flex;flex-direction:column;align-items:center;gap:6px;padding:12px 5px;
+  background:#10b981;color:#fff;border:1px solid #059669;border-right:none;border-radius:8px 0 0 8px;
+  box-shadow:-3px 0 12px rgba(0,0,0,.28);cursor:pointer;font:700 11px/1 'DM Sans',system-ui,sans-serif;
+  letter-spacing:.06em;text-transform:uppercase;}
+#sb-hide-tab:hover{background:#059669;}
+#sb-hide-tab:focus-visible{outline:2px solid #fff;outline-offset:-4px;}
+#sb-hide-tab .sb-label{writing-mode:vertical-rl;transform:rotate(180deg);white-space:nowrap;}
+#sb-hide-tab .sb-arrow{font-size:13px;line-height:1;}

@@ -1,4 +1,8 @@
-# Canonical implementation — Controls Guide (overlay) + two-button template
+# Canonical implementation — Simulation guide (overlay; formerly "Controls Guide") + two-button template
+
+User-visible name: **Simulation guide** (2026-10-01). Ids, classes and JS
+identifiers keep their `cg` names. §7 adds the scene tour + spotlight engine
+that every guide now opens with.
 
 Every block below is verbatim from a bundled example:
 `examples/Double-slit-experiment.full-template.html` (standalone sim with its
@@ -73,7 +77,7 @@ adaptation unless the sim uses a third hook.
 ```html
         <div class="guide-actions">
             <button type="button" class="btn-topbar btn-guide active" id="btn-gi" title="Show or hide the guided inquiry">Guided Inquiry</button>
-            <button type="button" class="btn-topbar btn-guide" id="btn-cg" title="Show or hide the controls guide">Controls Guide</button>
+            <button type="button" class="btn-topbar btn-guide" id="btn-cg" title="Show or hide the simulation guide">Simulation guide</button>
         </div>
 ```
 
@@ -202,7 +206,7 @@ Buttons in the header's left cluster (GI boots active):
 
 ```html
       <button id="btn-gi" class="shell-btn active" title="Show or hide the guided inquiry">Guided Inquiry</button>
-      <button id="btn-cg" class="shell-btn" title="Show or hide the controls guide">Controls Guide</button>
+      <button id="btn-cg" class="shell-btn" title="Show or hide the simulation guide">Simulation guide</button>
 ```
 
 Hooks published by the sim script (inside its scope):
@@ -679,12 +683,13 @@ original listeners stay identical):
                     '</div>';
     document.body.appendChild(callout);
     document.body.appendChild(nav);
-    // Voiceover: reads the current step's title + text; forward/rewind stay
-    // card-synced (rewind restarts this step's narration, or steps back from its top).
+    // Voiceover: reads the current step's `say` (spoken prose, symbols in words)
+    // when it has one, else its title + text; forward/rewind stay card-synced
+    // (rewind restarts this step's narration, or steps back from its top).
     // Auto = hands-free tour: each step is narrated, then the guide advances itself.
     if(window.__makeCardVoice){
       cgVoice = window.__makeCardVoice(nav.querySelector('#cg-voice-play'),
-        () => [steps[cgStep].title, steps[cgStep].text],
+        () => steps[cgStep].say ? [steps[cgStep].say] : [steps[cgStep].title, steps[cgStep].text],
         { onCardDone: () => {
             if(!cgAuto) return;
             if(cgStep >= steps.length-1){ setCgAuto(false); return; }   // tour ends on the closing card
@@ -800,3 +805,217 @@ every voice/Auto button, must NOT restart the run or reset parameters.
   (Galperin's didn't) — add `card.setAttribute('data-answered','')` in the
   commit handler as a one-line additive edit, or Auto will wait forever at
   answered gates.
+
+## 7. Scene tour + spotlight engine (approved 2026-10-01; all 116 uni-lab sims)
+
+The guide opens with 4–6 **scene steps** that spotlight regions of the
+simulation window, then continues into the control steps unchanged. Scene
+steps carry `spot:()=>rect` instead of `sel`; the engine draws `#cg-spot`
+(a fixed-position box with the `.cg-glow` pulse) over the rect and aims the
+callout at it. Every block is verbatim from shipped commits — Phase Plane
+`7820a2b` (§3-style controller: `cgSteps`/`cel`/`positionCallout`/`cgShow`)
+and L12-s2 Twin Paradox `971b0e7` + `160c76a` (§4 shell controller:
+`steps`/`el`/`position`/`show`). Translate names consistently for your
+controller; nothing else differs.
+
+### 7.1 CSS — one rule, in the same `<style>` (after the welcome glass block)
+
+```css
+/* ===== Simulation guide: spotlight for canvas regions ===== */
+#cg-spot{position:fixed;z-index:3990;pointer-events:none;display:none;border-radius:10px;}
+```
+(z 3990: under the callout/nav at 4000, over the sim. The glow comes from
+the existing `.cg-glow` rule, toggled on the spot by `placeSpot()`.)
+
+### 7.2 Engine hooks — five edits to the controller
+
+(1) Create the spot with the callout, in `ensureUi()`:
+```js
+    if(!document.getElementById('cg-spot')){ const sp=document.createElement('div'); sp.id='cg-spot'; sp.setAttribute('data-no-reset',''); document.body.appendChild(sp); }
+    callout = document.createElement('div'); callout.className='cg-callout';
+```
+
+(2) `placeSpot()` before the positioning function, called at its top; spot
+steps target the spot:
+```js
+  function placeSpot(){
+    const sp=document.getElementById('cg-spot'); if(!sp) return;
+    const st=cgSteps[cgStep], r=(cgOn&&st&&st.spot)?st.spot():null;
+    sp.classList.toggle('cg-glow', !!r); sp.style.display = r ? 'block' : 'none';
+    if(r){ sp.style.left=r.left+'px'; sp.style.top=r.top+'px'; sp.style.width=r.width+'px'; sp.style.height=r.height+'px'; }
+  }
+  function positionCallout(){
+    if(!cgOn || !callout) return;
+    placeSpot();
+    const st = cgSteps[cgStep], t = st.spot ? document.getElementById('cg-spot') : cel(st.sel), arrow = callout.querySelector('.cg-arrow');
+```
+Shell form (a spot getter may return null — then target nothing, so the
+callout centres with no arrow):
+```js
+    placeSpot();
+    const spEl = document.getElementById('cg-spot');
+    const t = st.spot ? (spEl && spEl.style.display === 'block' ? spEl : null) : el(st.sel);
+```
+
+(3) `inside` placement — between the `if(!t)` branch and the arrow branch:
+```js
+    if(!t){ callout.classList.add('no-arrow'); }
+    else if(st.inside){ const r=t.getBoundingClientRect(); callout.classList.add('no-arrow');
+      const a = typeof st.inside === 'function' ? st.inside(cw, ch) : null;
+      if(a){ x = a.x; y = a.y; }
+      else { x = r.left+r.width/2-cw/2; y = st.inside==='top' ? r.top+18 : r.top+r.height/2-ch/2; } }
+    else{
+```
+`inside:'center'` centres the callout in the region; `'top'` puts it 18px
+below the region's top edge; a function `(cw,ch)=>({x,y})|null` returns an
+empty patch you computed (null falls back to centre). The common clamp to the
+viewport still runs after.
+
+(4) The sel-glow path skips spot steps (in `cgShow`/`show`):
+```js
+    const cur = cgSteps[cgStep].spot ? null : cel(cgSteps[cgStep].sel); if(cur) cur.classList.add('cg-glow');
+```
+Spot steps have no `sel`, so the hide/veil loop leaves every control
+hidden/veiled during the tour (nothing is "introduced" yet) — correct, and
+the spot itself is never given `cg-hidden`/`cg-veiled`.
+
+(5) Hide the spot when the guide closes (in `setCg(false…)`, after hiding
+the callout/nav):
+```js
+      if(callout){ callout.style.display='none'; nav.style.display='none'; }
+      placeSpot();
+```
+
+### 7.3 ResizeObserver — MANDATORY (in `ensureUi()`, after the window listeners)
+
+The sidebar HIDE/OPEN tab (`#sb-hide-tab`) resizes the canvas without a
+window `resize` event. Observe the canvas or stage element the spots are
+measured from (several, if the spots span more than one):
+```js
+    const sc = document.getElementById('scene');
+    if(sc && window.ResizeObserver) new ResizeObserver(()=>{ if(cgOn && cgSteps[cgStep].spot) positionCallout(); }).observe(sc);
+```
+Shell form — re-aim again next frame, once the sim has redrawn at the new size:
+```js
+    { // the sidebar HIDE/OPEN tab resizes the canvas with no window resize: re-aim a spot step (again next frame, once the sim has redrawn)
+      const cgRe = () => { if(cgOn && steps[cgStep].spot){ position(); requestAnimationFrame(() => { if(cgOn && steps[cgStep].spot) position(); }); } };
+      const sc = document.getElementById('mink');
+      if(sc && window.ResizeObserver) new ResizeObserver(cgRe).observe(sc); }
+```
+If the sim refits on a debounced timer (e.g. 80 ms), add a second re-aim
+after that delay.
+
+### 7.4 Geometry — the sim's own, never pixels
+
+Spot rects are built from the canvas's LIVE box plus the sim's own layout:
+plot-area constants (`GEO.x0`, `getPlotArea()`), coordinate mappers, its 3D
+camera, or DOM boxes (legends, readout overlays, `.plot-box`). If those live
+inside the sim's closure, add ONE read-only hook next to the sim's other
+`window.__…` hooks:
+```js
+  /* Simulation guide: read-only diagram geometry so the guide can spotlight
+     canvas regions with the sim's own mappers. Changes nothing. */
+  window.__cgGeo = function(){
+    const s = uniScale(), vxMin = view.xMin - xOffset()/s;
+    return { X, Y, M, xMin:vxMin, xMax:vxMin + plotW()/s, tMin:view.tMin, tMax:view.tMin + plotH()/s,
+             ev:eventsS(), inF:eventInFrame, alice:aliceLine(), bella:bellaLine() };
+  };
+```
+It may only READ existing values/functions — no state writes, no draw
+calls, no timers. Return `null` when the geometry doesn't apply (another
+view mode) so the step degrades to a centred callout. 3D: project the sim's
+own objects through its own camera (`vector.project(camera)`) into the
+canvas box.
+
+### 7.5 Scene steps — the Phase Plane set (verbatim, §3-style controller)
+
+Defined right after the `cgSteps` array, then prepended. (Prepend with
+`cgSteps.unshift(...cgSceneSteps)` or `const steps = [ ...cgSceneSteps,` —
+pick whichever anchor keeps your hunk away from lines other sessions edit.)
+```js
+const cgPlate = () => { const c=document.getElementById('scene'); if(!c||!GEO) return null; const b=c.getBoundingClientRect();
+  return { l:b.left+GEO.x0-4, r:b.left+GEO.x1+4, t:b.top+GEO.uTop-4, b:b.top+GEO.pBot+4, c:b, g:GEO }; };
+const cgRect = (l,t,r,b) => ({ left:l, top:t, width:r-l, height:b-t });
+const cgSceneSteps = [
+  { spot:()=>{ const p=cgPlate(); return p && cgRect(p.l,p.t,p.r,p.b); }, inside:'center', title:'The simulation window',
+    text:'One particle, shown two ways. Both panels share the same x axis, so they always line up.',
+    say:'Before the controls, let’s look at the simulation window itself. It shows one particle in two linked views. Both panels share the same x axis, so anything in the lower panel sits directly under its spot on the curve above.' },
+  { spot:()=>{ const p=cgPlate(); return p && cgRect(p.l,p.t,p.r,p.c.top+p.g.uBot+4); }, title:'Top: the potential U(x)',
+    text:'The energy landscape the particle moves through. Here it’s the double well: two valleys split by a hump.',
+    say:'The top panel is the potential energy, U of x — the landscape the particle moves through. Right now it’s the double well: two valleys, separated by a hump in the middle.' },
+  { spot:()=>{ const p=cgPlate(); return p && cgRect(p.l,p.c.top+p.g.pTop-4,p.r,p.b); }, inside:'top', title:'Bottom: the phase plane',
+    text:'Position x across, momentum p up. A single point here is the particle’s whole state — click to place one.',
+    say:'The bottom panel is the phase plane. Position runs across, momentum runs up. A single point here captures the particle’s entire state — where it is, and how fast it’s moving. Click anywhere in it to place one, and press Play to set it going.' },
+  { spot:()=>{ const p=cgPlate(); return p && cgRect(p.l,p.c.top+p.g.pTop-4,p.r,p.b); }, inside:'top', title:'The faint curves',
+    text:'Each grey curve is a path of constant energy H — a point you place rides along one. The orange one is special: the separatrix.',
+    say:'Those faint grey curves are paths of constant energy, H. A point you place will ride along one of them. The orange curve is a special one, called the separatrix — keep an eye on it.' },
+  { spot:()=>{ const l=document.getElementById('scene-legend'); if(!l) return null; const r=l.getBoundingClientRect(); return r.width ? cgRect(r.left-6,r.top-4,r.right+6,r.bottom+4) : null; }, title:'The colour key',
+    text:'Names every line on the canvas. New entries appear as you place points and switch overlays on.',
+    say:'Finally, the colour key in the corner names every line on the canvas. New entries appear as you place points and switch the overlays on. Now, let’s meet the controls.' }
+];
+cgSteps.unshift(...cgSceneSteps);
+```
+(This guide's `__cgPrepare` switches to the double well on open — that is
+why step 2 may say "Here it's the double well". Write to YOUR guide's
+opening state.)
+
+### 7.6 Scene steps — patterns from the shell controllers
+
+`inside` as a function that parks the callout in an empty corner of the
+diagram, falling back when the window is short (Twin Paradox, verbatim):
+```js
+  const cgG = () => { const c = document.getElementById('cv'), g = window.__cgGeo && window.__cgGeo();
+    if(!c || !g) return null; const b = c.getBoundingClientRect();
+    const px = x => b.left + g.X(x), py = t => b.top + g.Y(t);
+    return { g, b, px, py, L:px(g.xMin), R:px(g.xMax), T:py(g.tMax), B:py(g.tMin) }; };
+  const cgRect = (l,t,r,b) => ({ left:l, top:t, width:r-l, height:b-t });
+  const cgLowRight = (cw,ch) => { const q = cgG(); return q && { x:q.R - cw - 14, y:q.py(0) - ch - 18 }; };
+  // above the reception badge, left of Alice; on a short window there is no room, so use the lower-right
+  const cgUpLeft = (cw,ch) => { const q = cgG(); if(!q) return null; const er = q.g.inF(q.g.ev.ER), y = q.py(er.t) - ch - 34;
+    return y < q.T + 4 ? cgLowRight(cw,ch) : { x:Math.max(q.L + 8, q.px(0) - cw - 34), y }; };
+  // …a step:
+    { spot:()=>{ const q = cgG(); if(!q) return null;
+        const xs = q.g.alice.concat(q.g.bella).map(p => q.px(p.x));
+        return cgRect(Math.max(q.L-4, Math.min(...xs)-16), q.T-4, Math.min(q.R+4, Math.max(...xs)+56), q.py(0)+12); }, inside:cgUpLeft,
+      title:'Two worldlines',
+      text:'Cyan: Alice, at rest at x = 0 — straight up. Amber: Bella, coasting away — tilted. The bright dots show where each twin is now.',
+      say:'Each twin traces a worldline. Alice, in cyan, stays at x equals zero, so her line goes straight up. Bella, in amber, coasts away at constant speed, so her line tilts over. The bright dot on each line shows where that twin is right now.' },
+```
+Other placements that shipped: the empty sidebar column level with the spot
+(sidebar open; beside the region when hidden); a grid scan of the canvas
+scoring candidate boxes against markers, labels, the spot and the `.cg-nav`
+box; the quadrant diagonally opposite a draggable marker.
+
+State-adaptive text — `title`/`text`/`say` as getters (the callout reads
+them through `.textContent`, the voice through the getter). Schematic below;
+shipped examples: `QM_sims/wavefunctions-and-probability.html` (View Mode,
+measurement count), `QM_sims/Vector_Space_Finite_Vectors_Updated.html`
+(view + overlay toggles), `SR_sims/L11-s2-light-clock-…-shell.html`
+(construction stage):
+```js
+  { spot:()=>topPlotRect(), get title(){ return viewMode()==='prob' ? 'Top: the prepared state' : 'Top: the wave'; },
+    get text(){ return viewMode()==='prob' ? 'Purple curve: |ψ(x)|², …' : 'Blue curve: Re(ψ), …'; },
+    get say(){ return viewMode()==='prob' ? 'The top plot shows …' : '…'; } },
+```
+Use getters whenever the student can change what the region shows (view
+mode, frame, a layer toggle, a construction stage, data present or not) —
+never switch the sim to match the text.
+
+### 7.7 Header label
+
+Markup (keep the element's spans/ids/classes):
+```html
+<button id="btn-cg" class="shell-btn" data-no-reset title="Show or hide the simulation guide">🎛 Simulation guide</button>
+```
+Header-wrap fix when the longer label wraps where the original didn't:
+```css
+.shell-header #btn-cg{padding-left:8px;padding-right:8px;}
+```
+Fallback used ONLY when another session holds uncommitted edits within 3
+lines of the button markup (so a markup hunk would not apply to HEAD): set
+the label from the guide script, right after `cgBtn` is looked up, and move
+it into the markup once that session commits:
+```js
+  cgBtn.textContent = 'Simulation guide'; cgBtn.title = 'Show or hide the simulation guide';
+```
+(for a button with a `.btn-lbl` span, set that span's `textContent`).

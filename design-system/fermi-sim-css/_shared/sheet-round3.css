@@ -1,0 +1,26 @@
+
+/* round 3 — spoiler gate, footer jump, live card, a11y, phone, light theme */
+.ps-gate{margin:30px auto;max-width:520px;padding:18px 20px;border:1px solid var(--accent-soft);border-radius:12px;background:var(--surface-soft);
+  font-size:13.5px;line-height:1.55;color:var(--ink-mid);}
+.ps-gate b{color:var(--text);}
+.ps-gate b:focus{outline:none;}
+.ps-gate-b{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px;}
+.ps-rail button.locked .l{opacity:.55;}
+.ps-rail-k{margin:10px 0 0 10px;font-size:11px;color:var(--ink-mute);}
+.ps-rail-k span{color:var(--accent);}
+.ps-h h3:focus{outline:none;}
+.ps-pager .ps-more{flex:1;max-width:220px;margin:0 auto;}
+#ps-more[hidden],.ps-count[hidden]{display:none !important;}
+#ps-watch{visibility:hidden;transition:opacity .2s,transform .2s,visibility 0s linear .2s;}
+#ps-watch.show{visibility:visible;transition-delay:0s;}
+#ps-watch .w-live{margin:-4px 0 10px;padding:6px 9px;border-radius:7px;background:var(--surface-soft);font-family:var(--font-nums);font-size:12.5px;color:var(--ink-mid);}
+#ps-watch .w-live b{color:var(--text);}
+@media(max-width:760px){
+  .phys-body.ps-on{display:block;}
+  .ps-rail{margin-bottom:14px;padding-bottom:10px;}
+  .ps-rail button[aria-current="true"] .l{display:inline;}
+  .ps-rail-k{display:none;}
+  .ps-gate{margin:10px 0;}
+  #ps-watch{left:0;right:0;bottom:0;width:auto;border-radius:12px 12px 0 0;border-left:1px solid var(--accent-soft);border-top:3px solid var(--accent);}
+}
+@media(max-width:420px){ .ps-pager .ps-count{display:none;} .ps-pager{gap:6px;} }

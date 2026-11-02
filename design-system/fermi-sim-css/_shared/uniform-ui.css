@@ -1,0 +1,39 @@
+
+/* ===== UNIFORM UI — fleet layer. Additive: nothing above is edited. =====
+   1. Header: button labels stay on every desktop width and the bar stays one line; a long
+      title truncates with an ellipsis instead of the buttons losing their words.
+   2. Physics sheet: one palette and type set, whatever the host page defines.
+   3. Guided Inquiry cards: one type scale. */
+@media (min-width:1001px){
+  #ask-euler{gap:6px !important;padding:0 14px !important;}
+  #ask-euler .ask-euler-label,
+  #btn-gi > span,#btn-cg > span{display:inline !important;}
+  .shell-header{flex-wrap:nowrap !important;}
+  .shell-header > .shell-title{min-width:0;flex:0 1 auto;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+  .shell-header > .shell-group,.shell-header > .shell-controls{flex-shrink:0;}
+}
+#btn-gi,#btn-cg,#toggle-formal{font-family:'DMSansUser','DM Sans',-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif !important;font-size:13px !important;font-weight:400 !important;letter-spacing:normal !important;}
+#phys-backdrop,#ps-watch,#phys-toast{--text:#e2e8f0;--ink-mid:#cbd5e1;--ink-mute:#9ca3af;--mut:#cbd5e1;--accent:#3b9b8f;--accent-soft:rgba(59,155,143,.35);
+  --panel-2:#0f1a1d;--surface-soft:rgba(6,14,17,.92);--border:rgba(19,49,49,.45);--line:rgba(19,49,49,.45);
+  --ctrl-bg:rgba(30,77,58,.15);--ctrl-border:rgba(30,77,58,.50);
+  --font-sans:'DMSansUser','DM Sans',-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;--font-nums:'JetBrainsMonoNums','JetBrains Mono',ui-monospace,monospace;}
+body.light-theme #phys-backdrop,body.light-theme #ps-watch,body.light-theme #phys-toast,html[data-theme="light"] #phys-backdrop,html[data-theme="light"] #ps-watch,html[data-theme="light"] #phys-toast{--text:#0f172a;--ink-mid:#334155;--ink-mute:#6b7280;--mut:#334155;--accent:#2a8a7e;--accent-soft:rgba(42,138,126,.35);
+  --panel-2:#e5e7eb;--surface-soft:rgba(241,245,249,.96);--border:rgba(51,65,85,.18);--line:rgba(51,65,85,.18);
+  --ctrl-bg:rgba(30,77,58,.08);--ctrl-border:rgba(30,77,58,.35);}
+#phys-backdrop,#ps-watch,#phys-toast{font-family:var(--font-sans);line-height:normal;}
+html:not([data-theme="light"]) body:not(.light-theme):not(.theme-light):not(.theme-bright):not(.light-mode) #inq-cards .inq-step > h4{color:#e2e8f0 !important;}
+html:not([data-theme="light"]) body:not(.light-theme):not(.theme-light):not(.theme-bright):not(.light-mode) #inq-cards .inq-step > p:not([class]){color:#cbd5e1 !important;}
+#inq-cards .inq-step > h4{font-size:14px !important;font-weight:600 !important;line-height:1.35 !important;}
+#inq-cards .inq-step > p:not([class]){font-size:14px !important;line-height:1.55 !important;}
+#inq-cards .inq-step button.choice{font-size:13px !important;line-height:1.5 !important;}
+/* Header fit levels, set by the script below only when the bar would overflow or wrap */
+[data-fu-pb]{font-family:'DMSansUser','DM Sans',-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif !important;font-size:13px !important;}
+html.fu-tight [data-fu-hdr],html.fu-tight [data-fu-hdr] > *,html.fu-tight [data-fu-hdr] > * > *,html.fu-tight [data-fu-hdr] > * > * > *{column-gap:6px !important;}
+html.fu-tight [data-fu-hdr]{padding-left:12px !important;padding-right:12px !important;}
+html.fu-tight [data-fu-hdr] :is(button,select,label.shell-btn){padding-left:9px !important;padding-right:9px !important;}
+html.fu-tight #ask-euler{padding:0 10px !important;}
+html.fu-tight [data-fu-title]{letter-spacing:.2px !important;}
+html.fu-tighter [data-fu-sec]{display:none !important;}
+html.fu-tighter [data-fu-hdr],html.fu-tighter [data-fu-shrink]{flex-wrap:nowrap !important;}
+html.fu-tighter [data-fu-shrink]{min-width:0 !important;flex-shrink:1 !important;}
+html.fu-tighter [data-fu-title]{min-width:0 !important;overflow:hidden !important;text-overflow:ellipsis !important;white-space:nowrap !important;}

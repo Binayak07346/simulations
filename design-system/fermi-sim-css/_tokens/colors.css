@@ -1,0 +1,48 @@
+/* ════════════════════════════════════════════════════════════════════
+ * COLOUR · the semantic palette
+ * ════════════════════════════════════════════════════════════════════
+ * Same names AND values as the main app's design system
+ * (study-tools-v2 · frontend/src/design-system/_tokens/colors.css), so a
+ * sim and the page around it speak one vocabulary. Only the roles the sims
+ * use are declared; add a role here (with its main-app value) before using it.
+ *
+ * Named for the role, never the appearance. Light values sit at :root; a
+ * future dark theme overrides these same names at :root[data-theme="dark"].
+ * ════════════════════════════════════════════════════════════════════ */
+:root {
+  /* Action · royal blue acts */
+  --color-accent:        #4169e1;
+  --color-accent-hover:  #224fd7;
+  --color-accent-active: #1c42b4;
+  --color-accent-subtle: #edf1fc;
+  --color-accent-border: rgba(65, 105, 225, 0.30);
+  --color-text-on-accent: #ffffff;
+
+  /* Ground and surface */
+  --color-bg:         #f4f9fd;
+  --color-bg-subtle:  #eef4f9;
+  --color-bg-muted:   #dfe3f7;
+  --color-bg-inverse: #0a1929;
+  --color-surface:    #ffffff;
+
+  /* Text · a legible ramp */
+  --color-text:        #0e2a48;
+  --color-text-muted:  #3a4a5a;
+  --color-text-subtle: #4f6275;
+  --color-text-faint:  #5b6f82;
+
+  /* Border */
+  --color-border:        #e2ebf3;
+  --color-border-strong: #d3e0ea;
+
+  /* Status · bright value = fill/border, -text = ink */
+  --color-success:      #16a34a;
+  --color-success-text: #14532d;
+  --color-danger:       #e5484d;
+  --color-danger-text:  #7a271a;
+  --color-warning:      #ffb27c;
+  --color-warning-text: #8a5a20;
+
+  /* Focus */
+  --color-focus-ring: #4169e1;
+}

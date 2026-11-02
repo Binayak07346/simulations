@@ -1,183 +1,111 @@
 ---
 name: controls-tutorial
-description: Add a "Controls Guide" overlay tutorial to a single-file interactive simulation HTML page. Use this skill whenever the user asks to add a controls tutorial, controls guide, control walkthrough, onboarding for the controls, or "the controls layer like the solar-system sim" — even on sims that already have a guided inquiry. The result is a top-bar 🎛 Controls Guide button that walks the student through every control and readout one at a time with a purple chat-bubble callout pointing at the control, everything else hidden until its turn, terse one-line descriptions, and a bottom-right ‹ › Next nav.
+description: Install the agreed guide v2 on a university-lab user-version simulation. The guide v2 has three parts. (1) The Simulation guide: a 4–6 step tour that outlines the real scene parts with chalk lines, then the controls, and ends by pointing at Play. (2) The Explore-freely trigger hint: one small note on one control that closes itself within 3 s. (3) The blackboard landing (see welcome-overlay). It is built from one spec file per sim with the shared sim-guide-kit. Use when asked to add, upgrade or roll out the Simulation guide, controls guide, scene tour, "guide me", the free-exploration hint, or the SME-approved guide flow on one sim or a batch. Production sims: additive layer, anchor-asserted, gated by check.mjs.
 ---
 
-# Controls Guide (overlay tutorial) for Simulation Pages
+# Simulation guide v2 (+ Explore-freely trigger hint)
 
-Retrofit an existing sim with the Controls Guide. The reference builds are
-the user-validated `Double-slit-experiment.html` (guide-only, minimal
-integration) and `L1-Solar_System_Orbits-two-button-mock.html` (guide +
-guided inquiry with the two-button template). Verbatim blocks are in
-`references/implementation.md`. **Read it before writing code.** Copy the
-blocks; adapt only the parts marked ADAPT.
+This is the flow the owner and senior SME signed off on 2026-10-05, after three pilot rounds (pendulum, double slit, time-dilation train). It replaces the October "Simulation guide" (the purple-callout walk through every control). The old body is in `references/legacy-v1.md`.
 
-> This design SUPERSEDES the earlier sidebar-card tutorial (sticky card
-> zone, "Try:" lines, title-bar Hide/Show toggle). Do not build that.
+Kit: `../sim-guide-kit/`. Read before writing anything:
+- `GUIDE_STRUCTURE.md`: the shape of the tour;
+- `PLAIN_LANGUAGE.md`: the wording;
+- `SPEC_FORMAT.md`: how to write the per-sim spec;
+- the finished `examples/`.
 
-## Acceptance criteria (the validated behavior — all mandatory)
+## What the learner gets
+- **Landing (blackboard):** "Welcome to" plus the title, one line on what it is, what you do and what you see, and two choices: **Guide me →** (a 2-minute tour) and **Explore freely** (all controls open). The sim does not run. See the welcome-overlay skill.
+- **Guide me:** 4–6 chalk-board cards.
+  - First 2–3 "The simulation" steps outline the exact parts of the scene: silhouettes for 3-D parts, ellipses for small objects.
+  - Then "Controls" steps, at most 3 controls each, grouped by the part they change. Each control card says what the control changes, with a yellow outline and a chalk symbol on that part.
+  - The last step adds "Press Play to…"; Play pulses with a "Press Play to start" tag.
+  - Pressing Play ends the tour with the experiment running. Done ends it with a ~3 s Play cue.
+  - **Static sims** (no Play): the last card pulses the trigger control with a "Try …" line, and Done shows a ~3 s "Try it" cue on it. See "Static variant" in `GUIDE_STRUCTURE.md`.
+  - The sim stays paused for the whole tour.
+  - Every card, **the last one included**, has the voice control.
+- **Explore freely:** no guide card. One compact chalk note (≤ 12 words) points at ONE control, which pulses.
+  - Dynamic sims: ALWAYS Play.
+  - Static sims: the most telling slider or toggle.
+  - It closes with a tick when the learner uses that control.
+  - It **closes by itself after 3 s at most**; its spoken line may finish.
+- **Never explained:** top-bar buttons, Reset, Play/Pause, speed, theme, Hide Text, legends, axes, badges, the HIDE tab.
+- The header's "Ask Euler" becomes **"Ask AI Tutor"**; the builder does this.
 
-1. **Original sim untouched at boot.** Until the guide button is pressed,
-   the sim behaves exactly as before: same boot state (playing or paused
-   as the author made it), all controls and readouts visible, no callout
-   or nav in the DOM. The only persistent additions are ids on wrapper
-   elements, one CSS block, one button, and one script.
-2. **One top-bar button, 🎛 Controls Guide**, in the sim's own top-bar
-   button style, filled dark-green when active. It toggles the guide on
-   and off. If the sim has a guided-inquiry zone, it gets a sibling
-   🧭 Guided Inquiry button and the two are MUTUALLY EXCLUSIVE (see
-   "Two-button template" below). No Lecture mode anywhere.
-3. **Overlay, not cards.** Each step shows a floating callout anchored
-   beside its control: PURPLE border and title (so it never blends with
-   the green glow on the control), a speech-bubble arrow on the edge
-   facing the target, aimed at the target's centre. Placement is
-   side-aware: right-sidebar targets get the callout to their LEFT with a
-   right-edge arrow; top-bar/canvas targets get it BELOW with a top arrow,
-   flipping above when cramped. The closing card is centred with no arrow.
-   Nav is a floating bottom-right bar in the callout's purple identity
-   (purple border, outlined purple pager buttons, solid-purple Next):
-   ‹ › pager + `Next →` (reads `Done` on the closing card).
-4. **Hidden until its turn — by location.** Not-yet-introduced elements
-   are hidden, never merely dimmed: sidebar panels and boxes collapse
-   (`.cg-hidden`, display:none); top-bar controls go invisible but keep
-   their slot (`.cg-veiled`, visibility:hidden) so the bar never reflows.
-   The current control glows (`.cg-glow`, green pulse). A `cgMax`
-   high-water mark makes reveal monotone: back-navigation never re-hides.
-5. **Session memory.** Completing the guide (Done) or toggling it off
-   restores everything. Reopening in the same session resumes at the step
-   left, with everything introduced so far still visible; after completion
-   it opens on the closing card with everything visible, and stepping
-   back never re-hides. A browser reload is what restarts the guide from
-   step 1. **Reset restores first-load**: the guide closes and its
-   progress clears (`cgStep = cgMax = 0`); with the two-button template,
-   Reset also puts Guided Inquiry back on at card 1.
-6. **Copy is terse.** One line per control: what it is and what it
-   controls, ≤15 words. No "Try:" lines, no observable-effect sentence.
-   The closing card: "That's every control — explore freely; reopen the
-   guide from the top bar."
-7. **Complete coverage.** Every control and every readout panel gets a
-   step or a written reason it doesn't (meta-UI only: theme toggle, info,
-   hover-hint switches). A missed panel (the View panel was missed once)
-   fails the manual check.
-8. **Card voiceover + Auto walkthrough** (validated on C025). The nav is
-   TWO rows: a "Listen" row (⏮ ▶ ⏭ transport + Auto pill) above the card-nav
-   row (‹ › Next), split by a hairline — a single wide row would overflow
-   onto the canvas. Play reads the current step (title + text) from the top; pause
-   keeps position; resume continues; finish flips to replay. Navigation by
-   ANY route keeps narration card-synced. Auto narrates each step then
-   advances after a 700 ms dwell, turning itself off on the closing card.
-   Auto pill: muted outline off, solid purple + glow on. Voice: quality-
-   ranked (Google US English first, locals as fallback). All code + the
-   Chrome TTS pitfalls (deferred speak, guarded cancel, hang watchdog,
-   engineDead) are verbatim in `references/implementation.md` §6 — the
-   defenses are load-bearing, copy them exactly; ADAPT only the `norm()`
-   speech replacements for the sim's symbols.
+## Safety stance (production sims)
+- Additive layer only. The sim's physics, drawing, controls and Guided Inquiry are untouched.
+- `hooks.py` may add **read-only** geometry hooks. Any sim fix needs the owner's OK and is listed in the report.
+- `build.py` rebuilds from `work/<slug>/pristine.html` every time. It asserts every anchor and syntax-checks the guide scripts. It refuses to overwrite a repo file that changed since the snapshot (another session): stop and report, never force.
+- Headless Chrome only (`check.mjs`). No visible windows.
+- Commit only on request, one sim per commit, to the personal fork `origin` (Binayak07346/simulations). Never push to the company upstream.
 
-**Scene/mode-dependent controls.** If a guided control is hidden by the sim
-in some scenes or modes, publish `window.__cgPrepare` from the sim (pin a
-scene where every guided target exists) — the controller calls it on entry.
-The browser test catches the failure (glowing target not visible); the
-headless gate cannot, because it never reaches that scene.
+## Workflow for one sim
+Set `K=User_version_sims_skills/sim-guide-kit`.
+1. **Set up:** `mkdir -p $K/work/<slug>`, and write `config.json` `{"sim":"<path under Fermi_university_sim_lab_sims/, or an absolute path>","slug":"<slug>"}`.
+2. **Read the sim:**
+   - **Its current Simulation-guide steps.** Look for `const steps = [`, `const cgSteps = [`, `cgSceneSteps`, `spot:` functions, and `window.__cgGeo` / `__cgSceneBox`. If its `cg*` helpers are private (inside a closure), copy their maths into spec.js or expose them with one read-only hooks.py line (`SPEC_FORMAT.md` → "Outlines").
+   - **The ids:** Play, Reset and the sidebar controls.
+   - **The engine contract** (`SPEC_FORMAT.md`): `#btn-gi`, `#btn-cg`, `__setMode`, a header, and a Play button whose text or aria-label says Play / Pause.
+   - **EVERY Guided Inquiry card,** with its prompt AND its correct choice. The guide must state none of them, in text, in voice or in what the stage shows.
+   - **What `__setMode('free')` reveals on this sim.** If it shows answers (shaded results, selected states), stage a neutral view with `__cgPrepare` / `start` / `end` / `onReset`.
+3. **Write `spec.js`** (`SPEC_FORMAT.md`):
+   - title and blurb;
+   - 4–6 steps whose outlines come from the sim's own geometry;
+   - `playText` / `playSay`;
+   - the trigger.
 
-## Workflow
+   Add `hooks.py` only if a part has no geometry yet.
+4. **Preview build:** `python3 $K/build.py $K/work/<slug> --out <scratchpad>/<slug>.html`. This adds the ElevenLabs clips; `--no-voice` skips them for quick layout passes. build.py also always writes `work/<slug>/built.html`, and warns if the repo file differs from git HEAD: mention that in your report.
+5. **Gates (both must PASS):**
+   - `$K/slot.sh node $K/check.mjs <scratchpad>/<slug>.html --shots $K/work/<slug>/shots`. Always run it through `slot.sh`, which caps parallel browsers.
+   - `node $K/regress.mjs <original sim> <scratchpad>/<slug>.html $K/work/<slug>`: nothing else in the sim changed or broke.
 
-### 1. Map the sim
-List every top-bar control, every sidebar panel/box, every readout panel,
-in layout order. Classify by LOCATION: top bar → `veil`; sidebar/canvas
-panels → `hide`. Identify the sim's top-bar button class (reuse it for the
-guide button), its Reset element, and whether a guided-inquiry zone exists.
-Give wrappers ids where missing (`sep-box`, `params-group`, …) — markup
-only, no behaviour change. Group tightly-coupled controls with `also`
-(e.g. slit separation + slit width; a select + its label) so they reveal
-and glow together.
+   The check.mjs checks:
+   - landing L1–L5;
+   - guide G1–G11:
+     - 4–6 steps, every target found, outlines drawn, ≤ 3 controls a step;
+     - card on screen and off its targets, outlines on screen (G11), sim paused;
+     - voice on every card, last card points at Play (static: at the trigger control);
+     - Done cue, Play (static: the trigger) starts the run;
+   - free F1–F4: one hint, at its control, gone within 3 s, sim waiting;
+   - N1 every line voiced, including the combined last-card line;
+   - X1 no page errors.
 
-### 2. Insert the three blocks (reference §1–3)
-CSS before `</style>`; the button pair in the top bar's LEFT cluster,
-immediately AFTER the theme toggle (order: title/info → theme → Guided
-Inquiry → Controls Guide … Reset/Play stay right-anchored — the JEE fleet
-reference; never glue the pair to Reset with margin-left:auto); the
-controller `<script>` before `</body>` —
-INCLUDING its `<script>` wrapper. ADAPT only the `steps` array (selectors,
-mode, `also`, title, text) and the Reset selector.
+   Every check always prints a line. Any FAIL blocks the install.
 
-### 3. If the sim has a guided-inquiry zone: two-button template (reference §4)
-Add the 🧭 Guided Inquiry button (boot: active) beside 🎛 Controls Guide.
-Wire `setGi`/`setCg` for mutual exclusion and expose the four hooks:
-- `window.__giOff` — the inquiry's own Finish/Skip route here (the GI
-  button is the single owner of inquiry visibility; delete any restore
-  strip and any Lecture button/mode).
-- `window.__freeExplore` — turning the inquiry OFF, or reaching both-off,
-  hands over the POST-COMPLETION state (all inquiry reveals lifted, no
-  mid-inquiry leftovers such as ghost objects or zoomed views).
-- `window.__giResume` — turning the inquiry back ON re-applies its current
-  step's state (reveals, view, pause-on-gate), so progress is intact.
-- `window.__fullReset` — Reset = first-load: GI on at card 1, CG off with
-  progress cleared, sim defaults restored, then paused/playing as on boot.
-Entering the guide lifts inquiry-step reveals (`window.__cgReveals(99)`)
-so hidden-by-inquiry panels can be described; the guide's own hide/veil
-then takes over.
+   Then **look** at `shots/`:
+   - every outline must sit on the part it names;
+   - no card covers a key label;
+   - the title fits;
+   - direction words (left/right/top) match the picture.
+6. **Install:** `python3 $K/build.py $K/work/<slug>` writes the repo file. Then run both gates on the repo file.
+7. **UI step (last):** it also installs the **direct landing** (no overlay; one 5 s tip under the Simulation guide button, which opens this tour). Gate it there with `ui-stylesheet/scripts/landing_check.mjs`. `check.mjs` L1–L5/F1–F4 apply to the UX build only. Details are in `ui-stylesheet/SKILL.md` → "Landing: DIRECT".
+   Also on the UI step: `ui-stylesheet/SKILL.md` puts the built sim on the shared stylesheet, which gives the A look. It also patches this engine: page controls are marked `.fsim-guide-target` and outlined by the stylesheet, and the last card keeps clear of Play and its tip. `check.mjs` counts those outlines (G3), so the same gate runs before and after the UI step.
+   - **Sims outside the uni lab** (AI courses, JEE): `config.json` takes an absolute `"sim"` path.
+   - **Older shells:** build.py renames "Controls Guide" to "Simulation guide" (label and tooltip).
 
-**Scope hazard:** functions inside the sim's IIFEs (`applyStepReveals`,
-`setInquiryCollapsed`, …) are NOT visible to a separate `<script>`. Expose
-them on `window` or the sim's public object; a `typeof fn === 'function'`
-guard silently no-ops otherwise — this bug shipped once and only showed in
-a real browser.
+## Batches (fleet rollout)
+- **Size:** 8–12 sims per batch, one sub-agent per sim, each given this skill and one slug. Agents write only in their own `work/<slug>/`, and install only after their gate passes.
+- **Coordinator, after each batch:**
+  - re-runs `check.mjs` on every installed repo file;
+  - spot-checks the screenshots;
+  - updates the rollout list (`work/ROLLOUT.md`: slug, sim, steps, trigger, gate result, notes).
+- **Families:**
+  - 2-D canvas shells: the pendulum is the template;
+  - Three.js / pre-shell QM: the double slit;
+  - 3-D shells with `__cgSceneBox`: the train.
+- **Static sims (no Play):** leave `play` out; `trigger.at` names the control; the last step's `playText` becomes a "Try …" line ("Static variant" in `GUIDE_STRUCTURE.md`).
+- **Requirements:** python3, node, Chrome, puppeteer-core (`PUPPETEER_CORE`) and the ElevenLabs key. See `SPEC_FORMAT.md`.
+- **Canonical examples:** `sim-guide-kit/examples/`. The Downloads pilots are older builds.
+- **Status before the first batch** (2026-10-05): the three pilots are built in `~/Downloads/logged-in web's flows/`. 89 of the 116 sims expose `__cgGeo` / `__cgSceneBox`; 114 have scene-spot code to reuse.
 
-### 3b. Voiceover + Auto (reference §6)
-Insert the engine script BEFORE the controller, append the voiceover CSS,
-apply the controller deltas (two-row nav, `setCgAuto`, sync/stop hooks).
-Extend `norm()` with this sim's physics symbols. Match the Listen-row button
-height to the sim's existing pager buttons — never grow the sidebar row.
+## Report per sim (≤ 120 words)
+- slug;
+- the steps (titles);
+- the trigger;
+- results of both gates (check.mjs n/n, regress.mjs n/n);
+- whether the repo file differed from git HEAD;
+- any hook added;
+- anything you could not outline, and why;
+- open questions.
 
-### 4. Verify
-```
-node scripts/verify.js <patched.html> --baseline <original.html>
-```
-Config-free: boot untouched (no callout, no cg classes); button toggles;
-callout + arrow + side class per step; hidden/veiled set non-empty at step
-1 and monotone; glow present and never on a hidden element; back-nav
-never re-hides; closing card has no arrow and `Done`; Done restores
-everything and deactivates; revisit lands on the closing card fully
-visible; Reset deactivates and clears progress (reopen = step 1 re-hidden);
-no NEW runtime errors vs baseline (CDN libs like Three.js/KaTeX throw
-headlessly — baseline subtracts them).
-
-Run the browser test twice: default, and with `--theme-toggle <selector>` on
-sims that have a theme switch (plus once at `--viewport 1024x768`).
-Manual checks (browser): callout placement and arrow aim on real
-geometry; every control/readout covered; copy true for THIS sim.
-
-Deliver as a new file; never overwrite the upload in place.
-
-## Pitfalls (each observed)
-- Dim instead of hide — un-introduced controls stayed readable. Hide.
-- Hiding top-bar buttons with display:none — the bar reflows. Veil.
-- Callout in the same colour as the glow — two jobs, two colours.
-- Scope bug above — hooks must be on `window`.
-- Lecture mode conflicting with the buttons — remove it; both-off is the
-  presenter view.
-- Forgetting a sidebar panel (View/Zoom) — enumerate everything.
-- Reset leaving a hybrid (closing card lingering, inquiry gone) — Reset
-  must route through `__fullReset` / clear guide progress.
-- The controller pasted without `<script>` tags is inert text.
-- Light-theme selector mismatch (`html[data-theme]` vs `body.light-theme`)
-  left the callout dark on a light UI; the CSS now targets both hooks.
-- On a 1024×768 viewport the last sidebar panel sat below the fold and the
-  clamped callout drifted 119px from it; the controller now scrolls the
-  target into view before measuring. Always run the smoke at 1024×768 too.
-- Applying a skill twice (bulk re-runs) duplicates ids — every verifier
-  now fails on duplicate template ids or script blocks.
-- Green/white nav shipped in one reference while the agreed design was purple — the nav
-  must match the callout; the reference CSS now carries the purple nav.
-- Testing: jsdom walkthroughs must count clicks exactly; several "bugs"
-  were test off-by-ones. Assert state, not click counts.
-- Voiceover: every Chrome TTS pitfall in reference §6.5 was hit for real on
-  C025 — deferred speak after cancel, `safeCancel` (an idle cancel wedges the
-  browser's TTS service until a FULL browser restart), the no-events remote-
-  voice hang caught by the `onstart` watchdog, `resume()` only when paused,
-  and real-gesture-only audio testing. Never re-derive this from scratch.
-
-## Bulk application
-One sim at a time, full mapping each time; never reuse another sim's
-`steps`, ids, or copy. Always `--baseline`. Log deviations and report
-them as skill feedback.
+_`scripts/verify.js` and `references/implementation.md` in this folder belong to the v1 design (legacy). The v2 gate is `../sim-guide-kit/check.mjs`._

@@ -1144,6 +1144,7 @@ body{background:var(--bg);color:var(--ink);font-family:var(--font-sans);overflow
 .ctrl-box{background:var(--ctrl-bg);border:1px solid var(--ctrl-border);border-radius:5px;padding:12px;margin-bottom:8px;box-sizing:border-box;}
 .ctrl-box:last-child{margin-bottom:0;}
 .ctrl-box--slider{min-height:73px;display:flex;flex-direction:column;justify-content:center;}
+.ctrl-box[hidden]{display:none !important;}
 .ctrl-box-label{display:block;font-size:13px;font-weight:600;color:var(--text);line-height:1.2;}
 .ctrl-box-head{display:flex;align-items:baseline;justify-content:space-between;gap:10px;margin-bottom:8px;}
 .ctrl-box-head .ctrl-box-label{flex:1;min-width:0;}
@@ -1765,7 +1766,7 @@ html.no-voice #inq-voice, html.no-voice #inq-auto, html.no-voice .cg-row-voice, 
       <div class="shell-modal-body"><h3>About this simulation</h3>
 <dl class="shell-info-dl">
   <dt>On screen</dt><dd>Top: the phasors of all 6000 routes added head to tail, on equal axes in units of length, with the phase measured from one reference route so that its phasor points to the right; once coloured, each phasor has the colour of its strip's position along the mirror. The accent arrow is the resultant Ẽ<sub>B</sub>, from the start of the chain to its end. A faint grey outline keeps the bare-mirror chain while the opaque strip is in place. Bottom: source A 2 units above the mirror, detector B 1 unit above it and 6 units along, the mirror from x = −2 to 10 units in the same colours, one route in two hundred drawn faintly, and the opaque strip in dark grey.</dd>
-  <dt>Controls</dt><dd>Opaque strip in place: puts a strip 1 unit wide on the mirror, or removes it. Strip centre x<sub>s</sub>: −1.50 to 9.50 units from the foot of the perpendicular from A; dragging it puts the strip in place. Wavelength λ: 0.10 to 0.50 units. Mark the ray: draws the ray and the stretch of mirror within π of its phase (in the inquiry, once you have found them). ▶ Play adds the phasors one strip at a time from x = −2: the order of the sum, not a motion in time.</dd>
+  <dt>Controls</dt><dd>Opaque strip in place: puts a strip 1 unit wide on the mirror, or removes it. Strip centre x<sub>s</sub>: −1.50 to 9.50 units from the foot of the perpendicular from A; it is shown once the strip is in place. Wavelength λ: 0.10 to 0.50 units. Mark the ray: draws the ray and the stretch of mirror within π of its phase (in the inquiry, once you have found them). ▶ Play adds the phasors one strip at a time from x = −2: the order of the sum, not a motion in time.</dd>
   <dt>Measured</dt><dd>Each strip, of width Δx = 0.002 units, adds Δx e<sup>ik<sub>0</sub>[Λ(x) − Λ<sub>ref</sub>]</sup>, with k<sub>0</sub> = 2π/λ and Λ(x) = √(x<sup>2</sup> + 4) + √((6 − x)<sup>2</sup> + 1) units in air. I/I<sub>0</sub> is |Ẽ<sub>B</sub>|<sup>2</sup> over its value for the bare mirror at the same λ. w<sub>π</sub> is the width of the stretch of mirror whose phase stays within π of the reference route's, found exactly from Λ(x).</dd>
 </dl></div>
     </div>
@@ -3688,9 +3689,19 @@ window.Kit = (function () {
   }
   function fitAll() { canvases.forEach(fitCanvas); }
 
+  // showWhen (2026-10-28): a param is shown only while other params have the stated values, e.g. "showWhen": {"meter": "amm"} or
+  // {"meter": ["amm", "volt"], "conv": "conv"}. A hidden control keeps its value; no control ever changes another to make room.
+  function applyShowWhen() {
+    for (const p of manifest().params || []) {
+      if (!p.showWhen || typeof p.showWhen !== 'object') continue;
+      const ok = Object.entries(p.showWhen).every(([k, v]) => (Array.isArray(v) ? v : [v]).map(String).includes(String(P[k])));
+      const el = $('box-' + p.id); if (el && el.hidden === ok) el.hidden = !ok;
+    }
+  }
   function render() {
     if (!SIM || !S) return;
     Q = (SIM.derive ? SIM.derive(S, P, Kit) : {}) || {};
+    applyShowWhen();
     for (const cv of canvases) {
       if (!cv.g) fitCanvas(cv);
       const painter = SIM.paint && SIM.paint[cv.id];
@@ -3875,7 +3886,8 @@ window.Kit = (function () {
     const box = $('box-' + p.id), label = ((box && box.querySelector('.ctrl-box-label')) || {}).textContent || p.label || p.id;
     if (p.type === 'toggle') return `${label.trim()} ${v ? 'on' : 'off'}`;
     const opt = (p.options || []).find(o => String(o.value) === String(v));
-    const text = opt ? String(opt.label || opt.value) : fmt(v, p.decimals ?? 2, p.unit || '', { signed: p.signed });
+    const custom = !opt && SIM && SIM.formatParam ? SIM.formatParam(p.id, v, Kit) : undefined;   // the slider's own format (e.g. a log slider shows 10^v)
+    const text = opt ? String(opt.label || opt.value) : custom != null ? String(custom) : fmt(v, p.decimals ?? 2, p.unit || '', { signed: p.signed });
     return `${label.trim()} to ${text.replace(/[_^{}]/g, '')}`;
   }
   function announcements() {
@@ -4204,6 +4216,11 @@ function scale(g, t) {
   return g.mix(STOPS[i], STOPS[i + 1], x - i);
 }
 
+// a control is shown only where it applies (2026-10-28 fix: no control changes another)
+function showOnlyWhere(rules) {
+  for (const id in rules) { const b = document.getElementById('box-' + id); if (b) { b.hidden = !rules[id]; b.style.display = rules[id] ? '' : 'none'; } }
+}
+
 Kit.sim({
   // n = how many strips the sum has taken in; every run starts with none (▶ builds the chain)
   state() { return { n: 0 }; },
@@ -4215,7 +4232,6 @@ Kit.sim({
   },
 
   onParam(id, v, s, p, kit, prev, source) {
-    if (id === 'xs' && source === 'user' && !p.strip) kit.setQuiet('strip', true);   // dragging the strip puts it in place
     return 'keep';                                       // the sum is recomputed at once; the build keeps its progress
   },
 
@@ -4227,6 +4243,7 @@ Kit.sim({
   },
 
   derive(s, p) {
+    showOnlyWhere({ xs: !!p.strip });
     const P = phys(p.lam, p.strip, p.xs, s.n);
     return { lamOut: p.lam, xsOut: p.strip ? p.xs : 'removed', ratio: P.ratio, wPi: P.wPi, complete: s.n >= N };
   },
@@ -5888,9 +5905,9 @@ function drawHero(){ const c = document.getElementById('welcome-fringes'); if (c
         text: '<p>Each phasor takes the colour of its strip on the mirror, from blue at the left end to orange at the right.</p><p>The teal arrow, Ẽ<sub>B</sub>, runs from the start of the chain to its end.</p>',
         say: 'Each phasor takes the colour of its strip on the mirror, from blue at the left end to orange at the right. The teal arrow, E B, runs from the start of the chain to its end. It is the amplitude at the detector.' },
       { chap: 'Controls', title: 'The opaque strip',
-        targets: function(){ return [ { sel: '#box-strip' }, { sel: '#box-xs' }, { rect: part('mirror', 'mirror'), sec: true, tag: 'x_s' } ]; },
-        text: '<p><b>Opaque strip in place</b> covers 1 unit of the mirror, so its routes drop out of the sum.</p><p><b>Strip centre</b> slides that strip along the mirror.</p>',
-        say: 'Opaque strip in place covers one unit of the mirror, so the routes off that part drop out of the sum. Strip centre slides the strip along the mirror.' },
+        targets: function(){ return [ { sel: '#box-strip' }, { rect: part('mirror', 'mirror'), sec: true, tag: 'x_s' } ]; },
+        text: '<p><b>Opaque strip in place</b> covers 1 unit of the mirror, so its routes drop out of the sum.</p><p><b>Strip centre</b> appears once the strip is in place, and slides it along the mirror.</p>',
+        say: 'Opaque strip in place covers one unit of the mirror, so the routes off that part drop out of the sum. Strip centre appears once the strip is in place, and slides it along the mirror.' },
       { chap: 'Controls', title: 'Wavelength and the ray',
         targets: function(){ return [ { sel: '#box-lam' }, { sel: '#box-marks' }, { rect: part('chain', 'phasor plane'), sec: true, tag: 'λ' } ]; },
         text: '<p><b>Wavelength</b> sets how far each phasor turns for a given path length.</p><p><b>Mark the ray</b> draws the ray from A to B that obeys the law of reflection.</p>',

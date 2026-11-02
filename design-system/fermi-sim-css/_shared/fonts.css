@@ -1,0 +1,7 @@
+/* fermi-sim shared fonts: the @font-face rules the sims embedded as data URIs, now served as files.
+   Upload fonts/* to s3://…/fermi-sim/fonts/ (CORS via the fermi-sim/* CloudFront behaviour + SimpleCORS). */
+@font-face{font-family:'DMSansUser';font-weight:600;font-style:normal;font-display:swap;src:url('https://d6jsp0m3kqowo.cloudfront.net/fermi-sim/fonts/DMSansUser-600.ttf') format('truetype');}
+@font-face{font-family:'JetBrainsMonoNums';font-weight:600;font-style:normal;font-display:swap;src:url('https://d6jsp0m3kqowo.cloudfront.net/fermi-sim/fonts/JetBrainsMonoNums-600.ttf') format('truetype');}
+@font-face{font-family:'Kalam';font-weight:400;font-style:normal;font-display:swap;src:url('https://d6jsp0m3kqowo.cloudfront.net/fermi-sim/fonts/Kalam-400.woff2') format('woff2');}
+@font-face{font-family:'Kalam';font-weight:700;font-style:normal;font-display:swap;src:url('https://d6jsp0m3kqowo.cloudfront.net/fermi-sim/fonts/Kalam-700.woff2') format('woff2');}
+@font-face{font-family:'Patrick Hand';font-weight:400;font-style:normal;font-display:swap;src:url('https://d6jsp0m3kqowo.cloudfront.net/fermi-sim/fonts/PatrickHand-400.woff2') format('woff2');}

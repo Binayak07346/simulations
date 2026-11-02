@@ -1,0 +1,18 @@
+/* TYPOGRAPHY · same names and values as the main app (_tokens/typography.css).
+ * Inter is loaded by the sim's head block (Google Fonts link); offline, the
+ * system sans in the stack takes over. JetBrains Mono is NOT loaded on purpose:
+ * loading it changed sidebar row heights (2026-10-05); the stack falls back. */
+:root {
+  --font-sans: 'Inter Variable', 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  --font-mono: 'JetBrains Mono', ui-monospace, monospace;
+  --font-weight-normal: 400;
+  --font-weight-medium: 500;
+  --font-weight-semibold: 600;
+  --font-weight-bold: 700;
+  --leading-none: 1.08;
+  --leading-tight: 1.25;
+  --leading-normal: 1.55;
+  --text-xs: 0.75rem;
+  --text-sm: 0.8125rem;
+  --text-base: 0.9375rem;
+}

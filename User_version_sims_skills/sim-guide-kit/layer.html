@@ -1,0 +1,650 @@
+<!-- GUIDE V2 LAYER (owner + senior-SME approved, 2026-10-05). Layer-owned, additive; the sim's own code is untouched.
+     Blackboard start board (title, one line, two choices; the sim waits) · Guide me: a 4–6 step Simulation guide
+     (2–3 scene steps, then controls; the last card points at Play, or at trigger.at in static sims; voice on every
+     card) · Explore freely: ONE trigger hint at one control that closes itself within 3 s · the Physics sheet gets
+     its "In one line" summary block at the top. Per-sim content lives in window.__GV_SPEC (see SPEC_FORMAT.md). -->
+<style id="gv-style">
+__FONTS__
+#gv-start,#gv-tour,#gv-free,#gv-playtip,#gv-hint{--chalk:#f7f5ee;--chalk2:#e6e3d8;--chalk3:#b3bdb6;--yellow:#fbe38a;--board:#22372f;--board2:#1a2d26;
+  --wood:#8d5b33;--wood-hi:#a8713f;--wood2:#5a381d;
+  --hand:'Kalam','Chalkboard SE','Segoe Print','Bradley Hand',cursive;
+  --print:'Patrick Hand','Chalkboard SE','Segoe Print','Comic Sans MS',cursive;}
+.gv-board{position:relative;color:var(--chalk);font-family:var(--print);border-radius:5px;text-align:left;
+  background:radial-gradient(ellipse 60% 40% at 18% 8%,rgba(255,255,255,.045),transparent 70%),
+    radial-gradient(ellipse 50% 30% at 90% 100%,rgba(255,255,255,.05),transparent 70%),
+    linear-gradient(165deg,var(--board),var(--board2));
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.05),inset 0 0 24px rgba(0,0,0,.4),
+    0 0 0 3px var(--wood-hi),0 0 0 7px var(--wood),0 0 0 9px var(--wood2),0 18px 40px rgba(0,0,0,.5);
+  -webkit-font-smoothing:antialiased;letter-spacing:normal;line-height:normal;}
+.gv-board::before{content:"";position:absolute;inset:-7px;pointer-events:none;border:4px solid transparent;
+  border-image:repeating-linear-gradient(90deg,rgba(0,0,0,.14) 0 1px,transparent 1px 4px,rgba(255,255,255,.06) 4px 5px,transparent 5px 9px) 4;}
+.gv-board b{font-weight:400;color:#fff;}
+.gv-hand{border:1.6px solid rgba(247,245,238,.62);border-radius:255px 12px 225px 12px/12px 225px 12px 255px;}
+.gv-write{display:inline-block;clip-path:inset(-4px 100% -6px 0);animation:gvWrite .55s cubic-bezier(.35,.1,.3,1) forwards;}
+@keyframes gvWrite{to{clip-path:inset(-4px -4px -6px 0);}}
+.gv-w{opacity:0;display:inline-block;transform:translateY(3px);animation:gvWord .28s ease-out forwards;}
+@keyframes gvWord{to{opacity:1;transform:none;}}
+.gv-underline{display:block;width:100%;height:8px;}
+.gv-underline path{fill:none;stroke:var(--yellow);stroke-width:2;stroke-linecap:round;stroke-dasharray:1;stroke-dashoffset:1;animation:gvDraw .45s .45s ease-out forwards;opacity:.85;}
+@keyframes gvDraw{to{stroke-dashoffset:0;}}
+.gv-erasing .gv-body,.gv-erasing .gv-head .gv-chap{animation:gvErase .18s ease-in forwards;}
+@keyframes gvErase{to{opacity:0;transform:translateX(10px);filter:blur(1px);}}
+.gv-textbtn{font:inherit;color:var(--chalk2);background:none;border:0;cursor:pointer;padding:2px 4px;text-decoration:underline dotted;text-underline-offset:4px;}
+.gv-textbtn:hover{color:#fff;}
+.gv-cbtn{font:18px/1 var(--print);color:var(--chalk);background:transparent;cursor:pointer;padding:6px 12px 5px;white-space:nowrap;transition:background .15s,transform .15s;}
+.gv-cbtn:hover{background:rgba(255,255,255,.07);transform:translateY(-1px);}
+.gv-cbtn:disabled{opacity:.3;cursor:default;transform:none;}
+.gv-cbtn.primary{color:#1e2320;background:var(--yellow);border-color:var(--yellow);}
+.gv-cbtn.primary:hover{background:#fff0b8;}
+
+/* ---------- start board ---------- */
+#gv-start{position:fixed;inset:0;z-index:5600;display:flex;align-items:center;justify-content:center;padding:24px;
+  background:radial-gradient(ellipse at 50% 45%,rgba(4,8,12,.45),rgba(4,8,12,.72));backdrop-filter:blur(2px);-webkit-backdrop-filter:blur(2px);}
+#gv-start[hidden]{display:none;}
+#gv-start .gv-board{box-sizing:border-box;width:min(500px,100%);padding:30px 32px 36px;text-align:center;animation:gvIn .4s cubic-bezier(.2,.8,.2,1);}
+@keyframes gvIn{from{opacity:0;transform:translateY(12px) scale(.985);}to{opacity:1;transform:none;}}
+.gv-kicker{margin:0;font:18px var(--print);color:var(--chalk3);letter-spacing:.02em;}
+#gv-start h2{margin:2px 0 0;font:700 38px/1.15 var(--hand);color:#fff;letter-spacing:.005em;}
+#gv-start .gv-titlewrap{display:inline-block;max-width:100%;}
+.gv-blurb{margin:14px auto 26px;max-width:410px;font:19px/1.45 var(--print);color:var(--chalk2);}
+.gv-choices{display:grid;grid-template-columns:1fr 1fr;gap:16px;}
+.gv-choice{display:flex;flex-direction:column;align-items:center;gap:4px;padding:15px 10px 13px;cursor:pointer;
+  font-family:var(--print);color:var(--chalk);background:transparent;transition:transform .18s ease,background .18s ease;}
+.gv-choice b{font:700 23px/1.2 var(--hand);color:inherit;} .gv-choice small{font-size:16.5px;color:var(--chalk3);}
+.gv-choice:hover,.gv-choice:focus-visible{outline:none;transform:translateY(-2px) rotate(-.6deg);background:rgba(255,255,255,.05);}
+.gv-choice.guide{border-color:rgba(251,227,138,.85);color:var(--yellow);background:rgba(251,227,138,.06);}
+.gv-choice.guide small{color:#eadca6;}
+.gv-choice.guide:hover,.gv-choice.guide:focus-visible{background:rgba(251,227,138,.12);}
+.gv-ledge{position:absolute;left:-9px;right:-9px;bottom:-17px;height:11px;border-radius:2px;
+  background:linear-gradient(var(--wood-hi),var(--wood) 45%,var(--wood2));box-shadow:0 4px 8px rgba(0,0,0,.4);}
+.gv-ledge::after{content:"";position:absolute;right:72px;top:-5px;width:36px;height:7px;border-radius:3px;background:#f5f3ea;box-shadow:inset -3px 0 0 #dcd8c8,0 1px 2px rgba(0,0,0,.3);}
+.gv-ledge::before{content:"";position:absolute;right:120px;top:-4px;width:18px;height:6px;border-radius:3px;background:#f3e3a0;box-shadow:inset -2px 0 0 #d9c77f,0 1px 2px rgba(0,0,0,.3);}
+@media (max-width:480px){.gv-choices{grid-template-columns:1fr;}}
+
+/* ---------- tour ---------- */
+#gv-tour{position:fixed;inset:0;z-index:5500;pointer-events:none;}
+#gv-tour[hidden]{display:none;}
+#gv-svg{position:absolute;inset:0;width:100%;height:100%;overflow:visible;}
+.gv-chalkline{fill:none;stroke:rgba(247,245,238,.92);stroke-width:2.8;stroke-linecap:round;stroke-linejoin:round;filter:url(#gv-chalktex);}
+.gv-chalkline.sec{stroke:rgba(251,227,138,.95);}
+.gv-chalkline.draw{stroke-dasharray:100;stroke-dashoffset:100;animation:gvDraw2 .6s cubic-bezier(.4,.1,.3,1) forwards;}
+@keyframes gvDraw2{to{stroke-dashoffset:0;}}
+#gv-tour.gv-trigger #gv-svg > rect{opacity:0;}
+#gv-hint{position:fixed;z-index:5450;box-sizing:border-box;max-width:min(280px,calc(100vw - 32px));padding:9px 30px 10px 14px;animation:gvIn .3s cubic-bezier(.2,.8,.2,1);}
+#gv-hint[hidden]{display:none;}
+#gv-hint p{margin:0;font:17px/1.35 var(--print);color:var(--chalk);}
+#gv-hint p b{color:var(--yellow);}
+#gv-hint #gv-hint-x{position:absolute;top:4px;right:8px;border:0;background:none;color:var(--chalk3);font:20px/1 var(--print);cursor:pointer;padding:0;}
+#gv-hint #gv-hint-x:hover{color:#fff;}
+#gv-hint .gv-notch{position:absolute;top:-16px;left:var(--nx,40px);width:0;height:0;border:9px solid transparent;border-bottom-color:var(--wood-hi);}
+#gv-hint.below .gv-notch{top:auto;bottom:-16px;border-bottom-color:transparent;border-top-color:var(--wood-hi);}
+#gv-hint.done p{color:#bdf5cc;}
+.gv-tag{font:700 22px var(--hand);fill:var(--yellow);paint-order:stroke;stroke:rgba(4,8,12,.85);stroke-width:5px;stroke-linejoin:round;}
+.gv-pointer{fill:none;stroke:rgba(251,227,138,.95);stroke-width:2.6;stroke-linecap:round;stroke-linejoin:round;filter:url(#gv-chalktex);}
+.gv-pointer.draw{stroke-dasharray:100;stroke-dashoffset:100;animation:gvDraw2 .5s .15s cubic-bezier(.4,.1,.3,1) forwards;}
+#gv-card{position:fixed;box-sizing:border-box;width:350px;max-width:calc(100vw - 32px);pointer-events:auto;padding:14px 18px 16px;
+  transition:left .38s cubic-bezier(.2,.8,.2,1),top .38s cubic-bezier(.2,.8,.2,1);}
+.gv-head{display:flex;align-items:baseline;gap:10px;}
+.gv-chap{font:16px var(--print);color:var(--yellow);letter-spacing:.02em;}
+.gv-count{margin-left:auto;font:15px var(--print);color:var(--chalk3);white-space:nowrap;}
+.gv-tally{display:inline-flex;gap:3px;margin-left:7px;}
+.gv-tally i{width:2px;height:12px;background:rgba(247,245,238,.25);border-radius:1px;transform:rotate(9deg);transition:background .3s;}
+.gv-tally i.on{background:var(--chalk);}
+#gv-close{border:0;background:none;color:var(--chalk3);font:22px/1 var(--print);cursor:pointer;padding:0 2px;margin-left:4px;}
+#gv-close:hover{color:#fff;}
+.gv-body h4{margin:6px 0 1px;font:700 25px/1.15 var(--hand);color:#fff;letter-spacing:.005em;}
+.gv-body .gv-titlewrap{display:inline-block;max-width:100%;}
+#gv-text p{margin:7px 0 0;font:18px/1.45 var(--print);color:var(--chalk2);}
+.gv-body,#gv-text p,.gv-try{overflow-wrap:anywhere;}
+.gv-try{display:flex;align-items:baseline;gap:8px;margin:13px 0 2px;padding:9px 13px;font:17.5px/1.4 var(--print);color:var(--yellow);
+  border-color:rgba(251,227,138,.65);background:rgba(251,227,138,.05);}
+.gv-try .gv-tl{flex:0 0 auto;font-family:var(--hand);font-weight:700;}
+.gv-try.ok{color:#bdf5cc;border-color:rgba(189,245,204,.75);background:rgba(189,245,204,.06);}
+.gv-tick{display:inline-block;width:22px;height:16px;vertical-align:-2px;}
+.gv-tick path{fill:none;stroke:#bdf5cc;stroke-width:3;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:1;stroke-dashoffset:1;animation:gvDraw .35s ease-out forwards;}
+.gv-foot{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin-top:15px;}
+.gv-spacer{flex:1;}
+#gv-voice{white-space:nowrap;font:16px/1 var(--print);color:var(--chalk3);background:none;border:0;cursor:pointer;padding:4px 2px;}
+#gv-voice:hover{color:#fff;}
+#gv-voice .gv-waves{display:inline-block;width:14px;opacity:0;}
+.gv-speaking #gv-voice .gv-waves{animation:gvBlink 1s ease-in-out infinite;}
+@keyframes gvBlink{50%{opacity:1;}}
+.gv-final{display:flex;align-items:center;gap:10px;margin-top:14px;}
+.gv-final .gv-textbtn{font:16px var(--print);}
+.gv-cbtn[hidden],.gv-try[hidden],.gv-final[hidden],.gv-foot[hidden]{display:none;}
+@media (max-width:640px){#gv-card{width:calc(100vw - 32px);}}
+
+/* ---------- Free exploration: where to start ---------- */
+#gv-free{position:fixed;inset:0;z-index:5550;display:flex;align-items:center;justify-content:center;padding:24px;background:rgba(4,8,12,.38);}
+#gv-free[hidden]{display:none;}
+#gv-free .gv-board{box-sizing:border-box;width:min(520px,100%);padding:22px 28px 22px;animation:gvIn .35s cubic-bezier(.2,.8,.2,1);}
+#gv-free .gv-x{position:absolute;top:8px;right:12px;border:0;background:none;color:var(--chalk3);font:24px/1 var(--print);cursor:pointer;}
+#gv-free .gv-x:hover{color:#fff;}
+#gv-free h3{margin:0 26px 0 0;font:700 26px/1.25 var(--hand);color:#fff;}
+.gv-flow{display:grid;grid-template-columns:1fr auto 1fr auto 1fr;align-items:start;gap:0 8px;margin:16px 0 2px;text-align:center;}
+.gv-flow .gv-step{display:flex;flex-direction:column;align-items:center;gap:1px;min-width:0;}
+.gv-flow .gv-step b{font:700 23px/1.15 var(--hand);color:var(--yellow);}
+.gv-flow .gv-step span{font:16px/1.3 var(--print);color:var(--chalk3);}
+.gv-flow .gv-arr{color:var(--chalk3);font:22px/1.15 var(--hand);padding-top:1px;}
+.gv-rule{height:8px;margin:14px 0 10px;}
+.gv-rule path{fill:none;stroke:rgba(247,245,238,.35);stroke-width:1.6;stroke-linecap:round;stroke-dasharray:5 6;}
+.gv-one-k{margin:0;font:15px var(--print);color:var(--chalk3);letter-spacing:.04em;}
+.gv-one{margin:4px 0 0;font:18.5px/1.45 var(--print);color:var(--chalk);}
+#gv-free .gv-final{margin-top:18px;}
+
+/* ---------- the sim waits for Play ---------- */
+.gv-attn{position:relative;animation:gvPulse 1.5s ease-out infinite !important;}
+@keyframes gvPulse{0%{box-shadow:0 0 0 0 rgba(251,191,36,.75);}70%{box-shadow:0 0 0 12px rgba(251,191,36,0);}100%{box-shadow:0 0 0 0 rgba(251,191,36,0);}}
+#gv-playtip{position:fixed;z-index:5560;pointer-events:none;padding:6px 12px 5px;font:17px/1.2 var(--print);color:var(--yellow);white-space:nowrap;
+  background:linear-gradient(165deg,var(--board),var(--board2));border-radius:6px;box-shadow:0 0 0 2px var(--wood-hi),0 6px 16px rgba(0,0,0,.4);
+  animation:gvBob 1.6s ease-in-out infinite;}
+#gv-playtip::before{content:"";position:absolute;top:-7px;right:var(--ax,24px);border:7px solid transparent;border-top:0;border-bottom-color:var(--wood-hi);}
+#gv-playtip[hidden]{display:none;}
+@keyframes gvBob{50%{transform:translateY(3px);}}
+
+/* ---------- Physics sheet: the one-line summary, front and centre ---------- */
+.gv-oneline{margin:4px 0 22px;padding:14px 18px 15px;border-radius:10px;border:1px solid var(--accent-soft,rgba(59,155,143,.35));
+  border-left:4px solid var(--accent,#3b9b8f);background:var(--ctrl-bg,rgba(30,77,58,.15));}
+.gv-oneline .gv-ok{margin:0 0 4px;font:600 12px/1 var(--font-sans,inherit);letter-spacing:.12em;text-transform:uppercase;color:var(--accent,#3b9b8f);}
+.gv-oneline .gv-ot{margin:0;font:500 17px/1.5 var(--font-sans,inherit);color:var(--text,#e2e8f0);}
+@media (prefers-reduced-motion:reduce){.gv-write{clip-path:none;animation:none;}.gv-w{opacity:1;transform:none;animation:none;}
+  .gv-underline path,.gv-tick path,.gv-chalkline.draw,.gv-pointer.draw{animation:none;stroke-dashoffset:0;stroke-dasharray:none;}
+  .gv-erasing .gv-body,.gv-erasing .gv-head .gv-chap{animation:none;}#gv-card{transition:none;}.gv-attn,#gv-playtip{animation:none !important;}}
+</style>
+
+<div id="gv-start" role="dialog" aria-modal="true" aria-labelledby="gv-start-title" data-no-reset hidden>
+  <div class="gv-board">
+    <p class="gv-kicker">Welcome to</p>
+    <span class="gv-titlewrap"><h2 id="gv-start-title" class="gv-write"></h2>
+      <svg class="gv-underline" viewBox="0 0 200 9" preserveAspectRatio="none" aria-hidden="true"><path pathLength="1" d="M3 5 C 50 2, 110 8, 197 3"/></svg></span>
+    <p class="gv-blurb" id="gv-start-blurb"></p>
+    <div class="gv-choices">
+      <button type="button" class="gv-choice gv-hand guide" id="gv-go-guide"><b>Guide me &rarr;</b><small>a 2-minute tour</small></button>
+      <button type="button" class="gv-choice gv-hand free" id="gv-go-free"><b>Explore freely</b><small>all controls open</small></button>
+    </div>
+    <div class="gv-ledge" aria-hidden="true"></div>
+  </div>
+</div>
+
+<div id="gv-tour" data-no-reset hidden>
+  <svg id="gv-svg" aria-hidden="true">
+    <defs><filter id="gv-chalktex" x="-5%" y="-5%" width="110%" height="110%"><feTurbulence type="fractalNoise" baseFrequency="1.1" numOctaves="1" seed="3" result="n"/><feDisplacementMap in="SourceGraphic" in2="n" scale="1.8"/></filter>
+      <mask id="gv-mask"><rect x="0" y="0" width="100%" height="100%" fill="#fff"/><g id="gv-holes"></g></mask></defs>
+    <rect x="0" y="0" width="100%" height="100%" fill="rgba(4,8,12,.5)" mask="url(#gv-mask)"/>
+    <g id="gv-lines"></g>
+  </svg>
+  <div id="gv-card" class="gv-board" role="dialog" aria-live="polite" aria-labelledby="gv-title">
+    <div class="gv-head">
+      <span class="gv-chap" id="gv-chap"></span>
+      <span class="gv-count"><span id="gv-count"></span><span class="gv-tally" id="gv-tally"></span></span>
+      <button type="button" id="gv-close" title="Close the guide (Esc)" aria-label="Close the guide">&times;</button>
+    </div>
+    <div class="gv-body"><span class="gv-titlewrap"><h4 id="gv-title"></h4><svg class="gv-underline" viewBox="0 0 200 9" preserveAspectRatio="none" aria-hidden="true"><path pathLength="1" d="M2 5 C 60 2, 120 8, 198 4"/></svg></span>
+      <div id="gv-text"></div><div id="gv-try" class="gv-try gv-hand" hidden></div></div>
+    <div class="gv-final" id="gv-final" hidden>
+      <button type="button" class="gv-cbtn gv-hand" id="gv-fin-back" aria-label="Back" title="Back">&larr;</button>
+      <span class="gv-spacer"></span>
+      <button type="button" class="gv-textbtn" id="gv-fin-gi">Guided Inquiry</button>
+      <button type="button" class="gv-cbtn gv-hand primary" id="gv-fin-free">Done</button>
+    </div>
+    <div class="gv-foot" id="gv-foot">
+      <button type="button" class="gv-cbtn gv-hand" id="gv-back" aria-label="Back" title="Back">&larr;</button>
+      <button type="button" id="gv-voice" aria-pressed="true" title="Mute the guide"><span id="gv-voice-lab">voice</span> <span class="gv-waves">))</span></button>
+      <span class="gv-spacer"></span>
+      <button type="button" class="gv-cbtn gv-hand primary" id="gv-next">next &rarr;</button>
+    </div>
+  </div>
+</div>
+
+<div id="gv-free" role="dialog" aria-modal="true" aria-labelledby="gv-free-h" data-no-reset hidden>
+  <div class="gv-board">
+    <button type="button" class="gv-x" id="gv-free-x" title="Close (Esc)" aria-label="Close">&times;</button>
+    <h3 id="gv-free-h"></h3>
+    <div class="gv-flow" id="gv-flow"></div>
+    <svg class="gv-rule" viewBox="0 0 400 8" preserveAspectRatio="none" aria-hidden="true"><path d="M2 4 C 120 2, 260 6, 398 3"/></svg>
+    <p class="gv-one-k">In one line</p>
+    <p class="gv-one" id="gv-one"></p>
+    <div class="gv-final">
+      <button type="button" class="gv-textbtn" id="gv-free-phys">Open the full Physics sheet</button>
+      <span class="gv-spacer"></span>
+      <button type="button" class="gv-cbtn gv-hand primary" id="gv-free-go">Start exploring</button>
+    </div>
+  </div>
+</div>
+<div id="gv-playtip" data-no-reset hidden>Press Play to start</div>
+<div id="gv-hint" class="gv-board" role="status" data-no-reset hidden><span class="gv-notch" aria-hidden="true"></span><p id="gv-hint-text"></p><button type="button" id="gv-hint-x" title="Close" aria-label="Close">&times;</button></div>
+
+<script id="gv-spec">
+__SPEC__
+</script>
+<script id="gv-engine">
+(function(){
+  'use strict';
+  var SPEC=window.__GV_SPEC; if(!SPEC) return;
+  var $=function(id){return document.getElementById(id);};
+  var sleep=function(ms){return new Promise(function(r){setTimeout(r,ms);});};
+  var q=function(sel){ var e=document.querySelector(sel); return e; };
+  var vis=function(e){ if(!e) return false; var r=e.getBoundingClientRect(); return r.width>0&&r.height>0; };
+
+  /* ---------- the guide: the simulation window first, then the sidebar. The last step also points at Play.
+     Explore freely gets one trigger step: press Play and watch what changes. ---------- */
+  /* CUE: what the last card and the Done cue point at: Play, or the trigger control in static sims (no SPEC.play) */
+  var CUE=SPEC.play||(SPEC.trigger&&SPEC.trigger.at)||null, STATIC=!SPEC.play;
+  var GUIDE=SPEC.steps.map(function(s,k,arr){ if(k<arr.length-1) return s;
+    var o={}; for(var x in s) o[x]=s[x];
+    o.final=true; o.points=function(){ return [CUE]; };
+    o.text=s.text+(SPEC.playText||''); o.say=s.say+(SPEC.playSay?' '+SPEC.playSay:''); return o; });
+  var TRIGGER={chap:'Explore freely', title:'Start here', final:true, trigger:true, points:function(){ return [CUE]; },
+    text:SPEC.trigger.text, say:SPEC.trigger.say};
+  var steps=GUIDE, triggerOn=false;
+
+  /* ---------- the sim waits for Play ---------- */
+  var playBtn=function(){ return SPEC.play?q(SPEC.play):null; };
+  var cueEl=function(){ return CUE?q(CUE):null; };
+  var isPlaying=function(){ var b=playBtn(); return !!b&&/pause/i.test(b.textContent||''); };
+  var giOn=function(){ var b=$('btn-gi'); return !!b&&b.classList.contains('active'); };
+  var userStarted=false, holdUntil=0, attn=false;
+  function pauseSim(){ if(isPlaying()){ var b=playBtn(); if(b) b.click(); } }
+  function hold(ms){ holdUntil=performance.now()+ms; userStarted=false; pauseSim(); }
+  (function(){ var b=playBtn(); if(b) b.addEventListener('pointerdown',function(){ userStarted=true; holdUntil=0; },true);
+    if(b) b.addEventListener('keydown',function(e){ if(e.key==='Enter'||e.key===' '){ userStarted=true; holdUntil=0; } },true);
+    var tg=SPEC.trigger&&SPEC.trigger.at&&q(SPEC.trigger.at);   /* using the trigger control also counts: never re-pause after it */
+    if(tg&&tg!==b) ['pointerdown','input','change','keydown'].forEach(function(ev){ tg.addEventListener(ev,function(){ if(!tourOn){ userStarted=true; holdUntil=0; } },true); }); })();
+  /* Reset puts the experiment back to its starting state and waits for Play again (outside the
+     Guided Inquiry, which runs its own flow) */
+  (function(){ var r=SPEC.reset&&q(SPEC.reset); if(!r) return;
+    /* pause BEFORE the sim's own reset runs (capture phase), so no frame runs on the fresh state */
+    r.addEventListener('click',function(){ if(!giOn()) pauseSim(); },true);
+    r.addEventListener('click',function(){ if(giOn()) return; setTimeout(function(){ if(giOn()) return; hold(900); pauseSim(); },30); }); })();
+  var attnT=0;
+  function setAttn(on){ clearTimeout(attnT); attn=on; var b=cueEl(); if(b) b.classList.toggle('gv-attn',on); placeTip(); }
+  /* a short cue (about 3 s) pointing at Play; it never nags and never comes back on its own */
+  function flashAttn(){ if(!STATIC&&isPlaying()) return; setAttn(true); attnT=setTimeout(function(){ setAttn(false); },3000); }
+  function placeTip(){
+    var t=$('gv-playtip'), b=cueEl(), show=attn&&(!tourOn||(steps[i]&&steps[i].final))&&$('gv-free').hidden&&$('gv-start').hidden&&vis(b);
+    t.hidden=!show; if(!show) return;
+    var r=b.getBoundingClientRect(), w=t.offsetWidth;
+    var left=Math.max(8,Math.min(r.right-w, innerWidth-w-8));
+    t.style.left=left+'px'; t.style.top=(r.bottom+12)+'px';
+    t.style.setProperty('--ax',Math.max(10,Math.min(w-24,(left+w)-(r.left+r.width/2)-7))+'px');
+  }
+  setInterval(function(){
+    if(holdUntil && performance.now()<holdUntil && !userStarted && isPlaying()) pauseSim();
+    if(attn && !STATIC && isPlaying()) setAttn(false);
+    if(attn) placeTip();
+  },120);
+  addEventListener('resize',placeTip);
+  if(STATIC){ $('gv-playtip').textContent=SPEC.tryTip||'Try it'; }
+
+  /* ---------- voice: the sim's ElevenLabs clips first, the browser voice as fallback ---------- */
+  var VOICE=(function(){
+    var stat=window.__fermiStaticSpeech, SU=window.__fermiStaticUtterance;
+    var real=window['speech'+'Synthesis'], RU=window['SpeechSynthesis'+'Utterance'];
+    var ok=!!(stat&&SU)||!!(real&&RU);
+    var onState=function(){}, token=0;
+    function stop(){ token++; try{ if(stat) stat.cancel(); }catch(e){} try{ if(real) real.cancel(); }catch(e){} onState(false); }
+    function say(text){
+      if(!ok||!text) return; stop(); var my=token;
+      if(stat&&SU){ var u=new SU(text); u.onstart=function(){ if(my===token) onState(true); }; u.onend=u.onerror=function(){ if(my===token) onState(false); };
+        setTimeout(function(){ if(my===token) stat.speak(u); },120); return; }
+      var u2=new RU(text); u2.lang='en-GB'; u2.onstart=function(){ if(my===token) onState(true); }; u2.onend=u2.onerror=function(){ if(my===token) onState(false); };
+      setTimeout(function(){ if(my===token){ try{ real.speak(u2); real.resume(); }catch(e){} } },120);
+    }
+    function unlock(){ try{ if(window.__fermiClipAudio) window.__fermiClipAudio.ctx().resume(); }catch(e){}
+      try{ if(real&&RU&&!stat){ var u=new RU(' '); u.volume=0; real.speak(u); } }catch(e){} }
+    return {ok:ok, say:say, stop:stop, unlock:unlock, set onState(f){ onState=f; }};
+  })();
+
+  /* ---------- chalk helpers ---------- */
+  function chalkWords(html,delay){
+    var box=document.createElement('div'); box.innerHTML=html; var n=0;
+    (function walk(node){
+      Array.prototype.slice.call(node.childNodes).forEach(function(ch){
+        if(ch.nodeType===3){
+          var frag=document.createDocumentFragment();
+          ch.textContent.split(/(\s+)/).forEach(function(w){
+            if(!w) return; if(/^\s+$/.test(w)){ frag.appendChild(document.createTextNode(w)); return; }
+            var s=document.createElement('span'); s.className='gv-w'; s.style.animationDelay=(delay+n*28)+'ms'; s.textContent=w; n++; frag.appendChild(s); });
+          ch.parentNode.replaceChild(frag,ch);
+        } else if(ch.nodeType===1) walk(ch);
+      });
+    })(box);
+    return box.innerHTML;
+  }
+  function rewrite(el){ el.classList.remove('gv-write'); void el.offsetWidth; el.classList.add('gv-write');
+    var u=el.parentNode.querySelector('.gv-underline path'); if(u){ u.style.animation='none'; void u.getBoundingClientRect(); u.style.animation=''; } }
+  function roughRect(r,pad){
+    var x0=r.left-pad, y0=r.top-pad, x1=r.left+r.width+pad, y1=r.top+r.height+pad, k=Math.min(10,(x1-x0)/4,(y1-y0)/4);
+    var j=function(){ return (Math.random()-.5)*2.2; };
+    return 'M'+(x0+k)+' '+(y0+j())+' L'+(x1-k)+' '+(y0+j())+' Q'+x1+' '+y0+' '+(x1+j())+' '+(y0+k)
+      +' L'+(x1+j())+' '+(y1-k)+' Q'+x1+' '+y1+' '+(x1-k)+' '+(y1+j())+' L'+(x0+k)+' '+(y1+j())
+      +' Q'+x0+' '+y1+' '+(x0+j())+' '+(y1-k)+' L'+(x0+j())+' '+(y0+k)+' Q'+x0+' '+y0+' '+(x0+k+6)+' '+(y0+j()*1.5);
+  }
+  /* 3D parts: the outline follows the object's silhouette (convex hull of its projected corners), pushed out by pad */
+  function hull(P){ P=P.slice().sort(function(a,b){return a[0]-b[0]||a[1]-b[1];}); if(P.length<3) return P;
+    var cr=function(o,a,b){return (a[0]-o[0])*(b[1]-o[1])-(a[1]-o[1])*(b[0]-o[0]);}, lo=[], up=[], i;
+    for(i=0;i<P.length;i++){ while(lo.length>=2&&cr(lo[lo.length-2],lo[lo.length-1],P[i])<=0) lo.pop(); lo.push(P[i]); }
+    for(i=P.length-1;i>=0;i--){ while(up.length>=2&&cr(up[up.length-2],up[up.length-1],P[i])<=0) up.pop(); up.push(P[i]); }
+    up.pop(); lo.pop(); return lo.concat(up); }
+  function grow(H,pad){ var cx=0,cy=0; H.forEach(function(p){cx+=p[0];cy+=p[1];}); cx/=H.length; cy/=H.length;
+    return H.map(function(p){ var dx=p[0]-cx, dy=p[1]-cy, d=Math.hypot(dx,dy)||1; return [p[0]+dx/d*pad, p[1]+dy/d*pad]; }); }
+  function polyPath(H){ return 'M'+H.map(function(p){return p[0].toFixed(1)+' '+p[1].toFixed(1);}).join(' L')+' Z'; }
+  function bboxOf(H){ var l=1e9,t=1e9,r=-1e9,b=-1e9; H.forEach(function(p){l=Math.min(l,p[0]);t=Math.min(t,p[1]);r=Math.max(r,p[0]);b=Math.max(b,p[1]);});
+    return {left:l,top:t,width:r-l,height:b-t}; }
+  function arrowPath(x0,y0,x1,y1){   /* a chalk arrow from the card up to a button, with a hand-drawn head */
+    var mx=(x0+x1)/2+(x1>x0?-18:18), my=(y0+y1)/2;
+    var a=Math.atan2(y1-my,x1-mx), h=11;
+    return 'M'+x0+' '+y0+' Q'+mx+' '+my+' '+x1+' '+y1
+      +' M'+(x1-h*Math.cos(a-0.45))+' '+(y1-h*Math.sin(a-0.45))+' L'+x1+' '+y1+' L'+(x1-h*Math.cos(a+0.45))+' '+(y1-h*Math.sin(a+0.45));
+  }
+
+  /* ---------- start board (replaces the old welcome overlay) ---------- */
+  var startEl=$('gv-start'), tour=$('gv-tour'), card=$('gv-card'), freeEl=$('gv-free');
+  var ov=$('welcome-overlay'); if(ov) ov.classList.add('hidden');
+  $('gv-start-title').textContent=SPEC.title;
+  $('gv-start-blurb').innerHTML=chalkWords(SPEC.blurb,650);
+  startEl.hidden=false; hold(1e9);
+  setTimeout(function(){ $('gv-go-guide').focus({preventScroll:true}); },60);
+  function closeStart(){ startEl.hidden=true; }
+  $('gv-go-guide').addEventListener('click',function(){ VOICE.unlock(); closeStart(); begin(); });
+  $('gv-go-free').addEventListener('click',function(){ closeStart(); enterFree(true); });
+
+  function enterFree(withBoard){
+    if(window.__setMode) window.__setMode('free');
+    hold(1500); setTimeout(pauseSim,60);
+    if(withBoard) setTimeout(showHint,350);
+  }
+
+  /* ---------- Explore freely: ONE small trigger hint at one control (Play by default; a slider or toggle
+     in static sims). It is done when the student uses that control. Not dimmed, never comes back on Reset. ---------- */
+  var hintEl=$('gv-hint'), hintT=0, hintOff=null, hintAuto=0;   /* hintAuto: the hint closes itself after HINT_MS */
+  var HINT_MS=3000;
+  function hintTarget(){ return q((SPEC.trigger&&SPEC.trigger.at)||SPEC.play); }
+  function placeHint(){
+    var t=hintTarget(); if(hintEl.hidden||!t||!vis(t)) return;
+    var r=t.getBoundingClientRect(), w=hintEl.offsetWidth, h=hintEl.offsetHeight;
+    var below=r.bottom+14+h<innerHeight-8, x=Math.max(16,Math.min(r.left+r.width/2-w/2, innerWidth-w-16));
+    if(r.left>innerWidth*0.66&&r.top>hdrBottom()+4){ x=Math.max(16,r.left-w-16); }   /* sidebar control: sit to its left */
+    var y=below?r.bottom+14:r.top-h-14;
+    if(r.left>innerWidth*0.66&&r.top>hdrBottom()+4){ y=Math.max(hdrBottom()+8,Math.min(r.top+r.height/2-h/2,innerHeight-h-8)); }
+    hintEl.classList.toggle('below',!below&&!(r.left>innerWidth*0.66&&r.top>hdrBottom()+4));
+    hintEl.style.left=x+'px'; hintEl.style.top=y+'px';
+    hintEl.style.setProperty('--nx',Math.max(10,Math.min(w-28,r.left+r.width/2-x-9))+'px');
+    hintEl.querySelector('.gv-notch').style.display=(r.left>innerWidth*0.66&&r.top>hdrBottom()+4)?'none':'';
+  }
+  function showHint(){
+    var tg=SPEC.trigger, t=hintTarget(); if(!tg||!t) return;
+    $('gv-hint-text').innerHTML=tg.text; hintEl.classList.remove('done'); hintEl.hidden=false; placeHint();
+    t.classList.add('gv-attn');
+    if(voiceOn&&VOICE.ok&&tg.say){ VOICE.onState=function(){}; VOICE.say(tg.say); }
+    var isPlay=t===playBtn();
+    function done(){ if(hintEl.hidden) return; hintEl.classList.add('done'); t.classList.remove('gv-attn'); cleanup();
+      setTimeout(hideHint,1200); }
+    function onUse(){ setTimeout(function(){ if(!isPlay||isPlaying()) done(); },60); }
+    function cleanup(){ clearInterval(hintT); ['input','change','click'].forEach(function(ev){ t.removeEventListener(ev,onUse,true); }); }
+    ['input','change','click'].forEach(function(ev){ t.addEventListener(ev,onUse,true); });
+    if(isPlay) hintT=setInterval(function(){ if(isPlaying()) done(); },150);
+    hintOff=function(){ cleanup(); t.classList.remove('gv-attn'); };
+    /* owner rule: the hint never stays longer than 3 s; its spoken line may finish */
+    clearTimeout(hintAuto); hintAuto=setTimeout(function(){ if(hintEl.hidden) return; if(hintOff) hintOff(); hintOff=null; hintEl.hidden=true; },HINT_MS);
+  }
+  function hideHint(){ clearTimeout(hintAuto); if(hintOff) hintOff(); hintOff=null; hintEl.hidden=true; VOICE.stop(); }
+  $('gv-hint-x').addEventListener('click',hideHint);
+  addEventListener('resize',placeHint);
+
+  /* ---------- Free exploration: where to start (UNUSED since round 3: Explore freely shows only the trigger hint) ---------- */
+  function oneLine(){
+    var k=Array.prototype.find.call(document.querySelectorAll('.ps-key'),function(e){ return /In one line/i.test(e.textContent||''); });
+    if(!k) return '';
+    var c=k.cloneNode(true), b=c.querySelector('b'); if(b) b.remove(); return c.innerHTML.trim();
+  }
+  var freePrev=null;
+  function openFree(){
+    $('gv-free-h').textContent=SPEC.free.lede;
+    var flow=$('gv-flow'); flow.innerHTML='';
+    SPEC.free.flow.forEach(function(st,k){
+      if(k){ var a=document.createElement('span'); a.className='gv-arr'; a.textContent='→'; flow.appendChild(a); }
+      var s=document.createElement('span'); s.className='gv-step'; s.innerHTML='<b></b><span></span>';
+      s.firstChild.textContent=st[0]; s.lastChild.innerHTML=st[1]; flow.appendChild(s); });
+    var one=oneLine(); $('gv-one').innerHTML=one; $('gv-one').previousElementSibling.hidden=!one; $('gv-one').hidden=!one;
+    freePrev=document.activeElement; freeEl.hidden=false; placeTip();
+    setTimeout(function(){ $('gv-free-go').focus({preventScroll:true}); },50);
+  }
+  function closeFree(then){
+    if(freeEl.hidden) return; freeEl.hidden=true;
+    if(then) then(); else flashAttn();
+  }
+  $('gv-free-x').addEventListener('click',function(){ closeFree(); });
+  $('gv-free-go').addEventListener('click',function(){ closeFree(); });
+  $('gv-free-phys').addEventListener('click',function(){ closeFree(function(){ openPhysics(); }); });
+  function openPhysics(){ if(window.__openPhysics) window.__openPhysics(); else { var t=$('toggle-formal'); if(t) t.click(); } }
+
+  /* ---------- Physics sheet: the one-line summary, front and centre ---------- */
+  (function(){
+    var k=Array.prototype.find.call(document.querySelectorAll('.ps-key'),function(e){ return /In one line/i.test(e.textContent||''); });
+    if(!k) return;
+    var first=document.querySelector('.ps-sec'); if(!first||!first.parentNode) return;
+    var d=document.createElement('div'); d.className='gv-oneline';
+    d.innerHTML='<p class="gv-ok">In one line</p><p class="gv-ot"></p>';
+    d.querySelector('.gv-ot').innerHTML=oneLine();
+    first.parentNode.insertBefore(d,first);
+  })();
+
+  /* ---------- the guide ---------- */
+  var i=0, gen=0, tourOn=false, place=null, lastKey='', poll=0, voiceOn=VOICE.ok;
+  function rectOf(t){
+    if(!t) return null;
+    if(t.rect!==undefined) return t.rect;
+    var el=q(t.sel); if(!el||!vis(el)) return null;
+    var r=el.getBoundingClientRect(), p=t.pad==null?3:t.pad; return {left:r.left-p,top:r.top-p,width:r.width+2*p,height:r.height+2*p};
+  }
+  function union(rs){ if(!rs.length) return null; var l=Infinity,t=Infinity,r=-Infinity,b=-Infinity;
+    rs.forEach(function(x){ l=Math.min(l,x.left); t=Math.min(t,x.top); r=Math.max(r,x.left+x.width); b=Math.max(b,x.top+x.height); });
+    return {left:l,top:t,width:r-l,height:b-t}; }
+  function hdrBottom(){ var h=q('.shell-header')||q('header'); var r=h&&h.getBoundingClientRect(); return r&&r.height?r.bottom:60; }
+  function layout(force){
+    if(!tourOn) return;
+    var st=steps[i];
+    var all0=st.targets?st.targets():[];
+    var av=all0.filter(function(t){ return t&&t.avoid&&t.rect; }).map(function(t){ return t.rect; });   /* keep the card clear of these; not outlined */
+    var ts=all0.filter(function(t){ return !(t&&t.avoid); }).map(function(t){
+        if(t&&t.ellipse){ var e=t.ellipse; if(!e||e.width<3||e.height<3) return {r:null};
+          var cx=e.left+e.width/2, cy=e.top+e.height/2, rx=e.width/2*1.22+6, ry=e.height/2*1.22+6, E=[];
+          for(var a=0;a<48;a++){ var th=a/48*Math.PI*2; E.push([cx+rx*Math.cos(th), cy+ry*Math.sin(th)]); }
+          return {r:bboxOf(E),poly:E,sec:!!t.sec,tag:t.tag}; }
+        if(t&&t.poly){ var H=t.poly&&t.poly.length>=3?grow(hull(t.poly),t.pad==null?8:t.pad):null; return {r:H?bboxOf(H):null,poly:H,sec:!!t.sec,tag:t.tag}; }
+        return {r:rectOf(t),sec:!!(t&&t.sec),tag:t&&t.tag}; }).filter(function(o){ return o.r&&o.r.width>2&&o.r.height>2; });
+    var ps=(st.points?st.points():[]).map(function(s){ var e=q(s); return vis(e)?e.getBoundingClientRect():null; }).filter(Boolean);
+    var holes=$('gv-holes'); holes.innerHTML='';
+    ts.filter(function(o){return o.poly;}).forEach(function(o){
+      var h=document.createElementNS('http://www.w3.org/2000/svg','path'); h.setAttribute('d',polyPath(grow(o.poly,3)));
+      h.setAttribute('fill','#000'); h.setAttribute('stroke','#000'); h.setAttribute('stroke-width','6'); h.setAttribute('stroke-linejoin','round'); holes.appendChild(h); });
+    ts.filter(function(o){return !o.poly;}).map(function(o){return o.r;}).concat(ps.map(function(r){ return {left:r.left-4,top:r.top-4,width:r.width+8,height:r.height+8}; })).forEach(function(r){
+      var h=document.createElementNS('http://www.w3.org/2000/svg','rect');
+      h.setAttribute('x',r.left-3); h.setAttribute('y',r.top-3); h.setAttribute('width',r.width+6); h.setAttribute('height',r.height+6);
+      h.setAttribute('rx',8); h.setAttribute('fill','#000'); holes.appendChild(h); });
+    /* card position: top-bar steps sit under the bar, centred on what they point at; other steps sit where
+       they hide the least of what is circled, close to it */
+    var cw=card.offsetWidth, ch=card.offsetHeight, vw=innerWidth, vh=innerHeight, m=20, top0=hdrBottom()+12;
+    function cX(v){return Math.max(16,Math.min(v,vw-cw-16));} function cY(v){return Math.max(top0,Math.min(v,vh-ch-16));}
+    /* a camera drag moved something under the card: find the card a new spot */
+    if(place&&!force&&ts.length){ var hid=ts.some(function(o){ var r=o.r, ox=Math.max(0,Math.min(place[0]+cw,r.left+r.width)-Math.max(place[0],r.left)),
+        oy=Math.max(0,Math.min(place[1]+ch,r.top+r.height)-Math.max(place[1],r.top)); return ox*oy>0.15*Math.max(1,r.width*r.height); }); if(hid) place=null; }
+    if(force||!place){
+      var x,y;
+      if(ps.length&&!ts.length){
+        var U=union(ps); x=cX(U.left+U.width/2-cw/2); y=Math.max(top0+44,U.top+U.height+58);
+        if(st.final){ x=cX(U.left+U.width-cw); }
+        y=cY(y);
+      } else {
+        var prim=ts.filter(function(o){return !o.sec;}).map(function(o){return o.r;}); var R=union(prim.length?prim:ts.map(function(o){return o.r;}));
+        if(!R){ x=(vw-cw)/2; y=(vh-ch)/2; }
+        else {
+          var all=union(ts.map(function(o){return o.r;}));
+          var cands=[[R.left+R.width+m,R.top],[R.left-cw-m,R.top],[R.left,R.top+R.height+m],[R.left,R.top-ch-m],
+            [R.left+R.width+m,R.top+R.height-ch],[R.left-cw-m,R.top+R.height-ch],[all.left-cw-m,all.top],[all.left+all.width+m,all.top],
+            [R.left+R.width-cw,R.top+R.height+m],[vw-cw-16,top0],[16,top0],[16,vh-ch-16],[(vw-cw)/2,vh-ch-16]], best=null;
+          cands.forEach(function(c){
+            var cx=cX(c[0]), cy=cY(c[1]), s=0;
+            ts.forEach(function(o){ var r=o.r, ox=Math.max(0,Math.min(cx+cw,r.left+r.width)-Math.max(cx,r.left)), oy=Math.max(0,Math.min(cy+ch,r.top+r.height)-Math.max(cy,r.top));
+              s+=ox*oy*(o.sec?2:3); });
+            av.forEach(function(r){ var ox=Math.max(0,Math.min(cx+cw,r.left+r.width)-Math.max(cx,r.left)), oy=Math.max(0,Math.min(cy+ch,r.top+r.height)-Math.max(cy,r.top)); s+=ox*oy*3; });
+            var dx=Math.max(0,Math.max(R.left-(cx+cw),cx-(R.left+R.width))), dy=Math.max(0,Math.max(R.top-(cy+ch),cy-(R.top+R.height)));
+            s+=(dx+dy)*30;
+            if(!best||s<best[0]) best=[s,cx,cy]; });
+          x=best[1]; y=best[2];
+        }
+      }
+      place=[cX(x),cY(y)];
+    } else { place[0]=cX(place[0]); place[1]=cY(place[1]); }
+    card.style.left=place[0]+'px'; card.style.top=place[1]+'px';
+    /* chalk: loops around what is explained, arrows from the card to what it points at */
+    var lines=$('gv-lines');
+    var key=ts.map(function(o){return Math.round(o.r.left/30)+','+Math.round(o.r.top/30)+','+Math.round(o.r.width/30)+','+Math.round(o.r.height/30);}).join('|')
+      +'#'+ps.map(function(r){return Math.round(r.left/20);}).join(',')+'@'+Math.round(place[0]/20)+','+Math.round(place[1]/20);
+    var loopsNow=lines.querySelectorAll('.gv-chalkline');
+    if(!force&&key===lastKey) return;
+    if(!force&&ts.length&&!ps.length&&!ts.some(function(o){return o.tag;})&&loopsNow.length===ts.length&&lines.dataset.step===String(i)){   /* same step, things moved: follow, no re-draw */
+      ts.forEach(function(o,k){ loopsNow[k].setAttribute('d',o.poly?polyPath(o.poly):roughRect(o.r,5)); });
+      lastKey=key; return;
+    }
+    lastKey=key; lines.innerHTML=''; lines.dataset.step=String(i);
+    ts.forEach(function(o,k){ var p=document.createElementNS('http://www.w3.org/2000/svg','path');
+      p.setAttribute('class','gv-chalkline'+(force?' draw':'')+(o.sec?' sec':'')); p.setAttribute('pathLength','100'); p.style.animationDelay=(k*120)+'ms';
+      p.setAttribute('d',o.poly?polyPath(o.poly):roughRect(o.r,5)); lines.appendChild(p);
+      if(o.tag){   /* a chalk symbol beside the outline, matching the symbol on the control */
+        var tx=document.createElementNS('http://www.w3.org/2000/svg','text'); tx.setAttribute('class','gv-tag');
+        /* above the outline's left corner; if that spot lies on another outlined part, beside it; else below */
+        var inOther=function(px,py){ return ts.some(function(q){ return q!==o&&px>=q.r.left&&px<=q.r.left+q.r.width&&py>=q.r.top-14&&py<=q.r.top+q.r.height; }); };
+        var cands=[[o.r.left+4,o.r.top-10],[o.r.left-34,o.r.top+o.r.height/2+8],[o.r.left+4,o.r.top+o.r.height+26]];
+        var pick=cands.find(function(c){ return c[1]>hdrBottom()+22&&!inOther(c[0],c[1]); })||cands[2];
+        var x=Math.max(8,Math.min(innerWidth-60,pick[0])), y=pick[1];
+        tx.setAttribute('x',x); tx.setAttribute('y',y); tx.textContent=o.tag; lines.appendChild(tx); } });
+    var cl=place[0], ct=place[1];
+    if(st.final) ps=[];   /* the last step's Play prompt is the pulse + tag under Play, not a long arrow */
+    ps.forEach(function(r,k){ var tx=r.left+r.width/2, ty=r.bottom+6;
+      var sx=Math.max(cl+26,Math.min(cl+cw-26,tx)), sy=ct-4;
+      if(ty>sy-12) return;
+      var p=document.createElementNS('http://www.w3.org/2000/svg','path');
+      p.setAttribute('class','gv-pointer draw'); p.setAttribute('pathLength','100'); p.style.animationDelay=(150+k*160)+'ms';
+      p.setAttribute('d',arrowPath(sx,sy,tx,ty)); lines.appendChild(p); });
+  }
+  function progress(){ $('gv-count').parentNode.hidden=steps.length<2; $('gv-count').textContent=(i+1)+' of '+steps.length;
+    var t=$('gv-tally'); t.innerHTML=''; for(var k=0;k<steps.length;k++){ var e=document.createElement('i'); if(k<=i) e.className='on'; t.appendChild(e); } }
+  function voiceState(talking){ var b=$('gv-voice'); b.setAttribute('aria-pressed',String(voiceOn)); $('gv-voice-lab').textContent=voiceOn?'voice':'muted';
+    card.classList.toggle('gv-speaking',!!talking&&voiceOn); b.title=voiceOn?'Mute the guide':'Let the guide talk you through it'; }
+  function narrate(){ if(!voiceOn||!VOICE.ok) return; VOICE.onState=function(s){ voiceState(s); }; VOICE.say(steps[i].say||''); }
+  var TICK='<svg class="gv-tick" viewBox="0 0 22 16" aria-hidden="true"><path pathLength="1" d="M2 9 L8 14 L20 2"/></svg>';
+  function setTry(kind,label,msg){ var tr=$('gv-try'); tr.hidden=false; tr.className='gv-try gv-hand'+(kind?' '+kind:'');
+    tr.innerHTML=(kind==='ok'?TICK:'')+'<span class="gv-tl">'+label+'</span><span>'+msg+'</span>'; }
+  function scrollTargets(st){
+    (st.targets?st.targets():[]).forEach(function(t){ if(t&&t.sel&&!t.avoid){ var e=q(t.sel); if(e&&e.scrollIntoView&&!(t.noScroll)){ var r=e.getBoundingClientRect();
+      if(r.bottom>innerHeight-16||r.top<hdrBottom()+8) e.scrollIntoView({block:'center',inline:'nearest'}); } } });
+  }
+  async function render(){
+    var st=steps[i], my=++gen; clearInterval(poll); place=null; lastKey='';
+    if(card.dataset.shown){ card.classList.add('gv-erasing'); await sleep(170); if(my!==gen) return; }
+    card.classList.remove('gv-erasing'); card.dataset.shown='1';
+    if(st.enter) st.enter();
+    scrollTargets(st);
+    $('gv-chap').textContent=st.chap; $('gv-title').textContent=st.title; rewrite($('gv-title'));
+    $('gv-text').innerHTML=chalkWords(st.text,450);
+    $('gv-back').disabled=i===0;
+    var tr=$('gv-try'), fin=$('gv-final'), foot=$('gv-foot');
+    tr.hidden=true;
+    /* the voice control stays on every card, the last one included */
+    var vb=$('gv-voice'); if(st.final){ if(vb.parentNode!==fin) fin.insertBefore(vb,$('gv-fin-back').nextSibling); } else if(vb.parentNode!==foot) foot.insertBefore(vb,$('gv-back').nextSibling);
+    if(st.final){
+      foot.hidden=true; fin.hidden=false; setAttn(!isPlaying());
+      $('gv-fin-back').hidden=!!st.trigger; $('gv-fin-gi').hidden=!!st.trigger; $('gv-fin-free').textContent=st.trigger?'Close':'Done';
+      if(isPlaying()) setTry('ok','It’s running.','');   /* otherwise the card line + the tag under Play say it once */
+      poll=setInterval(function(){
+        if(my!==gen) return clearInterval(poll);
+        if(isPlaying()){ clearInterval(poll); setTry('ok','It’s running.','');
+          setTimeout(function(){ if(tourOn&&my===gen) end('free'); },1500); }
+      },150);
+    } else { fin.hidden=true; foot.hidden=false; setAttn(false); $('gv-next').innerHTML='next &rarr;'; }
+    progress(); requestAnimationFrame(function(){ layout(true); }); setTimeout(function(){ layout(true); },380); narrate();
+  }
+  function go(d){ var n=i+d; if(n<0||n>=steps.length) return; i=n; render(); }
+  /* no-spoiler staging: the sim's own __cgPrepare (the old guide's staging), then the spec's start() */
+  var staged=false;
+  function stage(){
+    if(window.__setMode) window.__setMode('free');
+    if(window.__cgPrepare&&SPEC.stage!==false){ try{ window.__cgPrepare(); staged=true; }catch(e){} }
+    hold(1e9); setTimeout(pauseSim,60);
+    if(SPEC.start) SPEC.start();
+  }
+  function unstage(mode){
+    if(!staged) return; staged=false;
+    if(mode==='inquiry'||mode==='quiet') return;          /* the Guided Inquiry takes over and sets its own scene */
+    var was=isPlaying();
+    try{ if(window.__giResume) window.__giResume(); if(window.__freeExplore) window.__freeExplore(); }catch(e){}
+    if(!was){ hold(700); setTimeout(pauseSim,40); }       /* leaving the tour never starts the sim by itself */
+  }
+  /* Reset while the tour is open: the spec decides (onReset), else the tour stays on its step, re-staged; never the Guided Inquiry */
+  var resetTour=false;   /* true while a Reset pressed during the tour is being handled: the sim's own mode-local reset must not end it */
+  (function(){ var r=SPEC.reset&&q(SPEC.reset); if(!r) return;
+    r.addEventListener('click',function(){ resetTour=tourOn&&!triggerOn; },true);
+    r.addEventListener('click',function(){ if(!resetTour) return;
+      setTimeout(function(){ if(!resetTour) return;
+        if(SPEC.onReset){ try{ SPEC.onReset(); }catch(e){} }
+        else { if(giOn()&&window.__setMode) window.__setMode('free'); stage(); }
+        tourOn=true; tour.hidden=false; var cg=$('btn-cg'); if(cg) cg.classList.add('active'); setAttn(false); render();
+        /* a mode-local reset may switch to the Guided Inquiry a moment later: undo that while the tour is open */
+        [250,600].forEach(function(ms){ setTimeout(function(){ if(tourOn&&!SPEC.onReset&&giOn()&&window.__setMode){ window.__setMode('free'); stage(); var cg2=$('btn-cg'); if(cg2) cg2.classList.add('active'); } if(ms===600) resetTour=false; },ms); });
+      },80); }); })();
+  function begin(mode){
+    closeStart(); if(!freeEl.hidden) freeEl.hidden=true;
+    triggerOn=mode==='trigger'; steps=triggerOn?[TRIGGER]:GUIDE; tour.classList.toggle('gv-trigger',triggerOn);
+    if(!triggerOn){
+      var sh=$('shell'), tab=$('sb-hide-tab'); if(sh&&sh.classList.contains('shell-max')&&tab) tab.click();
+      stage();
+    }
+    tourOn=true; tour.hidden=false; var cg=$('btn-cg'); if(cg) cg.classList.add('active'); voiceState(false);
+    placeTip(); i=0; setTimeout(render,150);
+  }
+  function end(mode){
+    if(!tourOn) return;
+    if(resetTour&&(mode==='quiet'||mode==='inquiry')) return;   /* Reset during the tour keeps the tour */
+    tourOn=false; gen++; clearInterval(poll); tour.hidden=true; delete card.dataset.shown; var cg=$('btn-cg'); if(cg) cg.classList.remove('active');
+    VOICE.stop(); card.classList.remove('gv-speaking'); holdUntil=0;
+    unstage(mode);
+    if(mode==='inquiry'){ setAttn(false); holdUntil=0; if(window.__setMode) window.__setMode('inquiry'); }
+    else if(mode==='done') flashAttn();      /* finished the guide: a short cue at Play (the trigger control in static sims) */
+    else setAttn(false);
+    if(SPEC.end){ try{ SPEC.end(mode); }catch(e){} }
+  }
+  $('gv-next').addEventListener('click',function(){ go(1); });
+  $('gv-back').addEventListener('click',function(){ go(-1); });
+  $('gv-fin-back').addEventListener('click',function(){ go(-1); });
+  $('gv-fin-free').addEventListener('click',function(){ end(triggerOn?'free':'done'); });
+  $('gv-fin-gi').addEventListener('click',function(){ end('inquiry'); });
+  $('gv-close').addEventListener('click',function(){ end('free'); });
+  $('gv-voice').addEventListener('click',function(){ voiceOn=!voiceOn; voiceState(false); if(voiceOn){ VOICE.unlock(); narrate(); } else VOICE.stop(); });
+  if(!VOICE.ok) $('gv-voice').hidden=true;
+
+  /* the header's Simulation guide button opens this guide; Guided Inquiry closes it */
+  var cgBtn=$('btn-cg');
+  if(cgBtn) cgBtn.addEventListener('click',function(e){ e.stopImmediatePropagation(); e.preventDefault();
+    if(tourOn) end('free'); else { VOICE.unlock(); hideHint(); closeFree(function(){}); begin(); } },true);
+  var giBtn=$('btn-gi');
+  if(giBtn) giBtn.addEventListener('click',function(e){ if(!e.isTrusted) return;   /* the sim's own code clicking it (mode switches) is not the learner */
+  holdUntil=0; if(tourOn) end('quiet'); hideHint(); closeFree(function(){}); setAttn(false);
+},true);
+
+  document.addEventListener('keydown',function(e){
+    var tag=((e.target||{}).tagName)||'';
+    if(!startEl.hidden){ if(e.key==='Escape'){ e.stopImmediatePropagation(); closeStart(); enterFree(false); } return; }
+    if(!freeEl.hidden){ if(e.key==='Escape'){ e.stopImmediatePropagation(); closeFree(); } return; }
+    if(!tourOn) return;
+    if(e.key==='Escape'){ e.stopImmediatePropagation(); end('free'); }
+    else if(e.key==='ArrowRight'&&!/INPUT|SELECT|TEXTAREA/.test(tag)&&!steps[i].final){ go(1); }
+    else if(e.key==='ArrowLeft'&&!/INPUT|SELECT|TEXTAREA/.test(tag)){ go(-1); }
+  },true);
+  addEventListener('resize',function(){ place=null; layout(true); });
+  setInterval(function(){ if(tourOn) layout(false); },250);
+  window.__gv={showHint:showHint,hideHint:hideHint,get hint(){ return !hintEl.hidden; },begin:begin,end:end,go:go,get step(){return i;},get active(){return tourOn;},get steps(){return steps;},isPlaying:isPlaying,get attn(){return attn;}};
+})();
+</script>
+<!-- /GUIDE V2 LAYER -->

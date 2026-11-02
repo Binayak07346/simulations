@@ -1,0 +1,77 @@
+/* ════════════════════════════════════════════════════════════════════
+ * CHROME · the simulation page frame (layer fermi.components)
+ * ════════════════════════════════════════════════════════════════════
+ * Canonical classes for the parts every sim shares: top bar, stage
+ * (simulation window), sidebar with its panels/controls/readouts, hide
+ * tab, Guided Inquiry, and the Physics sheet. Colour, border, radius and
+ * type come from tokens; LAYOUT (grid, widths, heights) is deliberately
+ * NOT here in v1 — every sim family lays its page out differently, and
+ * geometry is the later type/geometry pass.
+ *
+ * Today these classes match nothing in the live sims (see primitives.css
+ * header). The legacy selector each one replaces is listed beside it and in
+ * CLASSES.md.
+ * ════════════════════════════════════════════════════════════════════ */
+
+/* Page ground · legacy: html, body, #shell, .shell-hero */
+.fsim-page { background: var(--color-bg); color: var(--color-text); font-family: var(--font-sans); }
+
+/* ── Top bar · legacy: .shell-header, .top-bar ───────────────────────── */
+.fsim-topbar {
+  background: var(--fsim-topbar-bg);
+  box-shadow: var(--fsim-topbar-shadow);
+  border-bottom: 1px solid var(--fsim-topbar-edge);
+  color: var(--fsim-topbar-text);
+}
+.fsim-topbar__title { color: var(--fsim-topbar-text); font-weight: var(--font-weight-semibold); }   /* .shell-title */
+.fsim-topbar__label { color: var(--fsim-topbar-text-muted); }                                       /* header <label>, .lbl-speed */
+.fsim-topbar__sep { background: var(--fsim-topbar-control-border); }                                /* .shell-sep */
+.fsim-topbar .fsim-btn {                                                                            /* .shell-header .shell-btn */
+  background: var(--fsim-topbar-control-bg);
+  color: var(--fsim-topbar-control-text);
+  border-color: var(--fsim-topbar-control-border);
+}
+.fsim-topbar .fsim-btn:hover { background: var(--fsim-topbar-control-bg-hover); color: var(--fsim-topbar-text); }
+.fsim-topbar .fsim-btn--selected,
+.fsim-topbar .fsim-btn[aria-pressed="true"] { background: var(--fsim-topbar-selected-bg); color: var(--fsim-topbar-text); border-color: var(--fsim-topbar-selected-border); }
+.fsim-topbar .fsim-btn--primary { background: var(--color-accent); color: var(--color-text-on-accent); border-color: var(--fsim-play-border); }   /* #shell-play */
+.fsim-topbar .fsim-btn--tutor { background: var(--color-surface); color: var(--color-text); border-color: var(--color-surface); }              /* #ask-euler */
+.fsim-topbar :focus-visible { outline-color: var(--fsim-topbar-focus); }
+
+/* ── Stage · legacy: .plot-box, .canvas-frame ────────────────────────── */
+.fsim-stage { background: var(--color-surface); }
+.fsim-stage__hint { background: var(--fsim-stage-hint-bg); color: var(--color-text); border: 1px solid var(--color-border); }   /* .stage-hint */
+
+/* ── Sidebar · legacy: .shell-aside ──────────────────────────────────── */
+.fsim-sidebar { background: var(--fsim-sidebar-bg); border-left: 1px solid var(--fsim-sidebar-line); color: var(--color-text); }
+.fsim-panel { border: 1px solid var(--fsim-sidebar-line); border-radius: var(--radius-md); }                                  /* .shell-panel, .ctrl-box */
+.fsim-panel__head { color: var(--color-text-faint); font-family: var(--font-mono); font-size: var(--text-xs); letter-spacing: .08em; text-transform: uppercase; }   /* .aside-zone-head, .shell-panel-head */
+.fsim-control__label { color: var(--color-text); }                                       /* .ctrl-box-label */
+.fsim-control__value { color: var(--color-text); font-family: var(--font-mono); }         /* .slider-val */
+.fsim-control__range { color: var(--color-text-faint); }                                  /* .control-range */
+.fsim-slider { accent-color: var(--color-accent); }                                       /* input[type=range] */
+.fsim-readout__row { color: var(--color-text); }                                          /* .stat-row */
+.fsim-readout__label { color: var(--color-text); }                                        /* .stat-label */
+.fsim-readout__value { color: var(--color-text); font-family: var(--font-mono); }         /* .stat-value */
+.fsim-note { color: var(--color-text-faint); }                                            /* .hint, .note-text */
+
+/* ── Hide tab · legacy: #sb-hide-tab ─────────────────────────────────── */
+.fsim-hide-tab { background: var(--fsim-hide-tab-bg); color: var(--fsim-topbar-text); border: 1px solid var(--fsim-hide-tab-bg); box-shadow: var(--fsim-hide-tab-shadow); }
+.fsim-hide-tab:hover { background: var(--fsim-hide-tab-bg-hover); border-color: var(--fsim-hide-tab-bg-hover); }
+
+/* ── Guided Inquiry · legacy: .inq-step, .choice, .inq-dot ───────────── */
+.fsim-inquiry__title { color: var(--color-text); }
+.fsim-inquiry__text { color: var(--color-text-muted); }
+.fsim-inquiry__dot { background: var(--fsim-track); border-radius: var(--radius-full); }
+.fsim-inquiry__dot--on { background: var(--color-accent); }
+.fsim-choice { background: var(--fsim-control-bg); color: var(--color-text); border: 1px solid var(--fsim-sidebar-line); border-radius: var(--radius-sm); }
+.fsim-choice:hover { background: var(--fsim-control-bg-hover); }
+.fsim-choice--correct { background: var(--fsim-ok-bg); border-color: var(--fsim-ok-border); color: var(--fsim-ok-text); }
+.fsim-choice--wrong { background: var(--fsim-bad-bg); border-color: var(--fsim-bad-border); color: var(--fsim-bad-text); }
+
+/* ── The Physics sheet · legacy: #phys-backdrop, .phys-modal, .phys-head ── */
+.fsim-sheet-scrim { background: var(--fsim-scrim); }
+.fsim-sheet { background: var(--color-surface); border: 1px solid var(--color-border); border-radius: var(--radius-lg); box-shadow: var(--shadow-xl); color: var(--color-text); }
+.fsim-sheet__head { background: var(--fsim-topbar-bg); border-radius: var(--fsim-sheet-head-radius); box-shadow: var(--fsim-sheet-head-edge); color: var(--fsim-topbar-text); }
+.fsim-sheet__kicker { color: var(--fsim-topbar-text-quiet); }
+.fsim-sheet__lede { background: var(--fsim-sheet-tint); color: var(--color-text-muted); border: 1px solid var(--fsim-accent-border); border-left-color: var(--color-accent); }

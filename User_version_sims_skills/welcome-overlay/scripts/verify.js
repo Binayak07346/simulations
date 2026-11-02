@@ -1,6 +1,7 @@
 #!/usr/bin/env node
 /*
- * Welcome-overlay invariant verifier (headless, config-free).
+ * Welcome-overlay invariant verifier (headless, config-free) — two-mode
+ * liquid-glass landing (Simulation guide + Free exploration; no inquiry card).
  * Usage: node verify.js <patched.html> [--baseline <original.html>]
  * Exit 0 = pass. Pair with tests/browser-smoke.js for the real-browser gate.
  */
@@ -55,19 +56,29 @@ const fails = []; const ok = (c, m) => { if (!c) fails.push(m); };
     ok(!!$('#welcome-fringes'), 'hero canvas present');
     ok(!!$('#welcome-title .welcome-kicker') && $('#welcome-title .welcome-kicker').textContent.trim() === 'Welcome to', 'title: "Welcome to" kicker');
     ok(!!$('#welcome-title .welcome-name') && $('#welcome-title .welcome-name').textContent.trim().length > 0, 'title: sim name line');
-    const HOUSE = { inquiry: 'Uncover the simulation in steps and see the physics emerge.', controls: 'Learn each control, one at a time.', free: 'Everything open. Experiment on your own.' };
+    const HOUSE = { controls: 'What\u2019s on screen, then every control \u2014 one at a time.', free: 'Everything open. Experiment on your own.' };
+    const TITLE = { controls: 'Simulation guide', free: 'Free exploration' };
     $$('.welcome-mode').forEach(b => {
+      const t = b.querySelector('.wm-title'); ok(t && t.textContent.trim() === TITLE[b.dataset.mode], `card ${b.dataset.mode}: house-copy title "${TITLE[b.dataset.mode]}"`);
       const d = b.querySelector('.wm-desc'); ok(d && d.textContent.trim() === HOUSE[b.dataset.mode], `card ${b.dataset.mode}: house-copy description`);
       ok(/Start/.test((b.querySelector('.wm-go')||{textContent:''}).textContent), `card ${b.dataset.mode}: "Start" affordance`);
     });
-    const pill = $('.welcome-mode[data-mode="inquiry"] .wm-tag'); ok(pill && pill.textContent.trim() === 'Recommended', 'inquiry card: inline "Recommended" pill');
+    ok(!$('.welcome-mode[data-mode="inquiry"]'), 'no Guided Inquiry card on the landing (two-mode landing; GI lives on the header button)');
+    ok($$('.welcome-mode').length <= 2, 'at most two landing cards');
+    { const css = $$('style').map(x => x.textContent).join('\n');
+      const n = (css.match(/Landing choices: liquid glass \(two modes\)/g) || []).length;
+      ok(n === 1, `liquid-glass landing CSS block present exactly once (found ${n})`);
+      ok(/#welcome-overlay \.welcome-modes\{grid-template-columns:repeat\(2,1fr\)/.test(css), 'glass block: two-column landing grid'); }
+    { const html = d.documentElement.outerHTML;
+      ok(!/['"]Choose Guided Inquiry/.test(html), 'welcome narration: no "Choose Guided Inquiry" line left');
+      ok(!/three ways in|three ways to begin/i.test(html), 'welcome narration: no "three ways in" count left'); }
+    if ($('#btn-cg')) { const lab = $('#btn-cg').textContent; ok(/Simulation guide/.test(lab) && !/Controls Guide/i.test(lab), `header #btn-cg labelled "Simulation guide" (got "${lab.trim()}")`); }
     // rows ⇔ buttons
     const has = id => !!$(id);
     const rows = Object.fromEntries($$('.welcome-mode').map(b => [b.dataset.mode, b]));
     ok(!!rows.free, 'free-exploration row present');
-    ok((has('#btn-gi') === !!rows.inquiry), 'inquiry row present iff #btn-gi exists');
-    ok((has('#btn-cg') === !!rows.controls), 'controls row present iff #btn-cg exists');
-    ['inquiry', 'controls', 'free'].forEach(m => { if (rows[m]) {
+    ok((has('#btn-cg') === !!rows.controls), 'Simulation guide row present iff #btn-cg exists');
+    ['controls', 'free'].forEach(m => { if (rows[m]) {
       ok(rows[m].querySelector('.wm-title') && rows[m].querySelector('.wm-desc'), `row ${m}: title + description`);
     }});
     // transport present + speech attempted + progress text
@@ -84,14 +95,14 @@ const fails = []; const ok = (c, m) => { if (!c) fails.push(m); };
     ok(typeof dom.window.__setMode === 'function', 'window.__setMode wired');
     // boot state must be untouched by the overlay: GI (if present) active, CG inactive
     if (has('#btn-gi')) ok($('#btn-gi').classList.contains('active'), 'boot: Guided Inquiry active behind the overlay (sim boot unchanged)');
-    if (has('#btn-cg')) ok(!$('#btn-cg').classList.contains('active'), 'boot: Controls Guide inactive behind the overlay');
+    if (has('#btn-cg')) ok(!$('#btn-cg').classList.contains('active'), 'boot: Simulation guide inactive behind the overlay');
     // choose controls → overlay hidden, speech cancelled, CG on
     const before = speech.cancel;
     if (rows.controls) {
       rows.controls.click();
       ok(ov.classList.contains('hidden'), 'choose controls: overlay hidden');
       ok(speech.cancel > before, 'choose: speech cancelled');
-      ok($('#btn-cg').classList.contains('active'), 'choose controls: Controls Guide on');
+      ok($('#btn-cg').classList.contains('active'), 'choose controls: Simulation guide on');
       if (has('#btn-gi')) ok(!$('#btn-gi').classList.contains('active'), 'choose controls: inquiry off (exclusion)');
     }
     const newErrs = errors.filter(e => !baseErrs.includes(e));

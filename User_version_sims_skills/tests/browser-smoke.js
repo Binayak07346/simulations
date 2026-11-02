@@ -1,7 +1,8 @@
 #!/usr/bin/env node
 /*
- * Real-browser smoke test for a sim carrying the Guided Inquiry / Controls
- * Guide template. Runs the sim's ACTUAL init in Chromium (Playwright).
+ * Real-browser smoke test for a sim carrying the Guided Inquiry / Simulation
+ * guide template (two-mode landing, scene tour; see also sim-guide-scene.mjs,
+ * which runs without Playwright and covers the scene-tour geometry). Runs the sim's ACTUAL init in Chromium (Playwright).
  *
  *   node browser-smoke.js <patched.html> [--baseline <original.html>]
  *        [--cdn-map cdn-map.json] [--checks sim.checks.js] [--shots dir]
@@ -63,7 +64,8 @@ const shot = async (page, name) => { if(shots) await page.screenshot({ path: pat
   /* ---- welcome overlay (if present): must show, attempt speech, and dismiss into a mode ---- */
   if(await page.$('#welcome-overlay')){
     ok(await page.$eval('#welcome-overlay', e=>getComputedStyle(e).display!=='none'), 'welcome: overlay shown on landing');
-    ok(await page.$$eval('#welcome-overlay .welcome-mode', b=>b.length===3), 'welcome: three mode options');
+    ok(await page.$$eval('#welcome-overlay .welcome-mode', b=>b.length===2), 'welcome: two mode options (Simulation guide + Free exploration)');
+    ok(!(await page.$('#welcome-overlay .welcome-mode[data-mode="inquiry"]')), 'welcome: no Guided Inquiry card (it lives on the header button)');
     ok(await page.evaluate(()=> (window.__spokenCount||0) > 0), 'welcome: read-aloud attempted via speechSynthesis');
     await shot(page, '00-welcome');
     // transport: forward/rewind move the line counter; pause keeps position; play resumes there
@@ -82,8 +84,10 @@ const shot = async (page, name) => { if(shots) await page.screenshot({ path: pat
     await page.click('#welcome-speak'); await sleep(150);           // resume
     ok((await page.evaluate(()=>window.__spokenCount||0)) > before, 'welcome transport: resume speaks again');
     ok((await progress()).startsWith('2 /'), 'welcome transport: resume did NOT restart from line 1');
-    await page.click('#welcome-overlay .welcome-mode[data-mode="inquiry"]'); await sleep(150);
+    await page.click('#welcome-overlay .welcome-mode[data-mode="free"]'); await sleep(150);
     ok(await page.$eval('#welcome-overlay', e=>getComputedStyle(e).display==='none'), 'welcome: dismissed after choosing a mode');
+    if(await page.$('#btn-gi')) ok(!(await page.$eval('#btn-gi', e=>e.classList.contains('active'))), 'welcome free: Guided Inquiry off');
+    ok(!(await page.$eval('#btn-cg', e=>e.classList.contains('active'))), 'welcome free: Simulation guide off');
     ok(await page.evaluate(()=> window.__speechCancelled===true), 'welcome: speech stopped when a mode was chosen');
   }
   /* ---- generic boot checks ---- */
@@ -117,7 +121,8 @@ const shot = async (page, name) => { if(shots) await page.screenshot({ path: pat
 
   /* ---- inquiry walk ---- */
   if(gi){
-    ok(await gi.evaluate(e=>e.classList.contains('active')), 'boot: Guided Inquiry active');
+    if(!(await gi.evaluate(e=>e.classList.contains('active')))){ await gi.click(); await sleep(250); }   // after the two-mode landing GI opens from the header
+    ok(await gi.evaluate(e=>e.classList.contains('active')), 'Guided Inquiry active (boot, or opened from the header button)');
     const n = await page.$$eval('#inq-cards .inq-step', cs=>cs.length);
     for(let i=0;i<n;i++){
       if(i>0){ await page.click('#inq-next'); await sleep(150); }
@@ -149,18 +154,23 @@ const shot = async (page, name) => { if(shots) await page.screenshot({ path: pat
     const co = await page.$('.cg-callout');
     ok(co && await co.isVisible(), `CG step ${step}: callout visible`);
     const info = await page.evaluate(()=>{
-      const c=document.querySelector('.cg-callout'), g=document.querySelector('.cg-glow');
+      const c=document.querySelector('.cg-callout'), g=document.querySelector('.cg-glow'), sp=document.getElementById('cg-spot');
+      const scene = !!sp && sp.style.display==='block';
       const cr=c.getBoundingClientRect(); const gr=g?g.getBoundingClientRect():null;
       const gap = gr ? Math.max(0, gr.left-cr.right, cr.left-gr.right, gr.top-cr.bottom, cr.top-gr.bottom) : null;
       return { cls:c.className, gap, inView: cr.left>=0 && cr.top>=0 && cr.right<=innerWidth && cr.bottom<=innerHeight,
                glowVisible: g ? (getComputedStyle(g).display!=='none' && getComputedStyle(g).visibility!=='hidden') : null,
                arrowShown: getComputedStyle(c.querySelector('.cg-arrow')).display!=='none',
-               words: c.querySelector('p').textContent.trim().split(/\s+/).length };
+               scene, inside: !!scene && c.classList.contains('no-arrow'),
+               words: c.querySelector('p').textContent.trim().split(/\s+/).filter(w=>/[A-Za-z0-9\u00C0-\u024F\u0370-\u03FF]/.test(w)).length };
     });
     ok(info.inView, `CG step ${step}: callout inside viewport`);
-    ok(info.words <= 18, `CG step ${step}: text ≤18 words`);
+    ok(info.words <= (info.scene ? 24 : 18), `CG step ${step}: text ≤${info.scene ? 24 : 18} words`);
     const done = (await page.$eval('#cg-next', b=>b.textContent.trim()))==='Done';
-    if(!done){
+    if(!done && info.scene){
+      ok(info.glowVisible===true, `CG scene step ${step}: spotlight visible`);
+      if(!info.inside) ok(info.gap!==null && info.gap <= 60, `CG scene step ${step}: callout beside its spot (gap ${info.gap})`);
+    } else if(!done){
       ok(info.glowVisible===true, `CG step ${step}: glowing target visible`);
       ok(info.gap!==null && info.gap <= 60, `CG step ${step}: callout within 60px of its target (gap ${info.gap})`);
       ok(info.arrowShown && /arrow-/.test(info.cls), `CG step ${step}: arrow shown with a side class`);
@@ -180,13 +190,14 @@ const shot = async (page, name) => { if(shots) await page.screenshot({ path: pat
   ok((await page.$eval('#cg-next', b=>b.textContent.trim()))==='Done', 'CG revisit: closing card (session memory)');
   await cg.click(); await sleep(100);
 
-  /* ---- Reset = first-load ---- */
+  /* ---- Reset (mode-local: from Guided Inquiry → card 1; the guide stays off) ---- */
   const reset = await page.$('#reset-btn, #btn-reset, #shell-reset, [id*="reset" i]');
   if(reset){
+    if(gi && !(await gi.evaluate(e=>e.classList.contains('active')))){ await gi.click(); await sleep(250); }
     await reset.click(); await sleep(400);
     if(gi){ ok(await gi.evaluate(e=>e.classList.contains('active')), 'Reset: Guided Inquiry on');
             ok(await page.$eval('#inq-cards .inq-step', e=>e.classList.contains('active')), 'Reset: card 1'); }
-    ok(!(await cg.evaluate(e=>e.classList.contains('active'))), 'Reset: Controls Guide off');
+    ok(!(await cg.evaluate(e=>e.classList.contains('active'))), 'Reset: Simulation guide off');
     if(checks.afterReset) await checks.afterReset(page, ok);
     await shot(page, '05-after-reset');
   } else ok(false, 'no Reset element found');

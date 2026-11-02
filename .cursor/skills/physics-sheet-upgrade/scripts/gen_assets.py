@@ -90,6 +90,10 @@ def main():
     os.chdir(outdir)
     art = {}
     for name, tex in spec.EQS.items():
+        # The docstring promises math mode: wrap bare strings in $...$ (strings that
+        # already carry $ or a display environment are left exactly as written).
+        if '$' not in tex and '\\[' not in tex and '\\begin{' not in tex:
+            tex = '$' + tex + '$'
         art[name] = scale_eq(render(name, tex, '2pt'), k)
         print(f'{name}: ok ({len(art[name])} chars)')
     for name, tikz in spec.DIAGS.items():

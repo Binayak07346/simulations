@@ -1,7 +1,10 @@
 # Canonical implementation — Welcome overlay (centered, card layout)
 
 Blocks are verbatim from the validated `L1-Solar_System_Orbits` card-layout
-welcome build (bundled as `examples/L1-Solar_System_Orbits.welcome-cards.html`).
+welcome build (bundled as `examples/L1-Solar_System_Orbits.welcome-cards.html`),
+upgraded 2026-10-01 to the owner-approved TWO-MODE liquid-glass landing
+(§1b–§1c, §2, §3 lines; first shipped on `Fermi_university_sim_lab_sims/CM_sims/
+cm-phase-plane.polished.html`, commit 7820a2b, then on all 116 uni-lab sims).
 Copy; adapt only the ADAPT parts.
 
 ## 1. CSS — insert before `</style>`
@@ -89,12 +92,98 @@ selector only if the sim uses a different hook. Nothing else.
         html[data-theme="light"] .welcome-seg i.cur, body.light-theme .welcome-seg i.cur{background:#0F172A;}
 ```
 
+## 1b. Liquid-glass landing choices — insert right AFTER the §1 block
+
+VERBATIM (the owner approved this exact material). It wins over §1 by
+`#welcome-overlay` specificity, so order is not load-bearing, but keep it
+after §1 for readability. ADAPT only: the stack breakpoint (`640px`) may be
+raised to the sim's own §1 breakpoint (e.g. `760px`) if two columns look
+cramped between them; `max-width:510px` → `502px` if you want the two cards
+EXACTLY the old single-card width (244px); and the light-theme rules per §1c.
+
+```css
+/* ===== Landing choices: liquid glass (two modes) =====
+   Same card size, icons, text and colours as before; only the surface becomes clear, whitish glass. */
+#welcome-overlay .welcome-modes{grid-template-columns:repeat(2,1fr);max-width:510px;margin:0 auto;}
+@media (max-width:640px){#welcome-overlay .welcome-modes{grid-template-columns:1fr;}}
+#welcome-overlay .welcome-mode{isolation:isolate;border-radius:18px;
+  background:linear-gradient(180deg,rgba(255,255,255,.13),rgba(255,255,255,.05) 55%,rgba(255,255,255,.08));
+  -webkit-backdrop-filter:blur(20px) saturate(180%);backdrop-filter:blur(20px) saturate(180%);
+  border:1px solid rgba(255,255,255,.2);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.42),inset 0 -1px 0 rgba(255,255,255,.07),0 8px 24px rgba(0,0,0,.28);
+  transition:transform .35s cubic-bezier(.2,.9,.3,1.2),background .2s,border-color .2s,box-shadow .2s;}
+/* specular sheen across the top of the glass */
+#welcome-overlay .welcome-mode::before{content:"";position:absolute;inset:0;border-radius:inherit;pointer-events:none;z-index:-1;
+  background:radial-gradient(130% 60% at 30% 0%,rgba(255,255,255,.16),rgba(255,255,255,0) 60%);}
+/* light-catching rim: bright at the top-left and bottom-right corners */
+#welcome-overlay .welcome-mode::after{content:"";position:absolute;inset:-1px;border-radius:inherit;pointer-events:none;padding:1px;
+  background:linear-gradient(135deg,rgba(255,255,255,.7),rgba(255,255,255,.08) 35%,rgba(255,255,255,.04) 65%,rgba(255,255,255,.35));
+  -webkit-mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);-webkit-mask-composite:xor;mask-composite:exclude;}
+#welcome-overlay .welcome-mode:hover,#welcome-overlay .welcome-mode:focus-visible{transform:translateY(-3px);
+  background:linear-gradient(180deg,rgba(255,255,255,.18),rgba(255,255,255,.08) 55%,rgba(255,255,255,.11));border-color:rgba(255,255,255,.3);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.55),0 14px 34px rgba(0,0,0,.35);}
+#welcome-overlay .welcome-mode:active{transform:scale(.98);}
+html[data-theme="light"] #welcome-overlay .welcome-mode,body.light-theme #welcome-overlay .welcome-mode{
+  background:linear-gradient(180deg,rgba(255,255,255,.72),rgba(255,255,255,.45) 55%,rgba(255,255,255,.58));border-color:rgba(255,255,255,.9);
+  box-shadow:inset 0 1px 0 #fff,0 1px 1px rgba(15,23,42,.05),0 8px 24px rgba(15,23,42,.12);}
+html[data-theme="light"] #welcome-overlay .welcome-mode::after,body.light-theme #welcome-overlay .welcome-mode::after{
+  background:linear-gradient(135deg,#fff,rgba(255,255,255,.4) 35%,rgba(15,23,42,.06) 65%,rgba(255,255,255,.9));}
+html[data-theme="light"] #welcome-overlay .welcome-mode:hover,body.light-theme #welcome-overlay .welcome-mode:hover{
+  background:linear-gradient(180deg,rgba(255,255,255,.85),rgba(255,255,255,.6) 55%,rgba(255,255,255,.7));box-shadow:inset 0 1px 0 #fff,0 14px 34px rgba(15,23,42,.16);}
+@media (prefers-reduced-motion:reduce){#welcome-overlay .welcome-mode{transition:none;}}
+```
+
+The Simulation guide's spotlight rule ships in the same `<style>` (it is the
+controls-tutorial skill's, §7.1 there) — insert it right after this block:
+
+```css
+/* ===== Simulation guide: spotlight for canvas regions ===== */
+#cg-spot{position:fixed;z-index:3990;pointer-events:none;display:none;border-radius:10px;}
+```
+
+## 1c. Light theme — pick the case by MEASURING, not by reading the CSS
+
+Load the page, then force light theme the way a host viewer does
+(`document.documentElement.setAttribute('data-theme','light')`, or click the
+sim's theme button), wait ~250ms, read the computed colour of
+`.welcome-mode[data-mode="controls"] .wm-title` and the card's
+`background-image`, and screenshot the two cards.
+
+1. **Overlay turns light, title turns dark (#0F172A)** — the §1 light rules
+   are in effect. Keep §1b as is. (105 of 116 fleet sims.)
+2. **Overlay stays dark in every theme** (the sim never shipped light welcome
+   rules; title stays #E6EDF5) — the whitish light glass would put pale text
+   on a pale card. Replace the three `html[data-theme="light"] …` rules of
+   §1b with this comment, so the dark glass stays in light theme:
+   ```css
+   /* no light-glass variants: this sim's welcome overlay stays dark in every theme */
+   ```
+   (10 QM sims: A(k)-vs-k-plot, Time_evolution_Gaussian_Fourier-comps,
+   Time_evolution_Gaussian_wavepacket — built this way — and
+   2d_wavefunction_collapse_measurement, Harmonic-oscillator,
+   Multi_Stage_Stern_Gerlach_New, Spherical_harmonics_Explorer,
+   Spin-X-measurement-probability, Spin_Measurement,
+   wavefunctions-and-probability, which shipped pale-on-pale and were fixed.)
+3. **Overlay turns light but the title stays pale** — the sim's §1 copy
+   hard-codes `color:#E6EDF5` on `.welcome-mode` with no light override. Keep
+   §1b and add, before its reduced-motion line:
+   ```css
+   html[data-theme="light"] #welcome-overlay .welcome-mode,body.light-theme #welcome-overlay .welcome-mode{color:#0F172A;}
+   html[data-theme="light"] #welcome-overlay .wm-desc,body.light-theme #welcome-overlay .wm-desc,html[data-theme="light"] #welcome-overlay .wm-go,body.light-theme #welcome-overlay .wm-go{color:#475569;}
+   ```
+   (stern-gerlach-NEW.)
+
+Sims whose light theme uses a third hook (`body.theme-bright`,
+`body.theme-light`) add that selector to every light rule of §1b.
+
 ## 2. Markup — first child of `body` after the header (it is fixed-position)
 
 ADAPT: the `.welcome-name` text (sim name; "Welcome to" kicker is fixed),
-the description, the hero caption; delete the `inquiry` or `controls` card
-if that flow does not exist in the sim. The three card descriptions are
-HOUSE COPY — do not rewrite them. Keep every id and `data-mode`.
+the description, the hero caption; delete the `controls` card if the sim has
+no guide (`#btn-cg`). Exactly two cards — there is NO `inquiry` card (Guided
+Inquiry is reached from the header 🧭 button). The two card titles and
+descriptions are HOUSE COPY — do not rewrite them. Keep every id and
+`data-mode`.
 
 ```html
     <div id="welcome-overlay" role="dialog" aria-labelledby="welcome-title">
@@ -108,16 +197,10 @@ HOUSE COPY — do not rewrite them. Keep every id and `data-mode`.
                 <p class="welcome-blurb">Watch the planets trace their orbits — each one speeds up near the Sun and slows down far from it.</p>
                 <p class="welcome-ask">How would you like to begin?</p>
                 <div class="welcome-modes">
-                    <button type="button" class="welcome-mode" data-mode="inquiry">
-                        <span class="wm-icon"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M14.8 9.2l-1.9 4.6-4.6 1.9 1.9-4.6z"/></svg></span>
-                        <span class="wm-text"><span class="wm-title">Guided inquiry <span class="wm-tag">Recommended</span></span>
-                            <span class="wm-desc">Uncover the simulation in steps and see the physics emerge.</span></span>
-                        <span class="wm-go">Start <svg viewBox="0 0 24 24"><path d="M9 6l6 6-6 6"/></svg></span>
-                    </button>
                     <button type="button" class="welcome-mode" data-mode="controls">
                         <span class="wm-icon"><svg viewBox="0 0 24 24"><path d="M4 7h10M18 7h2M4 17h4M12 17h8"/><circle cx="16" cy="7" r="2"/><circle cx="10" cy="17" r="2"/></svg></span>
-                        <span class="wm-text"><span class="wm-title">Controls guide</span>
-                            <span class="wm-desc">Learn each control, one at a time.</span></span>
+                        <span class="wm-text"><span class="wm-title">Simulation guide</span>
+                            <span class="wm-desc">What’s on screen, then every control — one at a time.</span></span>
                         <span class="wm-go">Start <svg viewBox="0 0 24 24"><path d="M9 6l6 6-6 6"/></svg></span>
                     </button>
                     <button type="button" class="welcome-mode" data-mode="free">
@@ -149,10 +232,15 @@ HOUSE COPY — do not rewrite them. Keep every id and `data-mode`.
 
 ## 3. Script — insert before `</body>` INCLUDING the `<script>` wrapper
 
-ADAPT: the six `script` lines (lines 1–2 are sim-specific; 3–6 are house
-copy), the `drawHero` body (see §4), and `WELCOME_ONCE` (false → true for
-production). Everything else — transport, position tracking, auto-attempt,
-guards — stays as is.
+ADAPT: the five `script` lines — lines 1–2 are sim-specific; line 4 is house
+copy with THIS sim's 2–4 main on-screen components filled in (the same things
+the guide's scene steps spotlight: panels, apparatus, graphs, colour key);
+lines 3 and 5 are house copy. Never mention Guided Inquiry or a count of
+"three" ways in. Warm-narration sims may phrase line 4 as the fleet does:
+`'Choose Simulation Guide for a tour of what’s on screen — <components> — and
+then every control.'` Then the `drawHero` body (see §4), and `WELCOME_ONCE`
+(false → true for production). Everything else — transport, position
+tracking, auto-attempt, guards — stays as is.
 
 ```html
     <script>
@@ -170,8 +258,7 @@ guards — stays as is.
         'Welcome to solar system orbits.',
         'Here you watch the planets trace their orbits around the Sun. Every orbit is an ellipse with the Sun at one focus, and each planet speeds up as it swings close to the Sun and slows down far away.',
         'Choose how you would like to begin.',
-        'Guided Inquiry walks you through the physics step by step, with predictions to make and then observe.',
-        'Controls Guide introduces each control one at a time, so you know what everything does before you experiment.',
+        'Simulation Guide shows you what’s on screen — the Sun, the planets and their orbits — and then introduces every control, one at a time.',
         'Free Exploration opens everything from the start, so you can experiment entirely on your own.'
       ];
       /* Hero: orbits drawn as EQUAL-TIME-STEP dots — dense where the planet is slow (far
@@ -412,6 +499,10 @@ intensity:
 ```
 
 ## 5. Hook — inside the two-button controller, right after `__giOff`
+
+Unchanged by the two-mode landing (the landing now only ever sends
+`controls` or `free`; the inquiry branch stays as the default so the header
+button and any older caller keep working):
 
 ```js
     window.__setMode = mode => {           // welcome overlay entry points

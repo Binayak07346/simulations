@@ -1,0 +1,18 @@
+{
+ "title": "Double slit with measurement",
+ "slug": "double-slit-measurement",
+ "sim": "/abs/path/to/final-sim.html",
+ "z": {
+  "backdrop": 99992,
+  "toast": 99993
+ },
+ "toast_top": 74,
+ "button": {
+  "before": "<div class=\"sim-playback-btn-group\">",
+  "class": "btn-topbar"
+ },
+ "hooks": {
+  "before": "</body>",
+  "code": "<script>\nwindow.__physicsHooks = { scene:function(cfg){},\n  isPlaying:function(){ var b=document.getElementById('sim-play-pause-btn'); return !b||b.textContent.trim()==='Pause'; },\n  setPlaying:function(p){ var b=document.getElementById('sim-play-pause-btn'); if(b&&((b.textContent.trim()==='Pause')!==!!p)) b.click(); } };\n</script>"
+ }
+}

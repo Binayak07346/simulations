@@ -1,0 +1,67 @@
+[
+ {
+  "family": "DMSansUser",
+  "weight": "600",
+  "style": "normal",
+  "display": "swap",
+  "unicode_range": null,
+  "format": "truetype",
+  "file": "DMSansUser-600.ttf",
+  "bytes": 56336,
+  "sha256": "b3ee9c6f271318066adae56c3033e6e4192f88f5d127cb507686d89a0a269168",
+  "origin": "fonts",
+  "mime": "font/ttf"
+ },
+ {
+  "family": "JetBrainsMonoNums",
+  "weight": "600",
+  "style": "normal",
+  "display": "swap",
+  "unicode_range": null,
+  "format": "truetype",
+  "file": "JetBrainsMonoNums-600.ttf",
+  "bytes": 114900,
+  "sha256": "55987f26bab41b3fc9f13ce5ca9db9d99a75e3be4bba0f7341d3c026ff6e4706",
+  "origin": "fonts",
+  "mime": "font/ttf"
+ },
+ {
+  "family": "Kalam",
+  "weight": "400",
+  "style": "normal",
+  "display": "swap",
+  "unicode_range": null,
+  "format": "woff2",
+  "file": "Kalam-400.woff2",
+  "bytes": 14040,
+  "sha256": "257f0129d54c60cda0f8856ad1de05e760a219c9365fb19cd50b0cc8fdb2c9d1",
+  "origin": "gv-style",
+  "mime": "font/woff2"
+ },
+ {
+  "family": "Kalam",
+  "weight": "700",
+  "style": "normal",
+  "display": "swap",
+  "unicode_range": null,
+  "format": "woff2",
+  "file": "Kalam-700.woff2",
+  "bytes": 13104,
+  "sha256": "c1bc5092263cb16e72fa43621eb116966068950e1b77ffd38fd401dd43ce1120",
+  "origin": "gv-style",
+  "mime": "font/woff2"
+ },
+ {
+  "family": "Patrick Hand",
+  "weight": "400",
+  "style": "normal",
+  "display": "swap",
+  "unicode_range": null,
+  "format": "woff2",
+  "file": "PatrickHand-400.woff2",
+  "bytes": 14224,
+  "sha256": "42156e008dd5fc3000679ff4e9ba9cbd3f417b6317c6dcbe11a12e9c87a09b28",
+  "origin": "gv-style",
+  "mime": "font/woff2"
+ }
+]
