@@ -31,7 +31,7 @@
   var TOUCH = false; try { TOUCH = matchMedia('(pointer: coarse)').matches; } catch (e) {}
   if (FORCE_OFF || !(FORCE_ON || TOUCH)) return;                    // mouse / trackpad (desktop): nothing runs
   if (window.__fermiAppMode) return;
-  var VER = window.__fermiAppMode = '1.0.0';
+  var VER = window.__fermiAppMode = '1.1.1';
   var d = document, H = d.documentElement;
   function $(s, r) { try { return (r || d).querySelector(s); } catch (e) { return null; } }
   function $$(s, r) { try { return [].slice.call((r || d).querySelectorAll(s)); } catch (e) { return []; } }
@@ -53,15 +53,30 @@
     var vm = d.createElement('meta'); vm.name = 'viewport'; vm.content = 'width=device-width,initial-scale=1';
     (d.head || H).appendChild(vm);
   }
+  /* Explicit roles (v1.1): a sim of ANY structure opts in by marking its parts with data-fapp=
+       "header"  the top bar (hidden; its visible controls move to the drawer's top card) - optional
+       "panel"   the controls/sidebar that becomes the drawer (phone) / docked panel (tablet)
+       "hero"    the drawing area that fills the screen
+       "play" "reset" "guide" "physics" "inquiry-toggle"   the sim's own buttons for those actions
+       "inquiry" the guided-inquiry block inside the panel (gets its own drawer tab)
+       "readouts" a panel block to mirror in the floating read-out chip
+       "skip"    a header control that must NOT move to the drawer
+     Marked parts win over the automatic detection below; pages with no marks behave exactly as v1.0. */
+  /* ...or, without touching the sim's markup, a role map of CSS selectors set before this script:
+       window.__FAPP_ROLES = {header:'.topbar', panel:'#controls', hero:'#stage', play:'#go', ...}
+     (app_mode.py --roles writes it as its own script, id fermi-app-mode-roles). A data-fapp mark wins over the map. */
+  var RMAP = (window.__FAPP_ROLES && typeof window.__FAPP_ROLES === 'object') ? window.__FAPP_ROLES : {};
+  var ROLES = !!$('[data-fapp]') || Object.keys(RMAP).length > 0;
+  function role(r) { return $('[data-fapp="' + r + '"]') || (RMAP[r] ? $(RMAP[r]) : null); }
   var shell = $('#shell');
-  var iqZone = first(['#aside-inquiry', '#inq-zone']);
+  var iqZone = role('inquiry') || first(['#aside-inquiry', '#inq-zone']);
   function bigCanvasIn(el) { return $$('canvas', el).filter(function (c) { var r = c.getBoundingClientRect(); return r.width * r.height > 0.35 * innerWidth * innerHeight; })[0] || null; }
   function labPanel() {
     return $$('aside.panel, aside#side, aside[class*="panel"]').filter(function (a) {
       var ps = getComputedStyle(a).position; return (ps === 'absolute' || ps === 'fixed') && shown(a) && a.parentElement && !!bigCanvasIn(a.parentElement);
     })[0] || null;
   }
-  var panel = $('.shell-aside') || (iqZone && iqZone.parentElement) || first(['.sidebar', '.control-panel', '.right-col']) || labPanel();
+  var panel = role('panel') || $('.shell-aside') || (iqZone && iqZone.parentElement) || first(['.sidebar', '.control-panel', '.right-col']) || labPanel();
   function vArea(e) { var r = e.getBoundingClientRect(); return Math.max(0, Math.min(r.right, innerWidth) - Math.max(r.left, 0)) * Math.max(0, Math.min(r.bottom, innerHeight) - Math.max(r.top, 0)); }
   /* The top bar: named (.shell-header / .top-bar) or, for sims that call it something else
      (.title-bar, .app-header, .upper-menu, a Tailwind <header>...), the bar that holds the
@@ -75,7 +90,8 @@
     var r = c.getBoundingClientRect();
     return r.top <= 12 && r.height >= 24 && r.height <= 170 && r.width >= innerWidth * 0.5 ? c : null;
   }
-  var header = first(['.shell-header', '.top-bar', '.top-bar-app']) || derivedHeader();
+  var header = role('header') || first(['.shell-header', '.top-bar', '.top-bar-app']) || derivedHeader();
+  if (!header && ROLES && role('panel') && role('hero')) header = d.createElement('div');   /* a marked page may have no top bar */
   /* The drawing: the shell hero; the QM fixed #canvas-container; else (flow sims: a flex/grid
      row of drawing + sidebar) the panel's one big visual sibling, or the whole row when the
      drawing is split across several siblings. */
@@ -100,8 +116,9 @@
   }
   /* stage family: no sidebar - the inquiry and control cards float over a full-bleed canvas
      inside the inquiry's own parent; the layer builds the drawer and moves those cards in. */
-  var hero = null, FAM = null, floatCards = [];
-  if (!shell && iqZone && panel === iqZone.parentElement && panel !== d.body) {
+  var hero = role('hero'), FAM = null, floatCards = [];
+  if (hero) FAM = (shell && hero.classList.contains('shell-hero')) ? 'shell' : 'fixed';
+  if (!hero && !shell && iqZone && panel === iqZone.parentElement && panel !== d.body) {
     var stageCv = $$('canvas', panel).filter(function (c) { var r = c.getBoundingClientRect(); return r.width * r.height > 0.35 * innerWidth * innerHeight; })[0];
     if (stageCv) {
       floatCards = [].slice.call(panel.children).filter(function (k) {
@@ -138,20 +155,23 @@
       return e !== not && !/^(btn-gi|btn-cg|toggle-formal)$/.test(e.id) && shown(e) && (re.test(txt(e)) || idre.test(e.id || ''));
     })[0] || null;
   }
-  var B = { inquiry: $('#btn-gi'), guide: $('#btn-cg'), physics: $('#toggle-formal'), tutor: $('#ask-euler') };
-  B.play = known(['#shell-play', '#playpause-btn', '#btnPlayPause', '#sim-play-pause', '#btnStart', '.btn-topbar-playpause', '#playBtn'], PLAY_RE, /play|pause|start/i) ||
+  var B = { inquiry: role('inquiry-toggle') || $('#btn-gi'), guide: role('guide') || $('#btn-cg'), physics: role('physics') || $('#toggle-formal'),
+    /* v1.1.1: a tutor link that lives in the Physics sheet header (the one-line sheet head) stays there */
+    tutor: (function () { var a = $('#ask-euler'); return a && !a.closest('#phys-backdrop, .phys-head') ? a : null; })() };
+  B.play = role('play') || known(['#shell-play', '#playpause-btn', '#btnPlayPause', '#sim-play-pause', '#btnStart', '.btn-topbar-playpause', '#playBtn'], PLAY_RE, /play|pause|start/i) ||
     barBtn(PLAY_RE, /play|pause/i);
-  B.reset = known(['#shell-reset', '#reset-btn', '#btnReset', '.btn-topbar-reset', '#resetBtn', '.shell-header #resetBtn'], RESET_RE, /reset/i, B.play) ||
+  B.reset = role('reset') || known(['#shell-reset', '#reset-btn', '#btnReset', '.btn-topbar-reset', '#resetBtn', '.shell-header #resetBtn'], RESET_RE, /reset/i, B.play) ||
     barBtn(RESET_RE, /reset/i, B.play);
   var TITLE = txt(first(['.shell-title', '.top-bar h1'])) || txt($('h1', header)) || d.title;
 
   /* The top bar's other controls (Speed, mode buttons, Hide Text...) - collected while the
      bar is still visible, so controls the sim keeps hidden stay out. */
   var SKIP = ['#btn-gi', '#btn-cg', '#toggle-formal', '#ask-euler', '#shell-maximize', '#shell-theme', '#fu-theme',
-    '.theme-toggle-wrap', '#theme-checkbox', '.shell-title', '#shell-info-btn', '#sb-hide-tab',
+    '.theme-toggle-wrap', '#theme-checkbox', '.shell-title', '#shell-info-btn', '#sb-hide-tab', '[data-fapp="skip"]', '[data-fapp="guide"]', '[data-fapp="physics"]', '[data-fapp="inquiry-toggle"]',
     '[id*="theme" i]', '[class*="theme-toggle" i]'];
   function skipped(e) {
-    if (e === B.play || e === B.reset) return true;
+    if (e === B.play || e === B.reset || e === B.guide || e === B.physics || e === B.inquiry) return true;
+    if (RMAP.skip) { try { if (e.matches(RMAP.skip) || e.closest(RMAP.skip)) return true; } catch (x) {} }
     for (var i = 0; i < SKIP.length; i++) { if (e.matches(SKIP[i]) || e.closest(SKIP[i])) return true; }
     return false;
   }
@@ -315,6 +335,7 @@
     '.fapp-chip-b .stat-row,.fapp-chip-b .readout-row{padding:2px 0!important;gap:10px!important;}',
     '.fapp-chip-b .stat-value,.fapp-chip-b .readout-value{white-space:nowrap!important;}',
     '.fapp-chip-b p,.fapp-chip-b .hint,.fapp-chip-b .note,.fapp-chip-b .note-text,.fapp-chip-b .eq-note,.fapp-chip-b canvas{display:none!important;}',
+    '.fapp-chip-b > .fapp-ro-m > h2:first-child,.fapp-chip-b > .fapp-ro-m > h3:first-child,.fapp-chip-b > .fapp-ro-m > h4:first-child{display:none!important;}',
     '.fapp-chip-b .readout-card + .readout-card,.fapp-chip-b .ctrl-box + .ctrl-box{margin-top:6px!important;}'
   ].join('') + '}';
   var st = d.createElement('style'); st.id = 'fermi-app-mode-css'; st.textContent = css; d.head.appendChild(st);
@@ -586,7 +607,8 @@
 
   /* ---------- floating read-outs ---------- */
   var RO = /read-?outs?|reading|measure|result|live|values?|output|stats?/i;
-  var roSrc = $$('.shell-panel, .ctrl-box', panel).filter(function (p) {
+  var roMarked = $$('[data-fapp="readouts"]').concat(RMAP.readouts ? $$(RMAP.readouts) : []);
+  var roSrc = roMarked.length ? roMarked : $$('.shell-panel, .ctrl-box', panel).filter(function (p) {
     if (p.closest('.fapp-iq')) return false;
     var h = txt(p.querySelector('.shell-panel-head, h3, .section-title'));
     var looks = RO.test(p.id || '') || RO.test(h);
@@ -606,7 +628,7 @@
       roSrc.forEach(function (p) {
         var src = p.querySelector('.shell-panel-body') || p, c = src.cloneNode(true);
         c.removeAttribute('id'); $$('[id]', c).forEach(function (x) { x.removeAttribute('id'); });
-        c.style.display = 'block'; body.appendChild(c);
+        c.style.display = 'block'; if (roMarked.length) c.classList.add('fapp-ro-m'); body.appendChild(c);
       });
     };
     mirror();
@@ -669,6 +691,7 @@
     return false;
   }
   function handle(m) {
+    var ret;
     switch (m.cmd) {
       case 'native-rails': H.classList.add('fapp-native'); ready(); break;
       case 'hello': case 'state': ready(); break;
@@ -685,9 +708,10 @@
         setPanel(true, 'inquiry'); break;
       case 'guide': if (!S.docked) setPanel(false); click(B.guide); break;
       case 'physics': click(B.physics); break;
-      case 'back': post({ type: 'back', handled: back() }); break;
+      case 'back': ret = back(); post({ type: 'back', handled: ret }); break;
     }
     setTimeout(sendState, 80);
+    return ret;   /* {cmd:'back'} returns true when it closed something (an app closes the player on false) */
   }
   window.addEventListener('message', function (ev) {
     var m = ev.data; if (typeof m === 'string') { try { m = JSON.parse(m); } catch (e) { return; } }

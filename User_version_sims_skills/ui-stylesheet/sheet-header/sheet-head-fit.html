@@ -1,0 +1,11 @@
+<style id="fermi-sheet-head-fit">
+/* Live-fleet companion to sb-sheet-head (2026-11-02): the live sims carry the older top-bar rule that hides the tutor
+   label (and zeroes its gap) at <= 1200px to save top-bar room. The link now lives in the sheet header, where the label
+   must always show (also on phones, where the sheet is full screen); the title truncates instead. */
+html body #phys-backdrop .phys-head #ask-euler .ask-euler-label{display:inline !important;}
+html body #phys-backdrop .phys-head a#ask-euler.phys-tutor{gap:6px !important;padding:0 10px !important;}
+/* one line on narrow screens too (the live sheet's <=760px rule lets the header wrap): the title truncates */
+html body #phys-backdrop .phys-head{flex-wrap:nowrap !important;}
+html body #phys-backdrop #phys-download.phys-icon-btn,html body #phys-backdrop #phys-close{flex-shrink:0 !important;}
+html body #phys-backdrop .phys-head .phys-title-row h2{min-width:0;flex:0 1 auto;}
+</style>

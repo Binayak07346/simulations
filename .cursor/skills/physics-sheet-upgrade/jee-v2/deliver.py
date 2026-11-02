@@ -21,6 +21,8 @@ def clean(g):
     for k in ('landing', 'lastcard', 'fallback', 'sheet_final'):
         if g.get(k) != 'PASS': bad.append(f'{k}={g.get(k)}')
     if g.get('app_mode') != 'PASS': bad.append(f"app_mode={g.get('app_mode')} (re-run chain.py: mobile app mode is its last step)")
+    if g.get('sheet_header') != 'applied' or g.get('sheet_header_check') != 'PASS':
+        if not str(g.get('sheet_header', '')).startswith('skipped'): bad.append(f"sheet_header={g.get('sheet_header')}/{g.get('sheet_header_check')} (re-run chain.py)")
     return bad
 
 notes = {}   # slug -> [lines]

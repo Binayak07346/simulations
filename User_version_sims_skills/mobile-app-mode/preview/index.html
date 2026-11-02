@@ -1,0 +1,92 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Mobile Sim Preview</title>
+<!--
+  Preview ANY converted sim the way a phone / tablet app shows it, on a desktop browser.
+  Serve a folder that contains both this page and the sims, e.g. from the repo root:
+      python3 -m http.server 8765 --bind 127.0.0.1
+  then open  http://127.0.0.1:8765/User_version_sims_skills/mobile-app-mode/preview/index.html?sim=/path/from/root/sim.html
+  (several: &sim=...&sim=...). The sim is loaded with ?app=1 (forces the mobile view on a mouse device) in an
+  iframe sized like the device's WebView; it must be same-origin so the rails can call window.FermiAppMode.
+  Rails: "app" = native rails that drive the sim (they call native-rails, panel, toggle-play, reset, state());
+         "none" = no app rails, so the sim shows its own small Controls/Play/Reset rail (mobile browser).
+-->
+<style>
+:root{--bg:#e9eef6;--ink:#0f172a;--mute:#5b6b80;--line:#c9d5e6;--navy:#0b1640;--acc:#4169e1;--gold:#d4a72c}
+*{box-sizing:border-box}html,body{margin:0;min-height:100%;background:var(--bg);color:var(--ink);font:14px/1.45 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
+.bar{display:flex;flex-wrap:wrap;gap:10px 16px;align-items:center;padding:12px 18px;background:#fff;border-bottom:1px solid var(--line)}
+.bar h1{font-size:15px;margin:0}.grp{display:flex;gap:6px;align-items:center;flex-wrap:wrap}.grp>span{font-size:11px;color:var(--mute);text-transform:uppercase;letter-spacing:.06em}
+.seg button,.bar input,.bar select{border:1px solid var(--line);background:#fff;color:var(--ink);border-radius:8px;padding:6px 10px;font:500 13px system-ui}
+.seg button[aria-pressed=true]{background:var(--navy);border-color:var(--navy);color:#fff}.bar input{width:340px;max-width:60vw}
+.stage{display:flex;flex-direction:column;align-items:center;gap:10px;padding:20px}
+.dev{background:#000;border-radius:40px;padding:20px 36px;box-shadow:0 30px 60px rgba(15,23,42,.25)}.dev.tab{border-radius:30px;padding:22px}
+.scr{position:relative;overflow:hidden;background:#05070d;border-radius:8px}.sc{transform-origin:top left;position:relative}
+iframe{position:absolute;border:0;background:#fff;border-radius:12px}
+.rail{position:absolute;z-index:5;display:flex;flex-direction:column;gap:6px;background:var(--navy);border-radius:26px;padding:8px 6px;transition:opacity .3s}
+.rail button{width:42px;height:42px;border:0;border-radius:21px;background:transparent;color:#fff;cursor:pointer;font:600 16px system-ui}.rail button.on{background:var(--acc)}
+.rail button:disabled{opacity:.3}.sep{height:1px;background:rgba(255,255,255,.18);margin:2px 6px}
+.faded .rail{opacity:0;pointer-events:none}.log{font:12px ui-monospace,monospace;color:var(--mute);max-width:1100px;text-align:center;min-height:16px}
+.under button{border:1px solid var(--line);background:#fff;border-radius:999px;padding:7px 14px;font:600 13px system-ui;cursor:pointer}
+</style>
+</head>
+<body>
+<div class="bar">
+  <h1>Mobile sim preview</h1>
+  <div class="grp"><span>Sim</span><select id="simSel"></select><input id="simIn" placeholder="/path/to/sim.html (same server)"><button id="add">Open</button></div>
+  <div class="grp seg" id="devSel"><span>Device</span></div>
+  <div class="grp seg" id="railSel"><span>Rails</span><button data-v="app">App rails</button><button data-v="none">No app (browser)</button></div>
+</div>
+<div class="stage">
+  <div class="dev" id="dev"><div class="scr" id="scr"><div class="sc" id="sc"></div></div></div>
+  <div class="under"><button id="back" title="Android Back (or Esc)">◁ Back</button> <a id="desk" target="_blank">open desktop view ↗</a></div>
+  <div class="log" id="log"></div>
+</div>
+<script>
+const DEVS = { phone: {l:'Phone 800×360', w:800, h:360}, phoneL: {l:'Phone 915×412', w:915, h:412}, phoneS: {l:'Phone 740×360', w:740, h:360}, tablet: {l:'Tablet 1280×800', w:1280, h:800, tab:true} };
+const q = new URLSearchParams(location.search);
+let sims = q.getAll('sim'); let sim = sims[0] || ''; let dev = q.get('dev') || 'phone'; let rails = q.get('rails') || 'app';
+let frame, st = {}, fadeT = 0; const $ = s => document.querySelector(s);
+function fill(){ const s=$('#simSel'); s.innerHTML=''; sims.forEach(x=>{ const o=document.createElement('option'); o.value=x; o.textContent=x.split('/').pop(); o.selected=x===sim; s.appendChild(o); }); }
+function ev(code){ try { return frame.contentWindow.eval(code); } catch(e){ $('#log').textContent = 'cannot reach the sim (is it served from the same origin?): ' + e.message; return null; } }
+function cmd(o){ ev('window.FermiAppMode && FermiAppMode.handle(' + JSON.stringify(o) + ')'); setTimeout(pull, 150); wake(); }
+function pull(){ const s = ev('window.FermiAppMode ? FermiAppMode.state() : null'); if (!s){ $('#log').textContent = 'FermiAppMode not present: is the layer in this sim and did it switch on?'; return; }
+  st = JSON.parse(s); $('#log').textContent = 'state ' + s; paint(); }
+function wake(){ $('#scr').classList.remove('faded'); clearTimeout(fadeT); fadeT = setTimeout(()=>$('#scr').classList.add('faded'), 3000); }
+function paint(){ const c = st.caps || {}; document.querySelectorAll('[data-a]').forEach(b=>{ const a=b.dataset.a;
+  if (a==='play'){ b.textContent = st.playing ? '❚❚' : '▶'; b.disabled = c.play===false; } if (a==='reset') b.disabled = c.reset===false; if (a==='controls') b.classList.toggle('on', !!st.panelOpen && !st.docked); }); }
+function build(){
+  const D = DEVS[dev], sc = $('#sc'), scale = Math.min(1, (innerWidth - 120) / (D.w + 80), D.tab ? 0.78 : 1);
+  document.querySelectorAll('#devSel button').forEach(b=>b.remove()); Object.entries(DEVS).forEach(([k,v])=>{ const b=document.createElement('button'); b.textContent=v.l; b.setAttribute('aria-pressed', String(k===dev)); b.onclick=()=>{dev=k;sync();}; $('#devSel').appendChild(b); });
+  document.querySelectorAll('#railSel button').forEach(b=>{ b.setAttribute('aria-pressed', String(b.dataset.v===rails)); b.onclick=()=>{rails=b.dataset.v;sync();}; });
+  $('#dev').className = 'dev' + (D.tab ? ' tab' : ''); $('#scr').style.width = D.w*scale+'px'; $('#scr').style.height = D.h*scale+'px';
+  sc.style.width = D.w+'px'; sc.style.height = D.h+'px'; sc.style.transform = `scale(${scale})`; sc.innerHTML = '';
+  const appRails = rails === 'app'; const L = D.tab ? 96 : (appRails ? 96 : 6), R = (!D.tab && appRails) ? 96 : 6;
+  frame = document.createElement('iframe'); Object.assign(frame.style, { left: L+'px', top: '6px', width: (D.w-L-R)+'px', height: (D.h-12)+'px' }); sc.appendChild(frame);
+  if (appRails || D.tab){
+    const left = document.createElement('div'); left.className='rail'; left.style.cssText='left:20px;top:50%;transform:translateY(-50%)';
+    left.innerHTML = '<button data-a="close" title="Close">✕</button><div class="sep"></div><button data-a="reload" title="Reload">⟳</button>' + (D.tab ? '<button data-a="guide" title="Guide">?</button>' : '');
+    sc.appendChild(left);
+    if (!D.tab){ const right = document.createElement('div'); right.className='rail'; right.style.cssText='right:20px;top:50%;transform:translateY(-50%)';
+      right.innerHTML = '<button data-a="controls" title="Controls">☰</button><button data-a="play" title="Play/Pause">▶</button><button data-a="reset" title="Reset">↺</button>'; sc.appendChild(right); }
+  }
+  sc.querySelectorAll('[data-a]').forEach(b=>b.onclick=()=>{ const a=b.dataset.a; wake();
+    if (a==='close'){ frame.src='about:blank'; return; } if (a==='reload'){ frame.src = frame.dataset.src; return; }
+    if (a==='controls') return cmd({cmd:'panel', tab:'controls'}); if (a==='play') return cmd({cmd:'toggle-play'}); cmd({cmd:a}); });
+  frame.addEventListener('load', ()=>{ if (appRails && !D.tab) ev("window.FermiAppMode && FermiAppMode.handle({cmd:'native-rails'})"); setTimeout(pull, 300); });
+  if (sim){ frame.dataset.src = sim + (sim.includes('?') ? '&' : '?') + 'app=1'; frame.src = frame.dataset.src; $('#desk').href = sim; }
+  else $('#log').textContent = 'add ?sim=/path/to/sim.html to the URL, or type a path above';
+  fill(); wake();
+}
+function sync(){ const u = new URL(location); u.search=''; sims.forEach(s=>u.searchParams.append('sim', s)); u.searchParams.set('dev', dev); u.searchParams.set('rails', rails); history.replaceState(null,'',u); build(); }
+$('#simSel').onchange = e => { sim = e.target.value; sync(); };
+$('#add').onclick = () => { const v = $('#simIn').value.trim(); if (!v) return; if (!sims.includes(v)) sims.push(v); sim = v; sync(); };
+$('#back').onclick = () => { const r = ev("window.FermiAppMode ? (FermiAppMode.handle({cmd:'back'}), 1) : 0"); setTimeout(pull, 200); };
+addEventListener('keydown', e => { if (e.key === 'Escape') $('#back').click(); });
+$('#scr').addEventListener('pointerdown', wake); addEventListener('resize', ()=>build());
+build();
+</script>
+</body>
+</html>

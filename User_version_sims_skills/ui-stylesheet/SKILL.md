@@ -48,9 +48,11 @@ Run it after every UX skill, and immediately before the mobile step:
 3. the physics sheet;
 4. narration;
 5. **ui-stylesheet** (this step), with all its gates;
-6. **mobile-app-mode** (`../mobile-app-mode/SKILL.md`): adds the phone/tablet layer to the finished file. Its
+6. **one-line sheet header** (`sheet-header/README.md`, `sheet_header.py` + `sheet_header_check.mjs`): moves the tutor
+   link from the top bar into the Physics sheet header (owner 2026-10-13).
+7. **mobile-app-mode** (`../mobile-app-mode/SKILL.md`, v1.1.1+): adds the phone/tablet layer to the finished file. Its
    gate proves the file changed by that block only and that desktop is untouched. Run every gate of this step
-   on the file **before** step 6.
+   on the file **before** steps 6–7.
 
 Re-running a UX skill means rebuilding from its output and then running this step again. `ui_build.py` refuses an input that already carries the stylesheet block.
 
@@ -82,7 +84,9 @@ Set `U=User_version_sims_skills/ui-stylesheet/scripts` and `K=User_version_sims_
    - royal-blue Play (Pause while running);
    - navy HIDE tab;
    - the new guide card with blue outlines (solid for controls, dashed for the scene parts they change).
-5. **Mobile app mode:** `python3 User_version_sims_skills/mobile-app-mode/scripts/app_mode.py <ui.html> <final.html>`,
+5. **Sheet header:** `python3 User_version_sims_skills/ui-stylesheet/sheet-header/sheet_header.py <ui.html> <sheet.html>`, then
+   `node .../sheet-header/sheet_header_check.mjs <ui.html> <sheet.html>`. It must PASS. Use `<sheet.html>` as the input below.
+5b. **Mobile app mode:** `python3 User_version_sims_skills/mobile-app-mode/scripts/app_mode.py <ui.html> <final.html>`,
    then `node User_version_sims_skills/mobile-app-mode/scripts/app_mode_check.mjs <ui.html> <final.html>`. It must PASS.
    Ship `<final.html>`.
 6. **Push:** stage S3, backup first, `--if-match` (`design-system/fermi-sim-css/tools/push_stage.sh --list`). The owner runs pushes.

@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """ai-v2 chain for ONE AI-course sim, after the v2 sheet is built (work/<slug>/built.html):
-   built.html -> guide UX rebuild (spec.js of the other session, --no-voice) -> ui_build -> gates -> mobile app mode (+ its gate).
+   built.html -> guide UX rebuild (spec.js of the other session, --no-voice) -> ui_build -> gates -> one-line sheet header -> mobile app mode (+ their gates).
    python3 chain.py <slug> [--root ~/ai-courses-physics-v2] [--skip-gates]
 Writes work/<slug>/final/{ux.html, <slug>.user-version.html, gates.json, gates.log, shots/}.  Never touches the guide work dirs.
 """
@@ -56,6 +56,15 @@ if '--skip-gates' not in sys.argv:
     r = run('sheet-check(final)', slot + ['node', str(HERE / 'check_final.mjs'), str(cd)], timeout=1500)
     res['sheet_final'] = 'PASS' if (r.returncode == 0 and not re.search(r'^FAIL', r.stdout, re.M)) else 'FAIL'
     res['sheet_final_fails'] = re.findall(r'^FAIL[^\n]*', r.stdout, flags=re.M)[:8]
+# ---- one-line Physics sheet header (owner 2026-10-13; ported from sim-builder's ux.py sheet_header): after the gates above,
+#      before mobile app mode. The tutor link moves from the top bar into the sheet header; byte-proven by sheet_header.apply.
+SH = REPO / 'User_version_sims_skills' / 'ui-stylesheet' / 'sheet-header'
+sys.path.insert(0, str(SH)); import sheet_header
+pre_sheet = F / f'{slug}.pre-sheet.html'; pre_sheet.write_text(out.read_text())
+try:
+    out.write_text(sheet_header.apply(pre_sheet.read_text())[0]); res['sheet_header'] = 'applied'
+except sheet_header.Skip as e:
+    res['sheet_header'] = 'skipped: ' + str(e)
 # ---- mobile app mode: the LAST step. Every gate above ran on the file without it; the layer is inert on desktop.
 AM = REPO / 'User_version_sims_skills' / 'mobile-app-mode' / 'scripts'
 sys.path.insert(0, str(AM)); import app_mode
@@ -65,5 +74,9 @@ if '--skip-gates' not in sys.argv:
     r = run('app-mode-check', slot + ['node', str(AM / 'app_mode_check.mjs'), str(pre), str(out), '--shots', str(F / 'shots' / 'app-mode')], timeout=1500)
     res['app_mode'] = 'PASS' if r.returncode == 0 else 'FAIL'
     res['app_mode_fails'] = re.findall(r'^FAIL[^\n]*', r.stdout, flags=re.M)[:8]
+if '--skip-gates' not in sys.argv and res.get('sheet_header') == 'applied':
+    r = run('sheet-header-check', slot + ['node', str(SH / 'sheet_header_check.mjs'), str(pre_sheet), str(out), '--shots', str(F / 'shots' / 'sheet-header')], timeout=1500)
+    res['sheet_header_check'] = 'PASS' if r.returncode == 0 else 'FAIL'
+    res['sheet_header_fails'] = re.findall(r'^FAIL[^\n]*', r.stdout, flags=re.M)[:8]
 json.dump(res, open(F / 'gates.json', 'w'), indent=1)
 print(json.dumps(res, indent=1))

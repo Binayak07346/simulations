@@ -17,23 +17,31 @@ const [IN, OUT] = args.filter((a, i) => !a.startsWith('--') && !(si >= 0 && i ==
 if (!IN || !OUT) { console.error('usage: node app_mode_check.mjs <input.html> <output.html> [--shots dir]'); process.exit(2); }
 const SHOTS = si >= 0 ? args[si + 1] : null;
 if (SHOTS) fs.mkdirSync(SHOTS, { recursive: true });
-const PC = process.env.PUPPETEER_CORE || '/Users/admin/Downloads/sim-foundry-v2/node_modules/puppeteer-core/lib/puppeteer/puppeteer-core.js';
-const CHROME = process.env.CHROME || '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome';
-const P = (await import(PC)).default;
+// Browser: $PUPPETEER_CORE (a path to puppeteer-core's entry) or an installed puppeteer-core / puppeteer package;
+// Chrome: $CHROME, else the standard install for this OS (puppeteer's own bundled Chrome when using full puppeteer).
+const CANDS = [process.env.PUPPETEER_CORE, 'puppeteer-core', 'puppeteer',
+  '/Users/admin/Downloads/sim-foundry-v2/node_modules/puppeteer-core/lib/puppeteer/puppeteer-core.js'].filter(Boolean);   // last: the Fermi build machine
+let P = null; for (const c of CANDS) { try { P = (await import(c)).default; if (P) break; } catch (e) {} }
+if (!P) { console.error('install puppeteer-core (npm i puppeteer-core) or set PUPPETEER_CORE'); process.exit(2); }
+const SYS = { darwin: '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome', linux: '/usr/bin/google-chrome', win32: 'C:/Program Files/Google/Chrome/Application/chrome.exe' }[process.platform];
+const CHROME = process.env.CHROME || (fs.existsSync(SYS || '') ? SYS : undefined);
 const W = ms => new Promise(r => setTimeout(r, ms));
 const res = []; const ok = (id, pass, msg) => { res.push({ id, pass, msg }); console.log(`${pass === null ? 'NOTE' : pass ? 'PASS' : 'FAIL'} ${id}  ${msg}`); };
 
 // ---- A: bytes
 const tin = fs.readFileSync(IN, 'utf8'), tout = fs.readFileSync(OUT, 'utf8');
 const BLOCK = /<script id="fermi-app-mode">[\s\S]*?<\/script>/;
+const RBLOCK = /<script id="fermi-app-mode-roles">[\s\S]*?<\/script>/;
+const strip = s => s.replace(RBLOCK, '').replace(BLOCK, '');
 const blocks = (tout.match(/id="fermi-app-mode"/g) || []).length;
 const m = tout.match(BLOCK);
 const rest = m ? tout.slice(m.index + m[0].length) : '';
-ok('A1-bytes', blocks === 1 && !!m && tout.replace(BLOCK, '') === tin.replace(BLOCK, '') && !/id="fermi-app-mode"/.test(tin.replace(BLOCK, '')),
-  blocks === 1 ? 'output = input + one app-mode block' : `found ${blocks} app-mode blocks`);
+const rm = tout.match(RBLOCK);
+ok('A1-bytes', blocks === 1 && !!m && strip(tout) === strip(tin) && !/id="fermi-app-mode"/.test(strip(tin)) && (!rm || rm.index + rm[0].length === m.index),
+  blocks === 1 ? 'output = input + one app-mode block' + (rm ? ' (with its role map right before it)' : '') : `found ${blocks} app-mode blocks`);
 ok('A2-place', !!m && (/^<\/body\s*>/i.test(rest) && !/<\/body\s*>/i.test(rest.slice(7)) || !/<\/body\s*>/i.test(tin)), 'block sits right before the last </body>');
 
-const b = await P.launch({ executablePath: CHROME, headless: 'new', args: ['--mute-audio', '--disable-features=WebSpeechSynthesis', '--use-gl=swiftshader', '--enable-webgl', '--ignore-gpu-blocklist', '--hide-scrollbars'] });
+const b = await P.launch({ ...(CHROME ? { executablePath: CHROME } : {}), headless: 'new', args: ['--mute-audio', '--disable-features=WebSpeechSynthesis', '--use-gl=swiftshader', '--enable-unsafe-swiftshader', '--enable-webgl', '--ignore-gpu-blocklist', '--hide-scrollbars'] });
 const url = f => 'file://' + encodeURI(path.resolve(f)).replace(/#/g, '%23');
 async function open(file, vp) {
   const ctx = await b.createBrowserContext(); const p = await ctx.newPage(); const errs = [];
@@ -43,7 +51,7 @@ async function open(file, vp) {
   await p.goto(url(file), { waitUntil: 'load', timeout: 120000 });
   return { ctx, p, errs };
 }
-const SIG = () => [...document.querySelectorAll('body *')].filter(e => e.id !== 'fermi-app-mode').slice(0, 4000).map(e => { const r = e.getBoundingClientRect(); return e.tagName + Math.round(r.x) + ',' + Math.round(r.y) + ',' + Math.round(r.width) + ',' + Math.round(r.height); }).join('|');
+const SIG = () => [...document.querySelectorAll('body *')].filter(e => e.id !== 'fermi-app-mode' && e.id !== 'fermi-app-mode-roles').slice(0, 4000).map(e => { const r = e.getBoundingClientRect(); return e.tagName + Math.round(r.x) + ',' + Math.round(r.y) + ',' + Math.round(r.width) + ',' + Math.round(r.height); }).join('|');
 const PROBE = () => {
   const vw = innerWidth, vh = innerHeight, H = document.documentElement;
   const vis = e => { if (!e) return false; const s = getComputedStyle(e), r = e.getBoundingClientRect(); return s.display !== 'none' && s.visibility !== 'hidden' && r.width > 2 && r.height > 2; };
@@ -63,7 +71,7 @@ const PROBE = () => {
 
 try {
   // ---- B: desktop
-  for (const [w, h] of [[1440, 900], [1100, 760]]) {
+  for (const [w, h] of (args.includes('--no-desktop') ? [] : [[1440, 900], [1100, 760]])) {   // --no-desktop: another gate covers desktop
     let same = false, ran = false, noisy = false;
     for (let t = 0; t < 2 && !same; t++) {
       const A = await open(IN, { width: w, height: h }); await A.p.evaluate(() => document.fonts.ready); await W(4000); const sa = await A.p.evaluate(SIG); await A.ctx.close();
@@ -72,7 +80,7 @@ try {
       same = sa === sb;
       if (!same) { const C = await open(IN, { width: w, height: h }); await C.p.evaluate(() => document.fonts.ready); await W(4000); noisy = noisy || (await C.p.evaluate(SIG)) !== sa; await C.ctx.close(); }
     }
-    ok(`B-desktop-${w}`, !ran && (same || noisy), ran ? 'app mode RAN on a mouse device' : same ? 'layer inert, layout identical' : 'layout differs, but the input alone also varies between loads (noisy sim)');
+    ok(`B-desktop-${w}`, !ran && (same || noisy), ran ? 'app mode RAN on a mouse device' : same ? 'layer inert, layout identical' : noisy ? 'layout differs, but the input alone also varies between loads (noisy sim)' : 'LAYOUT DIFFERS from the input on desktop');
   }
   // ---- C: phone
   const touch = (w, h) => ({ width: w, height: h, isMobile: true, hasTouch: true, deviceScaleFactor: 1 });

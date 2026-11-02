@@ -1,0 +1,21 @@
+<!doctype html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Book sim A</title>
+<style>body{margin:0;font:14px system-ui;display:flex;flex-direction:column;height:100vh} .topnav{display:flex;gap:8px;align-items:center;padding:10px 16px;background:#123;color:#fff}
+.topnav h1{font-size:18px;margin:0 auto 0 0} .wrap{flex:1;display:flex;min-height:0} .left{width:280px;padding:14px;background:#eef;display:flex;flex-direction:column;gap:12px}
+.stage{flex:1;min-width:0} #cv{width:100%;height:100%;display:block}</style></head><body>
+<div class="topnav"><h1>Waves on a string (book A)</h1><button id="play">Play</button><button id="reset">Reset</button><select id="units"><option>SI</option><option>CGS</option></select></div>
+<div class="wrap"><div class="left"><label>Amplitude <input id="amp" type="range" min="0.1" max="1" step="0.05" value="1"></label>
+    <label>Angular speed <input id="om" type="range" min="0.5" max="6" step="0.1" value="2"></label>
+    <div class="readouts" id="readouts"><h3>Read-outs</h3><div class="stat-row"><span>time</span><b id="ro-t">0</b></div><div class="stat-row"><span>y(0)</span><b id="ro-y">0</b></div></div></div><div class="stage"><canvas id="cv"></canvas></div></div>
+<script>
+const cv=document.getElementById('cv'), ctx=cv.getContext('2d'); let t=0, run=false, A=1, w=2;
+function fit(){ const r=cv.getBoundingClientRect(); cv.width=Math.max(1,r.width*devicePixelRatio); cv.height=Math.max(1,r.height*devicePixelRatio); draw(); }
+function draw(){ const W=cv.width,H=cv.height; ctx.fillStyle='#f4f7fb'; ctx.fillRect(0,0,W,H); ctx.strokeStyle='#2f55cc'; ctx.lineWidth=3*devicePixelRatio; ctx.beginPath();
+  for(let x=0;x<=W;x+=4){ const y=H/2+A*H*0.35*Math.sin(x/W*Math.PI*4 - w*t); x?ctx.lineTo(x,y):ctx.moveTo(x,y);} ctx.stroke();
+  document.getElementById('ro-t').textContent=t.toFixed(2)+' s'; document.getElementById('ro-y').textContent=(A*Math.sin(-w*t)).toFixed(3); }
+function loop(){ if(run){ t+=1/60; draw(); } requestAnimationFrame(loop); }
+document.getElementById('play').onclick=()=>{ run=!run; document.getElementById('play').textContent=run?'Pause':'Play'; };
+document.getElementById('reset').onclick=()=>{ t=0; draw(); };
+document.getElementById('amp').oninput=e=>{ A=+e.target.value; draw(); };
+document.getElementById('om').oninput=e=>{ w=+e.target.value; draw(); };
+addEventListener('resize',fit); fit(); loop();
+</script></body></html>
