@@ -23,6 +23,7 @@ for r in roster:
     if 'id="ask-euler"' not in h: bad.append('no tutor pill')
     if 'TODO-AUTHOR' in h: bad.append('TODO-AUTHOR')
     if g.get('app_mode') != 'PASS' or 'id="fermi-app-mode"' not in h: bad.append('no mobile app-mode layer / gate (re-run chain.py)')
+    if 'class="phys-title-row"' not in h and not str(g.get('sheet_header', '')).startswith('skipped'): bad.append('no one-line sheet header (re-run chain.py)')
     if SUB.search(h): bad.append('subtitle span present')
     if bad: held.append((s, '; '.join(bad))); continue
     dst = TP / r['module'] / (r['file'] + '.html')
