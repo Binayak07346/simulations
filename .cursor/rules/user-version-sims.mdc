@@ -15,6 +15,8 @@ User_version_sims_skills/
   controls-tutorial/SKILL.md      + references/implementation.md
   welcome-overlay/SKILL.md        + references/implementation.md
   tests/                          kernel-diff · layout-probe · canvas-check · browser-smoke
+  ui-stylesheet/SKILL.md          ← the UI step: shared stylesheet (A look), fallback, guide patch
+  mobile-app-mode/SKILL.md        ← the LAST step: phone/tablet layer (fermi-app-mode), desktop unchanged
   examples/                       validated builds with all three layers applied
 ```
 
@@ -105,6 +107,16 @@ puts the title **below**, so the band is its own space, not a backdrop behind ty
 - Feather top/bottom with a `destination-out` wipe. Light theme wants proper **dark** ink on
   the near-white ground, not mid-tones. No text or digits on the canvas.
 
+## THE LOOK — ONE SHARED STYLESHEET (2026-10-06)
+
+Every user-version sim's look comes from `fermi-sim.css` on the CDN (the locked Horizon "A" look). Its source is in `design-system/fermi-sim-css/`.
+- **Run `User_version_sims_skills/ui-stylesheet/`** on every sim, with its gates `check.mjs`, `lastcard.mjs` and `fallback.mjs`.
+- **Then, LAST, `User_version_sims_skills/mobile-app-mode/`** (`app_mode.py` + `app_mode_check.mjs`). Every live sim carries this layer. A sim pushed without it loses its phone/tablet view, so `app_mode.py --check <file>` must say `current` before any S3 push.
+- **Never hand-edit chrome colours, fonts or spacing** in a sim or a skill. The stylesheet overrides them; a look change is a new stylesheet version.
+- **`--sim-id` only for calibrated sims** (the 116 uni-lab). AI-course, JEE and new sims leave it out.
+- **Theme:** light only (the toggle is hidden by the stylesheet).
+- **Landing: DIRECT** (2026-10-06). There is no overlay; ONE 5 s tip under the highlighted Simulation guide button. It is installed by the UI step and switched by the stylesheet token `--fsim-landing`. Gate it with `ui-stylesheet/scripts/landing_check.mjs`.
+
 ## TOKEN DISCIPLINE
 
 These sims are ~310 KB and **~73% is a single base64 font line**. Never open a sim or an
@@ -124,7 +136,9 @@ measure the backing-store:CSS-box ratio directly instead. `playwright` is not in
 `tests/browser-smoke.js` cannot run — substitute a puppeteer-core walk.
 
 Browser-verify in **both themes at 1400×900 and 1024×768**: overlay cold on every boot and
-three entry cards reaching three distinct modes; every gate blocking Next **walked forward at
+TWO entry cards (Simulation guide, Free exploration — no Guided Inquiry card since 2026-10-01)
+reaching their modes, the 🧭 header button reaching the inquiry; the guide's scene tour via
+`tests/sim-guide-scene.mjs`; every gate blocking Next **walked forward at
 student speed** (not only from a fresh Reset — that is how a cascading gate leak once hid);
 commit marking exactly one correct and disabling the rest; Reset re-arming by real click; the
 controls sidebar opening empty with every step's glow target visible; plus ≥6 cold boots with

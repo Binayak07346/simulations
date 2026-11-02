@@ -1,110 +1,80 @@
 ---
 name: physics-sheet-upgrade
-description: Upgrade a physics simulation's "Formal" section (the equation strip pinned to the bottom of the shell) into "The Physics" — a pop-up, chapter-structured revision sheet with LaTeX-quality equations, computed TikZ diagrams, a live worked example bound to the sim's real sliders, "see it in the sim" buttons, and a themed downloadable copy. Use this skill whenever the user asks to upgrade, replace, redesign, or modernize the formal section, formula section, equation panel, or "∑ Formal" button of any simulation HTML file; asks for "The Physics" sheet, a revision sheet, cheat sheet, or formula sheet inside a sim; or wants their sim's equations made interactive, engaging, or student-friendly. These are production simulations — the upgrade must be additive and must not change any existing sim behavior.
+description: Give a university-lab simulation HTML file the current "⚛︎ The Physics" sheet (v2) — a fixed-size, statement-led, sectioned pop-up (contents rail, one section at a time, a "See it" box after every physics section that runs the sim, ⌖ locate buttons in the controls table, Guided-Inquiry gating, themed download). Use whenever the user asks to add, build, wire up, redo or upgrade the Physics sheet / revision sheet / "The Physics" / formal section of any sim, or to bring a new "user version" sim up to the current sheet. Works from a raw sim with no sheet at all. Production sims — the layer is additive; never change sim physics.
 ---
 
-# Physics Sheet Upgrade
+# Physics sheet v2 — add it to a sim
 
-Transform a simulation's bottom "Formal" strip into **The Physics**: a pop-up revision
-sheet a student would actually read. The target design was reached through many
-iterations with the user — reproduce it faithfully. The finished Coriolis example
-looked like this: a serif "The Physics" title with breathing room below the top bar;
-an outlined one-line hook ("The Coriolis force isn't a push. It's what a straight
-line looks like from a spinning room."); seven boxed, numbered chapters headed by
-questions; real Computer Modern equations on accent-edged boards; TikZ figures
-computed from the sim's actual trajectory; a live panel whose sliders ARE the sim's
-sliders; per-chapter "see it in the sim" buttons; and a download that clones the
-whole article into a standalone themed sheet.
+> **Look:** on a finished user-version sim, the colours and type of this part come from the shared stylesheet. Run `../ui-stylesheet/SKILL.md` and then `../mobile-app-mode/SKILL.md` as the last steps. Don't restyle chrome colours here; change the stylesheet (`design-system/fermi-sim-css/`).
 
-## Non-negotiable safety stance (production sims)
+Current design (owner-approved, shipped on all 116 uni-lab sims, 2026-10-01). Read `references/builder-guide.md`
+before writing any content; `references/families.md` before installing; `references/lessons.md` for traps.
 
-These files ship to students. The upgrade is a **layer**, never a rewrite:
+## The sheet in one paragraph
+A header button `⚛︎ The Physics` opens a fixed-size modal. Left: contents rail. Right: ONE `<section class="ps-sec">` at a time
+with prev/next. 5–9 sections: 01 At a glance → 02 The controls (⌖ locate buttons) → physics sections 03…N-2, each ending in a
+**See it** box (`▶ Show me in the sim` closes the sheet, stages the sim, shows a "Watch for" card, "Back to the sheet" reopens
+the section) → Where it matters → Summary. Statements not questions, no self-test, 80–200 words per section, nothing overstated,
+physics exactly right. While the Guided Inquiry runs, sections from `data-gate-from` onward sit behind "Read anyway" and the
+See-it buttons pause. The Download button saves every section as a standalone themed page.
 
-- Copy the sim to a working directory; never edit the original in place.
-- Make exactly **four structural edits** to existing code (listed in
-  `references/recon.md`); everything else is appended before `</body>`.
-- Every edit uses an exact-match anchor asserted to occur **exactly once**, and the
-  file is written only after **all** anchors match — a failed anchor must abort with
-  nothing written (use `scripts/patchlib.py`, which enforces this).
-- Add no globals except `window.__openPhysics` and `window.__physicsHooks`; wrap the
-  layer in an IIFE with `'use strict'`; register listeners only after the sim's own
-  boot code so ordering is deterministic; never remove or reorder the sim's listeners.
-- Do not touch the sim's physics, guided inquiry, controls guide, welcome overlay,
-  canvas code, or CSS outside the layer's own namespaced classes (`phys-*`, `.ch`,
-  `.board`, `.fig`, `.pts`, `.lede`, `.m`, `.seesim`, `.live-*`).
-- Run `scripts/verify_build.py` before delivering. If any check fails, fix and rerun;
-  never ship a file that fails verification.
+## Safety stance
+- Never edit the sim by hand and never change its physics, controls or inquiry cards. Everything goes through `kit/install.py`
+  (structural patches, anchor-asserted) and `kit/build.py` (assert-every-anchor-then-write).
+- Work in `work/v2/<SLUG>/` (scratch). Don't commit `raw.html pristine.html built.html sim.html shots/ .lastbuild`.
+- Commit/push only when asked, only to the personal fork `origin` (Binayak07346/simulations), never the company upstream.
+- `build.py` refuses to overwrite a sim that changed since `pristine.html` (another session editing it): stop, don't force.
+- Headless Chrome only; run every browser check through `kit/slot.sh`. No visible windows.
+- The AI-courses sims (`ai-courses/`, `layer.ai.html`) still use the OLD v1 sheet and belong to another workstream: don't touch.
+- PP11 (Standard Model) and PP18 (Scale of the Universe) are under professor review: sheet only, never the sim.
 
-## Workflow
+## Workflow (new sim → shipped sheet)
+Set `SK=.cursor/skills/physics-sheet-upgrade`, `D=$SK/work/v2/<SLUG>` (create it).
 
-### 1. Recon (read-only) — `references/recon.md`
+1. **Recon.** Read the sim: header buttons, `.inq-step` cards (Guided Inquiry), control ids/ranges/defaults, readouts, any
+   existing See-it/SHOW code, reset button id, theme tokens, whether it has `Shell`/`applyInquiryScene` (Shell family) or the
+   older `.btn-topbar` header (pre-shell QM family). `references/families.md` decides the install spec.
+2. **Install** (turns a raw sim into the buildable base):
+   `python3 $SK/kit/install.py <raw.html> $D --spec $D/install.json`
+   Spec: `{"title","slug","sim":"<final repo path>"}` for Shell sims; pre-shell sims add `z`, `toast_top`, `button`, `hooks`
+   (examples: `examples/L9/install.json`, `examples/QM07-preshell/install.json`). It asserts the sim has no sheet yet, patches the
+   header button + CG step + hooks, inserts the scaffold (CSS, modal, seat script, generic layer, GI pause), syntax-checks every
+   script, and writes `raw.html pristine.html config.json` plus starter `article.html persim.html edits.py`. Never re-run on an
+   already-built sim; to restart, take the raw sim again.
+3. **Author** the three per-sim files (see `references/builder-guide.md` and the finished `examples/L9/`):
+   - `article.html` — the sections, `data-gate-from="k"` on the `<article>` (index of the first section stating an inquiry answer);
+   - `persim.html` — `window.__psShow` (See-it keys: `{msg, scene, panel, run}`), `__psRefresh`, `__psDemos` for scripted
+     comparisons, light-theme CSS, `--ps-watch-*` card placement variables;
+   - `edits.py` — `REPS=[(old,new)…]` for sim-specific text (each anchor exactly once), `SKIP_TOAST` only for hand-written handlers.
+   Update `config.json` `kicker`/`aria` ("<Topic> · what this sim shows, the physics behind it, and every control").
+   Diagrams: `scripts/gen_assets.py` (TikZ/LaTeX → inline SVG) or hand-drawn `currentColor` SVG; namespace SVG ids per figure.
+4. **Build:** `python3 $SK/kit/build.py $D` → writes the sim at `config.json` `sim` and `built.html`. Fix and rebuild; never edit the output.
+5. **Gate:** `$SK/kit/slot.sh node $SK/kit/check.mjs $D` (needs `puppeteer-core` and Chrome; set `PUPPETEER_CORE`, `CHROME` if not
+   found; `PSV2_SLOTS_DIR`, `PSV2_SLOTS` for the limiter; `--quick` for a smoke run). 37–58 checks, 3–6 min. Every line must be
+   PASS. If the page is slow (3-D/WebGL) say so rather than weakening a check. Add `test.json` demos for any `data-demo`.
+6. **Look at the screenshots** in `$D/shots/`: every section dark, light and 720p, each `see-*.png`, `gi-gate.png`, `phone-s1.png`.
+   Each See-it must visibly deliver its Watch-for within ~10 s at 1440×900 in both themes. Light theme: fix unreadable sim
+   text in `persim.html` (scoped to `html[data-theme="light"], body.light-theme`).
+7. **Review twice** — as a physics professor (correctness, overstatement, qualifiers, spoilers, sequencing) and as a first-year
+   student (clarity, jargon, reading load). Verify every number with node. Rebuild + recheck until clean.
+8. **Deliver:** report section list, See-its, harness counts, light-theme fixes, cuts, open SME questions. Commit only on request.
 
-Map the sim before changing anything: the four patch anchors, the scene-control
-function, the Shell API, every slider (id, symbol, unit, physical meaning), the trail
-colors, the theme wiring, and the sim's own physics content (formal strip, info
-modal, guided inquiry) — that existing content is the source of truth for what the
-sheet must teach. Read `references/recon.md` and follow its checklist; if any anchor
-differs from the reference sim, adapt per its fallback guidance.
+## Updating an already-shipped v2 sim
+The per-sim sources of the 116 rollout (`article.html persim.html edits.py config.json test.json pristine.html`) are archived,
+git-ignored, in `work/v2/<SLUG>/` (`pristine.html` = the sim before v2). Edit those files, then `python3 kit/build.py work/v2/<SLUG>`
+and run the gate. `config.json` `sim` still points at the repo file; `build.py` refuses if that file changed since the last build.
+The archive is local only (`work/` is git-ignored); back it up if the machine changes.
 
-### 2. Author the sheet — `references/content.md`
+## Kit layout
+```
+scaffold/   head.css.html modal.html seat.js.html layer.js.html gi-pause.js.html article.skeleton.html   (installed into sims)
+kit/        install.py preflight.py build.py check.mjs slot.sh layer.generic.html sheet_css.jsfrag
+examples/   L9/ (full per-sim set, Shell family)   QM07-preshell/install.json (pre-shell spec)
+references/ builder-guide.md families.md lessons.md   |   legacy-v1.md content.md pitfalls.md recon.md (v1, historical)
+scripts/    gen_assets.py (diagrams, current)   patchlib.py verify_build.py browser_test.py example_spec_coriolis.py (v1, legacy)
+```
+`kit/preflight.py <dir>` checks that a sim carries the 12 build anchors (a v1/v2 sim sheet) before a rebuild.
 
-Plan the chapters, equations, diagrams, live worked example, traps, and self-test
-for THIS sim's topic. `references/content.md` defines the structure, voice, and
-quality bar (with the full Coriolis version as the calibration example). Write the
-plan first; it determines what assets step 3 must produce.
-
-### 3. Generate assets — `scripts/gen_assets.py`
-
-Equations are LaTeX (pdflatex → pdftocairo → post-processed inline SVG); diagrams
-are TikZ with geometry **computed from the sim's real defaults**, not sketched.
-Write a `spec.py` (copy `scripts/example_spec_coriolis.py`), run
-`python3 gen_assets.py spec.py`, then **rasterize every output to PNG and view each
-one** — label clipping and layout flaws are only caught by looking. Fix and rerun
-until every render is clean.
-
-### 4. Assemble
-
-- Apply the four structural patches with `patchlib.Patcher` (all-assert-then-write).
-- Copy `assets/layer.reference.html`, rewrite its topic content per your step-2 plan
-  (the file marks which parts are invariant machinery vs. per-sim content), fill the
-  `{{EQn}}`/`{{Dn}}` tokens from `art.json`, and inject the layer before `</body>`.
-- The machinery in the reference layer encodes hard-won fixes (theme repair, download
-  capability with fallback, live two-way slider binding, clone-based download,
-  `<\/script>` escaping). Keep it verbatim unless a check in step 5 forces a change.
-
-### 5. Verify and deliver — all three gates
-
-1. **Static**: `python3 scripts/verify_build.py <built-file> --original <pristine-copy>`.
-   Beyond the layer checks (anchors, tokens, `node --check`, combining arrows,
-   `</script>` escaping, SVG id hygiene), `--original` is the production-safety
-   proof: with the layer stripped, the built file must differ from the pristine
-   original at ONLY the four sanctioned patch sites — a single changed line
-   anywhere else fails the build. Always run this mode; keep the pristine copy
-   for it.
-2. **Runtime**: `python3 scripts/browser_test.py <built-file>` drives the file in
-   headless Chromium (works fully offline; the sim's CDN failures are expected
-   noise) and exercises every layer path: open/close/Esc/pause, the 9 SVGs and id
-   uniqueness, two-way slider sync, live worked-run recompute, see-it buttons
-   sending CURRENT values, viewer-pinned theme sync, and the downloaded sheet's
-   full content. If the environment has no headless browser (exit 3), run the same
-   checklist manually — e.g. with Claude in Chrome on the delivered page.
-3. **Delivery**: publish as an artifact when hosted viewing is wanted (declare
-   `capabilities: {downloads: true}` on the first publish) or present the file.
-   Ship only a build that passed gates 1 and 2.
-
-## Pitfalls — read before building
-
-`references/pitfalls.md` is the ledger of every bug hit while reaching the final
-design (blocked CDN stylesheets, tofu combining arrows, poppler SVG id collisions,
-viewer-pinned themes, inert blob downloads, stale worked-example values, and more).
-Each entry says what broke, why, and the required prevention. Skipping this file is
-how those bugs come back.
-
-## Quality bar
-
-The user's test is: "would a student mistake this for something a good human TA
-authored?" Concretely — question-led chapter headings, 2–4 bullet points instead of
-paragraphs, every number in the worked example live and honest (state first-order
-estimates as such), diagrams that agree with the sim because they were computed from
-it, and a download that is the same artifact, not a lesser one. When in doubt,
-compare against the Coriolis calibration example in `references/content.md`.
+## Legacy v1
+The old flow (replace the "Formal" strip with a question-led, chapter sheet + self-test) is described in `references/legacy-v1.md`.
+Don't use it for new work; it is kept only for sims that still carry the v1 sheet.

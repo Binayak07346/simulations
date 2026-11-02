@@ -1,0 +1,158 @@
+{
+ "batches": {
+  "J01": [
+   "C023",
+   "C024",
+   "C025",
+   "C025-projectile-motion-ground-to-ground--with-air-drag"
+  ],
+  "J02": [
+   "C028",
+   "C030",
+   "C031",
+   "C032",
+   "C033"
+  ],
+  "J03": [
+   "C037",
+   "C039",
+   "C041",
+   "C042",
+   "C046"
+  ],
+  "J04": [
+   "C051",
+   "C053",
+   "C054",
+   "C054-elastic-and-inelastic-collisions-in-1d--momentum-and-energy",
+   "C055"
+  ],
+  "J05": [
+   "C059",
+   "C063",
+   "C064",
+   "C067",
+   "C069"
+  ],
+  "J06": [
+   "C070",
+   "C072",
+   "cm-conical-pendulum",
+   "cm-slide-or-topple",
+   "cm-wheel-step"
+  ],
+  "J07": [
+   "C077",
+   "C078",
+   "C079",
+   "C080",
+   "C081"
+  ],
+  "J08": [
+   "C088",
+   "C090",
+   "C092",
+   "C099",
+   "C104"
+  ],
+  "J09": [
+   "C106",
+   "C108",
+   "C113",
+   "C118",
+   "C120"
+  ],
+  "J10": [
+   "C123",
+   "C124",
+   "C126",
+   "C127",
+   "C132"
+  ],
+  "J11": [
+   "C134",
+   "C135",
+   "C136",
+   "C137",
+   "C143"
+  ],
+  "J12": [
+   "C152",
+   "C156",
+   "C157",
+   "C159",
+   "C160"
+  ],
+  "J13": [
+   "C166",
+   "C169",
+   "C170",
+   "C173",
+   "C183"
+  ],
+  "J14": [
+   "C185",
+   "C190",
+   "C192",
+   "C193",
+   "C194"
+  ],
+  "J15": [
+   "C197",
+   "C198",
+   "C199",
+   "C203",
+   "C208"
+  ],
+  "J16": [
+   "C217",
+   "C219",
+   "C223",
+   "C230",
+   "C062"
+  ],
+  "J17": [
+   "extinguishers",
+   "C097",
+   "C100",
+   "C103",
+   "C139"
+  ],
+  "J18": [
+   "C140",
+   "C142",
+   "C144",
+   "C148",
+   "C149"
+  ],
+  "J19": [
+   "C154",
+   "C171",
+   "C175",
+   "C202",
+   "C204"
+  ],
+  "J20": [
+   "C206",
+   "C209",
+   "C210",
+   "C215",
+   "C216"
+  ],
+  "J21": [
+   "C222",
+   "C224",
+   "C225",
+   "C036",
+   "C080-keplers-three-laws--solar-system"
+  ]
+ },
+ "outliers_hand": [
+  "C161-kirchhoffs-laws-schematic",
+  "C161",
+  "C213",
+  "C225-energy-levels-and-the-hydrogen-spectral-series--emission-and-absorption"
+ ],
+ "order": "standard Play(68+10 scene_fn) first, then static(24), then three.js(2); outliers after",
+ "note": "C021 = finished pilot (delivered), so 104 sims left in 21 batches"
+}
