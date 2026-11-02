@@ -1,0 +1,11 @@
+/* SPACING · derived from one base, main-app scale (_tokens/spacing.css). */
+:root {
+  --space-base: 0.25rem;
+  --space-1: var(--space-base);
+  --space-2: calc(var(--space-base) * 2);
+  --space-3: calc(var(--space-base) * 3);
+  --space-4: calc(var(--space-base) * 4);
+  --space-5: calc(var(--space-base) * 6);
+  --space-6: calc(var(--space-base) * 8);
+  --control-height: 2.5rem;
+}

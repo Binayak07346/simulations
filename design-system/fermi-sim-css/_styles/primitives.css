@@ -1,0 +1,94 @@
+/* ════════════════════════════════════════════════════════════════════
+ * PRIMITIVES · appearance classes any sim may use (layer fermi.components)
+ * ════════════════════════════════════════════════════════════════════
+ * The class name IS the public API (main-app ADR-0002). BEM, like the main
+ * app's .card / .card__title / .card--interactive, with a `fsim-` prefix:
+ * existing sim CSS already defines bare .btn / .card / .chip, and an
+ * unprefixed name would collide with them during migration.
+ *
+ * The base class owns the shape; a variant owns colour only. Tokens only:
+ * no literal values in this file.
+ *
+ * In today's sims nothing carries these classes yet (v1 adds no classes to
+ * markup), so this file cannot change a live sim. New sims and the Track R
+ * refactor adopt them; CLASSES.md maps every legacy selector to its class.
+ * ════════════════════════════════════════════════════════════════════ */
+
+/* ── Button ─────────────────────────────────────────────────────────── */
+.fsim-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-2);
+  height: var(--control-height);
+  padding: 0 var(--space-4);
+  font-family: var(--font-sans);
+  font-size: var(--text-base);
+  font-weight: var(--font-weight-semibold);
+  line-height: 1;
+  border: 1px solid transparent;
+  border-radius: var(--radius-md);
+  background: var(--fsim-control-bg);
+  color: var(--color-text);
+  cursor: pointer;
+  white-space: nowrap;
+  transition: background var(--duration-fast) var(--ease-out),
+              color var(--duration-fast) var(--ease-out),
+              border-color var(--duration-fast) var(--ease-out);
+}
+.fsim-btn:hover { background: var(--fsim-control-bg-hover); }
+.fsim-btn:focus-visible { outline: 2px solid var(--color-focus-ring); outline-offset: 2px; }
+.fsim-btn:disabled,
+.fsim-btn[disabled] { opacity: 0.45; cursor: not-allowed; }
+.fsim-btn--sm { height: calc(var(--control-height) - var(--space-2)); padding: 0 var(--space-3); font-size: var(--text-sm); }
+
+/* primary · the ONE loud action per view (Play) */
+.fsim-btn--primary { background: var(--color-accent); color: var(--color-text-on-accent); border-color: var(--fsim-play-border); }
+.fsim-btn--primary:hover { background: var(--color-accent-hover); }
+/* selected · a toggled option (segment, mode, preset) */
+.fsim-btn--selected,
+.fsim-btn[aria-pressed="true"] { background: var(--fsim-selected-bg); color: var(--color-accent-active); border-color: var(--fsim-accent-border); }
+/* ghost · quiet, text-only */
+.fsim-btn--ghost { background: transparent; color: var(--color-text-subtle); }
+.fsim-btn--ghost:hover { background: var(--color-accent-subtle); color: var(--color-accent); }
+/* tutor · the white pill that opens the AI Tutor */
+.fsim-btn--tutor { background: var(--color-surface); color: var(--color-text); border-color: var(--color-surface); border-radius: var(--radius-full); }
+.fsim-btn--tutor .fsim-btn__icon {
+  width: 1em; height: 1em; display: inline-block;
+  background-color: var(--fsim-tutor-icon);
+  -webkit-mask: var(--fsim-tutor-icon-mask) center/contain no-repeat;
+          mask: var(--fsim-tutor-icon-mask) center/contain no-repeat;
+}
+
+/* ── Chip · a small toggle or tag ─────────────────────────────────────── */
+.fsim-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  padding: var(--space-1) var(--space-3);
+  border-radius: var(--radius-full);
+  border: 1px solid var(--fsim-sidebar-line);
+  background: var(--fsim-control-bg);
+  color: var(--color-text);
+  font-family: var(--font-sans);
+  font-size: var(--text-sm);
+}
+.fsim-chip--active { background: var(--color-accent); border-color: var(--color-accent); color: var(--color-text-on-accent); }
+
+/* ── Card · a raised surface (sheet sections, guide cards) ────────────── */
+.fsim-card {
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  padding: var(--space-5);
+  box-shadow: var(--shadow-xl);
+  color: var(--color-text);
+}
+.fsim-card__title { margin: 0; font-family: var(--font-sans); font-weight: var(--font-weight-bold); color: var(--color-text); }
+.fsim-card__body { margin: var(--space-2) 0 0; font-family: var(--font-sans); line-height: var(--leading-normal); color: var(--color-text-muted); }
+
+/* ── Feedback · answer states (Guided Inquiry) ────────────────────────── */
+.fsim-feedback { border: 1px solid var(--color-border); border-radius: var(--radius-md); padding: var(--space-2) var(--space-3); background: var(--fsim-eval-bg); color: var(--color-text-muted); }
+.fsim-feedback--correct { background: var(--fsim-ok-bg); border-color: var(--fsim-ok-border); color: var(--fsim-ok-text); }
+.fsim-feedback--wrong { background: var(--fsim-bad-bg); border-color: var(--fsim-bad-border); color: var(--fsim-bad-text); }
+.fsim-feedback--near { background: var(--fsim-near-bg); border-color: var(--fsim-near-border); color: var(--fsim-near-text); }

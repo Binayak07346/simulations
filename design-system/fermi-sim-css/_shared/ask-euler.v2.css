@@ -1,0 +1,20 @@
+
+/* ==========================================================================
+   ASK EULER — layer-owned, purely additive. Nothing above is modified.
+   The original info affordance is hidden (kept in DOM so its listener never
+   errors); this anchor takes its visual slot. Greens are the agreed palette;
+   headers are #FAF8F4 in both themes, so one palette is correct.
+   ========================================================================== */
+[data-euler-hidden]{display:none !important;}
+#ask-euler{display:inline-flex;align-items:center;justify-content:center;gap:7px;height:36px;
+  padding:0 16px;margin-left:14px;box-sizing:border-box;flex-shrink:0;border:1px solid #163d30;
+  border-radius:6px;background-color:#1E4D3A;color:#ffffff;font-family:inherit;font-size:13px;
+  font-weight:600;line-height:1;white-space:nowrap;text-decoration:none;cursor:pointer;vertical-align:middle;
+  transition:background-color .2s ease,border-color .2s ease,box-shadow .2s ease,transform .2s ease;}
+#ask-euler:visited{color:#ffffff;}
+#ask-euler:hover{background-color:#2D6E52;border-color:#245e45;color:#ffffff;box-shadow:0 2px 10px rgba(30,77,58,.28);}
+#ask-euler:active{transform:translateY(1px);box-shadow:none;}
+#ask-euler:focus-visible{outline:2px solid #B6820C;outline-offset:2px;}
+.ask-euler-icon{font-size:15px;line-height:1;display:inline-block;transform:translateY(-.5px);}
+@media (max-width:1200px){#ask-euler{padding:0 11px;gap:0;}#ask-euler .ask-euler-label{display:none;}}
+@media (prefers-reduced-motion:reduce){#ask-euler{transition:none;}#ask-euler:active{transform:none;}}

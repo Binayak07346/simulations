@@ -1,0 +1,189 @@
+<script>
+(function(){
+  'use strict';
+  var $=function(id){return document.getElementById(id);};
+  var backdrop=$('phys-backdrop'), toastEl=$('phys-toast');
+  var wasPlaying=true, toastT=null;
+  /* Assign immediately so a later throw cannot leave the header button a no-op. */
+  window.__openPhysics=function(){ if(backdrop) backdrop.classList.add('open'); };
+
+  /* ---- theme repair: the hosting viewer may pin data-theme="light" on <html>, which outranks a
+     body-class toggle and makes the theme button appear dead. Mirror the html attribute onto the
+     body class at load and on every change; where the sim has the Shell's #shell-theme button, it
+     now writes the html attribute (sims whose own toggle already does so are unaffected). */
+  (function(){
+    var rootEl=document.documentElement, btn=$('shell-theme');
+    function fromHtml(){
+      var light=rootEl.getAttribute('data-theme')==='light';
+      document.body.classList.toggle('light-theme',light);
+      if(btn) btn.textContent=light?'☀':'☾';
+    }
+    fromHtml();
+    new MutationObserver(fromHtml).observe(rootEl,{attributes:true,attributeFilter:['data-theme']});
+    if(btn) btn.addEventListener('click',function(){
+      rootEl.setAttribute('data-theme',document.body.classList.contains('light-theme')?'light':'dark');
+    });
+  })();
+
+  /* The inquiry / controls-guide flows veil and un-veil header controls. This button is reference
+     material and must never end up disabled. */
+  (function(){
+    var btn=$('toggle-formal'); if(!btn) return;
+    function unlock(){ if(btn.disabled) btn.disabled=false; btn.title='Open the revision sheet'; }
+    unlock();
+    new MutationObserver(unlock).observe(btn,{attributes:true,attributeFilter:['disabled']});
+  })();
+
+  function toast(msg,ms){
+    toastEl.innerHTML=msg; toastEl.classList.add('show');
+    clearTimeout(toastT); toastT=setTimeout(function(){toastEl.classList.remove('show');},ms||5600);
+  }
+
+  /* ---- pause the sim while the sheet is open, hand play/pause back on close.
+     Shell sims: Shell.setPlaying. Pre-shell sims: window.__physicsHooks.setPlaying / .isPlaying. */
+  function isPlay(){
+    var H=window.__physicsHooks;
+    if(H&&H.isPlaying) return !!H.isPlaying();
+    return (typeof Shell!=='undefined')?Shell.playing:true;
+  }
+  function setPlay(on){
+    var H=window.__physicsHooks;
+    if(H&&H.setPlaying) H.setPlaying(on);
+    else if(typeof Shell!=='undefined') Shell.setPlaying(on);
+  }
+
+  /* ---- PER-SIM seams (all optional; set them in persim.html) ----
+     window.__psRefresh()   refresh the #phys-live panel / any live numbers when the sheet opens
+     window.__psSnapshot()  HTML for the "your snapshot when you saved this" line in the download
+     window.__psShow        { key: { msg, scene, panel, run } } the See-it map (see references/builder-guide.md) */
+  function refreshLive(){ if(typeof window.__psRefresh==='function') window.__psRefresh(); }
+
+  /* ---- open / close ---- */
+  window.__openPhysics=function(){
+    refreshLive();
+    wasPlaying=isPlay();
+    setPlay(false);
+    backdrop.classList.add('open');
+    $('phys-close').focus();
+  };
+  function closePhys(restorePlay){
+    backdrop.classList.remove('open');
+    setPlay(restorePlay!==undefined?restorePlay:wasPlaying);
+  }
+  $('phys-close').addEventListener('click',function(){closePhys();});
+  backdrop.addEventListener('click',function(e){ if(e.target===backdrop) closePhys(); });
+  document.addEventListener('keydown',function(e){ if(e.key==='Escape'&&backdrop.classList.contains('open')) closePhys(); });
+
+  /* ---- "See it in the sim": the sheet drives the simulation ----
+     Each button's data-show names an entry of window.__psShow:
+       msg    the one factual line shown on the See-it card
+       scene  an object handed to window.__physicsHooks.scene(cfg), or a function returning one
+       panel  id of a collapsed sidebar panel to open (e.g. 'panel-readouts')
+       run    a function run after the scene is set
+     Always build scenes from the CURRENT control values unless the entry fixes a value on purpose. */
+  Array.prototype.forEach.call(document.querySelectorAll('.seesim[data-show]'),function(btn){
+    btn.addEventListener('click',function(){
+      var key=btn.getAttribute('data-show'), s=(window.__psShow||{})[key], H=window.__physicsHooks;
+      if(!s||!H) return;
+      var msg=(typeof s.msg==='function')?s.msg():s.msg;
+      var cfg=(typeof s.scene==='function')?s.scene():s.scene;
+      closePhys(true);
+      if(cfg&&H.scene) H.scene(cfg);
+      if(s.panel){ var rp=$(s.panel), rh=rp&&rp.querySelector('.shell-panel-head'); if(rh&&rp.classList.contains('collapsed')) rh.click(); }
+      if(typeof s.run==='function') s.run();
+      toast(msg);
+    });
+  });
+
+  /* ---- Download: the sheet IS the article — clone it, freeze the live panel ----
+     MACHINERY: keep the clone/capability/fallback flow. */
+  var SHEET_CSS=''
+    +':root{--bg:#fbfaf7;--ink:#1c2b2e;--mut:#54666a;--soft:#8a938f;--line:#e4e1d8;--acc:#217c71;--acc-soft:#bcd9d4;--tint:rgba(33,124,113,.07);--card:#ffffff;}'
+    +'html[data-theme="dark"]{--bg:#0b1416;--ink:#e2e8f0;--mut:#a7b6b9;--soft:#77878a;--line:#20363a;--acc:#4db3a5;--acc-soft:#23524b;--tint:rgba(77,179,165,.10);--card:#101d20;}'
+    +'body{margin:0;background:var(--bg);color:var(--ink);font:14.5px/1.6 "DM Sans",-apple-system,"Segoe UI",Roboto,sans-serif;transition:background .2s,color .2s;}'
+    +'main{max-width:730px;margin:0 auto;padding:40px 26px 64px;}'
+    +'.hd{display:flex;align-items:flex-end;gap:12px;border-bottom:2px solid var(--acc);padding-bottom:16px;}'
+    +'.hd h1{margin:0;flex:1;font:700 30px/1.1 "STIX Two Text",Georgia,"Times New Roman",serif;}'
+    +'.hd small{display:block;font-size:12.5px;font-weight:400;color:var(--mut);margin-top:7px;font-family:"DM Sans",sans-serif;}'
+    +'#theme{font:inherit;font-size:16px;line-height:1;padding:7px 11px;border-radius:8px;border:1px solid var(--line);background:transparent;color:var(--ink);cursor:pointer;}'
+    +'.lede{margin:18px 0 12px;padding:13px 16px;border:1px solid var(--acc-soft);border-left:3px solid var(--acc);border-radius:0 11px 11px 0;background:var(--card);font:italic 500 16.5px/1.5 "STIX Two Text",Georgia,serif;color:var(--mut);}'
+    +'.snap{margin:0 0 6px;padding:11px 15px;background:var(--tint);border-left:3px solid var(--acc);border-radius:0 8px 8px 0;font-size:13px;}'
+    +'.snap b{font-family:ui-monospace,monospace;}'
+    +'.ch{display:grid;grid-template-columns:42px 1fr;gap:0 14px;padding:17px 18px 15px;margin:14px 0;border:1px solid var(--line);border-radius:11px;background:var(--card);}'
+    +'.ch .no{font:600 20px/1.15 "STIX Two Text",Georgia,serif;color:var(--acc);padding-top:3px;}'
+    +'.ch h3{margin:0 0 12px;padding-bottom:9px;border-bottom:1px solid var(--line);font:600 19px/1.3 "STIX Two Text",Georgia,serif;color:var(--ink);}'
+    +'.pts{margin:8px 0 0;padding-left:17px;font-size:13.5px;line-height:1.62;color:var(--mut);}'
+    +'.pts li{margin:5px 0;}.pts b,.pts i{color:var(--ink);}'
+    +'.board{border-left:3px solid var(--acc);background:var(--tint);border-radius:0 8px 8px 0;padding:12px 14px 10px;margin:10px 0;overflow-x:auto;color:var(--ink);}'
+    +'.board svg{display:block;}'
+    +'.board .cap{font-size:11.5px;color:var(--soft);margin-top:8px;}'
+    +'.fig{margin:12px 0 6px;padding:12px 10px 9px;border:1px solid var(--line);border-radius:9px;color:var(--ink);text-align:center;}'
+    +'.fig svg{width:100%;height:auto;display:inline-block;}'
+    +'.fig.f1 svg{max-width:460px;}.fig.f2 svg{max-width:340px;}.fig.f3 svg{max-width:520px;}'
+    +'.fig .cap{font-size:11.5px;color:var(--soft);margin-top:4px;}'
+    +'.phys-q{border:1px solid var(--line);border-radius:8px;padding:9px 12px;font-size:13.5px;color:var(--mut);}'
+    +'.phys-q+.phys-q{margin-top:8px;}'
+    +'.phys-q summary{cursor:pointer;color:var(--ink);font-weight:600;}'
+    +'.phys-q[open]{border-color:var(--acc-soft);}'
+    +'.phys-q .ans{margin:7px 0 0;line-height:1.55;}'
+    +'.bar{margin-top:26px;display:flex;gap:12px;align-items:center;}'
+    +'.bar button{font:inherit;padding:9px 18px;border-radius:8px;border:1px solid var(--acc);background:var(--acc);color:#fff;cursor:pointer;}'
+    +'.foot{font-size:12px;color:var(--soft);}'
+    +'@media print{.bar,#theme{display:none;}body{background:#fff;}:root{--bg:#fff;--ink:#111;--mut:#3c4a4d;--soft:#666;--line:#ddd;--acc:#14524a;--acc-soft:#9cc;--tint:#f0f5f4;}.ch{break-inside:avoid;}}';
+
+  $('phys-download').addEventListener('click',function(){
+    var d=new Date().toLocaleDateString(undefined,{year:'numeric',month:'short',day:'numeric'});
+    var art=$('phys-art').cloneNode(true);
+    Array.prototype.forEach.call(art.querySelectorAll('.seesim'),function(b){b.remove();});
+    var live=art.querySelector('#phys-live');
+    if(live){
+      var snapHtml=(typeof window.__psSnapshot==='function')?window.__psSnapshot():'';
+      if(snapHtml){
+        var p=document.createElement('div');
+        p.className='snap';
+        p.innerHTML=snapHtml;
+        live.parentNode.replaceChild(p,live);
+      } else live.parentNode.removeChild(live);
+    }
+    var html='<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8">'
+      +'<meta name="viewport" content="width=device-width,initial-scale=1">'
+      +'<title>The Physics — {{TITLE}}</title>'
+      +'<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=STIX+Two+Text:ital,wght@0,400;0,600;0,700;1,500&display=swap">'
+      +'<style>'+SHEET_CSS+'</style></head><body><main>'
+      +'<div class="hd"><h1>The Physics<small>{{TITLE}} · revision sheet · saved '+d+'</small></h1>'
+      +'<button id="theme" title="Switch light / dark">☾</button></div>'
+      +art.innerHTML
+      +'<div class="bar"><button id="printer">🖨 Print / save as PDF</button>'
+      +'<span class="foot">Printing reveals the self-test answers. Equations and diagrams work fully offline.</span></div>'
+      +'</main><script>'
+      +'document.getElementById("theme").addEventListener("click",function(){'
+      +'var r=document.documentElement,dk=r.getAttribute("data-theme")==="dark";'
+      +'r.setAttribute("data-theme",dk?"light":"dark");this.textContent=dk?"\\u263E":"\\u2600";});'
+      +'document.getElementById("printer").addEventListener("click",function(){'
+      +'document.querySelectorAll("details").forEach(function(x){x.open=true;});window.print();});'
+      +'<\/script><\/body><\/html>';
+    (async function(){
+      var ok=false;
+      try{
+        if(window.claude && window.claude.use){
+          var dl=await window.claude.use('downloads');
+          if(dl){ await dl.save({filename:'the-physics-{{SLUG}}.html', data:html}); ok=true; }
+        }
+      }catch(err){
+        if(err && err.code==='declined') return;
+        if(err && err.code==='rate_limited'){ toast('One save prompt at a time — try again in a moment.'); return; }
+      }
+      if(!ok){
+        try{
+          var blob=new Blob([html],{type:'text/html'});
+          var a=document.createElement('a');
+          a.href=URL.createObjectURL(blob); a.download='the-physics-{{SLUG}}.html';
+          document.body.appendChild(a); a.click();
+          setTimeout(function(){URL.revokeObjectURL(a.href); a.remove();},400);
+        }catch(e2){ toast('Could not save the sheet in this view.'); return; }
+      }
+      toast('<b>Sheet saved.</b> Same sections, equations and diagrams — with its own light/dark switch and a print button that turns it into a PDF.');
+    })();
+  });
+})();
+</script>

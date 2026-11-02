@@ -1,0 +1,7 @@
+/* MOTION · main-app values (_tokens/motion.css). One easing curve. */
+:root {
+  --duration-instant: 80ms;
+  --duration-fast: 180ms;
+  --duration-base: 320ms;
+  --ease-out: cubic-bezier(0.2, 0.7, 0.2, 1);
+}

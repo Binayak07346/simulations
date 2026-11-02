@@ -1,0 +1,331 @@
+sim	selector	was	contrast	now	text
+qm-2d-wavefunction-collapse-measurement	#sb-sidebar div.panel-section > div.section-label	rgb(203, 213, 225)	1.31	#616a75	View
+qm-2d-wavefunction-collapse-measurement	#xPosValue	rgb(59, 155, 143)	2.94	#00756a	0.0
+qm-2d-wavefunction-collapse-measurement	#yPosValue	rgb(59, 155, 143)	2.94	#00756a	0.0
+qm-2d-wavefunction-collapse-measurement	#widthValue	rgb(59, 155, 143)	2.94	#00756a	0.75
+qm-2d-wavefunction-collapse-measurement	#speedValue	rgb(59, 155, 143)	2.94	#00756a	0.20x
+qm-2d-wavefunction-collapse-measurement	#statsSection div.section-label	rgb(203, 213, 225)	1.31	#616a75	Statistics
+qm-2d-wavefunction-collapse-measurement	#collapsesSection div.section-label	rgb(203, 213, 225)	1.31	#616a75	Recent Collapses
+qm-2d-wavefunction-collapse-measurement	#boxCollapses table.collapse-table > thead > tr > th	rgb(203, 213, 225)	1.31	#616a75	Collapse
+qm-2d-wavefunction-collapse-measurement	#collapseTableBody tr > td.empty-cell	rgb(100, 116, 139)	4.18	#5a6a80	No collapses yet
+qm-2d-wavefunction-collapse-measurement	#inq-cards div.inq-step > p > strong	rgb(226, 232, 240)	1.08	#646a71	|ψ(x, y, t)|²
+qm-a-k-vs-k-plot	#liveFormulaEl	rgb(203, 213, 225)	1.31	#616a75	A
+qm-a-k-vs-k-plot	#inq-cards div.inq-step > p > strong	rgb(226, 232, 240)	1.08	#646a71	k
+qm-bound-states	#physicalPanel div.panel-header	rgb(226, 232, 240)	1.16	#696e75	Potential and wavefunctions
+qm-bound-states	#mathPanel div.panel-header	rgb(226, 232, 240)	1.16	#696e75	η(k) vs k plot
+qm-bound-states	#v0Value	rgb(59, 155, 143)	2.94	#00756a	10.0
+qm-bound-states	#aValue	rgb(59, 155, 143)	2.94	#00756a	0.50
+qm-bound-states	#boxStates div.info-row > span.info-label	rgb(148, 163, 184)	2.25	#5c6a7d	Number of States N =
+qm-bound-states	#nStates	rgb(59, 155, 143)	2.94	#00756a	3
+qm-bound-states	#inq-cards div.inq-step > p > strong	rgb(226, 232, 240)	1.08	#646a71	V₀
+qm-classical-vs-schrodinger-anharmonic	#speedValue	rgb(59, 155, 143)	2.94	#00756a	0.5x
+qm-classical-vs-schrodinger-anharmonic	#mValue	rgb(59, 155, 143)	2.94	#00756a	1.00
+qm-classical-vs-schrodinger-anharmonic	#omegaValue	rgb(59, 155, 143)	2.94	#00756a	1.30
+qm-classical-vs-schrodinger-anharmonic	#amplitudeValue	rgb(59, 155, 143)	2.94	#00756a	3.0
+qm-classical-vs-schrodinger-anharmonic	#epsilonValue	rgb(59, 155, 143)	2.94	#00756a	0.020
+qm-classical-vs-schrodinger	#mSliderValue	rgb(42, 138, 126)	3.52	#007368	1.00
+qm-classical-vs-schrodinger	#omegaSliderValue	rgb(42, 138, 126)	3.52	#007368	1.00
+qm-classical-vs-schrodinger	#amplitudeSliderValue	rgb(42, 138, 126)	3.52	#007368	2.00
+qm-classical-vs-schrodinger	#boxReadouts div.readout-grid > div.readout-item.tooltip-item > div.readout-label	rgb(100, 116, 139)	4.26	#5b6b81	Classical x
+qm-classical-vs-schrodinger	#boxReadouts div.readout-grid > div.readout-item > div.readout-label	rgb(100, 116, 139)	4.26	#5b6b81	ω
+qm-classical-vs-schrodinger	#inq-auto	rgb(100, 116, 139)	4.3	#5c6c83	Auto
+cm-collisions	#r-m1	rgb(65, 105, 225)	4.26	#3a60d7	1.0
+cm-collisions	#r-m2	rgb(65, 105, 225)	4.26	#3a60d7	1.0
+cm-collisions	#r-v1	rgb(65, 105, 225)	4.26	#3a60d7	+2.0 m/s
+cm-collisions	#r-v2	rgb(65, 105, 225)	4.26	#3a60d7	0.0 m/s
+cm-collisions	#r-boost	rgb(65, 105, 225)	4.26	#3a60d7	0.0 m/s
+cm-collisions	#r-rest	rgb(65, 105, 225)	4.26	#3a60d7	0.00
+cm-collisions	#fourmom-table div.cons.ok	rgb(21, 128, 61)	4.41	#047936	✓ Σp conserved
+cm-collisions	#invariant-body div.inv-row.hero > span.inv-val	rgb(21, 128, 61)	4.41	#047936	2.000 kg·m/s
+qm-double-slit-experiment	#sb-sidebar div.header > p	rgb(107, 114, 128)	4.25	#626977	CONTROLS
+qm-double-slit-experiment	#slit-sep-value	rgb(42, 138, 126)	3.67	#05766a	1600 nm
+qm-double-slit-experiment	#slit-width-value	rgb(42, 138, 126)	3.67	#05766a	490 nm
+qm-double-slit-experiment	#screen-dist-value	rgb(42, 138, 126)	3.67	#05766a	4000 nm
+qm-double-slit-experiment	#rate-value	rgb(42, 138, 126)	3.67	#05766a	10
+qm-double-slit-exp-measurement	#sb-sidebar div.header > p	rgb(107, 114, 128)	4.25	#626977	CONTROLS
+qm-double-slit-exp-measurement	#slit-sep-value	rgb(42, 138, 126)	3.67	#05766a	1600 nm
+qm-double-slit-exp-measurement	#slit-width-value	rgb(42, 138, 126)	3.67	#05766a	100 nm
+qm-double-slit-exp-measurement	#screen-dist-value	rgb(42, 138, 126)	3.67	#05766a	4000 nm
+qm-double-slit-exp-measurement	#rate-value	rgb(42, 138, 126)	3.67	#05766a	2.00x
+qm-double-slit-exp-measurement	#chart-description span.highlight-green	rgb(21, 128, 61)	4.41	#047936	Unmeasured:
+qm-double-slit-exp-measurement	#chart-description	rgb(107, 114, 128)	4.25	#626977	I ∝ |ψ₁ + ψ₂|² = cos²(πd sinθ/λ) × sinc²
+qm-finite-well-probability-plot	#sb-sidebar div.sidebar-section > div.sidebar-section-title	rgb(148, 163, 184)	2.25	#5c6a7d	Physical parameters
+qm-finite-well-probability-plot	#stateNavLabel	rgb(59, 155, 143)	2.94	#00756a	n = 1
+qm-finite-well-probability-plot	#boxStateInfo div.info-row > div.lbl	rgb(203, 213, 225)	1.31	#616a75	Energy
+qm-finite-well-probability-plot	#rowOutsideProb div.lbl	rgb(203, 213, 225)	1.31	#616a75	Probability outside well
+qm-finite-well-probability-plot	#energyList div.energy-item > span.energy-label	rgb(203, 213, 225)	1.31	#616a75	n=1
+qm-finite-well-probability-plot	#energyList div.energy-item > span.energy-val	rgb(59, 155, 143)	2.94	#00756a	-18.91
+qm-finite-well-probability-plot	#inq-cards div.inq-step > p > strong	rgb(248, 250, 252)	1.09	#67696b	V₀
+qm-harmonic-oscillator	#boxParams div.ho-stat-row > span.ho-stat-label	rgb(203, 213, 225)	1.31	#616a75	Time
+qm-harmonic-oscillator	#statTime	rgb(94, 234, 212)	1.3	#007766	0.00
+qm-harmonic-oscillator	#statEnergyRow span.ho-stat-label	rgb(203, 213, 225)	1.31	#616a75	Energy
+qm-harmonic-oscillator	#statEnergyRow span.ho-stat-label > span.text-slate-400.font-normal	rgb(148, 163, 184)	2.25	#5c6a7d	E
+qm-harmonic-oscillator	#statEnergy	rgb(94, 234, 212)	1.3	#007766	0.50
+qm-harmonic-oscillator	#boxParams div.ho-stat-row > span.ho-stat-label > span.text-slate-400.font-normal	rgb(148, 163, 184)	2.25	#5c6a7d	x
+qm-harmonic-oscillator	#statTurning	rgb(94, 234, 212)	1.3	#007766	±1.00
+qm-harmonic-oscillator	#statOscLen	rgb(94, 234, 212)	1.3	#007766	1.000
+qm-harmonic-oscillator	#boxEquations div.ho-equations-inner	rgb(241, 245, 249)	1.04	#66696d	−
+qm-hydrogen-atom-energy-spectrum	#modeSection div.panel-section-title	rgb(203, 213, 225)	1.31	#616a75	Mode
+qm-hydrogen-atom-energy-spectrum	#lblEmission	rgb(251, 191, 36)	1.47	#945c00	Emission
+qm-hydrogen-atom-energy-spectrum	#lblAbsorption	rgb(148, 163, 184)	2.25	#5c6a7d	Absorption
+qm-hydrogen-atom-energy-spectrum	#sb-sidebar div.panel-section > div.panel-section-title	rgb(203, 213, 225)	1.31	#616a75	Manual Transition
+qm-hydrogen-atom-energy-spectrum	#transitionHint	rgb(251, 191, 36)	1.47	#945c00	⬇
+qm-hydrogen-atom-energy-spectrum	#seriesTitle	rgb(203, 213, 225)	1.31	#616a75	Spectral Series
+qm-hydrogen-atom-energy-spectrum	#speedValue	rgb(59, 155, 143)	2.94	#00756a	1×
+qm-hydrogen-atom-energy-spectrum	#infoPanel div.info-row > span.info-label	rgb(148, 163, 184)	2.25	#5c6a7d	Type:
+qm-hydrogen-atom-energy-spectrum	#infoType	rgb(59, 155, 143)	2.94	#00756a	—
+qm-hydrogen-atom-energy-spectrum	#infoTransition	rgb(59, 155, 143)	2.94	#00756a	—
+qm-hydrogen-atom-energy-spectrum	#infoEnergy	rgb(59, 155, 143)	2.94	#00756a	—
+qm-hydrogen-atom-energy-spectrum	#infoWavelength	rgb(59, 155, 143)	2.94	#00756a	—
+qm-hydrogen-atom-energy-spectrum	#infoFrequency	rgb(59, 155, 143)	2.94	#00756a	—
+qm-hydrogen-atom-energy-spectrum	#infoRegion	rgb(59, 155, 143)	2.94	#00756a	—
+qm-hydrogen-atom-energy-spectrum	#statusText	rgb(148, 163, 184)	2.25	#5c6a7d	Ready — Emission Mode
+sr-l00-s2-fly-on-a-boat-v2	#shell main.shell-hero > div.plot-box > div.plot-title	rgb(203, 213, 225)	1.48	#6a737e	Side view
+sr-l00-s2-fly-on-a-boat-v2	#active-frame-label	rgb(241, 245, 249)	1.1	#6e7175	— Beach frame (Galileo)
+sr-l01-s1-polar-vs-cartesian-one-window-showing-an-shell	#omega-read	rgb(65, 105, 225)	4.26	#3a60d7	ω = 1.00
+sr-l01-s2-supplementaldifferent-coordinate-frames-shell	#distS span.rlbl.blue	rgb(96, 165, 250)	2.28	#256bbb	r
+sr-l01-s2-supplementaldifferent-coordinate-frames-shell	#distS span.sub	rgb(107, 114, 128)	4.33	#636a78	dist between (3.0, 2.0) and (0, 0)
+sr-l01-s2-supplementaldifferent-coordinate-frames-shell	#distSp span.rlbl.red	rgb(248, 113, 113)	2.45	#bd3b40	r′
+sr-l01-s2-supplementaldifferent-coordinate-frames-shell	#distSp span.sub	rgb(107, 114, 128)	4.28	#636a78	dist between (3.6, 0.2) and (0, 0)
+sr-l01-s2-supplementaldifferent-coordinate-frames-shell	#inq-cards div.inq-step > p > span.blue	rgb(96, 165, 250)	2.24	#2369b9	S
+sr-l01-s2-supplementaldifferent-coordinate-frames-shell	#inq-cards div.inq-step > p > span.red	rgb(248, 113, 113)	2.43	#bb393f	S′
+sr-l02-s1-inner-product-shell	#readout-S div.ro-line.ro-norm-v > span.inv-chip	rgb(21, 128, 61)	4.24	#007634	‖V‖ =
+sr-l02-s1-inner-product-shell	#readout-S div.ro-line.ro-norm-u > span.inv-chip	rgb(21, 128, 61)	4.24	#007634	‖u‖ =
+sr-l02-s1-inner-product-shell	#readout-S div.ro-line.ro-dot > span.inv-chip	rgb(21, 128, 61)	4.24	#007634	u·V =
+sr-l02-s1-inner-product-shell	#readout-Sp div.ro-line.ro-norm-v > span.inv-chip	rgb(21, 128, 61)	4.21	#007634	‖V‖ =
+sr-l02-s1-inner-product-shell	#readout-Sp div.ro-line.ro-norm-u > span.inv-chip	rgb(21, 128, 61)	4.21	#007634	‖u‖ =
+sr-l02-s1-inner-product-shell	#readout-Sp div.ro-line.ro-dot > span.inv-chip	rgb(21, 128, 61)	4.21	#007634	u·V =
+sr-l02-s2-supplementaleuclidean-space-and-metric-shell	#panel-compute div.shell-panel-body > div.field-row > span.grid-units	rgb(107, 114, 128)	4.25	#626977	grid units
+sr-l04-s1-supplementalscalars-vs-vectors-shell	main.shell-hero > div.plot-box > div.sim-wrap > div.panels > section.vpanel.s-panel > div.vpanel-head > span.frame-chip.chip-s	rgb(14, 116, 144)	4.19	#006985	S
+sr-l04-s1-supplementalscalars-vs-vectors-shell	#ro-left div.ro-row.r-norm > span.inv	rgb(52, 211, 153)	1.39	#006938	invariant
+sr-l04-s1-supplementalscalars-vs-vectors-shell	#ro-left div.ro-row.r-norm.r-diff > span.inv	rgb(52, 211, 153)	1.39	#006938	interval
+sr-l04-s1-supplementalscalars-vs-vectors-shell	#ro-right div.ro-row.r-norm > span.inv	rgb(52, 211, 153)	1.39	#006938	invariant
+sr-l04-s1-supplementalscalars-vs-vectors-shell	#ro-right div.ro-row.r-norm.r-diff > span.inv	rgb(52, 211, 153)	1.39	#006938	interval
+sr-l05-s1-frame-clock-and-event-time-shell	#g-read	rgb(65, 105, 225)	4.26	#3a60d7	γ = 1.091
+sr-l06-s2-rel-vel-of-a-plane-v2	#framePicker button.on > span.fp-tag	rgb(65, 105, 225)	4.02	#355bd2	W = 0
+sr-l06-s2-rel-vel-of-a-plane-v2	#vAlice	rgb(65, 105, 225)	4.26	#3a60d7	0 km/h
+sr-l06-s2-rel-vel-of-a-plane-v2	#vBob	rgb(65, 105, 225)	4.26	#3a60d7	+100 km/h
+sr-l06-s2-rel-vel-of-a-plane-v2	#vPlane	rgb(65, 105, 225)	4.26	#3a60d7	+200 km/h
+sr-l07-s1-michelson-morley-experiment-3d	#statsToggle span.dropdown-arrow	rgb(100, 116, 139)	4.18	#5a6a80	▶
+sr-l08-s2-spacetime-diagram-explorer-new	#read-class span.reading-value > span.badge	rgb(65, 105, 225)	4.26	#3a60d7	spacelike
+sr-l09-s1-worldline-length-and-proper-time-shell	#betaRead	rgb(65, 105, 225)	4.26	#3a60d7	v/c = 0.00
+sr-l09-s1-worldline-length-and-proper-time-shell	#roFrame	rgb(203, 213, 225)	1.31	#616a75	Frame
+sr-l09-s1-worldline-length-and-proper-time-shell	#clkA span.clk-name	rgb(203, 213, 225)	1.31	#616a75	A · straight
+sr-l09-s1-worldline-length-and-proper-time-shell	#clockA	rgb(226, 232, 240)	1.08	#646a71	5.00
+sr-l09-s1-worldline-length-and-proper-time-shell	#clkB span.clk-name	rgb(203, 213, 225)	1.31	#616a75	B · one kink
+sr-l09-s1-worldline-length-and-proper-time-shell	#clockB	rgb(226, 232, 240)	1.08	#646a71	4.00
+cm-l1-solar-system-orbits	#shell main.shell-hero > div.plot-box > div.plot-title	rgb(203, 213, 225)	1.48	#6a737e	Orbital view — 3D
+cm-l1-solar-system-orbits	#shell main.shell-hero > div.plot-box > div.orbit-hint	rgba(203, 213, 225, 0.85)	1.39	#525a65	drag to pan, scroll to zoom
+sr-l10-s1-supplementalminkowski-space-and-metric-shell	#ro-dt	rgb(65, 105, 225)	4.26	#3a60d7	Δt = 3.0 ls
+sr-l10-s1-supplementalminkowski-space-and-metric-shell	#ro-dx	rgb(65, 105, 225)	4.26	#3a60d7	Δx = 4.0 ls
+sr-l10-s1-supplementalminkowski-space-and-metric-shell	#ro-ds2	rgb(65, 105, 225)	4.26	#3a60d7	Δs² = ?  · predict first
+sr-l11-s2-light-clock-and-geometric-derivation-of-shell	#eq-overlay div.eq-cap	rgb(107, 114, 128)	4.48	#666d7b	Pythagoras on the light triangle → resul
+sr-l11-s2-light-clock-and-geometric-derivation-of-shell	#v-out	rgb(65, 105, 225)	4.26	#3a60d7	v = 0.60 c
+sr-l11-s2-light-clock-and-geometric-derivation-of-shell	#g-out	rgb(65, 105, 225)	4.26	#3a60d7	γ = 1.25
+sr-l11-s2-light-clock-and-geometric-derivation-of-shell	#t-out	rgb(65, 105, 225)	4.26	#3a60d7	t = 1.25 t₀
+sr-l12-s1-twin-paradox-worldline-comparison-shell	#vReadout	rgb(65, 105, 225)	4.26	#3a60d7	v = 0.60c
+sr-l13-s1-lorentz-transformations-on-vectors-shell	#btnSprime	rgb(42, 138, 126)	3.52	#007368	S′ axes
+sr-l13-s1-lorentz-transformations-on-vectors-shell	#vGroup div.ctrl-sl-block > label.ctrl-sl-head > span.ctrl-sl-desc	rgb(107, 114, 128)	4.25	#626977	[time component]
+sr-l13-s1-lorentz-transformations-on-vectors-shell	#roV0	rgb(65, 105, 225)	4.26	#3a60d7	2.00
+sr-l13-s1-lorentz-transformations-on-vectors-shell	#roV1	rgb(65, 105, 225)	4.26	#3a60d7	1.00
+sr-l13-s1-lorentz-transformations-on-vectors-shell	#betaGroup div.ctrl-sl-block > label.ctrl-sl-head > span.ctrl-sl-desc	rgb(107, 114, 128)	4.25	#626977	[boost velocity]
+sr-l13-s1-lorentz-transformations-on-vectors-shell	#roBeta	rgb(65, 105, 225)	4.26	#3a60d7	0.00 · γ=1.00
+sr-l14-s1-momentum-vs-velocity-shell	#ro-m0	rgb(65, 105, 225)	4.26	#3a60d7	m₀ = 1.0
+sr-l14-s1-momentum-vs-velocity-shell	#ro-v	rgb(65, 105, 225)	4.26	#3a60d7	v = 0.100c
+sr-l14-s1-momentum-vs-velocity-shell	#ro-gp	rgb(65, 105, 225)	4.26	#3a60d7	γ = 1.01, p/c = 0.101
+sr-l15-s1-relativistic-constant-acceleration-shell	#force-read	rgb(65, 105, 225)	4.26	#3a60d7	a₀ = F/m = 0.50 c/s
+cm-l16-friction-in-3d	#uv-box-traj div.traj-checks > label.chk > span.c-drag	rgb(180, 83, 9)	4.41	#ad4d00	Linear drag
+cm-l16-friction-in-3d	#hud-range span > em	rgb(107, 114, 128)	4.25	#626977	(linear drag)
+cm-l16-friction-in-3d	#hud-best b > em	rgb(107, 114, 128)	4.25	#626977	@ 45°
+sr-l16-s1-energy-momentum-conservation-in-a-collis-shell	#r-m1	rgb(65, 105, 225)	4.26	#3a60d7	1.00
+sr-l16-s1-energy-momentum-conservation-in-a-collis-shell	#r-m2	rgb(65, 105, 225)	4.26	#3a60d7	1.00
+sr-l16-s1-energy-momentum-conservation-in-a-collis-shell	#r-v1	rgb(65, 105, 225)	4.26	#3a60d7	+0.80 c
+sr-l16-s1-energy-momentum-conservation-in-a-collis-shell	#r-v2	rgb(65, 105, 225)	4.26	#3a60d7	−0.80 c
+sr-l16-s1-energy-momentum-conservation-in-a-collis-shell	#r-boost	rgb(65, 105, 225)	4.26	#3a60d7	+0.60 c
+cm-l17-the-damped-ho	#alpha-readout	rgb(65, 105, 225)	4.26	#3a60d7	α = 0.60 rad/s
+cm-l17-the-damped-ho	#lambda-readout	rgb(65, 105, 225)	4.26	#3a60d7	λ = 0.60 rad/s
+cm-l17-the-damped-ho	#regime-badge	rgb(180, 83, 9)	4.41	#ad4d00	OVERDAMPED
+sr-l17-s1-photon-worldline-shell	#beta-read	rgb(65, 105, 225)	4.26	#3a60d7	0.500
+sr-l17-s1-photon-worldline-shell	#m-read	rgb(65, 105, 225)	4.26	#3a60d7	1.0
+sr-l17-s1-photon-worldline-shell	#freq-read	rgb(65, 105, 225)	4.26	#3a60d7	540 THz
+sr-l17-s1-photon-worldline-shell	#panel-readout div.shell-panel-body > div.readout-box > table.ro-table > thead > tr > th.ph	rgb(161, 98, 7)	4.33	#985a00	Photon
+sr-l17-s1-photon-worldline-shell	#m-dtau	rgb(180, 83, 9)	4.41	#ad4d00	6.93 s
+sr-l18-s1-tachyon-causality-violation-shell	#boostReadout	rgb(65, 105, 225)	4.26	#3a60d7	+0.00 c
+sr-l18-s1-tachyon-causality-violation-shell	#v2Readout	rgb(65, 105, 225)	4.26	#3a60d7	3.00 c
+sr-l18-s1-tachyon-causality-violation-shell	#ro-loop	rgb(21, 128, 61)	4.41	#047936	no loop (E₃ after E₁)
+sr-l18-s2-causality-misconceptions-spacetime-explorer-new	#read-class span.reading-value > span.badge	rgb(65, 105, 225)	4.26	#3a60d7	spacelike
+sr-l18-s2-causality-misconceptions-spacetime-explorer-new	#read-order-s span.reading-value > span.badge	rgb(65, 105, 225)	4.26	#3a60d7	E1 first
+sr-l19-s2-e-b-boost-v2-new	#inq-cards div.inq-step > p > span.field-chip.chip-b	rgb(147, 197, 253)	1.42	#356496	B₀ = 1 into the page
+cm-l2-newtons-laws	#ro1	rgb(65, 105, 225)	4.26	#3a60d7	F on A = —
+cm-l2-newtons-laws	#ro2	rgb(65, 105, 225)	4.26	#3a60d7	F on B = —
+cm-l29-the-centrifugal-force-shell	#ro-fcf	rgb(65, 105, 225)	4.26	#3a60d7	F
+cm-l30-coriolis-on-a-rotating-sphere	#scene-box div.plot-title	rgb(148, 163, 184)	2.56	#657387	Rotating Earth
+cm-l35-orbits	#box-e div.e-scale > span.tick-mid	rgb(65, 105, 225)	4.26	#3a60d7	1
+cm-l4-projectile-motion	#grp-actions span.ctrl-row-label	rgb(107, 114, 128)	4.25	#626977	Actions
+cm-l4-projectile-motion	#lbl-compare	rgb(107, 114, 128)	4.25	#626977	Compare
+cm-l4-projectile-motion	#panel-readouts div.shell-panel-body > div.ctrl-box.readout-box > div.readout-row > div.readout-meta > span.readout-hint	rgb(107, 114, 128)	4.25	#626977	since launch
+cm-l4-projectile-motion	#read-t	rgb(65, 105, 225)	4.26	#3a60d7	-0.01 s
+cm-l4-projectile-motion	#read-R	rgb(65, 105, 225)	4.26	#3a60d7	— m
+cm-l6-the-harmonic-oscillator	#ro-t2	rgb(180, 83, 9)	4.41	#ad4d00	T₂ = — s
+sr-l7-s2-airplane-wind-v2	#leg-out-name	rgb(65, 105, 225)	4.26	#3a60d7	Outbound → (100 km/h)
+qm-multi-stage-stern-gerlach-new	#boxBuilderNote	rgb(216, 222, 233)	1.19	#646972	Drag a magnet or blocker from above into
+qm-multi-stage-stern-gerlach-new	#s1lbl	rgb(244, 114, 182)	2.33	#b5387f	Stage 1: Z-Axis
+qm-multi-stage-stern-gerlach-new	#dz2 span.drop-zone-lbl	rgb(216, 222, 233)	1.19	#646972	Stage 2 — drop magnet / blocker
+qm-multi-stage-stern-gerlach-new	#dz3 span.drop-zone-lbl	rgb(216, 222, 233)	1.19	#646972	Stage 3 — add Stage 2 first
+qm-multi-stage-stern-gerlach-new	#boxRate div.ctrl-hdr > span.ctrl-val	rgb(125, 211, 192)	1.54	#137565	12
+qm-multi-stage-stern-gerlach-new	#boxField div.ctrl-hdr > span.ctrl-val	rgb(125, 211, 192)	1.54	#137565	0.40
+qm-multi-stage-stern-gerlach-new	#sb-sidebar div.panel-section-title	rgb(241, 245, 249)	1.04	#66696d	Output statistics
+qm-particle-on-a-circle	#nValue	rgb(59, 155, 143)	2.94	#00756a	1
+qm-particle-on-a-circle	#degeneracyBadge	rgb(251, 191, 36)	1.47	#945c00	Doubly Degenerate (±1)
+qm-particle-on-a-circle	#speedValue	rgb(59, 155, 143)	2.94	#00756a	0.1x
+qm-quantum-tunneling-gaussian-wave	#valV0	rgb(59, 155, 143)	2.94	#00756a	0.30 eV
+qm-quantum-tunneling-gaussian-wave	#valWidth	rgb(59, 155, 143)	2.94	#00756a	0.50 nm
+qm-quantum-tunneling-gaussian-wave	#valE	rgb(59, 155, 143)	2.94	#00756a	0.20 eV
+qm-quantum-tunneling-gaussian-wave	#valSigma	rgb(59, 155, 143)	2.94	#00756a	1.50 nm
+qm-quantum-tunneling-gaussian-wave	#valX0	rgb(59, 155, 143)	2.94	#00756a	-6.0 nm
+qm-quantum-tunneling-gaussian-wave	#valSpeed	rgb(59, 155, 143)	2.94	#00756a	1.0×
+qm-quantum-tunneling-plane-wave	#valV0	rgb(59, 155, 143)	2.94	#00756a	0.50 eV
+qm-quantum-tunneling-plane-wave	#valWidth	rgb(59, 155, 143)	2.94	#00756a	0.50 nm
+qm-quantum-tunneling-plane-wave	#valE	rgb(59, 155, 143)	2.94	#00756a	0.30 eV
+qm-quantum-tunneling-plane-wave	#valSpeed	rgb(59, 155, 143)	2.94	#00756a	1.0×
+qm-quantum-tunneling-plane-wave	#formulaDisplay div.result-row > span.result-t	rgb(59, 155, 143)	2.94	#00756a	T = 3.8558%
+qm-quantum-tunneling-plane-wave	#formulaDisplay div.result-row > span.result-r	rgb(59, 155, 143)	2.94	#00756a	R = 96.1442%
+qm-spherical-harmonics-explorer	#sb-sidebar div.sidebar-controls-label	rgb(203, 213, 225)	1.31	#616a75	controls
+qm-spherical-harmonics-explorer	#formulaBox div.ql	rgb(59, 155, 143)	2.94	#00756a	Y
+qm-spherical-harmonics-explorer	#typeLabel	rgb(182, 194, 214)	1.58	#5f697b	Real Spherical Harmonic
+qm-spherical-harmonics-explorer	#dynamicInfoNote	rgb(168, 179, 199)	1.86	#60697c	When
+qm-spin-x-measurement-probability	#rightPanel div.panel-section > div.hd	rgb(203, 213, 225)	1.31	#616a75	PARAMETERS
+qm-spin-x-measurement-probability	#aSlV	rgb(59, 155, 143)	2.94	#00756a	0.707
+qm-spin-x-measurement-probability	#bSlV	rgb(59, 155, 143)	2.94	#00756a	0.707
+qm-spin-x-measurement-probability	#omV	rgb(59, 155, 143)	2.94	#00756a	1.0
+qm-spin-x-measurement-probability	#spV	rgb(59, 155, 143)	2.94	#00756a	1.0×
+qm-spin-x-measurement-probability	#outputSection div.hd	rgb(203, 213, 225)	1.31	#616a75	OUTPUT
+qm-spin-x-measurement-probability	#outBox div.stats-grid > div.st > span.st-l	rgb(148, 163, 184)	2.25	#5c6a7d	t
+qm-spin-x-measurement-probability	#tV	rgb(59, 155, 143)	2.94	#00756a	0.00
+qm-spin-x-measurement-probability	#ppV	rgb(59, 155, 143)	2.94	#00756a	1.000
+qm-spin-x-measurement-probability	#siP div.hd	rgb(203, 213, 225)	1.31	#616a75	QUANTUM STATE
+qm-spin-x-measurement-probability	#stateBox div.rw > span.lb	rgb(219, 229, 243)	1.12	#616975	|ψ(0)⟩
+qm-spin-x-measurement-probability	#stS	rgb(59, 155, 143)	2.94	#00756a	|→⟩ = (|↑⟩+|↓⟩)/√2
+qm-spin-x-measurement-probability	#eqBlock div.eq-label	rgb(203, 213, 225)	1.31	#616a75	P
+qm-spin-x-measurement-probability	#eqBlock	rgb(226, 232, 240)	1.08	#646a71	P
+qm-spin-x-measurement-probability	#inq-zone div.inq-listen > span.inq-listen-lab	rgb(148, 163, 184)	2.25	#5c6a7d	Listen
+qm-spin-measurement	#wfEquation mjx-container.MathJax.CtxtMenu_Attached_0	rgb(241, 245, 249)	1.04	#66696d	|
+qm-spin-measurement	#probBars div.prob-bar > div.prob-bar-label	rgb(148, 163, 184)	2.25	#5c6a7d	P(↑)
+qm-spin-measurement	#probUpValue	rgb(59, 155, 143)	2.94	#00756a	100%
+qm-spin-measurement	#probDownValue	rgb(59, 155, 143)	2.94	#00756a	0%
+qm-spin-measurement	#alphaGroup div.input-row > span	rgb(148, 163, 184)	2.25	#5c6a7d	+
+qm-spin-measurement	#betaGroup div.input-row > span	rgb(148, 163, 184)	2.25	#5c6a7d	+
+qm-spin-measurement	#blochCoords	rgb(100, 116, 139)	4.18	#5a6a80	Bloch Coordinates: θ =
+qm-spin-measurement	#thetaDisplay	rgb(59, 155, 143)	2.94	#00756a	0.0°
+qm-spin-measurement	#phiDisplay	rgb(59, 155, 143)	2.94	#00756a	0.0°
+qm-spin-measurement	#historyList div.history-empty	rgb(100, 116, 139)	4.18	#5a6a80	No measurements yet
+qm-time-evolution-gaussian-fourier-comps	#sb-sidebar div.panel-section > div.panel-section-title	rgb(226, 232, 240)	1.08	#646a71	Wave Packet Parameters
+qm-time-evolution-gaussian-fourier-comps	#statisticsSection div.panel-section-title	rgb(226, 232, 240)	1.08	#646a71	Statistics
+qm-time-evolution-gaussian-fourier-comps	#boxStats div.stat-row > span.stat-label-panel	rgb(203, 213, 225)	1.31	#616a75	Time (t)
+qm-time-evolution-gaussian-fourier-comps	#sT	rgb(59, 155, 143)	2.94	#00756a	0.000
+qm-time-evolution-gaussian-fourier-comps	#sTn	rgb(59, 155, 143)	2.94	#00756a	0.000
+qm-time-evolution-gaussian-fourier-comps	#sNorm	rgb(59, 155, 143)	2.94	#00756a	1.0000
+qm-time-evolution-gaussian-fourier-comps	#sNormPlot	rgb(59, 155, 143)	2.94	#00756a	0.5515
+qm-time-evolution-gaussian-fourier-comps	#sCapt	rgb(59, 155, 143)	2.94	#00756a	55.2%
+qm-time-evolution-gaussian-fourier-comps	#inq-cards div.inq-step > p > strong	rgb(226, 232, 240)	1.08	#646a71	k
+qm-time-evolution-gaussian-wavepacket	#atomicUnitsBadge	rgb(252, 211, 77)	1.27	#896200	Units: ℏ = 1
+qm-time-evolution-gaussian-wavepacket	#boxK0 div.param-group > div.param-header > span.param-name	rgb(226, 232, 240)	1.08	#646a71	k₀
+qm-time-evolution-gaussian-wavepacket	#boxSigma div.param-group > div.param-header > span.param-name	rgb(226, 232, 240)	1.08	#646a71	σ
+qm-time-evolution-gaussian-wavepacket	#boxMass div.param-group > div.param-header > span.param-name	rgb(226, 232, 240)	1.08	#646a71	m (mₑ)
+qm-time-evolution-gaussian-wavepacket	#boxSpeed div.param-group > div.param-header > span.param-name	rgb(226, 232, 240)	1.08	#646a71	Time Speed
+qm-time-evolution-gaussian-wavepacket	#boxToggles div.toggle-group > div.param-name	rgb(226, 232, 240)	1.08	#646a71	Wavefunction Components
+qm-time-evolution-gaussian-wavepacket	#toggleReal	rgb(147, 197, 253)	1.59	#3d6c9f	Re[√Cψ]
+qm-time-evolution-gaussian-wavepacket	#toggleImag	rgb(196, 181, 253)	1.62	#6e5fa0	Im[√Cψ]
+qm-time-evolution-gaussian-wavepacket	#inq-cards div.inq-step > p > strong	rgb(226, 232, 240)	1.08	#646a71	σ
+qm-time-evolution-qho-v2	#narration-header div.narration-header-left > span	rgb(203, 213, 225)	1.31	#616a75	Simulation Context
+qm-time-evolution-qho-v2	#sb-sidebar div.panel-section > div.panel-section-title	rgb(203, 213, 225)	1.31	#616a75	Controls
+qm-time-evolution-qho-v2	#boxX0 div.control-group > div.control-label	rgb(148, 163, 184)	2.25	#5c6a7d	Displacement x₀
+qm-time-evolution-qho-v2	#boxSigma div.control-group > div.control-label	rgb(148, 163, 184)	2.25	#5c6a7d	Width σ
+qm-time-evolution-qho-v2	#stateIndicator div.state-name	rgb(52, 211, 153)	1.69	#007946	✓ Coherent State (σ = 0.71)
+qm-time-evolution-qho-v2	#stateIndicator div.state-desc	rgb(100, 116, 139)	4.18	#5a6a80	No breathing - circular phase space - cl
+qm-time-evolution-qho-v2	#inq-cards div.inq-step > p > strong	rgb(226, 232, 240)	1.08	#646a71	x₀
+qm-transmission-probability-plot	#boxCurrentValues div.output-row > span.output-name	rgb(100, 116, 139)	4.18	#5a6a80	T
+qm-transmission-probability-plot	#statELabel	rgb(100, 116, 139)	4.18	#5a6a80	E (eV)
+qm-transmission-probability-plot	#statKLabel	rgb(100, 116, 139)	4.18	#5a6a80	k (Å⁻¹)
+qm-transmission-probability-plot	#statEtaLabel	rgb(100, 116, 139)	4.18	#5a6a80	κ (Å⁻¹)
+qm-vector-space-finite-vectors-updated	#vecNote	rgb(100, 116, 139)	4.18	#5a6a80	Max coordinate value: ±10
+qm-vector-space-finite-vectors-updated	#vecBox div.vec-row > span.vec-paren	rgb(148, 163, 184)	2.25	#5c6a7d	= (
+qm-vector-space-finite-vectors-updated	#vecBox div.vec-row > span.vec-label.b-color	rgb(5, 150, 105)	3.31	#00794e	b
+qm-vector-space-finite-vectors-updated	#comboBox div.combo-row > span.v-color	rgb(219, 39, 119)	4.04	#cb0a6a	v
+qm-vector-space-finite-vectors-updated	#comboBox div.combo-row > span.combo-label	rgb(100, 116, 139)	4.18	#5a6a80	=
+qm-vector-space-finite-vectors-updated	#comboBox div.combo-row > span.plus-sign	rgb(100, 116, 139)	4.18	#5a6a80	+
+qm-vector-space-finite-vectors-updated	#comboBox div.combo-row > span.b-color	rgb(5, 150, 105)	3.31	#00794e	b
+qm-vector-space-finite-vectors-updated	#linCombSteps div.step > span.v-color	rgb(219, 39, 119)	4.04	#cb0a6a	v
+qm-vector-space-finite-vectors-updated	#linCombSteps div.step > span.b-color	rgb(5, 150, 105)	3.31	#00794e	b
+qm-vector-space-finite-vectors-updated	#basisStatus span.status-badge.valid	rgb(5, 150, 105)	3.31	#00794e	✓ Linearly independent — valid basis
+condensed-matter-cm-bloch-oscillations	#readouts-toggle span.shell-caret	rgb(91, 111, 130)	4.16	#516577	▾
+condensed-matter-cm-bloch-oscillations	#panel-clock button.ro-group-head > span.ro-group-caret	rgb(91, 111, 130)	4.16	#516577	▾
+condensed-matter-cm-bloch-oscillations	#ro-clock-body p.ro-hint	rgb(107, 114, 128)	4.25	#626977	Time to walk one Brillouin zone
+condensed-matter-cm-bloch-oscillations	#panel-live button.ro-group-head > span.ro-group-caret	rgb(91, 111, 130)	4.16	#516577	▾
+condensed-matter-cm-bloch-oscillations	#ro-live-body p.ro-hint	rgb(107, 114, 128)	4.25	#626977	Where the electron is right now
+condensed-matter-cm-bloch-oscillations	#panel-swing button.ro-group-head > span.ro-group-caret	rgb(91, 111, 130)	4.16	#516577	▾
+condensed-matter-cm-bloch-oscillations	#ro-swing-body p.ro-hint	rgb(107, 114, 128)	4.25	#626977	Peak-to-peak swing of x(t)
+condensed-matter-cm-crystal-diffraction-2d-polished	#readouts-toggle span.shell-caret	rgb(91, 111, 130)	4.16	#516577	▾
+condensed-matter-cm-crystal-diffraction-2d-polished	#panel-spot button.ro-group-head > span.ro-group-caret	rgb(91, 111, 130)	4.16	#516577	▾
+condensed-matter-cm-crystal-diffraction-2d-polished	#panel-measure button.ro-group-head > span.ro-group-caret	rgb(91, 111, 130)	4.16	#516577	▾
+condensed-matter-cm-crystal-diffraction-2d-polished	#ro-prod-row button.ro-group-head > span.ro-group-caret	rgb(91, 111, 130)	4.16	#516577	▾
+condensed-matter-cm-kronig-penney-bands-polished	#readouts-toggle span.shell-caret	rgb(91, 111, 130)	4.16	#516577	▾
+condensed-matter-cm-kronig-penney-bands-polished	#panel-gap button.ro-group-head > span.ro-group-caret	rgb(91, 111, 130)	4.16	#516577	▾
+condensed-matter-cm-kronig-penney-bands-polished	#panel-energy button.ro-group-head > span.ro-group-caret	rgb(91, 111, 130)	4.16	#516577	▾
+condensed-matter-cm-kronig-penney-bands-polished	#panel-hint button.ro-group-head > span.ro-group-caret	rgb(91, 111, 130)	4.16	#516577	▾
+condensed-matter-cm-phonon-diatomic-chain-polished	#readouts-toggle span.shell-caret	rgb(91, 111, 130)	4.16	#516577	▾
+condensed-matter-cm-phonon-diatomic-chain-polished	#panel-marker button.ro-group-head > span.ro-group-caret	rgb(91, 111, 130)	4.16	#516577	▾
+cm-cm-spinning-book-polished	#axis-1 small	rgb(91, 111, 130)	4.16	#516577	I₁ smallest
+cm-cm-spinning-book-polished	#axis-2 small	rgb(91, 111, 130)	4.16	#516577	I₂ intermediate
+cm-cm-spinning-book-polished	#axis-3 small	rgb(91, 111, 130)	4.16	#516577	I₃ largest
+cm-cm-spinning-book-polished	#ro-t	rgb(65, 105, 225)	4.26	#3a60d7	0.00 s
+cm-cm-spinning-book-polished	#ro-T	rgb(65, 105, 225)	4.26	#3a60d7	0.164526 J
+cm-cm-spinning-book-polished	#ro-L	rgb(65, 105, 225)	4.26	#3a60d7	0.052362 kg·m²/s
+cm-cm-spinning-book-polished	#ro-turn	rgb(65, 105, 225)	4.26	#3a60d7	not yet
+cm-cm-spinning-book-polished	#ro-est	rgb(65, 105, 225)	4.26	#3a60d7	about 1.30 s
+condensed-matter-cm-superconductor-polished	#val-kappa span.kv-type	rgb(107, 114, 128)	4.25	#626977	· type II
+pp-feynman-diagram-sandbox	#puzGoal	rgb(107, 114, 128)	4.25	#626977	Pick a puzzle — or free-build below.
+pp-feynman-diagram-sandbox	#grp-build div.shell-panel-body > div.sim-note.ht-hide	rgb(107, 114, 128)	4.25	#626977	Arrows = fermion-number flow (backwards 
+pp-feynman-diagram-sandbox	#roInv	rgb(65, 105, 225)	4.26	#3a60d7	86.85 nb·GeV²
+pp-feynman-diagram-sandbox	#resultPanel div.shell-panel-body > div.sim-note.ht-hide	rgb(107, 114, 128)	4.25	#626977	σ = (4πα²/3s)·β(3−β²)/2 with fixed α = 1
+qm-infinite-potential-well	#nDisplay	rgb(42, 138, 126)	3.67	#05766a	1
+qm-infinite-potential-well	#boxLengthDisplay	rgb(42, 138, 126)	3.67	#05766a	1.00
+qm-infinite-potential-well	#boxOverride div.toggle-row > span.toggle-label	rgb(107, 114, 128)	4.25	#626977	Override ω with animation speed
+qm-infinite-potential-well	#measurementRateDisplay	rgb(42, 138, 126)	3.67	#05766a	10 particles/s
+qm-infinite-potential-well	#histogramStats	rgb(5, 150, 105)	3.31	#00794e	Measurements:
+condensed-matter-mc-random-walker-eval-newcontract-polished	#ro-steps	rgb(65, 105, 225)	4.26	#3a60d7	0
+condensed-matter-mc-random-walker-eval-newcontract-polished	#ro-spread	rgb(65, 105, 225)	4.26	#3a60d7	0.000
+condensed-matter-mc-random-walker-eval-newcontract-polished	#ro-pred	rgb(65, 105, 225)	4.26	#3a60d7	0.000
+pp-navigating-the-eight-fold-way	#grp-mode p.sim-sublabel	rgb(58, 74, 90)	3.75	#223140	Mode
+pp-navigating-the-eight-fold-way	#grp-layout p.sim-sublabel	rgb(58, 74, 90)	3.75	#223140	Layout
+pp-navigating-the-eight-fold-way	#ewCDisc	rgb(255, 255, 255)	1.14	#828282	Ω⁻
+pp-navigating-the-eight-fold-way	#panel-card div.sim-pbody > div.sim-box > p.sim-sublabel	rgb(58, 74, 90)	3.75	#223140	Quantum numbers
+qm-qm-blackbody-spectrum-polished	#val-fmax	rgb(65, 105, 225)	4.26	#3a60d7	3.53 ×10¹⁴ Hz
+qm-qm-blackbody-spectrum-polished	#val-total	rgb(65, 105, 225)	4.26	#3a60d7	0.9805 J/m³
+qm-qm-compton-scattering-polished	#ro-lp	rgb(65, 105, 225)	4.26	#3a60d7	0.073426 nm
+qm-qm-compton-scattering-polished	#ro-shift	rgb(65, 105, 225)	4.26	#3a60d7	0.002426 nm
+qm-qm-compton-scattering-polished	#ro-pct	rgb(65, 105, 225)	4.26	#3a60d7	3.4 %
+condensed-matter-qs-rabi-bloch-sphere	#box-omega div.ctrl-box-head > label > span.cx-star	rgb(65, 105, 225)	4.26	#3a60d7	★
+condensed-matter-sm-energy-sharing	#readouts-toggle span.shell-caret	rgb(91, 111, 130)	4.16	#516577	▾
+condensed-matter-sm-energy-sharing	#panel-total button.ro-group-head > span.ro-group-caret	rgb(91, 111, 130)	4.16	#516577	▾
+condensed-matter-sm-energy-sharing	#panel-avg button.ro-group-head > span.ro-group-caret	rgb(91, 111, 130)	4.16	#516577	▾
+condensed-matter-sm-energy-sharing	#panel-slope button.ro-group-head > span.ro-group-caret	rgb(91, 111, 130)	4.16	#516577	▾
+condensed-matter-sm-heat-capacity-steps-eval-newcontract-polished	#ro-theta	rgb(65, 105, 225)	4.26	#3a60d7	116.0 K
+condensed-matter-sm-heat-capacity-steps-eval-newcontract-polished	#ro-kbt	rgb(65, 105, 225)	4.26	#3a60d7	3.45 meV
+condensed-matter-sm-heat-capacity-steps-eval-newcontract-polished	#ro-c	rgb(65, 105, 225)	4.26	#3a60d7	0.518
+condensed-matter-sm-heat-capacity-steps-eval-newcontract-polished	#ro-p0	rgb(65, 105, 225)	4.26	#3a60d7	0.945
+condensed-matter-sm-identical-counting	#guard-note	rgb(65, 105, 225)	4.26	#3a60d7	4 particles and 4 levels together would 
+condensed-matter-sm-identical-counting	#ro-mode-strip	rgb(65, 105, 225)	4.26	#3a60d7	distinguishable — labels on
+qm-stern-gerlach-new	#modeIndicator	rgb(165, 243, 252)	1.1	#21737c	⚛ Quantum Mode — 2 Discrete States
+qm-stern-gerlach-new	#legendTitle	rgb(148, 163, 184)	2.25	#5c6a7d	mⱼ States (2j+1 =
+qm-stern-gerlach-new	#beamLegendItems div.beam-legend-item > span.beam-legend-label	rgb(226, 232, 240)	1.08	#646a71	mⱼ = +1/2
+qm-stern-gerlach-new	#beamLegendItems div.beam-legend-item > span.beam-legend-count	rgb(148, 163, 184)	2.25	#5c6a7d	6
+qm-stern-gerlach-new	#boxSpin div.control > div.control-header > span.control-value-display	rgb(59, 155, 143)	2.94	#00756a	j =
+qm-stern-gerlach-new	#boxField div.control > div.control-header > span.control-value-display	rgb(59, 155, 143)	2.94	#00756a	3
+qm-stern-gerlach-new	#boxRate div.control > div.control-header > span.control-value-display	rgb(59, 155, 143)	2.94	#00756a	8
+pp-virtual-cloud-chamber	#simBeam div.sim-box > p.sim-hint.ht-hide	rgb(107, 114, 128)	4.25	#626977	“? unknown” fires an unlabelled particle
+pp-virtual-particle-collider	#simEvents	rgb(65, 105, 225)	4.26	#3a60d7	7.82×10
+qm-wavefunctions-and-probability	#rateValue	rgb(94, 234, 212)	1.3	#007766	20/s
+qm-wavefunctions-and-probability	#animationSpeedValue	rgb(94, 234, 212)	1.3	#007766	1.0x
+qm-wavefunctions-and-probability	#momentumNote	rgb(16, 185, 129)	2.23	#007946	⟨p⟩ = 0 (Zero Average Momentum)
+qm-wavefunctions-and-probability	#statBox div.convergence-bar > div.convergence-label	rgb(209, 217, 230)	1.25	#626974	Convergence to theoretical σ

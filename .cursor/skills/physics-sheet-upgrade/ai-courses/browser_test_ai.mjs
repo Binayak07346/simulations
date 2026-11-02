@@ -35,7 +35,9 @@ try {
   // enter Guided Inquiry the way a student does
   await p.evaluate(() => { const w = document.querySelector('.welcome-mode[data-mode="inquiry"]') || document.querySelector('.welcome-mode'); if (w) w.click(); else if (window.__setMode) window.__setMode('inquiry'); });
   await sleep(700);
-  const ctlSnap = () => p.evaluate(() => [...document.querySelectorAll('.shell-aside input, .shell-aside select, [data-kit-seg] .kit-seg-btn.active')].map(e => e.id + '=' + (e.value ?? e.dataset.value)).join('|'));
+  const ctlSnap = () => p.evaluate(() => [...document.querySelectorAll('.shell-aside input, .shell-aside select, .shell-aside button')]
+    .filter(e => e.tagName !== 'BUTTON' || e.classList.contains('active') || e.classList.contains('is-on') || e.getAttribute('aria-pressed') === 'true' || e.getAttribute('aria-checked') === 'true')
+    .map(e => (e.id || e.textContent.trim().slice(0, 20)) + '=' + (e.tagName === 'BUTTON' ? 'on' : (e.type === 'checkbox' || e.type === 'radio' ? e.checked : e.value))).join('|'));
 
   // 2 open
   await p.click('#toggle-formal'); await sleep(400);

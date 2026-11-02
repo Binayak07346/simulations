@@ -1,0 +1,56 @@
+
+/* ==========================================================================
+   ASK EULER — layer-owned, purely additive. Nothing above is modified.
+   #ask-euler sits in .shell-header where the ⓘ Info button used to, as the
+   first item of the first .shell-group. It deliberately does NOT carry the
+   .shell-btn class (that class is painted white by
+   `.shell-header .shell-btn`), so the button look is restated here.
+   Metrics — 36px tall, 6px radius, 13px text, 6px gap — are copied from
+   `.shell-header .shell-btn` so it shares a baseline and silhouette with
+   Guided Inquiry / Controls Guide / Maximize / The Physics / Reset / Pause.
+   The header is --topbar-bg (#FAF8F4) in BOTH themes — the light-theme block
+   only re-tints --topbar-border — so one palette is correct in light and dark.
+   ========================================================================== */
+#ask-euler{
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+    gap:6px;
+    height:36px;
+    padding:0 14px;
+    box-sizing:border-box;
+    flex-shrink:0;
+    border:1px solid #163d30;
+    border-radius:6px;
+    background-color:#1E4D3A;
+    color:#ffffff;
+    font-family:var(--font-sans);
+    font-size:13px;
+    font-weight:600;
+    line-height:1;
+    white-space:nowrap;
+    text-decoration:none;
+    cursor:pointer;
+    transition:background-color .15s ease,border-color .15s ease,box-shadow .15s ease,transform .15s ease;
+}
+#ask-euler:visited{color:#ffffff;}
+#ask-euler:hover{
+    background-color:#2D6E52;
+    border-color:#245e45;
+    color:#ffffff;
+    box-shadow:0 2px 10px rgba(30,77,58,.28);
+}
+#ask-euler:active{transform:translateY(1px);box-shadow:none;}
+#ask-euler:focus-visible{outline:2px solid #B6820C;outline-offset:2px;}
+.ask-euler-icon{font-size:15px;line-height:1;display:inline-block;transform:translateY(-.5px);}
+/* Narrow-window guard: collapse to the icon alone so the header does not wrap
+   to a second row earlier than it did with the ⓘ Info button. The link keeps
+   its title attribute, so the meaning survives the collapse. */
+@media (max-width:1200px){
+    #ask-euler{padding:0 10px;gap:0;}
+    #ask-euler .ask-euler-label{display:none;}
+}
+@media (prefers-reduced-motion:reduce){
+    #ask-euler{transition:none;}
+    #ask-euler:active{transform:none;}
+}

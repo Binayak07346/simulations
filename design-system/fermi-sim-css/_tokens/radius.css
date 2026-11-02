@@ -1,0 +1,7 @@
+/* RADIUS · named for what it wraps; main-app scale (_tokens/radius.css). */
+:root {
+  --radius-sm:   8px;
+  --radius-md:  11px;
+  --radius-lg:  16px;
+  --radius-full: 999px;
+}

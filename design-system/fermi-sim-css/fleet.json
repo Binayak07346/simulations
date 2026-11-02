@@ -1,0 +1,518 @@
+{
+ "about": "Per-sim build options for the fleet (tools/build_fleet.py). Every sim also gets --channel v1 --guide-mark.",
+ "stage_name": {
+  "SR_sims/L19-s2-E_&_B_boost_v2-new.html": "L19-s2-E_&_B_boost_v2.html"
+ },
+ "layout_qm_legacy": [
+  "QM_sims/A(k)-vs-k-plot.html",
+  "QM_sims/Bound_states.html",
+  "QM_sims/Fourier-series.html",
+  "QM_sims/Harmonic-oscillator.html",
+  "QM_sims/Quantum_Tunneling_Gaussian_Wave.html",
+  "QM_sims/Quantum_tunneling_Plane_Wave.html",
+  "QM_sims/Spin-X-measurement-probability.html",
+  "QM_sims/Time_evolution_Gaussian_Fourier-comps.html",
+  "QM_sims/Time_evolution_Gaussian_wavepacket.html",
+  "QM_sims/Time_evolution_QHO_v2.html",
+  "QM_sims/Two_Gaussian_superposition.html",
+  "QM_sims/Vector_Space_Finite_Vectors_Updated.html",
+  "QM_sims/stern-gerlach-NEW.html"
+ ],
+ "canvas_light": [
+  "SR_sims/L02-s2-supplementaleuclidean-space-and-metric-shell.html",
+  "SR_sims/L04-s1-supplementalscalars-vs-vectors-shell.html",
+  "SR_sims/L04-s2-supplementaleuclidean-space-and-metric-shell.html",
+  "SR_sims/L05-s1-frame-clock-and-event-time-shell.html",
+  "SR_sims/L08-s1-relativity-of-simultaneity-shell.html",
+  "SR_sims/L09-s1-worldline-length-and-proper-time-shell.html",
+  "SR_sims/L10-s1-supplementalminkowski-space-and-metric-shell.html",
+  "SR_sims/L11-s2-light-clock-and-geometric-derivation-of--shell.html",
+  "SR_sims/L12-s1-twin-paradox-worldline-comparison-shell.html",
+  "SR_sims/L14-s1-momentum-vs-velocity-shell.html",
+  "SR_sims/L15-s1-relativistic-constant-acceleration-shell.html",
+  "SR_sims/L16-s1-energy-momentum-conservation-in-a-collis-shell.html",
+  "SR_sims/L17-s1-photon-worldline-shell.html",
+  "SR_sims/L18-s0-tachyon-causality-violation-shell.html",
+  "SR_sims/L18-s1-tachyon-causality-violation-shell.html"
+ ],
+ "spec_fixes": {
+  "CM_sims/cm-phase-plane.polished.html": [
+   [
+    "title:'What the plane shows', targets:function(){ return [{sel:'#box-contours'},{sel:'#box-field'},{sel:'#box-cloud'},{rect:plane(),sec:true}]; },",
+    "title:'What the plane shows', targets:function(){ return [{sel:'#box-contours'},{sel:'#box-field'},{sel:'#box-cloud'}]; },"
+   ]
+  ]
+ },
+ "tutor_links": {
+  "QM_sims/Double-slit-experiment.html": {
+   "stage": "https://stage.fermi.ai/t/3jZnnPnchIk",
+   "beta": "https://beta.fermi.ai/t/ly8n1y60ZVk"
+  },
+  "QM_sims/stern-gerlach-NEW.html": {
+   "stage": "https://stage.fermi.ai/t/H-7ZgVe22kI",
+   "beta": "https://beta.fermi.ai/t/ltVnOq5wRVQ"
+  },
+  "QM_sims/Quantum_Tunneling_Gaussian_Wave.html": {
+   "stage": "https://stage.fermi.ai/t/D-LO89gXuis",
+   "beta": "https://beta.fermi.ai/t/5I5lkec82K4"
+  },
+  "QM_sims/infinite-potential-well.html": {
+   "stage": "https://stage.fermi.ai/t/iiZspvrRZuw",
+   "beta": "https://beta.fermi.ai/t/pnXsoKXFaBQ"
+  },
+  "QM_sims/2d_wavefunction_collapse_measurement.html": {
+   "stage": "https://stage.fermi.ai/t/9pV6_aBwZNE",
+   "beta": "https://beta.fermi.ai/t/IM4roCnXuZc"
+  },
+  "QM_sims/A(k)-vs-k-plot.html": {
+   "stage": "https://stage.fermi.ai/t/Zqh3PNEMD-E",
+   "beta": "https://beta.fermi.ai/t/zSVel7ScDnY"
+  },
+  "QM_sims/Bound_states.html": {
+   "stage": "https://stage.fermi.ai/t/NGJdsKkdFLk",
+   "beta": "https://beta.fermi.ai/t/QwEhao_a1MU"
+  },
+  "QM_sims/Classical-vs-schrodinger-ANHARMONIC.html": {
+   "stage": "https://stage.fermi.ai/t/8WrclR39PBg",
+   "beta": "https://beta.fermi.ai/t/oYGpdC4z68g"
+  },
+  "QM_sims/Classical-vs-schrodinger.html": {
+   "stage": "https://stage.fermi.ai/t/6NI5_orCkt0",
+   "beta": "https://beta.fermi.ai/t/LcCw1gwuYp8"
+  },
+  "QM_sims/Double_slit_exp_Measurement.html": {
+   "stage": "https://stage.fermi.ai/t/IAEK-Rs-spY",
+   "beta": "https://beta.fermi.ai/t/KJx9U_LXP9s"
+  },
+  "QM_sims/Finite_well_probability_plot.html": {
+   "stage": "https://stage.fermi.ai/t/nL1rsma2O3o",
+   "beta": "https://beta.fermi.ai/t/dqhL1f7VPgg"
+  },
+  "QM_sims/Fourier-series.html": {
+   "stage": "https://stage.fermi.ai/t/BNCx4IptGko",
+   "beta": "https://beta.fermi.ai/t/B8_FZe5casY"
+  },
+  "QM_sims/Harmonic-oscillator.html": {
+   "stage": "https://stage.fermi.ai/t/7N-8RKvZt7c",
+   "beta": "https://beta.fermi.ai/t/k7gSR8JycVo"
+  },
+  "QM_sims/Harmonic_Oscillator_High_Energies.html": {
+   "stage": "https://stage.fermi.ai/t/3dTtKbbLfFA",
+   "beta": "https://beta.fermi.ai/t/0m7UPa5e7hg"
+  },
+  "QM_sims/Hydrogen_atom_energy_spectrum.html": {
+   "stage": "https://stage.fermi.ai/t/2nX9gbRwBms",
+   "beta": "https://beta.fermi.ai/t/eopISlhA4zA"
+  },
+  "QM_sims/Hydrogen_atom_wavefunctions.html": {
+   "stage": "https://stage.fermi.ai/t/ykR2TLxs67Q",
+   "beta": "https://beta.fermi.ai/t/KRKu5kFezfE"
+  },
+  "QM_sims/Multi_Stage_Stern_Gerlach_New.html": {
+   "stage": "https://stage.fermi.ai/t/FS6sSGyaf-Q",
+   "beta": "https://beta.fermi.ai/t/T84NZA_MuEM"
+  },
+  "QM_sims/Particle-on-a-circle.html": {
+   "stage": "https://stage.fermi.ai/t/5plfuD16-_4",
+   "beta": "https://beta.fermi.ai/t/0RRjWcj2liw"
+  },
+  "QM_sims/Quantum_tunneling_Plane_Wave.html": {
+   "stage": "https://stage.fermi.ai/t/ukIDbOq4c5Y",
+   "beta": "https://beta.fermi.ai/t/kKFYD37lz2M"
+  },
+  "QM_sims/Single_Gaussian_plot.html": {
+   "stage": "https://stage.fermi.ai/t/7lC0j3AzQi0",
+   "beta": "https://beta.fermi.ai/t/aevgHLukqDw"
+  },
+  "QM_sims/Spherical_harmonics_Explorer.html": {
+   "stage": "https://stage.fermi.ai/t/4vIdhcuN49c",
+   "beta": "https://beta.fermi.ai/t/uJvsCT_NrdM"
+  },
+  "QM_sims/Spin-X-measurement-probability.html": {
+   "stage": "https://stage.fermi.ai/t/738theloiWA",
+   "beta": "https://beta.fermi.ai/t/nmyapwOx5Is"
+  },
+  "QM_sims/Spin_Measurement.html": {
+   "stage": "https://stage.fermi.ai/t/UY-G1w1Wd7E",
+   "beta": "https://beta.fermi.ai/t/w_NORTWdYug"
+  },
+  "QM_sims/Time_evolution_Gaussian_Fourier-comps.html": {
+   "stage": "https://stage.fermi.ai/t/nDaIhDmGtZY",
+   "beta": "https://beta.fermi.ai/t/cGJWf2EbCHI"
+  },
+  "QM_sims/Time_evolution_Gaussian_wavepacket.html": {
+   "stage": "https://stage.fermi.ai/t/gKWoqzYFj9Y",
+   "beta": "https://beta.fermi.ai/t/CLF59fHZ5Sc"
+  },
+  "QM_sims/Time_evolution_QHO_v2.html": {
+   "stage": "https://stage.fermi.ai/t/sbE4G3dsJ6s",
+   "beta": "https://beta.fermi.ai/t/B5LMrJrMxPg"
+  },
+  "QM_sims/Transmission_probability_plot.html": {
+   "stage": "https://stage.fermi.ai/t/z087V8EtKFo",
+   "beta": "https://beta.fermi.ai/t/VmSHDcijFl0"
+  },
+  "QM_sims/Two_Gaussian_superposition.html": {
+   "stage": "https://stage.fermi.ai/t/FJkcg5gWpzs",
+   "beta": "https://beta.fermi.ai/t/nvaFQ5lMX1E"
+  },
+  "QM_sims/Vector_Space_Finite_Vectors_Updated.html": {
+   "stage": "https://stage.fermi.ai/t/0VmQdKvIiv4",
+   "beta": "https://beta.fermi.ai/t/XvZBoAC1yvI"
+  },
+  "QM_sims/qm-blackbody-spectrum.polished.html": {
+   "stage": "https://stage.fermi.ai/t/aSMx6pInqbc",
+   "beta": "https://beta.fermi.ai/t/CQeAd64OE5I"
+  },
+  "QM_sims/qm-compton-scattering.polished.html": {
+   "stage": "https://stage.fermi.ai/t/E2WaboWIkto",
+   "beta": "https://beta.fermi.ai/t/PNacNgCKAxs"
+  },
+  "QM_sims/wavefunctions-and-probability.html": {
+   "stage": "https://stage.fermi.ai/t/uWTVZS6nLAE",
+   "beta": "https://beta.fermi.ai/t/lZQ2pcHUC_A"
+  },
+  "CM_sims/L9-The pendulum.html": {
+   "stage": "https://stage.fermi.ai/t/a9fVq1TrUz8",
+   "beta": "https://beta.fermi.ai/t/E2tC7XGh3xw"
+  },
+  "CM_sims/L4-Projectile motion.html": {
+   "stage": "https://stage.fermi.ai/t/uf_M-KMDogg",
+   "beta": "https://beta.fermi.ai/t/osT15g_zmbY"
+  },
+  "CM_sims/L37-Kepler's Laws.html": {
+   "stage": "https://stage.fermi.ai/t/nfSM8wh-lhc",
+   "beta": "https://beta.fermi.ai/t/_oCBAE6CdL8"
+  },
+  "CM_sims/Collisions.html": {
+   "stage": "https://stage.fermi.ai/t/3IsfRaLQLFY",
+   "beta": "https://beta.fermi.ai/t/vIbJh22tjqQ"
+  },
+  "CM_sims/Free-Body Diagram Builder.html": {
+   "stage": "https://stage.fermi.ai/t/G8UX0WFFuGE",
+   "beta": "https://beta.fermi.ai/t/VTPrMgwPg0g"
+  },
+  "CM_sims/Galperins_Billiard.html": {
+   "stage": "https://stage.fermi.ai/t/3WuPjBzSrec",
+   "beta": "https://beta.fermi.ai/t/dCfai4aqXCE"
+  },
+  "CM_sims/L1-Solar System Orbits.html": {
+   "stage": "https://stage.fermi.ai/t/8i4oK3eWx_4",
+   "beta": "https://beta.fermi.ai/t/teuAuSp7hOs"
+  },
+  "CM_sims/L16-Friction-in-3d.html": {
+   "stage": "https://stage.fermi.ai/t/IA7h5Nl9ZLU",
+   "beta": "https://beta.fermi.ai/t/63BPHhob0Cw"
+  },
+  "CM_sims/L17-The damped HO.html": {
+   "stage": "https://stage.fermi.ai/t/PH5Wy4z68Ys",
+   "beta": "https://beta.fermi.ai/t/ZoSR9iGwtt0"
+  },
+  "CM_sims/L2-Newtons-laws.html": {
+   "stage": "https://stage.fermi.ai/t/wQoqncbszPE",
+   "beta": "https://beta.fermi.ai/t/igfRUuKnk2g"
+  },
+  "CM_sims/L29-The centrifugal-force-shell.html": {
+   "stage": "https://stage.fermi.ai/t/3YFVtWitS-I",
+   "beta": "https://beta.fermi.ai/t/yfvLLh7TrdY"
+  },
+  "CM_sims/L30-Coriolis on a Rotating Sphere.html": {
+   "stage": "https://stage.fermi.ai/t/5W5rYdJpM-U",
+   "beta": "https://beta.fermi.ai/t/XPr47SFyZVM"
+  },
+  "CM_sims/L30-The coriolis-force.html": {
+   "stage": "https://stage.fermi.ai/t/nw8k23oWNgU",
+   "beta": "https://beta.fermi.ai/t/3E-Ozne3LYI"
+  },
+  "CM_sims/L35-Orbits.html": {
+   "stage": "https://stage.fermi.ai/t/Ixm9GFvYyh8",
+   "beta": "https://beta.fermi.ai/t/qV4Y3j8aEUU"
+  },
+  "CM_sims/L36-Scattering Extension.html": {
+   "stage": "https://stage.fermi.ai/t/8Hc16nEwEGg",
+   "beta": "https://beta.fermi.ai/t/5vSJDOD6RW0"
+  },
+  "CM_sims/L36-The Energy of the Orbit-new.html": {
+   "stage": "https://stage.fermi.ai/t/jXzkdVnKiSw",
+   "beta": "https://beta.fermi.ai/t/DzP5kahUoc8"
+  },
+  "CM_sims/L4-Forces on objects explorer.html": {
+   "stage": "https://stage.fermi.ai/t/5Ldj3tUMARc",
+   "beta": "https://beta.fermi.ai/t/18V0TCoUkaU"
+  },
+  "CM_sims/L6-The harmonic oscillator.html": {
+   "stage": "https://stage.fermi.ai/t/42P3irEgzBA",
+   "beta": "https://beta.fermi.ai/t/3A27L73RXi8"
+  },
+  "CM_sims/L7-Motion in a potential.html": {
+   "stage": "https://stage.fermi.ai/t/UOf2UfM5fXY",
+   "beta": "https://beta.fermi.ai/t/rJaEYGI0PxM"
+  },
+  "CM_sims/cm-brachistochrone-race.polished.html": {
+   "stage": "https://stage.fermi.ai/t/ybOMLtSyX2E",
+   "beta": "https://beta.fermi.ai/t/L9NtKvEEKok"
+  },
+  "CM_sims/cm-phase-plane.polished.html": {
+   "stage": "https://stage.fermi.ai/t/FZDqdzibBCE",
+   "beta": "https://beta.fermi.ai/t/pnJ0y6Uoxb8"
+  },
+  "CM_sims/cm-spinning-book.polished.html": {
+   "stage": "https://stage.fermi.ai/t/_7ccheKGRzw",
+   "beta": "https://beta.fermi.ai/t/nyKJjpdPKUE"
+  },
+  "PP_sims/geiger-marsden-gold-foil-experiment.html": {
+   "stage": "https://stage.fermi.ai/t/4QcqLuCFnQU",
+   "beta": "https://beta.fermi.ai/t/0CAJMY_K5Lg"
+  },
+  "PP_sims/build-a-baryon.html": {
+   "stage": "https://stage.fermi.ai/t/1aZd6wqO2Lc",
+   "beta": "https://beta.fermi.ai/t/CrnoQCBimuw"
+  },
+  "PP_sims/dirac-s-sea-of-electrons.html": {
+   "stage": "https://stage.fermi.ai/t/6tAQBEWLgHk",
+   "beta": "https://beta.fermi.ai/t/RDDysl7gaz0"
+  },
+  "PP_sims/exploring-the-standard-model.html": {
+   "stage": "https://stage.fermi.ai/t/TR_JYICLzj8",
+   "beta": "https://beta.fermi.ai/t/ErZpj3g2yEU"
+  },
+  "PP_sims/feynman-diagram-sandbox.html": {
+   "stage": "https://stage.fermi.ai/t/2FdbIdtLl1g",
+   "beta": "https://beta.fermi.ai/t/ReZUg7divlc"
+  },
+  "PP_sims/how-to-make-a-particle.html": {
+   "stage": "https://stage.fermi.ai/t/wpe8uCFMpRg",
+   "beta": "https://beta.fermi.ai/t/LydbL3-dHcE"
+  },
+  "PP_sims/ma-perturbation-breakdown.opus-5.html": {
+   "stage": "https://stage.fermi.ai/t/OjvCnAZX9LM",
+   "beta": "https://beta.fermi.ai/t/T0-tuUAp1Rw"
+  },
+  "PP_sims/navigating-the-eight-fold-way.html": {
+   "stage": "https://stage.fermi.ai/t/9EfjMh1y8yY",
+   "beta": "https://beta.fermi.ai/t/0XVOH-IukGQ"
+  },
+  "PP_sims/particle-detector-headquarters.html": {
+   "stage": "https://stage.fermi.ai/t/_uV6UNCxFAg",
+   "beta": "https://beta.fermi.ai/t/zd9nV0mmcKY"
+  },
+  "PP_sims/scale-of-the-universe.html": {
+   "stage": "https://stage.fermi.ai/t/Hv_hYJST6OM",
+   "beta": "https://beta.fermi.ai/t/0_0fHlMHjf4"
+  },
+  "PP_sims/spin-and-helicity.html": {
+   "stage": "https://stage.fermi.ai/t/Xa3uai9cWyY",
+   "beta": "https://beta.fermi.ai/t/Zw9NpsI7JmA"
+  },
+  "PP_sims/the-wine-bottle-potential-continuous-symmetr.html": {
+   "stage": "https://stage.fermi.ai/t/vYwHzmmAV_o",
+   "beta": "https://beta.fermi.ai/t/XWIADoy_8ec"
+  },
+  "PP_sims/virtual-cloud-chamber.html": {
+   "stage": "https://stage.fermi.ai/t/nTncLvtoTb8",
+   "beta": "https://beta.fermi.ai/t/qf_bXWSH1Eg"
+  },
+  "PP_sims/virtual-particle-collider.html": {
+   "stage": "https://stage.fermi.ai/t/udQpTqKXx4s",
+   "beta": "https://beta.fermi.ai/t/Je04YIxpnpY"
+  },
+  "PP_sims/wu-experiment-and-the-death-of-parity.html": {
+   "stage": "https://stage.fermi.ai/t/2O0ob8vcP2w",
+   "beta": "https://beta.fermi.ai/t/dr80PDgo5VY"
+  },
+  "Condensed_matter_sims/cm-kronig-penney-bands-polished.html": {
+   "stage": "https://stage.fermi.ai/t/-RG599cZG_Y",
+   "beta": "https://beta.fermi.ai/t/A98MBw4YQ3U"
+  },
+  "Condensed_matter_sims/cm-bloch-oscillations.html": {
+   "stage": "https://stage.fermi.ai/t/B-xI0leYMZo",
+   "beta": "https://beta.fermi.ai/t/Zv2iueJBN5A"
+  },
+  "Condensed_matter_sims/cm-crystal-diffraction-2d-polished.html": {
+   "stage": "https://stage.fermi.ai/t/7-wO2sQWy6M",
+   "beta": "https://beta.fermi.ai/t/I8a8Y0Rb40c"
+  },
+  "Condensed_matter_sims/cm-phonon-diatomic-chain-polished.html": {
+   "stage": "https://stage.fermi.ai/t/6KKil1dgMDM",
+   "beta": "https://beta.fermi.ai/t/jCRV6hl-Fv8"
+  },
+  "Condensed_matter_sims/cm-superconductor.polished.html": {
+   "stage": "https://stage.fermi.ai/t/HaiYOgFnQmI",
+   "beta": "https://beta.fermi.ai/t/AXt2wFzCbHs"
+  },
+  "Condensed_matter_sims/mc-random-walker.eval-newcontract.polished.html": {
+   "stage": "https://stage.fermi.ai/t/k8_MXYZdpoE",
+   "beta": "https://beta.fermi.ai/t/zBeeaIgY7OI"
+  },
+  "Condensed_matter_sims/qs-rabi-bloch-sphere.html": {
+   "stage": "https://stage.fermi.ai/t/I2Vxo8eCyZk",
+   "beta": "https://beta.fermi.ai/t/q3ZoCQeI7kE"
+  },
+  "Condensed_matter_sims/sc-ising-order.html": {
+   "stage": "https://stage.fermi.ai/t/Xgdh29qjvOc",
+   "beta": "https://beta.fermi.ai/t/1ugpxlY17qY"
+  },
+  "Condensed_matter_sims/sm-energy-sharing.html": {
+   "stage": "https://stage.fermi.ai/t/HTGPurprIqA",
+   "beta": "https://beta.fermi.ai/t/pOqtJWQZaAo"
+  },
+  "Condensed_matter_sims/sm-heat-capacity-steps.eval-newcontract.polished.html": {
+   "stage": "https://stage.fermi.ai/t/FC84rkt9afU",
+   "beta": "https://beta.fermi.ai/t/zeZLYkmFQrM"
+  },
+  "Condensed_matter_sims/sm-identical-counting.html": {
+   "stage": "https://stage.fermi.ai/t/gFJ6vHdYAJs",
+   "beta": "https://beta.fermi.ai/t/nhcnoHrPkWA"
+  },
+  "Condensed_matter_sims/sm-rubber-band.html": {
+   "stage": "https://stage.fermi.ai/t/pZ1cUCTpFgo",
+   "beta": "https://beta.fermi.ai/t/5s4PJRA-qWY"
+  },
+  "SR_sims/L12-s2-Twin_Paradox_v2.html": {
+   "stage": "https://stage.fermi.ai/t/W_Psbi1y9NI",
+   "beta": "https://beta.fermi.ai/t/RX6pl86qYqg"
+  },
+  "SR_sims/L00-s1-supplementalball-on-a-train-shell.html": {
+   "stage": "https://stage.fermi.ai/t/eOKGV_64QkA",
+   "beta": "https://beta.fermi.ai/t/LB4mkjMUs8A"
+  },
+  "SR_sims/L00-s2-Fly_on_a_boat_v2.html": {
+   "stage": "https://stage.fermi.ai/t/AtpqkqW-BYI",
+   "beta": "https://beta.fermi.ai/t/7p8xhXMlkZw"
+  },
+  "SR_sims/L01-s1-polar-vs-cartesian-one-window-showing-an-shell.html": {
+   "stage": "https://stage.fermi.ai/t/G9sqVWQivHg",
+   "beta": "https://beta.fermi.ai/t/4myG8jrjpss"
+  },
+  "SR_sims/L01-s2-supplementaldifferent-coordinate-frames-shell.html": {
+   "stage": "https://stage.fermi.ai/t/ma10fuaQow4",
+   "beta": "https://beta.fermi.ai/t/42FJZlh60uQ"
+  },
+  "SR_sims/L02-s1-inner-product-shell.html": {
+   "stage": "https://stage.fermi.ai/t/VorkFCxTHpU",
+   "beta": "https://beta.fermi.ai/t/DZskXKj-Enw"
+  },
+  "SR_sims/L02-s2-supplementaleuclidean-space-and-metric-shell.html": {
+   "stage": "https://stage.fermi.ai/t/nl7QUUbJ3b0",
+   "beta": "https://beta.fermi.ai/t/WiUyAqFX1n0"
+  },
+  "SR_sims/L03-s1-supplementalshape-rotation-and-symmetry-shell.html": {
+   "stage": "https://stage.fermi.ai/t/Zb_Wp3NdmNQ",
+   "beta": "https://beta.fermi.ai/t/n55HH6aTxEk"
+  },
+  "SR_sims/L04-s1-supplementalscalars-vs-vectors-shell.html": {
+   "stage": "https://stage.fermi.ai/t/ZRUIgJJ0s0o",
+   "beta": "https://beta.fermi.ai/t/N6Wm-1MEq-I"
+  },
+  "SR_sims/L04-s2-supplementaleuclidean-space-and-metric-shell.html": {
+   "stage": "https://stage.fermi.ai/t/1L0SsFAh6Rs",
+   "beta": "https://beta.fermi.ai/t/s8fMOOOAr0g"
+  },
+  "SR_sims/L05-s1-frame-clock-and-event-time-shell.html": {
+   "stage": "https://stage.fermi.ai/t/2bDzH5L7nzA",
+   "beta": "https://beta.fermi.ai/t/d0ZlI6Ol2iA"
+  },
+  "SR_sims/L05-s2-spacetime-diagram-explorer-new.html": {
+   "stage": "https://stage.fermi.ai/t/FTvPPzD4QPc",
+   "beta": "https://beta.fermi.ai/t/FrkXfFktNwQ"
+  },
+  "SR_sims/L06-s1-supplementaldodgeball-shell.html": {
+   "stage": "https://stage.fermi.ai/t/etbUXKPik0Y",
+   "beta": "https://beta.fermi.ai/t/8Z0aOOmoVHQ"
+  },
+  "SR_sims/L06-s2-Rel_vel_of_a_plane_v2.html": {
+   "stage": "https://stage.fermi.ai/t/OEoAosbj6G8",
+   "beta": "https://beta.fermi.ai/t/J9hFfUlFhWw"
+  },
+  "SR_sims/L07-s1-Michelson_Morley_experiment_3D.html": {
+   "stage": "https://stage.fermi.ai/t/pEBsnGbT7DE",
+   "beta": "https://beta.fermi.ai/t/tPINDq5nHeI"
+  },
+  "SR_sims/L08-s1-relativity-of-simultaneity-shell.html": {
+   "stage": "https://stage.fermi.ai/t/8hb66EB3HGw",
+   "beta": "https://beta.fermi.ai/t/Mhyd1u1G_mA"
+  },
+  "SR_sims/L08-s2-spacetime-diagram-explorer-new.html": {
+   "stage": "https://stage.fermi.ai/t/MgSaZ0E1ZkY",
+   "beta": "https://beta.fermi.ai/t/r0XCUtYK4ow"
+  },
+  "SR_sims/L09-s1-worldline-length-and-proper-time-shell.html": {
+   "stage": "https://stage.fermi.ai/t/8dxEQx7Tsas",
+   "beta": "https://beta.fermi.ai/t/NVu7NMFj2z4"
+  },
+  "SR_sims/L10-s1-supplementalminkowski-space-and-metric-shell.html": {
+   "stage": "https://stage.fermi.ai/t/gdMLE-VCTWw",
+   "beta": "https://beta.fermi.ai/t/5IIdWhkATY4"
+  },
+  "SR_sims/L10-s2-lorentz-transformation-vs-euclidean-rota-shell.html": {
+   "stage": "https://stage.fermi.ai/t/23AQDf9P590",
+   "beta": "https://beta.fermi.ai/t/TSaVhSU3WQg"
+  },
+  "SR_sims/L11-s1-Time-dilation-train-paradox-shell_updated.html": {
+   "stage": "https://stage.fermi.ai/t/FCY-pxeRfYI",
+   "beta": "https://beta.fermi.ai/t/YCEakW7oRNM"
+  },
+  "SR_sims/L11-s2-light-clock-and-geometric-derivation-of--shell.html": {
+   "stage": "https://stage.fermi.ai/t/iUTjoxMdm7I",
+   "beta": "https://beta.fermi.ai/t/jz8znrAsm2g"
+  },
+  "SR_sims/L11-s3-Length_contraction___simultaneity_v2.html": {
+   "stage": "https://stage.fermi.ai/t/2EMlfGvY08M",
+   "beta": "https://beta.fermi.ai/t/B7-NmR6OuTw"
+  },
+  "SR_sims/L12-s0-Twin_paradox_Alice___Bella_turnaround.html": {
+   "stage": "https://stage.fermi.ai/t/xibv_vc8eZA",
+   "beta": "https://beta.fermi.ai/t/lN8wwF-7IwA"
+  },
+  "SR_sims/L12-s1-twin-paradox-worldline-comparison-shell.html": {
+   "stage": "https://stage.fermi.ai/t/uAMsx6Yb4k0",
+   "beta": "https://beta.fermi.ai/t/EoykPWms67I"
+  },
+  "SR_sims/L13-s1-lorentz-transformations-on-vectors-shell.html": {
+   "stage": "https://stage.fermi.ai/t/B0p3b7coh1s",
+   "beta": "https://beta.fermi.ai/t/2y-hn2GWRhQ"
+  },
+  "SR_sims/L14-s1-momentum-vs-velocity-shell.html": {
+   "stage": "https://stage.fermi.ai/t/OEaYdmrPRYA",
+   "beta": "https://beta.fermi.ai/t/FQv_jcmGU8E"
+  },
+  "SR_sims/L15-s1-relativistic-constant-acceleration-shell.html": {
+   "stage": "https://stage.fermi.ai/t/v69AaghKvfU",
+   "beta": "https://beta.fermi.ai/t/Hmju7huqHiU"
+  },
+  "SR_sims/L16-s1-energy-momentum-conservation-in-a-collis-shell.html": {
+   "stage": "https://stage.fermi.ai/t/yXLZQTph0dM",
+   "beta": "https://beta.fermi.ai/t/ySUz_iAnMew"
+  },
+  "SR_sims/L17-s1-photon-worldline-shell.html": {
+   "stage": "https://stage.fermi.ai/t/DL1BWqeJNqU",
+   "beta": "https://beta.fermi.ai/t/yMem7HJp7iU"
+  },
+  "SR_sims/L18-s0-tachyon-causality-violation-shell.html": {
+   "stage": "https://stage.fermi.ai/t/ChccZ9qeJOU",
+   "beta": "https://beta.fermi.ai/t/bwCpTCgnI6Q"
+  },
+  "SR_sims/L18-s1-tachyon-causality-violation-shell.html": {
+   "stage": "https://stage.fermi.ai/t/NweC48A7Now",
+   "beta": "https://beta.fermi.ai/t/UV7Un1pU8_g"
+  },
+  "SR_sims/L18-s2-causality-misconceptions-spacetime-explorer-new.html": {
+   "stage": "https://stage.fermi.ai/t/_tgdsQ-XWMc",
+   "beta": "https://beta.fermi.ai/t/CVG47byqEWg"
+  },
+  "SR_sims/L19-s2-E_&_B_boost_v2-new.html": {
+   "stage": "https://stage.fermi.ai/t/J_LixR0Mtcc",
+   "beta": "https://beta.fermi.ai/t/IWgKZlMiIBI"
+  },
+  "SR_sims/L7-s2-Airplane_&_wind_v2.html": {
+   "stage": "https://stage.fermi.ai/t/AzB-O8n5w4g",
+   "beta": "https://beta.fermi.ai/t/X0m7CN46snU"
+  }
+ },
+ "shared_exclude": {
+  "QM_sims/Transmission_probability_plot.html": "Wave 3 capture vs Phase 1 differs (2026-10-06): keeps its own shared blocks",
+  "SR_sims/L00-s1-supplementalball-on-a-train-shell.html": "Wave 3 capture vs Phase 1 differs (2026-10-06): keeps its own shared blocks",
+  "SR_sims/L07-s1-Michelson_Morley_experiment_3D.html": "Wave 3 capture vs Phase 1 differs (2026-10-06): keeps its own shared blocks",
+  "SR_sims/L11-s1-Time-dilation-train-paradox-shell_updated.html": "Wave 3 capture vs Phase 1 differs (2026-10-06): keeps its own shared blocks"
+ }
+}

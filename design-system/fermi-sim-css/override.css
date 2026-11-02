@@ -1,0 +1,248 @@
+/* ════════════════════════════════════════════════════════════════════
+ * OVERRIDE · the Horizon "A" look on today's sim markup (TEMPORARY)
+ * ════════════════════════════════════════════════════════════════════
+ * Layer: fermi.override. Every declaration is !important ON PURPOSE:
+ * for !important the cascade-layer order REVERSES, so a layered !important
+ * beats every unlayered !important in the sim's own inline CSS, wherever
+ * this sheet is loaded. That is what lets one <link> in <head> restyle a
+ * sim that carries 7-14 inline <style> blocks, without editing any of them.
+ * (Normal declarations in this layer would lose to all inline sim CSS.)
+ *
+ * Selectors are the sims' EXISTING classes and ids (.shell-header, .top-bar,
+ * .shell-aside, #sb-hide-tab, #phys-backdrop, .gv-*, ...). JS rewrites
+ * className ~1,900 times across the fleet, so v1 adds no classes to markup;
+ * CLASSES.md maps each legacy selector to its canonical .sim-* class.
+ *
+ * Colour only, with one exception: the Simulation-guide cards (.gv-*) take
+ * the Horizon card type (Inter) and spacing, as locked on 2026-10-05.
+ *
+ * BURN-DOWN: this file shrinks as Track R moves each sim's inline chrome
+ * CSS into fermi.components; it is deleted when it reaches zero.
+ * Source of truth for every rule: LOCKED-A.md / skin.A-locked-2026-10-05.
+ * ════════════════════════════════════════════════════════════════════ */
+
+/* ── sim variables re-pointed inside chrome surfaces ───────────────────
+   NOT !important, deliberately: in the locked look these lose to a sim's own
+   definitions on the same element (e.g. its light-theme block for #phys-backdrop)
+   and only fill in where the sim defines nothing. Same semantics here: a layered
+   normal declaration applies only when no unlayered rule sets that variable. */
+.shell-header,.top-bar,html[data-fsim-layout="qm-legacy"] :is(.title-bar,.app-header,.header-bar,header.upper-menu,header.sim-header,div.header,body > header){--text:var(--fsim-topbar-text);--ink-mid:var(--fsim-topbar-text-muted);--ink-mute:var(--fsim-topbar-text-faint);--line:var(--fsim-topbar-line);--accent:var(--fsim-topbar-accent);}
+.shell-aside,#sb-sidebar,html[data-fsim-layout="qm-legacy"] :is(aside#rightPanel,.ho-sidebar){
+  --bg:var(--fsim-sidebar-bg);--panel:var(--fsim-sidebar-bg);--panel-2:var(--fsim-sidebar-bg);--surface-soft:var(--fsim-sidebar-bg);
+  --text:var(--color-text);--ink-mid:var(--color-text-muted);--ink-mute:var(--color-text-faint);--muted:var(--color-text-muted);--line:var(--fsim-sidebar-line);
+  --accent:var(--color-accent);--accent-soft:var(--fsim-accent-border);}
+#phys-backdrop,#ps-watch,.cg-callout,.cg-nav{
+  --bg:var(--color-bg);--panel:var(--color-surface);--panel-2:var(--color-surface);--surface-soft:var(--color-bg-subtle);
+  --text:var(--color-text);--ink-mid:var(--color-text-muted);--ink-mute:var(--color-text-faint);--line:var(--color-border);--accent:var(--color-accent);--accent-soft:var(--fsim-accent-border);}
+html,body,#shell{background-color:var(--color-bg) !important;}
+html body #shell :is(.plot-area,.main-container,.shell-hero,.hero-stack){background-color:var(--color-bg) !important;}
+
+/* v1.1.0: the 12 older QM layouts (<html data-fsim-layout="qm-legacy">, stamped by tools/apply.py --layout qm-legacy)
+   name their header, sidebar and Play button differently; the same rules reach them through the scoped lists below.
+   v1.1.1: those lists sit inside :where() so they add NO specificity: in v1.1.0 they raised every sidebar rule's weight,
+   and the sidebar heading rule out-ranked the Guided Inquiry title rule (card titles turned grey instead of ink). */
+/* ── top bar ──────────────────────────────────────────────────────────── */
+html body .shell-header,html body .top-bar,html body :is(html[data-fsim-layout="qm-legacy"] :is(.title-bar,.app-header,.header-bar,header.upper-menu,header.sim-header,div.header,body > header)){background:var(--fsim-topbar-bg) !important;
+  box-shadow:none !important;border-bottom:1px solid var(--fsim-sidebar-line) !important;backdrop-filter:none !important;color:var(--fsim-topbar-text) !important;}
+html body .shell-header .shell-title,html body .top-bar h1,html body :is(html[data-fsim-layout="qm-legacy"] :is(.title-bar,.app-header,.header-bar,header.upper-menu,header.sim-header,div.header,body > header)) :is(h1,h2,.title,.app-title,.sim-title,.title-text,[class*="title"]:not(button)){color:var(--fsim-topbar-text) !important;text-shadow:none !important;}
+/* v1.1.2: the sim title in the top bar is white whatever the sim names it (older QM sims call it .top-bar-title,
+   .title, .sim-title, .simulation-title, #simTitle or a plain h2; their own light-theme rule painted it dark on navy). */
+html body :is(.shell-header,.top-bar,:where(html[data-fsim-layout="qm-legacy"] :is(.title-bar,.app-header,.header-bar,header.upper-menu,header.sim-header,div.header,body > header))) :is(h1,h2,h3,.title,.top-bar-title,.sim-title,.simulation-title,#simTitle,#simTitleText),html body :is(.shell-header,.top-bar,:where(html[data-fsim-layout="qm-legacy"] :is(.title-bar,.app-header,.header-bar,header.upper-menu,header.sim-header,div.header,body > header))) :is(h1,h2,h3,.title,.top-bar-title,.sim-title,.simulation-title,#simTitle,#simTitleText) *{color:var(--fsim-topbar-text) !important;text-shadow:none !important;}
+html body :is(.shell-header,.top-bar,:where(html[data-fsim-layout="qm-legacy"] :is(.title-bar,.app-header,.header-bar,header.upper-menu,header.sim-header,div.header,body > header))) :is(button,select,.shell-btn){background-color:var(--fsim-topbar-control-bg) !important;background-image:none !important;color:var(--fsim-topbar-control-text) !important;border-color:var(--fsim-topbar-control-border) !important;box-shadow:none !important;text-shadow:none !important;}
+html body :is(.shell-header,.top-bar,:where(html[data-fsim-layout="qm-legacy"] :is(.title-bar,.app-header,.header-bar,header.upper-menu,header.sim-header,div.header,body > header))) :is(button,select):hover{background-color:var(--fsim-topbar-control-bg-hover) !important;color:var(--fsim-topbar-text) !important;}
+html body :is(.shell-header,.top-bar,:where(html[data-fsim-layout="qm-legacy"] :is(.title-bar,.app-header,.header-bar,header.upper-menu,header.sim-header,div.header,body > header))) select{color-scheme:dark !important;}
+html body :is(.shell-header,.top-bar,:where(html[data-fsim-layout="qm-legacy"] :is(.title-bar,.app-header,.header-bar,header.upper-menu,header.sim-header,div.header,body > header))) select option{background:var(--fsim-topbar-menu-bg) !important;color:var(--fsim-topbar-text) !important;}
+html body :is(.shell-header,.top-bar,:where(html[data-fsim-layout="qm-legacy"] :is(.title-bar,.app-header,.header-bar,header.upper-menu,header.sim-header,div.header,body > header))) :is(label,.ht-ctl,.lbl-speed,#lbl-speed){color:var(--fsim-topbar-text-muted) !important;}
+html body :is(.shell-header,.top-bar,:where(html[data-fsim-layout="qm-legacy"] :is(.title-bar,.app-header,.header-bar,header.upper-menu,header.sim-header,div.header,body > header))) input[type=checkbox]:where(:not([style*="accent-color"])){accent-color:var(--fsim-topbar-accent) !important;}
+html body :is(.shell-header,.top-bar,:where(html[data-fsim-layout="qm-legacy"] :is(.title-bar,.app-header,.header-bar,header.upper-menu,header.sim-header,div.header,body > header))) :is(#btn-gi,#btn-cg).active,html body :is(.shell-header,.top-bar,:where(html[data-fsim-layout="qm-legacy"] :is(.title-bar,.app-header,.header-bar,header.upper-menu,header.sim-header,div.header,body > header))) [aria-pressed="true"]:not(#shell-play),
+html body #shell .shell-header :is(#btnDim2D,#btnDim3D):is(.active,.on,.selected,[aria-pressed="true"]){background-color:var(--fsim-topbar-selected-bg) !important;color:var(--fsim-topbar-text) !important;border-color:var(--fsim-topbar-selected-border) !important;}
+html body #shell .shell-header :has(> #btnDim2D){background-color:var(--fsim-topbar-segment-bg) !important;border-color:var(--fsim-topbar-control-border) !important;box-shadow:none !important;}
+html body #shell .shell-header :is(#btnDim2D,#btnDim3D):not(.active):not(.on):not(.selected){background-color:transparent !important;color:var(--fsim-topbar-text-quiet) !important;opacity:1 !important;}
+/* Ask AI Tutor: white oval pill, outlined sparkle drawn in the glyph's own box (nothing moves) */
+html body :is(.shell-header,.top-bar,:where(html[data-fsim-layout="qm-legacy"] :is(.title-bar,.app-header,.header-bar,header.upper-menu,header.sim-header,div.header,body > header))) :is(#ask-euler,.ask-euler){background-color:var(--color-surface) !important;color:var(--color-text) !important;border-color:var(--color-surface) !important;}
+html body :is(.shell-header,.top-bar,:where(html[data-fsim-layout="qm-legacy"] :is(.title-bar,.app-header,.header-bar,header.upper-menu,header.sim-header,div.header,body > header))) :is(#ask-euler,.ask-euler) *{color:var(--color-text) !important;}
+html body :is(.shell-header,.top-bar,:where(html[data-fsim-layout="qm-legacy"] :is(.title-bar,.app-header,.header-bar,header.upper-menu,header.sim-header,div.header,body > header))) :is(#ask-euler,.ask-euler) :is(svg,span:first-child){color:var(--color-accent) !important;fill:currentColor !important;}
+html body :is(.shell-header,.top-bar,:where(html[data-fsim-layout="qm-legacy"] :is(.title-bar,.app-header,.header-bar,header.upper-menu,header.sim-header,div.header,body > header))) :is(#ask-euler,.ask-euler){border-radius:var(--radius-full) !important;}
+html body :is(.shell-header,.top-bar,:where(html[data-fsim-layout="qm-legacy"] :is(.title-bar,.app-header,.header-bar,header.upper-menu,header.sim-header,div.header,body > header))) :is(#ask-euler,.ask-euler) .ask-euler-icon{color:transparent !important;background-color:var(--fsim-tutor-icon) !important;-webkit-mask:var(--fsim-tutor-icon-mask) center/contain no-repeat !important;mask:var(--fsim-tutor-icon-mask) center/contain no-repeat !important;}
+/* Play: the one royal-blue button */
+html body :is(#shell-play,#playpause-btn,#btnPlayPause,html[data-fsim-layout="qm-legacy"] :is(#btnPlay,#playBtn,#playPauseBtn,#plB)){background-color:var(--color-accent) !important;color:var(--color-text-on-accent) !important;border-color:var(--fsim-play-border) !important;}
+html body :is(#shell-play,#playpause-btn,#btnPlayPause,html[data-fsim-layout="qm-legacy"] :is(#btnPlay,#playBtn,#playPauseBtn,#plB)):hover{background-color:var(--color-accent-hover) !important;}
+html body :is(.shell-header,.top-bar,:where(html[data-fsim-layout="qm-legacy"] :is(.title-bar,.app-header,.header-bar,header.upper-menu,header.sim-header,div.header,body > header))) :is(.shell-divider,.divider,.shell-sep,.hdr-sep){background-color:var(--fsim-topbar-control-border) !important;border-color:var(--fsim-topbar-control-border) !important;}
+/* light-only: the theme switch is hidden (not removed: sim JS still looks it up) */
+html body :is(#shell-theme,#fu-theme,.fu-theme){visibility:hidden !important;}
+
+/* ── stage frame ──────────────────────────────────────────────────────── */
+html body :is(.canvas-frame,.plot-box){background-color:var(--color-surface) !important;}
+html body :is(.release-hint,.rotate-drag-hint,.stage-hint){background-color:var(--fsim-stage-hint-bg) !important;color:var(--color-text) !important;border-color:var(--color-border) !important;}
+
+/* ── sidebar: one light-blue ground; graphs keep their own ─────────────── */
+html body :is(.shell-aside,#sb-sidebar,:where(html[data-fsim-layout="qm-legacy"] :is(aside#rightPanel,.ho-sidebar))){background-color:var(--fsim-sidebar-bg) !important;background-image:none !important;border-color:var(--fsim-sidebar-line) !important;}
+html body :is(.shell-aside,#sb-sidebar,:where(html[data-fsim-layout="qm-legacy"] :is(aside#rightPanel,.ho-sidebar))) *:not(canvas):not(svg):not(svg *):not(input):not(button):not(select):not(.inq-dot):not(.choice):not(.predict-eval):not([class*="dot"]):not([class*="swatch"]):not([class*="chip"]):not([class*="color"]):not([class*="legend"] *):not([style*="background"]):not([class*="graph"] *):not([id*="graph"] *):not([class*="chart"] *):not([id*="chart"] *){
+  background-color:transparent !important;background-image:none !important;}
+html body :is(.shell-aside,#sb-sidebar,:where(html[data-fsim-layout="qm-legacy"] :is(aside#rightPanel,.ho-sidebar))) *{border-color:var(--fsim-sidebar-line) !important;box-shadow:none !important;}
+html body :is(.shell-aside,#sb-sidebar,:where(html[data-fsim-layout="qm-legacy"] :is(aside#rightPanel,.ho-sidebar))){color:var(--color-text) !important;}
+/* v1.2.1: the :not() exemptions below sit inside :where() so they add NO specificity (in 1.0.1-1.2.0 they raised the
+   sidebar helper-text rule above the Guided Inquiry text rule: inquiry paragraphs with class note-text turned faint).
+   v1.0.1: READOUTS (.stat-label, values, *Val ids) and checkboxes skip an element that carries its OWN inline
+   colour: sims colour-code readouts and legend checkboxes on purpose. Plain form labels are still set to ink:
+   their inline colours are dark-theme values (e.g. #e2e8f0) that vanish on the light sidebar (Alice teal / Bella amber, Re / Im curves), and the approved look
+   keeps those colours. Found on SR L12-s0, L12-s2, L19-s2 and QM Time-evolution (2026-10-06). */
+html body :is(.shell-aside,#sb-sidebar,:where(html[data-fsim-layout="qm-legacy"] :is(aside#rightPanel,.ho-sidebar))) :is(h2,h3,h4,h5,.aside-zone-title,.section-title,.panel-title,.panel-controls-title):where(:not([style*="color"])){color:var(--color-text-faint) !important;}
+html body :is(.shell-aside,#sb-sidebar,:where(html[data-fsim-layout="qm-legacy"] :is(aside#rightPanel,.ho-sidebar))) :is(label,.ctrl-box-label,.label,.param-label,.stat-row){color:var(--color-text) !important;}
+html body :is(.shell-aside,#sb-sidebar,:where(html[data-fsim-layout="qm-legacy"] :is(aside#rightPanel,.ho-sidebar))) .stat-label:where(:not([style*="color"])){color:var(--color-text) !important;}
+html body :is(.shell-aside,#sb-sidebar,:where(html[data-fsim-layout="qm-legacy"] :is(aside#rightPanel,.ho-sidebar))) :is(.slider-val,.value,.val,.readout-main,.stat-value,.stat-val,output,.param-value,[id$="Val"],[id$="-val"]):where(:not([style*="color"])){color:var(--color-text) !important;}
+html body :is(.shell-aside,#sb-sidebar,:where(html[data-fsim-layout="qm-legacy"] :is(aside#rightPanel,.ho-sidebar))) :is(.control-range,.readout-sub,.readout-kicker,.hint,.note-text,small):where(:not([style*="color"])){color:var(--color-text-faint) !important;}
+html body :is(.shell-aside,#sb-sidebar,:where(html[data-fsim-layout="qm-legacy"] :is(aside#rightPanel,.ho-sidebar))) :is(button,.shell-btn,select){background-color:var(--fsim-control-bg) !important;background-image:none !important;color:var(--color-text) !important;}
+html body :is(.shell-aside,#sb-sidebar,:where(html[data-fsim-layout="qm-legacy"] :is(aside#rightPanel,.ho-sidebar))) :is(button,.shell-btn):hover{background-color:var(--fsim-control-bg-hover) !important;}
+html body :is(.shell-aside,#sb-sidebar,:where(html[data-fsim-layout="qm-legacy"] :is(aside#rightPanel,.ho-sidebar))) :is(button,.shell-btn):is(.active,.on,.selected,[aria-pressed="true"]){background-color:var(--fsim-selected-bg) !important;color:var(--color-accent-active) !important;border-color:var(--fsim-accent-border) !important;}
+html body :is(.shell-aside,#sb-sidebar,:where(html[data-fsim-layout="qm-legacy"] :is(aside#rightPanel,.ho-sidebar))) :is(#inq-next,.inq-next){background-color:var(--color-accent) !important;color:var(--color-text-on-accent) !important;border-color:var(--color-accent) !important;}
+html body :is(.shell-aside,#sb-sidebar,:where(html[data-fsim-layout="qm-legacy"] :is(aside#rightPanel,.ho-sidebar))) :is(#inq-next,.inq-next):hover{background-color:var(--color-accent-hover) !important;}
+/* ── Unified slider (2026-10-10, owner-approved target: solid thumb, two-tone track) ──
+   Every input[type=range], platform-wide. WebKit: the thumb paints the 8px track line
+   itself (border-image, accent to its left, grey to its right, 100vw each way); the
+   input's mask clips that line to the input with round caps. The inline padding keeps
+   the thumb's travel inside the caps, so the mask never cuts the thumb. Firefox uses
+   ::-moz-range-progress. */
+html body input[type=range]{-webkit-appearance:none !important;appearance:none !important;box-sizing:border-box !important;width:100% !important;height:var(--fsim-slider-thumb) !important;background:transparent !important;border:0 !important;margin:0 !important;padding:0 calc(var(--fsim-slider-track-h) / 2) !important;cursor:pointer !important;accent-color:var(--color-accent) !important;-webkit-mask:linear-gradient(var(--fsim-mask-on) 0 0) center/calc(100% - var(--fsim-slider-track-h)) 100% no-repeat,radial-gradient(closest-side,var(--fsim-mask-on) calc(100% - .5px),var(--fsim-mask-off)) left center/var(--fsim-slider-track-h) var(--fsim-slider-track-h) no-repeat,radial-gradient(closest-side,var(--fsim-mask-on) calc(100% - .5px),var(--fsim-mask-off)) right center/var(--fsim-slider-track-h) var(--fsim-slider-track-h) no-repeat !important;mask:linear-gradient(var(--fsim-mask-on) 0 0) center/calc(100% - var(--fsim-slider-track-h)) 100% no-repeat,radial-gradient(closest-side,var(--fsim-mask-on) calc(100% - .5px),var(--fsim-mask-off)) left center/var(--fsim-slider-track-h) var(--fsim-slider-track-h) no-repeat,radial-gradient(closest-side,var(--fsim-mask-on) calc(100% - .5px),var(--fsim-mask-off)) right center/var(--fsim-slider-track-h) var(--fsim-slider-track-h) no-repeat !important;}
+html body input[type=range]::-webkit-slider-runnable-track{-webkit-appearance:none !important;height:var(--fsim-slider-thumb) !important;background:transparent !important;border:0 !important;border-radius:0 !important;box-shadow:none !important;}
+html body input[type=range]::-webkit-slider-thumb{-webkit-appearance:none !important;width:var(--fsim-slider-thumb) !important;height:var(--fsim-slider-thumb) !important;margin-top:0 !important;border:0 !important;border-radius:50% !important;background:var(--color-accent) !important;box-shadow:none !important;border-image:linear-gradient(90deg,var(--color-accent) 50%,var(--fsim-slider-track) 0) 0 1/calc(50% - var(--fsim-slider-track-h) / 2) 100vw/0 100vw !important;}
+html body input[type=range]::-moz-range-track{height:var(--fsim-slider-track-h) !important;border:0 !important;border-radius:var(--radius-full) !important;background:var(--fsim-slider-track) !important;}
+html body input[type=range]::-moz-range-progress{height:var(--fsim-slider-track-h) !important;border-radius:var(--radius-full) !important;background:var(--color-accent) !important;}
+html body input[type=range]::-moz-range-thumb{width:var(--fsim-slider-thumb) !important;height:var(--fsim-slider-thumb) !important;border:0 !important;border-radius:50% !important;background:var(--color-accent) !important;box-shadow:none !important;}
+html body input[type=range]:disabled{opacity:.45 !important;cursor:not-allowed !important;}
+/* ── Slider stands alone on its line (2026-10-11, owner: golden = label row, slider, numbers below) ──
+   In the sims' horizontal slider rows: anything before the slider goes above it, anything after it
+   (readouts, number boxes, units) goes below it, right-aligned; +/- nudge buttons are removed. */
+html body :is(:is(.ctrl-slider-row,.control-row,.slider,.cg,.ctrl-row,.ctrl-inline,.sim-lab,.stepper-row,.ctrl-section-controls):has(> input[type=range] ~ *),.sl-mini:has(> input[type=range])){flex-wrap:wrap !important;row-gap:6px !important;}
+html body :is(:is(.ctrl-slider-row,.control-row,.slider,.cg,.ctrl-row,.ctrl-inline,.sim-lab,.stepper-row,.ctrl-section-controls):has(> input[type=range] ~ *),.sl-mini:has(> input[type=range])):has(> input[type=range] ~ :not(:is(.pv-step,.fe-step,.btn-nudge,.sim-step,.nudge-btn,.om-step,.lsm-step,.ls-step,.step-btn))){justify-content:flex-end !important;}
+html body :is(:is(.ctrl-slider-row,.control-row,.slider,.cg,.ctrl-row,.ctrl-inline,.sim-lab,.stepper-row,.ctrl-section-controls):has(> input[type=range] ~ *),.sl-mini:has(> input[type=range])) > :has(~ input[type=range]){order:-1 !important;margin-right:auto !important;}
+html body :is(:is(.ctrl-slider-row,.control-row,.slider,.cg,.ctrl-row,.ctrl-inline,.sim-lab,.stepper-row,.ctrl-section-controls):has(> input[type=range] ~ *),.sl-mini:has(> input[type=range])) > input[type=range]{order:0 !important;flex:0 0 100% !important;}
+html body :is(:is(.ctrl-slider-row,.control-row,.slider,.cg,.ctrl-row,.ctrl-inline,.sim-lab,.stepper-row,.ctrl-section-controls):has(> input[type=range] ~ *),.sl-mini:has(> input[type=range])) > input[type=range] ~ *{order:1 !important;}
+html body :is(:is(.ctrl-slider-row,.control-row,.slider,.cg,.ctrl-row,.ctrl-inline,.sim-lab,.stepper-row,.ctrl-section-controls):has(> input[type=range] ~ *),.sl-mini:has(> input[type=range])) > :is(.pv-step,.fe-step,.btn-nudge,.sim-step,.nudge-btn,.om-step,.lsm-step,.ls-step,.step-btn){display:none !important;}
+html body .control-row:has(> :is(#pointCountSlider,#threshSlider)) > label:first-child{order:1 !important;margin-right:auto !important;}
+
+html body :is(.shell-aside,#sb-sidebar,:where(html[data-fsim-layout="qm-legacy"] :is(aside#rightPanel,.ho-sidebar))) input[type=checkbox]:where(:not([style*="accent-color"])){accent-color:var(--color-accent) !important;}
+
+/* ── Guided Inquiry ───────────────────────────────────────────────────── */
+html body :is(#aside-inquiry,#inq-zone,#inq-cards,.inq-zone) .inq-step :is(h3,h4,.inq-title){color:var(--color-text) !important;}
+html body :is(#aside-inquiry,#inq-zone,#inq-cards,.inq-zone) .inq-step :is(p,li){color:var(--color-text-muted) !important;}
+html body :is(#aside-inquiry,#inq-zone,#inq-cards,.inq-zone) .inq-step :is(p,li) b{color:var(--color-text) !important;}
+html body .inq-dot{background-color:var(--fsim-track) !important;}
+html body .inq-dot:is(.active,.done,.on){background-color:var(--color-accent) !important;}
+html body .choice{background-color:var(--fsim-control-bg) !important;color:var(--color-text) !important;}
+html body .choice:hover{background-color:var(--fsim-control-bg-hover) !important;}
+html body .choice.correct{background-color:var(--fsim-ok-bg) !important;border-color:var(--fsim-ok-border) !important;color:var(--fsim-ok-text) !important;}
+html body .choice.wrong{background-color:var(--fsim-bad-bg) !important;border-color:var(--fsim-bad-border) !important;color:var(--fsim-bad-text) !important;}
+html body .predict-eval{background-color:var(--fsim-eval-bg) !important;color:var(--color-text-muted) !important;}
+html body .predict-eval.correct{background-color:var(--fsim-ok-bg) !important;color:var(--color-success-text) !important;border-color:var(--fsim-ok-border-soft) !important;}
+html body .predict-eval.wrong{background-color:var(--fsim-near-bg) !important;color:var(--fsim-near-text) !important;border-color:var(--fsim-near-border) !important;}
+
+/* ── HIDE tab: top-bar navy, white text ──────────────────────────────── */
+html body #sb-hide-tab{background-color:var(--fsim-hide-tab-bg) !important;color:var(--fsim-hide-tab-text) !important;border-color:var(--fsim-hide-tab-bg) !important;box-shadow:var(--fsim-hide-tab-shadow) !important;}
+html body #sb-hide-tab *{color:var(--fsim-hide-tab-text) !important;}
+html body #sb-hide-tab:hover{background-color:var(--fsim-hide-tab-bg-hover) !important;border-color:var(--fsim-hide-tab-bg-hover) !important;}
+
+/* ── The Physics sheet ────────────────────────────────────────────────── */
+html body #phys-backdrop{background-color:var(--fsim-scrim) !important;}
+html body #phys-backdrop .phys-modal{background-color:var(--color-surface) !important;border-color:var(--color-border) !important;box-shadow:var(--shadow-xl) !important;}
+html body #phys-backdrop .lede{color:var(--color-text-muted) !important;background-color:var(--fsim-sheet-tint) !important;border-color:var(--fsim-accent-border) !important;border-left-color:var(--color-accent) !important;}
+html body #phys-backdrop .ps-no{color:var(--color-accent) !important;}
+html body #phys-backdrop .ps-try{border-color:var(--fsim-accent-border) !important;background:var(--fsim-sheet-tint) !important;}
+html body #phys-backdrop .ps-try-tag{background-color:var(--color-accent) !important;}
+html body #phys-backdrop .ps-key{background-color:var(--fsim-sheet-tint) !important;border-color:var(--fsim-accent-border) !important;}
+html body #phys-backdrop #phys-download{background-color:var(--color-surface) !important;color:var(--color-text) !important;}
+html body #phys-backdrop .seesim{background-color:var(--color-accent) !important;color:var(--color-text-on-accent) !important;border-color:var(--color-accent) !important;}
+/* sheet header = the top bar; Download = the Ask-AI pill; one primary (Next) */
+html body #phys-backdrop .phys-head{background:var(--fsim-topbar-bg) !important;border-radius:var(--fsim-sheet-head-radius) !important;
+  box-shadow:var(--fsim-sheet-head-edge) !important;border-bottom-color:var(--fsim-topbar-edge) !important;}
+html body #phys-backdrop .phys-head .phys-title h2{color:var(--fsim-topbar-text) !important;}
+html body #phys-backdrop .phys-head .phys-kicker{color:var(--fsim-topbar-text-quiet) !important;}
+html body #phys-backdrop #phys-download{background-color:var(--color-surface) !important;color:var(--color-text) !important;border-color:var(--color-surface) !important;border-radius:var(--radius-full) !important;box-shadow:none !important;}
+html body #phys-backdrop #phys-download:hover{background-color:var(--color-accent-subtle) !important;}
+html body #phys-backdrop #phys-close{background-color:var(--fsim-sheet-close-bg) !important;color:var(--fsim-topbar-control-text) !important;border-color:var(--fsim-sheet-close-border) !important;box-shadow:none !important;}
+html body #phys-backdrop #phys-close:hover{background-color:var(--fsim-sheet-close-bg-hover) !important;color:var(--fsim-topbar-text) !important;}
+html body #phys-backdrop .gv-oneline{background-color:var(--color-accent-subtle) !important;border-color:var(--fsim-accent-border) !important;border-left-color:var(--color-accent) !important;}
+html body #phys-backdrop .gv-oneline .gv-ok{color:var(--color-accent) !important;}
+html body #phys-backdrop #ps-more{background-color:var(--color-accent-subtle) !important;color:var(--color-accent-active) !important;border-color:var(--fsim-accent-border) !important;}
+html body #phys-backdrop #ps-next{background-color:var(--color-accent) !important;color:var(--color-text-on-accent) !important;border-color:var(--color-accent) !important;}
+html body #phys-backdrop #ps-next:hover{background-color:var(--color-accent-hover) !important;}
+html body #ps-watch{background-color:var(--color-surface) !important;color:var(--color-text) !important;border-color:var(--color-border) !important;box-shadow:var(--shadow-xl) !important;}
+
+/* ── Simulation guide: landing board, tour card, hint, play tip (Horizon cards, Inter) ── */
+html body :is(#gv-start,#gv-tour,#gv-hint,#gv-playtip) *:not(svg):not(svg *):not(.katex):not(.katex *),html body #gv-playtip{font-family:var(--fsim-font-ui) !important;}
+/* the guide layer defines these same variables on these same elements; in the locked look the
+   skin's values WIN, so here they are !important (unlike the re-pointing block at the top) */
+#gv-start,#gv-tour,#gv-free,#gv-playtip,#gv-hint{--chalk:var(--color-text) !important;--chalk2:var(--color-text-muted) !important;--chalk3:var(--color-text-faint) !important;--yellow:var(--color-accent) !important;
+  --hand:var(--fsim-font-ui) !important;--print:var(--fsim-font-ui) !important;}
+html body .gv-board{background:var(--color-surface) !important;color:var(--color-text) !important;border-radius:var(--radius-lg) !important;box-shadow:var(--shadow-xl) !important;border:1px solid var(--color-border) !important;}
+html body .gv-board::before,html body .gv-ledge{display:none !important;}
+html body .gv-board b{color:var(--color-text) !important;font-weight:var(--font-weight-semibold) !important;}
+html body .gv-hand{border:1px solid var(--color-border-strong) !important;border-radius:var(--radius-md) !important;}
+html body #gv-start{background:var(--fsim-guide-backdrop) !important;backdrop-filter:var(--fsim-guide-backdrop-filter) !important;-webkit-backdrop-filter:var(--fsim-guide-backdrop-filter) !important;}
+html body #gv-start .gv-board{width:min(520px,100%) !important;padding:30px 32px 30px !important;}
+html body .gv-kicker{font:500 12px/1 var(--font-mono) !important;letter-spacing:.08em !important;text-transform:uppercase !important;color:var(--color-text-faint) !important;margin-bottom:10px !important;}
+html body #gv-start h2{font:700 30px/1.15 var(--fsim-font-ui) !important;letter-spacing:-.02em !important;color:var(--color-text) !important;}
+html body .gv-underline{display:none !important;}
+html body .gv-blurb{font:400 16px/1.55 var(--fsim-font-ui) !important;color:var(--color-text-muted) !important;margin:12px auto 24px !important;}
+html body .gv-choices{gap:16px !important;align-items:start !important;}
+/* the choice is only a wrapper: its <b> is the button, its <small> the caption under it */
+html body .gv-choice{background:none !important;border:0 !important;box-shadow:none !important;padding:0 !important;gap:8px !important;transform:none !important;border-radius:var(--radius-md) !important;}
+html body .gv-choice:hover,html body .gv-choice:focus-visible{background:none !important;transform:none !important;outline:none !important;}
+html body .gv-choice b{display:block !important;width:100% !important;box-sizing:border-box !important;padding:10px 16px !important;border-radius:var(--radius-sm) !important;font:600 15px/1.2 var(--fsim-font-ui) !important;color:var(--color-accent) !important;background:var(--color-surface) !important;border:1px solid var(--color-accent) !important;box-shadow:var(--fsim-choice-shadow) !important;transition:background .15s,box-shadow .15s,transform .1s !important;}
+html body .gv-choice:hover b{background:var(--color-bg-subtle) !important;box-shadow:var(--fsim-choice-shadow-hover) !important;}
+html body .gv-choice:active b{transform:translateY(1px) !important;}
+html body .gv-choice:focus-visible b{box-shadow:var(--fsim-choice-focus) !important;}
+html body .gv-choice:focus,html body .gv-choice:focus-visible,html body .gv-choice.gv-hand:focus-visible{outline:0 !important;outline-offset:0 !important;box-shadow:none !important;border:0 !important;}
+html body .gv-choice small{font:400 13px/1.3 var(--fsim-font-ui) !important;color:var(--color-text-faint) !important;}
+html body .gv-choice.guide b{background:var(--color-accent) !important;color:var(--color-text-on-accent) !important;border-color:var(--color-accent) !important;box-shadow:var(--fsim-choice-primary-shadow) !important;}
+html body .gv-choice.guide:hover b{background:var(--color-accent-hover) !important;}
+html body .gv-choice.guide small{color:var(--color-text-faint) !important;}
+@media (max-width:480px){html body .gv-choices{gap:14px !important;}}
+/* v1.2.0: the guide MARKS the page controls a step points at (tools/guide_patch.py) and this draws their outlines:
+   one clean outline per control, 1 px out from its rounded box, so controls stacked 8 px apart keep a clear gap
+   (the old hand-drawn paths were padded 3 px and crossed). Shown only while the tour is open. */
+html body .fsim-guide-target{outline:2px solid var(--color-accent) !important;outline-offset:1px !important;}
+html body .fsim-guide-target--sec{outline-style:dashed !important;outline-color:var(--fsim-guide-line-secondary) !important;}
+html body:not(:has(#gv-tour:not([hidden]))) .fsim-guide-target{outline:none !important;}
+/* tour: blue marker lines, no chalk texture */
+html body .gv-chalkline,html body .gv-pointer{filter:none !important;stroke:var(--color-accent) !important;stroke-width:2.5 !important;}
+html body .gv-chalkline.sec{stroke:var(--fsim-guide-line-secondary) !important;stroke-dasharray:6 5 !important;}
+html body .gv-tag{font:600 15px var(--font-mono) !important;fill:var(--color-accent-active) !important;stroke:var(--color-surface) !important;stroke-width:5px !important;}
+html body #gv-card{padding:16px 18px 14px !important;}
+html body .gv-chap{font:500 11.5px/1 var(--font-mono) !important;letter-spacing:.06em !important;text-transform:uppercase !important;color:var(--color-accent) !important;}
+html body .gv-count{font:500 12px/1 var(--font-mono) !important;color:var(--color-text-faint) !important;}
+/* NOTE: locked A renders inactive tally marks transparent (the skin pointed at a token that was never
+   defined). Kept for fidelity; candidate fix for v1.1: background var(--color-bg-muted). */
+html body .gv-tally i{background:transparent !important;transform:none !important;width:14px !important;height:4px !important;border-radius:var(--radius-full) !important;}
+html body .gv-tally i.on{background:var(--color-accent) !important;}
+html body .gv-body h4{font:700 19px/1.25 var(--fsim-font-ui) !important;color:var(--color-text) !important;letter-spacing:-.01em !important;}
+html body #gv-text p{font:400 14.5px/1.55 var(--fsim-font-ui) !important;color:var(--color-text-muted) !important;}
+html body .gv-try{font:500 14px/1.45 var(--fsim-font-ui) !important;color:var(--color-accent-active) !important;background:var(--fsim-selected-bg) !important;border:1px solid var(--fsim-accent-border) !important;border-radius:var(--radius-md) !important;}
+html body .gv-try .gv-tl{font-family:var(--fsim-font-ui) !important;font-weight:var(--font-weight-bold) !important;}
+html body .gv-try.ok{color:var(--fsim-ok-text) !important;background:var(--fsim-ok-bg) !important;border-color:var(--fsim-ok-border-soft) !important;}
+html body .gv-tick path{stroke:var(--fsim-ok-text) !important;}
+html body .gv-cbtn{font:600 13px/1 var(--fsim-font-ui) !important;height:36px !important;padding:0 14px !important;border-radius:var(--radius-sm) !important;color:var(--color-text) !important;background:var(--color-surface) !important;border:1px solid var(--color-border-strong) !important;}
+html body .gv-cbtn:hover{background:var(--color-bg-subtle) !important;transform:none !important;}
+html body .gv-cbtn.primary{background:var(--color-accent) !important;color:var(--color-text-on-accent) !important;border-color:var(--color-accent) !important;}
+html body .gv-cbtn.primary:hover{background:var(--color-accent-hover) !important;}
+html body .gv-textbtn{color:var(--color-text-subtle) !important;font-family:var(--fsim-font-ui) !important;font-size:13.5px !important;}
+html body #gv-close,html body #gv-hint #gv-hint-x{color:var(--color-text-faint) !important;font-family:var(--fsim-font-ui) !important;}
+html body #gv-hint{padding:11px 34px 12px 14px !important;}
+html body #gv-hint p{font:500 14px/1.45 var(--fsim-font-ui) !important;color:var(--color-text) !important;}
+html body #gv-hint p b{color:var(--color-accent-active) !important;font-weight:var(--font-weight-semibold) !important;}
+html body #gv-hint .gv-notch{border-bottom-color:var(--color-border) !important;}
+html body #gv-hint.below .gv-notch{border-top-color:var(--color-border) !important;border-bottom-color:transparent !important;}
+html body #gv-hint.done p{color:var(--fsim-ok-text) !important;}
+html body .gv-kicker,html body .gv-chap,html body .gv-count,html body .gv-tag{font-family:var(--font-mono) !important;}
+html body #gv-voice{font:500 13.5px/1 var(--fsim-font-ui) !important;color:var(--color-text-faint) !important;padding:6px 4px !important;}
+html body #gv-voice:hover{color:var(--color-accent-active) !important;}
+html body #gv-voice[aria-pressed="false"]{color:var(--fsim-guide-voice-off) !important;}
+html body .gv-final #gv-voice{margin-left:2px !important;}
+/* "Press Play to start": a light chip */
+html body #gv-playtip{background:var(--color-surface) !important;color:var(--color-accent-active) !important;font:600 13.5px/1.2 var(--fsim-font-ui) !important;padding:8px 13px !important;border-radius:var(--radius-sm) !important;
+  box-shadow:var(--fsim-playtip-shadow) !important;}
+html body #gv-playtip::before{border-bottom-color:var(--color-surface) !important;filter:var(--fsim-playtip-notch-shadow) !important;}
+
+/* ── focus ring (outline takes no layout space) ──────────────────────── */
+html body :is(button,select,input,a,[tabindex]):focus-visible{outline:2px solid var(--color-focus-ring) !important;outline-offset:2px !important;}
+html body :is(.shell-header,.top-bar,:where(html[data-fsim-layout="qm-legacy"] :is(.title-bar,.app-header,.header-bar,header.upper-menu,header.sim-header,div.header,body > header))) :is(button,select,input,a):focus-visible{outline-color:var(--fsim-topbar-focus) !important;}

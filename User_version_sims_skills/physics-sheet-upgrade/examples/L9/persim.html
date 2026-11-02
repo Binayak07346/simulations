@@ -1,0 +1,95 @@
+<style>
+/* L9 · the sheet's diagram labels, and the sim's own readouts + legend, in light theme */
+.ps-cy{fill:#22d3ee;} .ps-am{fill:#fbbf24;}
+html[data-theme="light"] .ps-cy, body.light-theme .ps-cy{fill:#0e7490;}
+html[data-theme="light"] .ps-am, body.light-theme .ps-am{fill:#b45309;}
+html[data-theme="light"] .readout-main, body.light-theme .readout-main{color:#0e7490;}
+html[data-theme="light"] .readout-row .rv, body.light-theme .readout-row .rv{color:#b45309;}
+html[data-theme="light"] .readout-card.race.danger .rv, body.light-theme .readout-card.race.danger .rv{color:#be123c;}
+html[data-theme="light"] .scene-legend, body.light-theme .scene-legend{background:rgba(255,255,255,.88);color:#334155;}
+</style>
+<script>
+(function(){
+  'use strict';
+  var $=function(id){return document.getElementById(id);};
+  var G=9.81, D2R=Math.PI/180;
+  var mainTh=$('thetaSlider'), mainL=$('lenSlider');
+  function curTh(){return parseInt(mainTh.value,10);}
+  function curL(){return parseFloat(mainL.value);}
+  function fmt(x,d){return (Math.round(x*Math.pow(10,d))/Math.pow(10,d)).toFixed(d);}
+  function agmRatio(th){var a=1,b=Math.cos(th/2);while(Math.abs(a-b)>1e-12){var an=(a+b)/2;b=Math.sqrt(a*b);a=an;}return 1/a;}
+
+  /* ---- live panel in the sheet (#phys-live), two-way bound to the sim's sliders ---- */
+  function refreshLive(){
+    var deg=curTh(), L=curL(), th=deg*D2R;
+    var T0=2*Math.PI*Math.sqrt(L/G), r=agmRatio(th), T=T0*r, pct=(r-1)*100;
+    $('phys-th').value=String(deg); $('phys-l').value=mainL.value;
+    $('phys-th-v').textContent=deg+'\u00b0'; $('phys-l-v').textContent=fmt(L,2)+' m';
+    $('phys-t').innerHTML='Real period at \u03b8\u2080 = '+deg+'\u00b0: <b>'+fmt(T,3)+' s</b>';
+    $('phys-sub').innerHTML='Formula T\u2080 = '+fmt(T0,3)+' s \u00b7 the real swing is '+(pct<0.1?'less than 0.1':fmt(pct,pct<10?1:0))+'% longer';
+  }
+  function pushToSim(el,val){ el.value=val; el.dispatchEvent(new Event('input',{bubbles:true})); refreshLive(); }
+  $('phys-th').addEventListener('input',function(){ pushToSim(mainTh,this.value); });
+  $('phys-l').addEventListener('input',function(){ pushToSim(mainL,this.value); });
+  mainTh.addEventListener('input',refreshLive);
+  mainL.addEventListener('input',refreshLive);
+  window.__psRefresh=refreshLive;
+
+  /* ---- the download's snapshot line (replaces #phys-live in the saved copy) ---- */
+  window.__psSnapshot=function(){
+    var deg=curTh(), L=curL(), r=agmRatio(deg*D2R), T0=2*Math.PI*Math.sqrt(L/G), T=T0*r;
+    return 'Your snapshot when you saved this: <b>\u03b8\u2080 = '+deg+'\u00b0</b>, <b>L = '+fmt(L,2)+' m</b> \u2192 <b>T\u2080 = '+fmt(T0,3)+' s</b>, <b>T = '+fmt(T,3)+' s</b> (\u00d7'+fmt(r,4)+').';
+  };
+
+  /* ---- See-it map: scenes are objects for __physicsHooks.scene; msg is one factual line ---- */
+  function sc(th,extra){
+    var c={theta0Deg:th, L:curL(), ghost:true, everPlayed:true, phase2:true, launch:true, playing:true};
+    for(var k in extra) c[k]=extra[k];
+    return c;
+  }
+  window.__psShow={
+    setup: {scene:function(){return sc(30,{curveOpen:false});}, msg:'Both bobs released from rest at <b>\u03b8\u2080 = 30\u00b0</b>: solid cyan is the real pendulum, dashed amber is the formula.'},
+    race:  {scene:function(){return sc(90,{curveOpen:false});}, panel:'panel-readouts', msg:'The race at <b>\u03b8\u2080 = 90\u00b0</b>. The Readouts panel is open so you can follow the Race card.'},
+    gentle:{scene:function(){return sc(10,{curveOpen:false});}, msg:'A gentle release at <b>\u03b8\u2080 = 10\u00b0</b>.'},
+    curveL:{scene:function(){return sc(curTh(),{curveOpen:true});}, msg:'The T/T\u2080 curve is open. Now drag the <b>length L</b> slider in the sidebar.'},
+    curve: {scene:function(){return sc(curTh(),{curveOpen:true});},
+            msg:function(){return 'The T/T\u2080 curve is open, with a marker at your <b>\u03b8\u2080 = '+curTh()+'\u00b0</b>.';}}
+  };
+  var LIVE='Exact laps=#lapExact|Ghost lead=#lapGhost';
+  /* §06 · the same 2 laps at two lengths, leads side by side */
+  window.__psDemos=window.__psDemos||{};
+  window.__psDemos.lcompare=function(api){
+    var H=window.__physicsHooks; if(!H) return;
+    var rp=$('panel-readouts'), rh=rp&&rp.querySelector('.shell-panel-head'); if(rh&&rp.classList.contains('collapsed')) rh.click();
+    function run(L,done){
+      H.scene({theta0Deg:60, L:L, ghost:true, curveOpen:false, everPlayed:true, phase2:true, playing:true});
+      (function tick(){
+        if(!api.alive()) return;
+        if(parseInt(($('lapExact')||{}).textContent,10)>=2){ if(typeof Shell!=='undefined') Shell.setPlaying(false); done(($('lapGhost')||{}).textContent||'—'); return; }
+        requestAnimationFrame(tick);
+      })();
+    }
+    api.show('Run 1 of 2: <b>L = 1 m</b>, released from 60°…',LIVE);
+    run(1,function(a){
+      api.show('L = 1 m after 2 laps: Ghost lead <b>'+a+'</b>.<br>Run 2 of 2: <b>L = 3 m</b>, released from 60°…',LIVE);
+      run(3,function(b){
+        api.show('After 2 laps at 60°: <b>L = 1 m → '+a+'</b> · <b>L = 3 m → '+b+'</b>. The same lead in swings; the 3 m run just took √3 ≈ 1.7 times longer.',null,true);
+      });
+    });
+  };
+  /* §07 · what your θ₀ would cost a clock timed by T₀ */
+  function clock(){
+    var el=$('ps-clock'), s=$('thetaSlider'); if(!el||!s) return;
+    var d=parseInt(s.value,10), a=1, b=Math.cos(d*Math.PI/360);
+    while(Math.abs(a-b)>1e-12){ var an=(a+b)/2; b=Math.sqrt(a*b); a=an; }
+    var lose=86400*(1-a), txt;   /* a = T₀/T */
+    if(lose<120) txt=Math.round(lose)+' s'; else if(lose<7200) txt=Math.round(lose/60)+' min'; else txt=(lose/3600).toFixed(1)+' h';
+    el.innerHTML='<b>At your θ₀ = '+d+'°</b>, a clock timed by T₀ would lose about <b>'+txt+' a day</b>.';
+  }
+  var ts=$('thetaSlider'); if(ts) ts.addEventListener('input',clock);
+  var pt=$('phys-th'); if(pt) pt.addEventListener('input',clock);
+  var bd=$('phys-backdrop');
+  if(bd) new MutationObserver(function(){ if(bd.classList.contains('open')) clock(); }).observe(bd,{attributes:true,attributeFilter:['class']});
+  clock();
+})();
+</script>

@@ -1,0 +1,71 @@
+<script>
+/* Physics sheet — Guided Inquiry pause (part of the sheet layer; touches nothing else).
+   While a Guided Inquiry is in progress, the "See it in the sim" buttons would drive the sim
+   to states the inquiry has not reached yet, and their toasts would state gated answers.
+   So while the inquiry panel is showing, the buttons are paused and a note says why. In Free
+   Exploration, the Controls Guide, or once the inquiry is finished, the sheet works as before. */
+(function(){
+  'use strict';
+  var backdrop = document.getElementById('phys-backdrop');
+  var art = document.getElementById('phys-art');
+  if (!backdrop || !art) return;
+  function giActive(){ var c = document.getElementById('inq-cards'); return !!(c && c.offsetParent); }
+  var note = document.createElement('div');
+  note.className = 'phys-gi-note';
+  note.setAttribute('role', 'note');
+  note.hidden = true;
+  note.innerHTML = '<b>You’re partway through the Guided Inquiry.</b> This sheet talks through the answers, '
+    + 'so the “See it in the sim” buttons are paused until you finish the inquiry or switch to Free Exploration.';
+  note.style.cssText = 'margin:0 0 16px;padding:10px 14px;border:1px solid rgba(127,127,127,.38);'
+    + 'border-radius:10px;background:rgba(127,127,127,.09);font-size:13.5px;line-height:1.5;color:inherit;';
+  art.parentNode.insertBefore(note, art);
+  function sync(){
+    var on = giActive() && backdrop.classList.contains('open');
+    note.hidden = !on;
+    if (!on && typeof hideHint === 'function') hideHint();
+    Array.prototype.forEach.call(art.querySelectorAll('.seesim'), function(b){
+      b.setAttribute('aria-disabled', on ? 'true' : 'false');
+      b.style.opacity = on ? '0.45' : '';
+      b.style.cursor = on ? 'not-allowed' : '';
+      if (on) b.title = 'Paused during the Guided Inquiry'; else if (b.title === 'Paused during the Guided Inquiry') b.removeAttribute('title');
+    });
+  }
+  new MutationObserver(sync).observe(backdrop, { attributes: true, attributeFilter: ['class'] });
+  document.addEventListener('click', function(e){
+    var b = e.target && e.target.closest ? e.target.closest('#phys-art .seesim') : null;
+    if (!b || !giActive()) return;
+    e.preventDefault(); e.stopImmediatePropagation();
+    sync(); hint(b);   // tell the student right where they clicked; never scroll the sheet
+  }, true);
+  // A small floating hint beside the pressed button. It lives on <body> (outside the sheet's
+  // article, so the downloadable copy never includes it), takes no layout space and ignores the
+  // pointer. It follows its button if the sheet scrolls, and fades after a moment, when the
+  // button leaves the view, or when the sheet closes.
+  var hintEl = null, hintT = 0, hintBtn = null;
+  function hideHint(){ if (hintEl) hintEl.style.opacity = '0'; hintBtn = null; }
+  function place(btn){
+    var r = btn.getBoundingClientRect(), h = hintEl.offsetHeight || 52;
+    if (r.bottom < 0 || r.top > window.innerHeight) { hideHint(); return; }
+    var top = r.bottom + 8; if (top + h > window.innerHeight - 8) top = Math.max(8, r.top - 8 - h);
+    hintEl.style.left = Math.max(8, Math.min(r.left, window.innerWidth - 296)) + 'px';
+    hintEl.style.top = top + 'px';
+  }
+  function hint(btn){
+    if (!hintEl) {
+      hintEl = document.createElement('div');
+      hintEl.className = 'phys-gi-hint';
+      hintEl.setAttribute('role', 'status');
+      hintEl.style.cssText = 'position:fixed;z-index:2147483000;max-width:280px;padding:7px 11px;border-radius:8px;'
+        + 'font-size:12.5px;line-height:1.4;background:rgba(20,24,28,.95);color:#f1f5f4;'
+        + 'box-shadow:0 6px 18px rgba(0,0,0,.3);pointer-events:none;opacity:0;transition:opacity .18s;';
+      hintEl.textContent = 'Paused during the Guided Inquiry. Finish the inquiry or switch to Free Exploration to use this.';
+      document.body.appendChild(hintEl);
+    }
+    hintBtn = btn; place(btn);
+    if (hintBtn) hintEl.style.opacity = '1';
+    clearTimeout(hintT); hintT = setTimeout(hideHint, 2600);
+  }
+  document.addEventListener('scroll', function(){ if (hintBtn) place(hintBtn); }, true);
+  sync();
+})();
+</script>

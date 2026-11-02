@@ -1,0 +1,19 @@
+<script>
+/* Seat the revision sheet below the sim's header. The header outranks the
+   sheet's backdrop in stacking order and grows taller when it wraps on a
+   narrow window, so a fixed top inset lets it cover the sheet's title.
+   Additive: observes the backdrop instead of altering the open/close code. */
+(function(){
+  var b=document.getElementById('phys-backdrop'); if(!b) return;
+  function seat(){
+    if(!b.classList.contains('open')) return;
+    var h=document.querySelector('.shell-header,.top-bar,.title-bar');
+    var t=h?Math.max(64,Math.round(h.getBoundingClientRect().bottom)+8):64;
+    b.style.paddingTop=t+'px';
+    var m=b.querySelector('.phys-modal');
+    if(m) m.style.maxHeight='calc(100vh - '+(t+40)+'px)';
+  }
+  new MutationObserver(seat).observe(b,{attributes:true,attributeFilter:['class']});
+  window.addEventListener('resize',seat);
+})();
+</script>

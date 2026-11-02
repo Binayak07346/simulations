@@ -1,0 +1,411 @@
+{
+ "fonts-dmsans-jbmono.v1.css": {
+  "sims": 68,
+  "exact_sims": 0,
+  "exact_contests": 0,
+  "exact_top": [],
+  "probable_sims": 0,
+  "probable_contests": 0,
+  "probable_top": [],
+  "exact_examples": [],
+  "probable_examples": [],
+  "later_exact_sims": 0,
+  "later_exact_contests": 0,
+  "later_top": [],
+  "later_examples": []
+ },
+ "gv-style.css": {
+  "sims": 116,
+  "exact_sims": 0,
+  "exact_contests": 0,
+  "exact_top": [],
+  "probable_sims": 116,
+  "probable_contests": 116,
+  "probable_top": [
+   [
+    [
+     ".welcome-seg i.on",
+     "background"
+    ],
+    116
+   ]
+  ],
+  "exact_examples": [],
+  "probable_examples": [
+   "Collisions.html: `.welcome-seg i.on` {background} vs `.gv-tally i.on`",
+   "Free-Body Diagram Builder.html: `.welcome-seg i.on` {background} vs `.gv-tally i.on`",
+   "Galperins_Billiard.html: `.welcome-seg i.on` {background} vs `.gv-tally i.on`",
+   "L1-Solar System Orbits.html: `.welcome-seg i.on` {background} vs `.gv-tally i.on`"
+  ],
+  "later_exact_sims": 0,
+  "later_exact_contests": 0,
+  "later_top": [],
+  "later_examples": []
+ },
+ "fonts-dmsans-jbmono.v2.css": {
+  "sims": 16,
+  "exact_sims": 0,
+  "exact_contests": 0,
+  "exact_top": [],
+  "probable_sims": 0,
+  "probable_contests": 0,
+  "probable_top": [],
+  "exact_examples": [],
+  "probable_examples": [],
+  "later_exact_sims": 0,
+  "later_exact_contests": 0,
+  "later_top": [],
+  "later_examples": []
+ },
+ "sheet-v2.v1.css": {
+  "sims": 63,
+  "exact_sims": 63,
+  "exact_contests": 63,
+  "exact_top": [
+   [
+    [
+     ".phys-modal",
+     "width"
+    ],
+    63
+   ]
+  ],
+  "probable_sims": 0,
+  "probable_contests": 0,
+  "probable_top": [],
+  "exact_examples": [
+   "Free-Body Diagram Builder.html: `.phys-modal` {width}",
+   "L16-Friction-in-3d.html: `.phys-modal` {width}",
+   "L17-The damped HO.html: `.phys-modal` {width}",
+   "L2-Newtons-laws.html: `.phys-modal` {width}",
+   "L29-The centrifugal-force-shel: `.phys-modal` {width}"
+  ],
+  "probable_examples": [],
+  "later_exact_sims": 63,
+  "later_exact_contests": 695,
+  "later_top": [
+   [
+    [
+     "#ps-watch",
+     "transition",
+     "shared:sheet-round3.css"
+    ],
+    63
+   ],
+   [
+    [
+     ".phys-body.ps-on",
+     "display",
+     "shared:sheet-round3.css"
+    ],
+    63
+   ],
+   [
+    [
+     ".ps-rail",
+     "margin-bottom",
+     "shared:sheet-round3.css"
+    ],
+    63
+   ],
+   [
+    [
+     ".ps-rail",
+     "padding-bottom",
+     "shared:sheet-round3.css"
+    ],
+    63
+   ],
+   [
+    [
+     "#ps-watch",
+     "left",
+     "shared:sheet-round3.css"
+    ],
+    63
+   ]
+  ],
+  "later_examples": [
+   "Free-Body Diagram Builder.html: later shared:sheet-round3.css `#ps-watch` {transition}",
+   "Free-Body Diagram Builder.html: later shared:sheet-round3.css `.phys-body.ps-on` {display}",
+   "Free-Body Diagram Builder.html: later shared:sheet-round3.css `.ps-rail` {margin-bottom}",
+   "Free-Body Diagram Builder.html: later shared:sheet-round3.css `.ps-rail` {padding-bottom}"
+  ]
+ },
+ "uniform-ui.css": {
+  "sims": 82,
+  "exact_sims": 82,
+  "exact_contests": 165,
+  "exact_top": [
+   [
+    [
+     "#phys-toast",
+     "line-height"
+    ],
+    82
+   ],
+   [
+    [
+     "#ps-watch",
+     "line-height"
+    ],
+    82
+   ],
+   [
+    [
+     ".shell-header > .shell-group",
+     "flex-shrink"
+    ],
+    1
+   ]
+  ],
+  "probable_sims": 3,
+  "probable_contests": 8,
+  "probable_top": [
+   [
+    [
+     ".shell-header .shell-group",
+     "flex-shrink"
+    ],
+    2
+   ],
+   [
+    [
+     ".shell-header .shell-controls",
+     "flex-shrink"
+    ],
+    2
+   ],
+   [
+    [
+     ".shell-header .shell-title",
+     "flex"
+    ],
+    1
+   ],
+   [
+    [
+     ".shell-header .shell-title",
+     "min-width"
+    ],
+    1
+   ],
+   [
+    [
+     ".shell-header .shell-title",
+     "overflow"
+    ],
+    1
+   ]
+  ],
+  "exact_examples": [
+   "Collisions.html: `#phys-toast` {line-height}",
+   "Collisions.html: `#ps-watch` {line-height}",
+   "Free-Body Diagram Builder.html: `#phys-toast` {line-height}",
+   "Free-Body Diagram Builder.html: `#ps-watch` {line-height}",
+   "Galperins_Billiard.html: `#phys-toast` {line-height}"
+  ],
+  "probable_examples": [
+   "Collisions.html: `.shell-header .shell-group` {flex-shrink} vs `.shell-header > .shell-group`",
+   "Collisions.html: `.shell-header .shell-controls` {flex-shrink} vs `.shell-header > .shell-controls`",
+   "Galperins_Billiard.html: `.shell-header .shell-group` {flex-shrink} vs `.shell-header > .shell-group`",
+   "Galperins_Billiard.html: `.shell-header .shell-controls` {flex-shrink} vs `.shell-header > .shell-controls`"
+  ],
+  "later_exact_sims": 0,
+  "later_exact_contests": 0,
+  "later_top": [],
+  "later_examples": []
+ },
+ "ask-euler.v1.css": {
+  "sims": 86,
+  "exact_sims": 0,
+  "exact_contests": 0,
+  "exact_top": [],
+  "probable_sims": 0,
+  "probable_contests": 0,
+  "probable_top": [],
+  "exact_examples": [],
+  "probable_examples": [],
+  "later_exact_sims": 0,
+  "later_exact_contests": 0,
+  "later_top": [],
+  "later_examples": []
+ },
+ "sheet-round3.css": {
+  "sims": 116,
+  "exact_sims": 116,
+  "exact_contests": 1233,
+  "exact_top": [
+   [
+    [
+     "#ps-watch",
+     "transition"
+    ],
+    232
+   ],
+   [
+    [
+     ".ps-pager",
+     "gap"
+    ],
+    116
+   ],
+   [
+    [
+     "#ps-watch",
+     "left"
+    ],
+    116
+   ],
+   [
+    [
+     "#ps-watch",
+     "bottom"
+    ],
+    116
+   ],
+   [
+    [
+     "#ps-watch",
+     "width"
+    ],
+    116
+   ]
+  ],
+  "probable_sims": 0,
+  "probable_contests": 0,
+  "probable_top": [],
+  "exact_examples": [
+   "Collisions.html: `.phys-body.ps-on` {display}",
+   "Collisions.html: `.ps-pager` {gap}",
+   "Collisions.html: `#ps-watch` {left}",
+   "Collisions.html: `#ps-watch` {bottom}",
+   "Collisions.html: `#ps-watch` {width}"
+  ],
+  "probable_examples": [],
+  "later_exact_sims": 0,
+  "later_exact_contests": 0,
+  "later_top": [],
+  "later_examples": []
+ },
+ "sheet-v2.v2.css": {
+  "sims": 10,
+  "exact_sims": 10,
+  "exact_contests": 10,
+  "exact_top": [
+   [
+    [
+     ".phys-modal",
+     "width"
+    ],
+    10
+   ]
+  ],
+  "probable_sims": 0,
+  "probable_contests": 0,
+  "probable_top": [],
+  "exact_examples": [
+   "Collisions.html: `.phys-modal` {width}",
+   "Galperins_Billiard.html: `.phys-modal` {width}",
+   "L1-Solar System Orbits.html: `.phys-modal` {width}",
+   "L30-Coriolis on a Rotating Sph: `.phys-modal` {width}",
+   "L36-Scattering Extension.html: `.phys-modal` {width}"
+  ],
+  "probable_examples": [],
+  "later_exact_sims": 10,
+  "later_exact_contests": 111,
+  "later_top": [
+   [
+    [
+     "#ps-watch",
+     "transition",
+     "shared:sheet-round3.css"
+    ],
+    10
+   ],
+   [
+    [
+     ".phys-body.ps-on",
+     "display",
+     "shared:sheet-round3.css"
+    ],
+    10
+   ],
+   [
+    [
+     ".ps-rail",
+     "margin-bottom",
+     "shared:sheet-round3.css"
+    ],
+    10
+   ],
+   [
+    [
+     ".ps-rail",
+     "padding-bottom",
+     "shared:sheet-round3.css"
+    ],
+    10
+   ],
+   [
+    [
+     "#ps-watch",
+     "left",
+     "shared:sheet-round3.css"
+    ],
+    10
+   ]
+  ],
+  "later_examples": [
+   "Collisions.html: later shared:sheet-round3.css `#ps-watch` {transition}",
+   "Collisions.html: later shared:sheet-round3.css `.phys-body.ps-on` {display}",
+   "Collisions.html: later shared:sheet-round3.css `.ps-rail` {margin-bottom}",
+   "Collisions.html: later shared:sheet-round3.css `.ps-rail` {padding-bottom}"
+  ]
+ },
+ "hide-tab.v1.css": {
+  "sims": 86,
+  "exact_sims": 0,
+  "exact_contests": 0,
+  "exact_top": [],
+  "probable_sims": 0,
+  "probable_contests": 0,
+  "probable_top": [],
+  "exact_examples": [],
+  "probable_examples": [],
+  "later_exact_sims": 0,
+  "later_exact_contests": 0,
+  "later_top": [],
+  "later_examples": []
+ },
+ "ask-euler.v2.css": {
+  "sims": 19,
+  "exact_sims": 0,
+  "exact_contests": 0,
+  "exact_top": [],
+  "probable_sims": 0,
+  "probable_contests": 0,
+  "probable_top": [],
+  "exact_examples": [],
+  "probable_examples": [],
+  "later_exact_sims": 0,
+  "later_exact_contests": 0,
+  "later_top": [],
+  "later_examples": []
+ },
+ "hide-tab.v2.css": {
+  "sims": 18,
+  "exact_sims": 0,
+  "exact_contests": 0,
+  "exact_top": [],
+  "probable_sims": 0,
+  "probable_contests": 0,
+  "probable_top": [],
+  "exact_examples": [],
+  "probable_examples": [],
+  "later_exact_sims": 0,
+  "later_exact_contests": 0,
+  "later_top": [],
+  "later_examples": []
+ }
+}

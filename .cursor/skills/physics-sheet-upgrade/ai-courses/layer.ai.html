@@ -144,6 +144,15 @@
       :document.querySelectorAll('input[type=radio][name="'+m.radio+'"]'))
       .filter(function(e){ return !e.closest('#phys-backdrop'); });
   }
+  /* a button's label for its mirror chip: the button's own markup (sub/superscripts kept),
+     minus any <small> small print and empty decorative spans (colour swatches) */
+  function mainLabel(e){
+    var c=e.cloneNode(true);
+    Array.prototype.forEach.call(c.querySelectorAll('small,.small'),function(n){ n.remove(); });
+    Array.prototype.forEach.call(c.querySelectorAll('span'),function(n){ if(!n.textContent.trim()) n.remove(); });
+    var h=c.innerHTML.replace(/\s+/g,' ').trim();
+    return h||e.textContent.trim();
+  }
   function optVal(m,e){ return m.radio?e.value:(m.value?m.value(e):(e.dataset.value!=null?e.dataset.value:e.textContent.trim())); }
   function keyOf(m){ return m.el||m.key; }
   function readVals(){
@@ -184,7 +193,9 @@
       ctl.setAttribute('data-src', m.group?m.group:'input[type=radio][name="'+m.radio+'"]');
       list.forEach(function(e,i){
         var c=document.createElement('button'); c.type='button'; c.className='phys-chip'; c.setAttribute('data-i',i);
-        c.textContent=m.radio?((e.labels&&e.labels[0]?e.labels[0].textContent:e.value).trim()):e.textContent.trim();
+        if(m.labels&&m.labels[i]) c.textContent=m.labels[i];
+        else if(m.radio) c.textContent=(e.labels&&e.labels[0]?e.labels[0].textContent:e.value).trim();
+        else c.innerHTML=mainLabel(e);
         c.addEventListener('click',function(){ var t=opts(m)[i]; if(t) t.click(); setTimeout(refreshLive,0); });
         ctl.appendChild(c);
         if(!m.radio&&window.MutationObserver) new MutationObserver(refreshLive).observe(e,{attributes:true,attributeFilter:['class','aria-pressed','aria-checked']});
@@ -198,7 +209,8 @@
     var v=readVals();
     MINI.forEach(function(m){
       var k=keyOf(m), c=$('phys-m-'+k), o=$('phys-mv-'+k);
-      if(m.el){ var src=mainEl(m.el); if(c&&src){ if(src.type==='checkbox') c.checked=src.checked; else c.value=src.value; } }
+      if(m.el){ var src=mainEl(m.el); if(c&&src){ if(src.type==='checkbox') c.checked=src.checked;
+        else { if(src.type==='range'&&(c.min!==src.min||c.max!==src.max||c.step!==(src.step||'any'))){ c.min=src.min; c.max=src.max; c.step=src.step||'any'; } c.value=src.value; } } }
       else if(c){ var list=opts(m);
         Array.prototype.forEach.call(c.children,function(ch,i){ var e=list[i], on=!!e&&(m.radio?e.checked:isOn(e));
           ch.classList.toggle('on',on); ch.setAttribute('aria-pressed',on?'true':'false'); }); }

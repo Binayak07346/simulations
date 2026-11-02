@@ -1,0 +1,114 @@
+/* ════════════════════════════════════════════════════════════════════
+ * SIM · feature-scoped tokens for the simulation page chrome
+ * ════════════════════════════════════════════════════════════════════
+ * main-app guidelines §6 "Feature-scoped tokens": a feature that needs
+ * values the root palette has no role for declares them in a block scoped
+ * to a selector it owns. A simulation is a whole document (it runs in its
+ * own page / iframe), so the scope is :root of that document.
+ *
+ * Every value is the locked Horizon "A" look (LOCKED-A.md, 2026-10-05).
+ * Where A differs from a main-app token with the same role, the A value
+ * lives HERE under a --fsim-* name and the main-app token keeps its value;
+ * TOKENS.md lists each divergence for the frontend team to reconcile.
+ * ════════════════════════════════════════════════════════════════════ */
+:root {
+  /* ── Type for Horizon cards in TODAY'S sims ──────────────────────────
+     Every live sim defines its own --font-sans (DM Sans) in unlayered CSS,
+     which beats this sheet's layered --font-sans. The override layer
+     therefore reads this name instead. Once Track R removes the sims' own
+     --font-sans, this becomes var(--font-sans) and can be retired. */
+  --fsim-font-ui: 'Inter Variable', 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+
+  /* ── Top bar · matches the sidebar ground (2026-10-09, owner-approved mock) ── */
+  --fsim-topbar-bg: #eaf1fa;                      /* = --fsim-sidebar-bg */
+  --fsim-topbar-menu-bg: #dde7f5;                 /* <option> rows of a top-bar select; = --fsim-control-bg */
+  --fsim-topbar-edge: rgba(65, 105, 225, 0.35);   /* = --fsim-accent-border */
+  --fsim-topbar-shadow: inset 0 -1px 0 rgba(65, 105, 225, 0.35), 0 2px 10px -6px rgba(14, 42, 72, 0.18);
+  --fsim-topbar-text: #0e2a48;                    /* = --color-text */
+  --fsim-topbar-text-muted: #3a5068;              /* labels, secondary ink */
+  --fsim-topbar-text-faint: #7487a0;
+  --fsim-topbar-text-quiet: #4a5f78;              /* unselected segment buttons */
+  --fsim-topbar-control-text: #17324e;
+  --fsim-topbar-control-bg: rgba(14, 42, 72, 0.06);
+  --fsim-topbar-control-bg-hover: rgba(14, 42, 72, 0.12);
+  --fsim-topbar-control-border: rgba(14, 42, 72, 0.16);
+  --fsim-topbar-segment-bg: rgba(14, 42, 72, 0.04);
+  --fsim-topbar-selected-bg: rgba(65, 105, 225, 0.18);
+  --fsim-topbar-selected-border: rgba(65, 105, 225, 0.55);
+  --fsim-topbar-line: rgba(14, 42, 72, 0.14);
+  --fsim-topbar-accent: #4169e1;                  /* = --color-accent */
+  --fsim-topbar-focus: #4169e1;
+
+  /* ── Ask AI Tutor · the one white pill in the top bar ──────────────── */
+  --fsim-tutor-icon: #6f80dc;
+  --fsim-tutor-icon-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2.1' stroke-linejoin='round'%3E%3Cpath d='M10 5Q10.8 12.2 18 13Q10.8 13.8 10 21Q9.2 13.8 2 13Q9.2 12.2 10 5Z'/%3E%3Cpath d='M19 1.8Q19.4 4.6 22.2 5Q19.4 5.4 19 8.2Q18.6 5.4 15.8 5Q18.6 4.6 19 1.8Z'/%3E%3C/svg%3E");
+
+  /* ── Play · the only royal-blue button ─────────────────────────────── */
+  --fsim-play-border: #6f8ff0;
+
+  /* ── Stage (the simulation window) ─────────────────────────────────── */
+  --fsim-stage-hint-bg: rgba(255, 255, 255, 0.92);
+
+  /* ── Sidebar · one light-blue ground ───────────────────────────────── */
+  --fsim-sidebar-bg: #eaf1fa;
+  --fsim-sidebar-line: #b0c3dd;                   /* box outlines (raised 2026-10-05) */
+  --fsim-control-bg: #dde7f5;                     /* buttons, selects, option rows */
+  --fsim-control-bg-hover: #d2def1;
+  --fsim-selected-bg: #e3eafb;                    /* main app: --color-accent-subtle #edf1fc */
+  --fsim-accent-border: rgba(65, 105, 225, 0.35); /* main app: --color-accent-border at .30 */
+  --fsim-track: #d5e0f3;                          /* inactive dots (NOT the slider track; see --fsim-slider-track) */
+
+  /* ── Slider · unified control design (2026-10-10, owner-approved) ──── */
+  --fsim-slider-track: #efefef;                   /* unfilled portion; filled portion uses --color-accent */
+  --fsim-slider-track-h: 8px;
+  --fsim-slider-thumb: 16px;                      /* = the sims' own thumbs before 1.3.4 (owner, 2026-10-11) */
+  --fsim-mask-on: #000;                           /* mask alpha only, never a visible colour */
+  --fsim-mask-off: transparent;
+
+  /* ── Hide tab · always-navy, independent of the top bar's own light/dark
+         state (2026-10-10: the top bar went light, this tab did not) ──── */
+  --fsim-hide-tab-bg: #1a2461;
+  --fsim-hide-tab-bg-hover: #24307a;
+  --fsim-hide-tab-text: #ffffff;
+  --fsim-hide-tab-shadow: -3px 0 8px -4px rgba(14, 42, 72, 0.18);
+
+  /* ── Answer feedback (Guided Inquiry) ──────────────────────────────── */
+  --fsim-ok-text: #15803d;
+  --fsim-ok-bg: #e9f7ee;
+  --fsim-ok-border: #86efac;
+  --fsim-ok-border-soft: #bbf7d0;
+  --fsim-bad-text: #b42318;
+  --fsim-bad-bg: #fdeceb;
+  --fsim-bad-border: #fecdca;
+  --fsim-near-text: #7a2e0e;                      /* "not quite" prediction */
+  --fsim-near-bg: #fff6e5;
+  --fsim-near-border: #fedf89;
+  --fsim-eval-bg: rgba(255, 255, 255, 0.55);
+
+  /* ── The Physics sheet ─────────────────────────────────────────────── */
+  --fsim-scrim: rgba(14, 42, 72, 0.38);
+  --fsim-sheet-tint: #f1f5fd;
+  --fsim-sheet-head-radius: 12px 12px 0 0;
+  --fsim-sheet-head-edge: inset 0 -1px 0 rgba(99, 132, 230, 0.6);
+  --fsim-sheet-close-bg: rgba(255, 255, 255, 0.08);
+  --fsim-sheet-close-bg-hover: rgba(255, 255, 255, 0.16);
+  --fsim-sheet-close-border: rgba(255, 255, 255, 0.25);
+
+  /* ── Landing (read by the guide engine, tools/flow_patch.py) ───────────
+     direct = no start board: the sim opens ready to explore, with ONE tip at
+     the Simulation guide button (5 s). Any other value, or an older sheet
+     without this token, keeps the start board. Owner + manager, 2026-10-06. */
+  --fsim-landing: direct;
+
+  /* ── Simulation guide (landing board, tour card, hint, play tip) ───── */
+  --fsim-guide-backdrop: rgba(244, 249, 253, 0.55);
+  --fsim-guide-backdrop-filter: blur(10px) saturate(110%);
+  --fsim-guide-line-secondary: #7c96ea;
+  --fsim-guide-voice-off: #94a3b8;
+  --fsim-choice-shadow: 0 1px 2px rgba(14, 42, 72, 0.08);
+  --fsim-choice-shadow-hover: 0 4px 12px -4px rgba(65, 105, 225, 0.35);
+  --fsim-choice-focus: 0 0 0 3px rgba(65, 105, 225, 0.35);
+  --fsim-choice-primary-shadow: 0 6px 16px -6px rgba(65, 105, 225, 0.55);
+  --fsim-playtip-shadow: 0 0 0 1px #d3e0ea, 0 10px 24px -10px rgba(14, 42, 72, 0.3), 0 2px 6px rgba(14, 42, 72, 0.08);
+  --fsim-playtip-notch-shadow: drop-shadow(0 -1px 0 #d3e0ea);
+}

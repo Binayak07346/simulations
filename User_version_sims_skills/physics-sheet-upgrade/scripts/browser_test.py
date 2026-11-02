@@ -42,7 +42,7 @@ def run(path):
     url = 'file://' + os.path.abspath(path)
     fails, errors = [], []
     with sync_playwright() as p:
-        b = p.chromium.launch()
+        b = p.chromium.launch(channel='chrome')
         pg = b.new_page()
         pg.on('console', lambda m: errors.append(m.text) if m.type == 'error' else None)
         pg.on('pageerror', lambda e: errors.append(str(e)))

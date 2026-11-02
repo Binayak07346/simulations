@@ -1144,6 +1144,7 @@ body{background:var(--bg);color:var(--ink);font-family:var(--font-sans);overflow
 .ctrl-box{background:var(--ctrl-bg);border:1px solid var(--ctrl-border);border-radius:5px;padding:12px;margin-bottom:8px;box-sizing:border-box;}
 .ctrl-box:last-child{margin-bottom:0;}
 .ctrl-box--slider{min-height:73px;display:flex;flex-direction:column;justify-content:center;}
+.ctrl-box[hidden]{display:none !important;}
 .ctrl-box-label{display:block;font-size:13px;font-weight:600;color:var(--text);line-height:1.2;}
 .ctrl-box-head{display:flex;align-items:baseline;justify-content:space-between;gap:10px;margin-bottom:8px;}
 .ctrl-box-head .ctrl-box-label{flex:1;min-width:0;}
@@ -1765,7 +1766,7 @@ html.no-voice #inq-voice, html.no-voice #inq-auto, html.no-voice .cg-row-voice, 
       <div class="shell-modal-body"><h3>About this simulation</h3>
 <dl class="shell-info-dl">
   <dt>On screen</dt><dd>Left: the stress-strain curve of the chosen material, stress σ in MPa against strain ε in per cent. The blue curve is faint where the wire has not been and solid where it has; the dot is the wire now. Amber marks appear when the load is released. Middle: a zoom of the start of the curve, strain 0 to 0.3%, with a slope triangle for Young's modulus E. Right: the wire, not to scale, with its load, the weight arrow and two extension gauges.</dd>
-  <dt>Controls</dt><dd>Material fits a new wire of steel, copper, aluminium or glass at its starting load. Wire length L and diameter d change the size of the wire; a change of d keeps the stress, so the load follows the area. Load F moves in steps of 1 MPa of stress; at the breaking load the wire breaks. Release the load takes the load off and puts it back. A broken wire is replaced when the material, L or d is changed.</dd>
+  <dt>Controls</dt><dd>Material fits a new wire of steel, copper, aluminium or glass at its starting load. Wire length L and diameter d change the size of the wire; a change of d keeps the stress, so the load follows the area. Load F moves in steps of 1 MPa of stress; at the breaking load the wire breaks. Release the load takes the load off and puts it back. Load F is shown while the load hangs. A broken wire is replaced when the material is changed or Reset is pressed.</dd>
   <dt>Measured</dt><dd>A = πd²/4, σ = F/A, ε = ΔL/L and ΔL = εL. The curve is a model with illustrative textbook values: the straight line σ = Eε up to the yield stress, a hardening curve up to the maximum stress, and a falling part (necking) to the break.</dd>
 </dl></div>
     </div>
@@ -3657,9 +3658,19 @@ window.Kit = (function () {
   }
   function fitAll() { canvases.forEach(fitCanvas); }
 
+  // showWhen (2026-10-28): a param is shown only while other params have the stated values, e.g. "showWhen": {"meter": "amm"} or
+  // {"meter": ["amm", "volt"], "conv": "conv"}. A hidden control keeps its value; no control ever changes another to make room.
+  function applyShowWhen() {
+    for (const p of manifest().params || []) {
+      if (!p.showWhen || typeof p.showWhen !== 'object') continue;
+      const ok = Object.entries(p.showWhen).every(([k, v]) => (Array.isArray(v) ? v : [v]).map(String).includes(String(P[k])));
+      const el = $('box-' + p.id); if (el && el.hidden === ok) el.hidden = !ok;
+    }
+  }
   function render() {
     if (!SIM || !S) return;
     Q = (SIM.derive ? SIM.derive(S, P, Kit) : {}) || {};
+    applyShowWhen();
     for (const cv of canvases) {
       if (!cv.g) fitCanvas(cv);
       const painter = SIM.paint && SIM.paint[cv.id];
@@ -4184,6 +4195,11 @@ function curvePath(g, v, m, e0, e1, st) {
 }
 function clipTo(g, R, fn) { const c = g.ctx; c.save(); c.beginPath(); c.rect(R.x, R.y, R.w, R.h); c.clip(); try { fn(); } finally { c.restore(); } }
 
+// a control is shown only where it applies (2026-10-28 fix: no control changes another)
+function showOnlyWhere(rules) {
+  for (const id in rules) { const b = document.getElementById('box-' + id); if (b) { b.hidden = !rules[id]; b.style.display = rules[id] ? '' : 'none'; } }
+}
+
 Kit.sim({
   state(p) {
     const m = mat(p), broken = breaks(m, p.load);
@@ -4194,11 +4210,10 @@ Kit.sim({
     const m = mat(p);
     const fresh = () => { kit.setQuiet('load', DEF_LOAD[p.material]); kit.setQuiet('release', false); return 'restart'; };
     if (id === 'material') return fresh();                     // a new wire of this material at its starting load
-    if (id === 'length' || id === 'diameter') return s.broken ? fresh() : 'keep';   // the stress and the history are kept
+    if (id === 'length' || id === 'diameter') return 'keep';   // the stress and the history are kept; a broken wire stays broken (Reset or a material fits a new one)
     if (id === 'load') {
       if (s.broken && source === 'sheet' && !breaks(m, v)) return 'restart';   // a See-it set-up hangs a new wire at that load
       if (s.broken) { kit.setQuiet('load', m.su); return 'keep'; }   // a broken wire stays broken, at its breaking load
-      if (p.release) kit.setQuiet('release', false);           // moving the load hangs it again
       if (breaks(m, v)) { s.broken = true; s.sigMax = m.su; kit.setQuiet('load', m.su); }
       else s.sigMax = Math.max(s.sigMax, stressOf(m, v));
       return 'keep';
@@ -4207,6 +4222,7 @@ Kit.sim({
   },
 
   derive(s, p) {
+    showOnlyWhere({ load: !p.release });       // the load is set while it hangs; Release takes it off and puts it back
     const r = phys(p, s);
     return {
       FText: s.broken ? `broke at ${fmtN(r.Fbreak)}` : fmtN(r.F), sigma: r.sig, epsText: fmtPct(r.eps), dLText: fmtMM(r.dL), E: r.m.E,
