@@ -1,0 +1,4306 @@
+{
+"Fermi_testprep_jee_sims/Module-04-Centre-of-Mass-Momentum-and-Rotation/cm-conical-pendulum.html": {
+"0": [
+"#box-theta",
+"#box-speed"
+],
+"1": [
+"#box-speed"
+],
+"2": [
+"#box-speed"
+],
+"4": [
+"#box-speed"
+]
+},
+"Fermi_testprep_jee_sims/Module-04-Centre-of-Mass-Momentum-and-Rotation/cm-slide-or-topple.html": {
+"1": [
+"#box-mu"
+],
+"4": [
+"#box-mu"
+]
+},
+"Fermi_testprep_jee_sims/Module-04-Centre-of-Mass-Momentum-and-Rotation/cm-wheel-step.html": {},
+"Fermi_testprep_jee_sims/Module-04-Centre-of-Mass-Momentum-and-Rotation/extinguishers-slide-them-and-watch-the-equation-not-move.v2.html": {
+"5": [
+"#bRel"
+]
+},
+"Fermi_testprep_jee_sims/Module-12-EMI-AC-and-EM-Waves/C197-lc-oscillations.html": {
+"0": [
+"#shell-play"
+]
+},
+"Fermi_testprep_jee_sims/Module-13-Optics/C209-the-compound-microscope.html": {
+"2": [
+"#box-fo"
+]
+},
+"Fermi_testprep_jee_sims/Module-10-Current-Electricity/C161-kirchhoffs-laws-schematic.html": {},
+"AI courses sims/astrophysics and cosmology/courses/as-chain-cno-cycle-crossover.html": {
+"1": [
+"#box-T"
+],
+"3": [
+"#box-zIdx",
+"#box-T"
+]
+},
+"AI courses sims/astrophysics and cosmology/courses/as-cluster-age-slider-turn.html": {
+"0": [
+"#box-logAge"
+],
+"1": [
+"#box-logAge"
+],
+"2": [
+"#box-logAge"
+],
+"3": [
+"#box-logAge"
+],
+"4": [
+"#box-logAge"
+]
+},
+"AI courses sims/astrophysics and cosmology/courses/as-colour-index-thermometer-that.html": {
+"0": [
+"#box-logT",
+"#box-delta"
+],
+"1": [
+"#box-logT"
+],
+"2": [
+"#box-logT"
+],
+"3": [
+"#box-logT"
+],
+"4": [
+"#box-logT",
+"#box-delta"
+],
+"5": [
+"#box-logT"
+]
+},
+"AI courses sims/astrophysics and cosmology/courses/as-curve-growth-linear-flat.html": {
+"0": [
+"#box-temperature",
+"#box-damping",
+"#box-logN"
+],
+"1": [
+"#box-logN"
+],
+"2": [
+"#box-logN",
+"#shell-play"
+],
+"3": [
+"#box-logN",
+"#box-temperature"
+],
+"4": [
+"#box-temperature",
+"#box-damping",
+"#box-logN"
+],
+"5": [
+"#box-logN",
+"#box-damping",
+"#box-temperature"
+]
+},
+"AI courses sims/astrophysics and cosmology/courses/as-differential-rotation-seen-sun.html": {
+"0": [
+"#box-curve",
+"#box-dist"
+],
+"1": [
+"#box-lon"
+],
+"3": [
+"#box-dist"
+],
+"4": [
+"#box-dist",
+"#box-curve"
+],
+"5": [
+"#box-curve"
+]
+},
+"AI courses sims/astrophysics and cosmology/courses/as-double-horned-line-tilted.html": {
+"0": [
+"#box-incl",
+"#box-vc",
+"#box-sigma"
+],
+"4": [
+"#box-incl",
+"#box-vc",
+"#box-sigma"
+],
+"5": [
+"#box-incl",
+"#box-vc",
+"#box-sigma"
+]
+},
+"AI courses sims/astrophysics and cosmology/courses/as-eclipsing-binary-light-curve.html": {
+"0": [
+"#box-rs",
+"#box-rl",
+"#box-ts"
+],
+"1": [
+"#box-ts",
+"#box-tl",
+"#shell-play"
+],
+"2": [
+"#box-ts",
+"#box-tl",
+"#shell-play"
+],
+"3": [
+"#box-ts",
+"#box-tl",
+"#shell-play"
+],
+"4": [
+"#box-rs",
+"#box-rl",
+"#box-ts"
+],
+"5": [
+"#box-rs",
+"#shell-play"
+]
+},
+"AI courses sims/astrophysics and cosmology/courses/as-every-galaxy-sees-itself.html": {
+"0": [
+"#box-observer",
+"#box-H0",
+"#box-actions"
+],
+"4": [
+"#box-observer",
+"#box-actions"
+]
+},
+"AI courses sims/astrophysics and cosmology/courses/as-flat-rotation-curve-missing.html": {
+"0": [
+"#box-halo",
+"#box-probe"
+],
+"1": [
+"#box-probe"
+],
+"2": [
+"#box-halo",
+"#box-probe"
+],
+"3": [
+"#box-probe"
+],
+"4": [
+"#box-probe"
+]
+},
+"AI courses sims/astrophysics and cosmology/courses/as-gamow-peak-where-maxwell.html": {
+"0": [
+"#box-reaction",
+"#box-temperature"
+],
+"2": [
+"#box-reaction"
+],
+"3": [
+"#box-temperature"
+],
+"4": [
+"#box-reaction",
+"#box-temperature"
+]
+},
+"AI courses sims/astrophysics and cosmology/courses/as-gravitational-focusing-growing-planet.html": {
+"0": [
+"#box-mass",
+"#box-vInf",
+"#box-b"
+],
+"2": [
+"#box-vInf"
+],
+"3": [
+"#box-vInf"
+],
+"4": [
+"#box-vInf",
+"#box-b"
+],
+"5": [
+"#box-vInf"
+]
+},
+"AI courses sims/astrophysics and cosmology/courses/as-kepler-equation-auxiliary-circle.html": {
+"0": [
+"#box-ecc",
+"#box-time",
+"#shell-play"
+],
+"3": [
+"#box-time",
+"#shell-play"
+],
+"4": [
+"#box-ecc"
+]
+},
+"AI courses sims/astrophysics and cosmology/courses/as-kirchhoff-three-spectra-one.html": {
+"0": [
+"#box-gasTemperature",
+"#box-lineOpticalDepth"
+],
+"1": [
+"#box-gasTemperature"
+],
+"2": [
+"#box-gasTemperature"
+],
+"3": [
+"#box-gasTemperature",
+"#box-lineOpticalDepth"
+],
+"4": [
+"#box-lineOpticalDepth"
+]
+},
+"AI courses sims/astrophysics and cosmology/courses/as-lighthouse-pulsar-tilted-beam.html": {
+"0": [
+"#box-alpha",
+"#box-zeta",
+"#box-rho"
+],
+"3": [
+"#box-alpha",
+"#box-rho",
+"#box-zeta"
+],
+"4": [
+"#box-alpha",
+"#box-zeta",
+"#box-rho"
+]
+},
+"AI courses sims/astrophysics and cosmology/courses/as-limb-darkening-line-sight.html": {
+"0": [
+"#box-bOverR"
+],
+"1": [
+"#box-bOverR"
+],
+"3": [
+"#box-bOverR"
+],
+"4": [
+"#box-bOverR"
+]
+},
+"AI courses sims/astrophysics and cosmology/courses/as-negative-heat-capacity-star.html": {
+"0": [
+"#box-gamma",
+"#box-radiation"
+],
+"1": [
+"#box-radiation"
+],
+"4": [
+"#box-gamma",
+"#box-radiation"
+]
+},
+"AI courses sims/astrophysics and cosmology/courses/as-observing-star-end-end.html": {
+"0": [
+"#box-absMag",
+"#box-logAp",
+"#box-sky"
+],
+"2": [
+"#box-logAp",
+"#box-actions"
+],
+"3": [
+"#box-logD"
+],
+"4": [
+"#box-sky",
+"#box-logD"
+],
+"5": [
+"#box-sky"
+]
+},
+"AI courses sims/astrophysics and cosmology/courses/as-olbers-paradox-how-far.html": {
+"0": [
+"#box-universe",
+"#box-density"
+],
+"1": [
+"#box-density"
+],
+"3": [
+"#box-universe",
+"#box-density",
+"#box-horizon"
+],
+"4": [
+"#box-horizon"
+],
+"5": [
+"#box-horizon",
+"#btn-fill"
+]
+},
+"AI courses sims/astrophysics and cosmology/courses/as-one-energy-minimum-sizes.html": {
+"0": [
+"#box-carrier",
+"#box-mass"
+],
+"1": [
+"#box-mass"
+],
+"2": [
+"#box-mass"
+],
+"3": [
+"#box-mass",
+"#box-carrier"
+],
+"4": [
+"#box-mass"
+]
+},
+"AI courses sims/astrophysics and cosmology/courses/as-one-point-lens-two.html": {
+"0": [
+"#box-logMass",
+"#box-logDL",
+"#box-u0"
+],
+"2": [
+"#box-u0"
+],
+"3": [
+"#box-logMass",
+"#box-logDL",
+"#box-u0"
+]
+},
+"AI courses sims/astrophysics and cosmology/courses/as-pdot-diagram-reading-age.html": {
+"0": [
+"#box-periodS",
+"#box-pDot"
+],
+"1": [
+"#box-periodS",
+"#box-pDot"
+]
+},
+"AI courses sims/astrophysics and cosmology/courses/as-point-mass-gravitational-lens.html": {
+"0": [
+"#box-beta"
+],
+"1": [
+"#box-beta"
+],
+"2": [
+"#box-beta"
+],
+"3": [
+"#box-beta"
+],
+"5": [
+"#box-beta",
+"#box-mass"
+]
+},
+"AI courses sims/astrophysics and cosmology/courses/as-polytropes-integrating-lane-emden.html": {
+"0": [
+"#box-polytropicIndex"
+],
+"1": [
+"#box-polytropicIndex"
+],
+"2": [
+"#box-polytropicIndex"
+],
+"4": [
+"#box-polytropicIndex"
+]
+},
+"AI courses sims/astrophysics and cosmology/courses/as-process-process-chart-nuclides.html": {
+"0": [
+"#box-logN"
+],
+"3": [
+"#box-logN"
+],
+"5": [
+"#box-logN"
+]
+},
+"AI courses sims/astrophysics and cosmology/courses/as-radial-velocity-curves-spectroscopic.html": {
+"0": [
+"#box-m1",
+"#box-m2",
+"#box-ecc"
+],
+"1": [
+"#box-m1"
+],
+"2": [
+"#box-m1",
+"#box-m2",
+"#box-omega"
+],
+"3": [
+"#box-omega"
+],
+"4": [
+"#box-inc"
+]
+},
+"AI courses sims/astrophysics and cosmology/courses/as-same-spectral-class-different.html": {
+"0": [
+"#box-giantRadius",
+"#box-giantMass"
+],
+"2": [
+"#box-giantRadius"
+],
+"4": [
+"#box-giantRadius",
+"#box-giantMass"
+],
+"5": [
+"#box-giantRadius",
+"#box-giantMass"
+]
+},
+"AI courses sims/astrophysics and cosmology/courses/as-schwarzschild-criterion-does-displaced.html": {
+"0": [
+"#box-gamma",
+"#box-gradient"
+],
+"2": [
+"#box-gradient"
+],
+"3": [
+"#box-gradient"
+],
+"4": [
+"#box-gradient"
+],
+"5": [
+"#box-gradient",
+"#box-gamma"
+]
+},
+"AI courses sims/astrophysics and cosmology/courses/as-solar-neutrino-spectrum-three.html": {
+"0": [
+"#box-detector",
+"#box-temp"
+],
+"1": [
+"#box-detector"
+],
+"2": [
+"#box-temp"
+],
+"3": [
+"#box-detector",
+"#box-temp"
+],
+"4": [
+"#box-temp",
+"#box-detector"
+]
+},
+"AI courses sims/astrophysics and cosmology/courses/as-starlight-through-dust-extinction.html": {
+"0": [
+"#box-aV",
+"#box-distance",
+"#box-rV"
+],
+"3": [
+"#box-distance"
+],
+"4": [
+"#box-aV"
+]
+},
+"AI courses sims/astrophysics and cosmology/courses/as-stellar-thermostat-runaway-ideal.html": {
+"0": [
+"#box-core",
+"#box-zeta",
+"#box-surge"
+],
+"1": [
+"#btn-surgeBtn"
+],
+"2": [
+"#box-core",
+"#btn-surgeBtn"
+],
+"3": [
+"#box-surge"
+],
+"4": [
+"#box-surge"
+],
+"5": [
+"#box-core"
+]
+},
+"AI courses sims/astrophysics and cosmology/courses/as-stromgren-sphere-ionised-bubble.html": {
+"0": [
+"#box-ndotExp",
+"#box-nExp"
+],
+"2": [
+"#box-ndotExp"
+],
+"4": [
+"#box-ndotExp",
+"#box-nExp"
+]
+},
+"AI courses sims/astrophysics and cosmology/courses/as-sun-surface-brightness-same.html": {
+"0": [
+"#btn-goEarth"
+],
+"1": [
+"#btn-goEarth"
+],
+"2": [
+"#btn-goEarth"
+],
+"3": [
+"#btn-goEarth"
+],
+"4": [
+"#btn-goEarth"
+]
+},
+"AI courses sims/astrophysics and cosmology/courses/as-tangent-point-method-mapping.html": {
+"0": [
+"#box-model",
+"#box-longitude"
+],
+"3": [
+"#box-longitude",
+"#btn-record"
+],
+"4": [
+"#box-model",
+"#box-longitude"
+],
+"5": [
+"#box-longitude"
+]
+},
+"AI courses sims/astrophysics and cosmology/courses/as-two-dish-radio-interferometer.html": {
+"0": [
+"#btn-drift"
+],
+"1": [
+"#box-theta"
+],
+"2": [
+"#box-baseline"
+],
+"3": [
+"#box-dish"
+],
+"4": [
+"#box-baseline",
+"#box-dish",
+"#box-theta"
+]
+},
+"AI courses sims/astrophysics and cosmology/courses/as-weighing-unseen-companion-mass.html": {
+"0": [
+"#box-fm",
+"#box-incl",
+"#box-m1"
+],
+"3": [
+"#box-m1",
+"#box-incl"
+],
+"4": [
+"#box-fm"
+],
+"5": [
+"#box-fm"
+]
+},
+"AI courses sims/astrophysics and cosmology/courses/as-white-dwarf-cooling-curve.html": {
+"0": [
+"#box-t2",
+"#box-age"
+],
+"1": [
+"#box-age"
+]
+},
+"AI courses sims/astrophysics and cosmology/courses/as-white-dwarf-energy-minimum.html": {
+"0": [
+"#box-regime",
+"#box-mass"
+],
+"1": [
+"#box-mass"
+],
+"2": [
+"#box-mass"
+],
+"3": [
+"#box-mass",
+"#box-regime"
+],
+"4": [
+"#box-mass"
+]
+},
+"AI courses sims/astrophysics and cosmology/courses/as-why-balmer-lines-peak.html": {
+"0": [
+"#box-pressureLog",
+"#box-temperature"
+],
+"2": [
+"#box-temperature"
+],
+"3": [
+"#box-temperature"
+],
+"4": [
+"#box-pressureLog"
+]
+},
+"AI courses sims/electromagnetism/courses/em-bar-magnet-fields.html": {
+"0": [
+"#box-probeZ"
+],
+"1": [
+"#box-probeZ"
+],
+"3": [
+"#box-probeZ"
+]
+},
+"AI courses sims/electromagnetism/courses/em-amperian-loops.html": {
+"0": [
+"#box-arrangement",
+"#box-shape"
+],
+"1": [
+"#box-left",
+"#box-right"
+],
+"2": [
+"#box-arrangement"
+],
+"3": [
+"#box-bottom",
+"#box-top"
+],
+"4": [
+"#box-arrangement",
+"#box-shape",
+"#box-radius"
+],
+"5": [
+"#box-arrangement"
+],
+"6": [
+"#box-arrangement"
+]
+},
+"AI courses sims/electromagnetism/courses/em-capacitor-energy.html": {
+"0": [
+"#box-geometry",
+"#box-separation"
+],
+"1": [
+"#btn-auto"
+],
+"2": [],
+"3": [],
+"4": [
+"#box-separation",
+"#btn-auto"
+],
+"5": [
+"#box-geometry",
+"#btn-auto"
+],
+"6": []
+},
+"AI courses sims/electromagnetism/courses/em-changing-solenoid.html": {
+"0": [
+"#box-rate",
+"#box-radius",
+"#box-probe"
+],
+"1": [
+"#box-rate"
+],
+"2": [
+"#box-probe"
+],
+"3": [
+"#box-probe"
+],
+"4": [
+"#box-radius",
+"#box-probe"
+],
+"5": [
+"#box-probe",
+"#box-ring",
+"#box-rate"
+],
+"6": []
+},
+"AI courses sims/electromagnetism/courses/em-conduction-drift.html": {
+"0": [
+"#box-field",
+"#box-tau",
+"#shell-play"
+],
+"1": [
+"#shell-play"
+],
+"2": [
+"#box-actions",
+"#shell-play"
+],
+"3": [
+"#box-field",
+"#shell-play"
+],
+"4": [
+"#box-field",
+"#shell-play"
+],
+"5": [
+"#box-tau",
+"#shell-play"
+],
+"6": []
+},
+"AI courses sims/electromagnetism/courses/em-disc-field-axis.html": {
+"0": [
+"#btn-build"
+],
+"1": [
+"#box-discRadius",
+"#btn-build",
+"#box-zCm"
+],
+"2": [
+"#btn-build"
+],
+"3": [
+"#box-discRadius",
+"#box-zCm",
+"#btn-build"
+],
+"4": [
+"#box-discRadius",
+"#box-zCm",
+"#btn-build"
+],
+"5": []
+},
+"AI courses sims/electromagnetism/courses/em-divergence-small-box.html": {
+"0": [
+"#box-field",
+"#box-side"
+],
+"1": [
+"#box-side",
+"#box-centreX"
+],
+"2": [
+"#box-field",
+"#box-centreX"
+],
+"3": [
+"#box-field",
+"#box-centreX",
+"#box-side"
+],
+"4": [
+"#box-centreX",
+"#box-side"
+],
+"5": [
+"#box-field",
+"#box-centreX",
+"#box-side"
+],
+"6": []
+},
+"AI courses sims/electromagnetism/courses/em-field-line-bending.html": {
+"0": [
+"#box-field",
+"#box-beta0",
+"#box-k"
+],
+"1": [],
+"2": [],
+"3": [
+"#box-beta0"
+],
+"4": [
+"#box-field",
+"#box-beta0",
+"#box-k"
+],
+"5": [
+"#box-k"
+],
+"6": []
+},
+"AI courses sims/electromagnetism/courses/em-gauss-cones.html": {
+"0": [
+"#box-surface"
+],
+"1": [
+"#box-q2"
+],
+"2": [
+"#box-surface"
+],
+"3": [
+"#box-actions"
+],
+"4": [],
+"5": [
+"#box-surface",
+"#box-q2"
+],
+"6": []
+},
+"AI courses sims/electromagnetism/courses/em-filled-capacitor.html": {
+"0": [
+"#box-relativePermittivity"
+],
+"1": [
+"#box-relativePermittivity"
+],
+"2": [
+"#box-relativePermittivity"
+],
+"3": [
+"#box-plates",
+"#box-relativePermittivity"
+],
+"4": [
+"#box-relativePermittivity"
+],
+"5": []
+},
+"AI courses sims/electromagnetism/courses/em-lc-spring-twin.html": {
+"0": [
+"#box-L",
+"#box-C",
+"#btn-closeSwitch"
+],
+"1": [
+"#btn-closeSwitch"
+],
+"2": [
+"#btn-closeSwitch"
+],
+"3": [
+"#btn-closeSwitch"
+],
+"4": [
+"#box-L",
+"#btn-closeSwitch"
+],
+"5": [
+"#box-L",
+"#box-C",
+"#btn-closeSwitch"
+],
+"6": []
+},
+"AI courses sims/electromagnetism/courses/em-lcr-discharge.html": {
+"0": [
+"#box-resistance",
+"#box-cap",
+"#btn-close"
+],
+"1": [
+"#btn-close"
+],
+"2": [
+"#box-resistance"
+],
+"3": [
+"#box-resistance",
+"#btn-close"
+],
+"4": [
+"#box-resistance"
+],
+"5": [
+"#box-cap",
+"#box-resistance"
+],
+"6": []
+},
+"AI courses sims/electromagnetism/courses/em-lcr-phasor-diagram.html": {
+"0": [
+"#box-omega",
+"#box-resistance",
+"#box-capacitance"
+],
+"1": [
+"#box-omega"
+],
+"2": [
+"#box-omega"
+],
+"3": [
+"#box-omega",
+"#box-actions"
+],
+"4": [
+"#box-resistance",
+"#box-omega"
+],
+"5": [
+"#box-resistance",
+"#box-omega",
+"#box-capacitance"
+],
+"6": []
+},
+"AI courses sims/electromagnetism/courses/em-lcr-resonance-voltages.html": {
+"0": [
+"#box-resistance",
+"#box-meter",
+"#box-omega"
+],
+"1": [
+"#box-omega",
+"#box-meter"
+],
+"2": [
+"#box-meter"
+],
+"3": [
+"#box-meter"
+],
+"4": [
+"#box-resistance",
+"#box-meter"
+],
+"5": [
+"#box-resistance",
+"#box-omega"
+],
+"6": []
+},
+"AI courses sims/electromagnetism/courses/em-line-integral-point-charge.html": {
+"0": [
+"#box-field",
+"#box-path",
+"#btn-clear"
+],
+"1": [
+"#box-path"
+],
+"2": [
+"#box-path"
+],
+"3": [
+"#box-path"
+],
+"4": [
+"#box-path"
+],
+"5": [
+"#box-field"
+],
+"6": []
+},
+"AI courses sims/electromagnetism/courses/em-magnetic-field-between-plates.html": {
+"0": [
+"#box-probe"
+],
+"1": [
+"#box-probe"
+],
+"2": [
+"#box-probe"
+],
+"3": [
+"#box-plate",
+"#box-probe"
+],
+"4": [
+"#box-plate",
+"#box-probe",
+"#box-current"
+],
+"5": [
+"#box-current"
+],
+"6": []
+},
+"AI courses sims/electromagnetism/courses/em-one-loop-two-surfaces.html": {
+"0": [
+"#box-cap"
+],
+"1": [
+"#box-maxwell"
+],
+"2": [
+"#box-cap"
+],
+"3": [
+"#box-area"
+],
+"4": [
+"#box-area",
+"#box-current"
+],
+"5": [
+"#box-current"
+],
+"6": []
+},
+"AI courses sims/electromagnetism/courses/em-magnetised-slab-loops.html": {
+"0": [
+"#box-grid",
+"#box-gradient",
+"#box-view"
+],
+"1": [
+"#box-view"
+],
+"2": [
+"#box-grid"
+],
+"3": [
+"#box-view",
+"#box-grid",
+"#box-gradient"
+],
+"4": [
+"#box-grid"
+],
+"5": [
+"#box-grid"
+],
+"6": []
+},
+"AI courses sims/electromagnetism/courses/em-paddle-wheel-curl.html": {
+"0": [
+"#box-field"
+],
+"1": [
+"#box-wheelX"
+],
+"2": [
+"#box-field",
+"#box-wheelX"
+],
+"3": [
+"#box-wheelX"
+],
+"4": [
+"#box-wheelX"
+],
+"5": []
+},
+"AI courses sims/electromagnetism/courses/em-polarisation-ellipse.html": {
+"0": [
+"#box-e1",
+"#box-e2",
+"#box-psi"
+],
+"1": [
+"#shell-play",
+"#box-psi"
+],
+"2": [
+"#shell-play",
+"#box-psi"
+],
+"3": [
+"#shell-play",
+"#box-psi"
+],
+"4": [
+"#shell-play",
+"#box-psi"
+],
+"5": [
+"#shell-play",
+"#box-e2",
+"#box-psi"
+],
+"6": []
+},
+"AI courses sims/electromagnetism/courses/em-rc-rl-switching.html": {
+"0": [
+"#box-component",
+"#box-resistance",
+"#btn-throw"
+],
+"1": [],
+"2": [
+"#box-component",
+"#box-inductance",
+"#btn-throw"
+],
+"3": [],
+"4": [
+"#box-resistance"
+],
+"5": [
+"#box-component",
+"#box-capacitance"
+],
+"6": []
+},
+"AI courses sims/electromagnetism/courses/em-ring-or-magnet.html": {
+"0": [],
+"1": [],
+"2": [],
+"3": [],
+"4": [],
+"5": [],
+"6": []
+},
+"AI courses sims/electromagnetism/courses/em-rod-on-rails.html": {
+"0": [
+"#btn-run"
+],
+"1": [
+"#btn-run",
+"#btn-pause"
+],
+"2": [],
+"3": [
+"#btn-run"
+],
+"4": [
+"#btn-run"
+],
+"5": []
+},
+"AI courses sims/mathematical methods/courses/ma-alembert-solution-released-pulse.html": {
+"0": [
+"#box-shape",
+"#box-time",
+"#shell-play"
+],
+"1": [
+"#box-time"
+],
+"2": [
+"#box-shape",
+"#box-time"
+],
+"3": [
+"#shell-play"
+],
+"4": [
+"#box-shape",
+"#shell-play"
+],
+"5": []
+},
+"AI courses sims/mathematical methods/courses/ma-central-limit-theorem-sums.html": {
+"0": [
+"#box-parent",
+"#box-termCount"
+],
+"1": [],
+"2": [
+"#box-termCount"
+],
+"3": [
+"#box-parent",
+"#box-termCount"
+],
+"4": [],
+"5": []
+},
+"AI courses sims/mathematical methods/courses/ma-convolution-sliding-overlap-pulse.html": {
+"0": [
+"#box-halfWidth",
+"#box-slidingFunction",
+"#box-shift"
+],
+"1": [
+"#box-shift"
+],
+"2": [
+"#box-shift"
+],
+"3": [
+"#box-shift"
+],
+"4": [
+"#box-halfWidth",
+"#shell-play"
+],
+"5": [
+"#box-halfWidth",
+"#box-slidingFunction",
+"#box-shift"
+],
+"6": [
+"#box-shift",
+"#box-halfWidth",
+"#box-slidingFunction"
+]
+},
+"AI courses sims/mathematical methods/courses/ma-cooling-bar-fine-detail.html": {
+"0": [
+"#box-profile",
+"#box-T2",
+"#shell-play"
+],
+"1": [
+"#box-actions",
+"#shell-play"
+],
+"2": [
+"#box-profile",
+"#box-actions",
+"#shell-play"
+],
+"3": [
+"#box-profile",
+"#box-T2",
+"#shell-play"
+],
+"4": [
+"#box-T2",
+"#box-L",
+"#shell-play"
+],
+"5": [
+"#box-terms",
+"#box-actions",
+"#shell-play"
+],
+"6": []
+},
+"AI courses sims/mathematical methods/courses/ma-curl-paddle-wheel-source.html": {
+"0": [
+"#box-flow"
+],
+"1": [
+"#box-wheelX",
+"#box-wheelY"
+],
+"2": [
+"#box-flow",
+"#box-wheelX",
+"#box-wheelY"
+],
+"3": [
+"#box-flow",
+"#box-wheelX",
+"#box-wheelY"
+],
+"4": [
+"#box-wheelX",
+"#box-wheelY"
+],
+"5": [
+"#box-wheelX",
+"#box-wheelY"
+],
+"6": []
+},
+"AI courses sims/mathematical methods/courses/ma-heat-kernel-flash-heat.html": {
+"0": [
+"#box-timeS"
+],
+"1": [
+"#box-showSnapshots",
+"#box-actions"
+],
+"2": [
+"#box-timeS"
+],
+"3": [
+"#box-timeS",
+"#box-showSnapshots",
+"#box-probeCm"
+],
+"4": [
+"#box-probeCm",
+"#box-timeS"
+],
+"5": []
+},
+"AI courses sims/mathematical methods/courses/ma-hunting-eigenvectors-which-directions.html": {
+"0": [
+"#box-matrix"
+],
+"1": [
+"#box-nu"
+],
+"2": [
+"#box-matrix"
+],
+"3": [
+"#box-theta"
+],
+"4": [
+"#box-matrix",
+"#box-phi"
+],
+"5": [
+"#box-phi"
+],
+"6": []
+},
+"AI courses sims/mathematical methods/courses/ma-one-recurrence-two-directions.html": {
+"0": [],
+"1": [],
+"2": [
+"#btn-step"
+],
+"3": [
+"#btn-step"
+],
+"4": [
+"#btn-step"
+],
+"5": [],
+"6": []
+},
+"AI courses sims/mathematical methods/courses/ma-newton-raphson-follow-tangent.html": {
+"0": [
+"#box-fn",
+"#box-C",
+"#btn-step"
+],
+"1": [
+"#box-fn",
+"#btn-step"
+],
+"2": [
+"#box-fn",
+"#box-x0",
+"#btn-step"
+],
+"3": [
+"#box-fn",
+"#box-x0",
+"#btn-step"
+],
+"4": [
+"#box-fn",
+"#box-x0",
+"#btn-step"
+],
+"5": [
+"#box-x0",
+"#btn-step"
+],
+"6": []
+},
+"AI courses sims/mathematical methods/courses/ma-plucked-string-sum-normal.html": {
+"0": [
+"#box-pluck"
+],
+"1": [
+"#box-pluck"
+],
+"2": [
+"#box-pluck"
+],
+"3": [
+"#box-modes"
+],
+"4": [
+"#box-pluck",
+"#shell-play"
+],
+"5": [
+"#box-time"
+],
+"6": []
+},
+"AI courses sims/mathematical methods/courses/ma-precision-meets-step-size.html": {
+"0": [
+"#box-t",
+"#box-formula",
+"#btn-clear"
+],
+"1": [
+"#box-lh"
+],
+"2": [
+"#box-formula",
+"#box-lh"
+],
+"3": [
+"#box-formula",
+"#btn-sweep",
+"#box-t"
+],
+"4": [
+"#box-t",
+"#box-formula",
+"#box-lh"
+],
+"5": [
+"#box-t",
+"#box-formula",
+"#box-lh"
+],
+"6": []
+},
+"AI courses sims/mathematical methods/courses/ma-radius-convergence-maclaurin-partial.html": {
+"0": [
+"#box-nTerms"
+],
+"1": [
+"#box-nTerms"
+],
+"2": [
+"#box-nTerms"
+],
+"3": [
+"#box-nTerms"
+],
+"4": [
+"#box-nTerms"
+],
+"5": [
+"#box-nTerms"
+],
+"6": []
+},
+"AI courses sims/mathematical methods/courses/ma-radiation-monitor-lab-door.html": {
+"0": [
+"#box-sourceFraction",
+"#box-detectionProbability",
+"#box-backgroundAlarmProbability"
+],
+"1": [
+"#box-crowdSize",
+"#box-actions"
+],
+"2": [
+"#box-detectionProbability"
+],
+"3": [
+"#box-detectionProbability",
+"#box-backgroundAlarmProbability"
+],
+"4": [
+"#box-sourceFraction"
+],
+"5": []
+},
+"AI courses sims/mathematical methods/courses/ma-runge-phenomenon-more-equally.html": {
+"0": [
+"#box-degree"
+],
+"1": [
+"#box-degree"
+],
+"2": [
+"#box-showError",
+"#box-degree"
+],
+"3": [
+"#box-degree"
+],
+"4": [
+"#box-degree"
+],
+"5": []
+},
+"AI courses sims/mathematical methods/courses/ma-same-pulse-two-equations.html": {
+"0": [
+"#box-shape",
+"#box-time"
+],
+"1": [
+"#box-time"
+],
+"2": [
+"#box-time",
+"#box-diffusivity"
+],
+"3": [
+"#box-diffusivity",
+"#box-time",
+"#box-probeX"
+],
+"4": [
+"#box-shape",
+"#box-probeX",
+"#box-time"
+],
+"5": [
+"#box-shape",
+"#box-probeX",
+"#box-time"
+],
+"6": []
+},
+"AI courses sims/mathematical methods/courses/ma-terms-that-vanish-sums.html": {
+"0": [
+"#btn-step"
+],
+"1": [
+"#shell-play"
+],
+"2": [
+"#shell-play"
+],
+"3": [
+"#box-N"
+],
+"4": [],
+"5": []
+},
+"AI courses sims/mathematical methods/courses/ma-square-wave-partial-sums.html": {
+"0": [
+"#box-nTerms",
+"#box-probeX"
+],
+"1": [
+"#box-showTwoTerms",
+"#box-nTerms"
+],
+"2": [
+"#box-nTerms"
+],
+"3": [
+"#box-showTwoTerms",
+"#box-nTerms"
+],
+"4": [
+"#box-nTerms",
+"#box-probeX"
+],
+"5": [
+"#box-nTerms",
+"#box-probeX"
+],
+"6": [
+"#box-probeX"
+]
+},
+"AI courses sims/mathematical methods/courses/ma-two-masses-three-springs.html": {
+"0": [
+"#box-kPrime",
+"#box-shape",
+"#shell-play"
+],
+"1": [
+"#box-shape",
+"#shell-play"
+],
+"2": [
+"#box-kPrime",
+"#shell-play"
+],
+"3": [
+"#box-kPrime",
+"#box-shape",
+"#shell-play"
+],
+"4": [
+"#box-kPrime",
+"#shell-play"
+],
+"5": [
+"#shell-play"
+],
+"6": []
+},
+"AI courses sims/mathematical methods/courses/ma-why-outward-unit-field.html": {
+"0": [],
+"1": [
+"#box-radialDepth"
+],
+"2": [
+"#box-radius"
+],
+"3": [
+"#box-angularWidthDeg"
+],
+"4": [
+"#box-field",
+"#box-radialDepth",
+"#box-angularWidthDeg"
+],
+"5": [
+"#box-field",
+"#box-radialDepth"
+],
+"6": []
+},
+"AI courses sims/thermal and statistical physics/courses/th-carnots-theorem.prebuild.html": {
+"0": [],
+"1": [],
+"2": [
+"#box-eta"
+],
+"3": [
+"#box-eta"
+],
+"4": [
+"#box-arr"
+],
+"5": [
+"#box-th",
+"#box-tc",
+"#box-arr"
+],
+"6": []
+},
+"AI courses sims/thermal and statistical physics/courses/th-carnot-cycle.prebuild.html": {
+"0": [
+"#box-ratio"
+],
+"1": [
+"#box-ratio",
+"#box-gas"
+],
+"2": [
+"#box-gas"
+],
+"3": [
+"#box-ratio",
+"#box-gas"
+],
+"4": [
+"#box-th",
+"#box-tc"
+]
+},
+"AI courses sims/thermal and statistical physics/courses/th-chemical-potential-liquid-vapour.prebuild.html": {
+"0": [],
+"1": [
+"#box-T"
+],
+"2": [
+"#box-p",
+"#box-T"
+],
+"3": [
+"#box-p"
+],
+"4": [
+"#box-p"
+],
+"5": [
+"#box-p"
+]
+},
+"AI courses sims/thermal and statistical physics/courses/th-clausius-clapeyron-equation.prebuild.html": {
+"0": [],
+"1": [
+"#box-lfus",
+"#box-dvfus"
+],
+"2": [
+"#box-lfus",
+"#box-dvfus"
+],
+"3": [],
+"4": [
+"#box-dvfus",
+"#box-lfus"
+]
+},
+"AI courses sims/thermal and statistical physics/courses/th-common-tangent.prebuild.html": {
+"0": [
+"#box-xt"
+],
+"1": [
+"#box-xt"
+],
+"2": [
+"#box-xt"
+],
+"3": [
+"#box-comp"
+],
+"4": [
+"#box-comp"
+],
+"5": [
+"#box-tau"
+]
+},
+"AI courses sims/thermal and statistical physics/courses/th-counting-molecules-half-vessel.prebuild.html": {
+"0": [
+"#shell-play"
+],
+"1": [
+"#box-clear"
+],
+"4": [
+"#box-region"
+],
+"5": [
+"#box-region"
+]
+},
+"AI courses sims/thermal and statistical physics/courses/th-debye-einstein.prebuild.html": {
+"0": [
+"#box-T"
+],
+"1": [
+"#box-T"
+],
+"2": [
+"#box-axes",
+"#box-T"
+],
+"3": [
+"#box-thE",
+"#box-T"
+],
+"4": [
+"#box-T"
+]
+},
+"AI courses sims/thermal and statistical physics/courses/th-diatomic-heat-capacity.prebuild.html": {
+"0": [
+"#box-temp"
+],
+"1": [
+"#box-temp"
+],
+"2": [
+"#box-gas",
+"#box-temp"
+],
+"3": [
+"#box-gas",
+"#box-temp"
+],
+"4": [
+"#box-gas",
+"#box-temp"
+]
+},
+"AI courses sims/thermal and statistical physics/courses/th-effusion.prebuild.html": {
+"1": [
+"#box-clear"
+],
+"2": [
+"#box-clear"
+],
+"3": [
+"#box-T"
+],
+"4": [
+"#box-T",
+"#box-f"
+]
+},
+"AI courses sims/thermal and statistical physics/courses/th-drawing-microstates-fixed-temperature.prebuild.html": {
+"0": [
+"#box-draw"
+],
+"2": [
+"#box-sys",
+"#box-draw"
+],
+"3": [
+"#box-sys",
+"#box-T",
+"#box-draw"
+],
+"4": [
+"#box-T",
+"#box-sys",
+"#box-draw"
+]
+},
+"AI courses sims/thermal and statistical physics/courses/th-equipartition-wells.prebuild.html": {
+"0": [
+"#shell-play"
+],
+"1": [
+"#box-shape"
+],
+"2": [
+"#box-ell"
+],
+"3": [
+"#box-shape",
+"#box-ell"
+],
+"4": [
+"#box-ell",
+"#box-shape"
+]
+},
+"AI courses sims/thermal and statistical physics/courses/th-filling-modes-cavity.prebuild.html": {
+"0": [
+"#box-wc"
+],
+"1": [
+"#box-rule",
+"#box-wc"
+],
+"2": [
+"#box-wc"
+],
+"3": [
+"#box-wc",
+"#box-T"
+]
+},
+"AI courses sims/thermal and statistical physics/courses/th-free-expansion.prebuild.html": {
+"0": [
+"#box-action"
+],
+"1": [
+"#box-process",
+"#box-action"
+],
+"2": [
+"#box-process",
+"#box-action"
+],
+"3": [
+"#box-ratio",
+"#box-action"
+],
+"4": [
+"#box-ratio",
+"#box-process",
+"#box-action"
+]
+},
+"AI courses sims/thermal and statistical physics/courses/th-gas-water-bath.prebuild.html": {
+"0": [
+"#box-ratio",
+"#box-steps",
+"#box-run"
+],
+"1": [
+"#box-steps",
+"#box-run"
+],
+"2": [
+"#box-run"
+],
+"3": [
+"#box-ratio",
+"#box-steps",
+"#box-run"
+],
+"4": [
+"#box-steps"
+]
+},
+"AI courses sims/thermal and statistical physics/courses/th-isotherm-adiabat.prebuild.html": {
+"0": [
+"#box-vol"
+],
+"1": [
+"#box-wall",
+"#box-vol"
+],
+"3": [
+"#box-wall",
+"#box-vol"
+],
+"4": [
+"#box-vol",
+"#box-wall"
+],
+"5": [
+"#box-gas",
+"#box-vol"
+]
+},
+"AI courses sims/thermal and statistical physics/courses/th-gibbs-paradox.prebuild.html": {
+"1": [
+"#box-gas"
+],
+"2": [
+"#box-gas",
+"#box-partition"
+],
+"3": [
+"#box-partition"
+],
+"4": [
+"#box-gas",
+"#box-count"
+],
+"5": [
+"#box-partition"
+]
+},
+"AI courses sims/thermal and statistical physics/courses/th-legendre-transform.prebuild.html": {
+"0": [
+"#box-x"
+],
+"1": [
+"#box-x",
+"#box-sweep"
+],
+"2": [
+"#box-sweep",
+"#box-a"
+],
+"3": [
+"#box-x",
+"#box-f0",
+"#box-sweep"
+],
+"4": [
+"#box-a",
+"#box-sweep",
+"#box-rebuild"
+]
+},
+"AI courses sims/thermal and statistical physics/courses/th-isothermal-atmosphere.prebuild.html": {
+"0": [
+"#box-start"
+],
+"2": [
+"#box-slab"
+],
+"3": [
+"#box-T",
+"#box-slab",
+"#box-m"
+],
+"4": [
+"#box-m",
+"#box-T"
+],
+"5": [
+"#box-m",
+"#box-T"
+]
+},
+"AI courses sims/thermal and statistical physics/courses/th-mean-free-path-molecule.prebuild.html": {
+"0": [
+"#shell-play"
+],
+"1": [
+"#box-pressure"
+],
+"2": [
+"#box-pressure",
+"#box-mode"
+]
+},
+"AI courses sims/thermal and statistical physics/courses/th-mixing-free-energy.prebuild.html": {
+"1": [
+"#box-kt"
+],
+"2": [
+"#box-kt"
+],
+"3": [
+"#box-kt"
+],
+"4": [
+"#box-kt"
+]
+},
+"AI courses sims/thermal and statistical physics/courses/th-molecules-surface.prebuild.html": {
+"0": [
+"#box-mu"
+],
+"1": [
+"#box-T"
+],
+"2": [
+"#box-T",
+"#shell-play",
+"#box-mu"
+],
+"3": [
+"#box-mu",
+"#box-T"
+],
+"4": [
+"#box-M"
+]
+},
+"AI courses sims/thermal and statistical physics/courses/th-negative-temperature.prebuild.html": {
+"0": [
+"#box-energy"
+],
+"1": [
+"#box-energy"
+],
+"2": [
+"#box-energy"
+],
+"3": [
+"#box-energy",
+"#box-block",
+"#box-contact"
+],
+"4": [
+"#box-contact"
+],
+"5": [
+"#box-contact",
+"#box-energy"
+]
+},
+"AI courses sims/thermal and statistical physics/courses/th-oscillator-reservoir.prebuild.html": {
+"0": [
+"#box-u",
+"#box-nr"
+],
+"1": [
+"#box-nr"
+],
+"2": [
+"#box-nr"
+],
+"3": [
+"#box-compare"
+],
+"4": [
+"#box-u"
+]
+},
+"AI courses sims/thermal and statistical physics/courses/th-partition-counting.prebuild.html": {
+"0": [
+"#box-remove"
+],
+"1": [
+"#box-n",
+"#box-remove"
+],
+"3": [
+"#box-n",
+"#box-remove"
+],
+"4": [
+"#box-n",
+"#box-remove"
+],
+"5": [
+"#box-n",
+"#box-remove"
+]
+},
+"AI courses sims/thermal and statistical physics/courses/th-random-walk-one-dimension.prebuild.html": {
+"0": [
+"#shell-play"
+],
+"1": [
+"#shell-play"
+],
+"2": [
+"#shell-play"
+],
+"3": [
+"#box-ell",
+"#shell-play"
+],
+"4": [
+"#box-ell",
+"#box-tau"
+]
+},
+"AI courses sims/thermal and statistical physics/courses/th-sharpness-energy-sharing-peak.prebuild.html": {
+"0": [
+"#box-n1",
+"#box-n2",
+"#shell-play"
+],
+"1": [
+"#box-n1",
+"#box-n2"
+],
+"2": [
+"#box-n1",
+"#box-n2"
+],
+"3": [
+"#box-n1",
+"#box-n2"
+]
+},
+"AI courses sims/thermal and statistical physics/courses/th-shearing-gas-two-plates.prebuild.html": {
+"0": [
+"#box-p"
+],
+"1": [
+"#box-p"
+],
+"2": [
+"#box-p"
+],
+"4": [
+"#box-p",
+"#box-L"
+]
+},
+"AI courses sims/thermal and statistical physics/courses/th-stretching-wire-rubber-band.prebuild.html": {
+"0": [
+"#box-tension"
+],
+"1": [
+"#box-tension"
+],
+"2": [
+"#box-sample",
+"#box-tension"
+],
+"3": [
+"#box-equil"
+],
+"4": [
+"#box-tension"
+],
+"5": [
+"#box-reset-sample",
+"#box-tension"
+]
+},
+"AI courses sims/thermal and statistical physics/courses/th-thermal-wavelength-spacing-molecules.prebuild.html": {
+"0": [
+"#box-example"
+],
+"1": [
+"#box-temp"
+],
+"2": [
+"#box-example",
+"#box-temp",
+"#box-dens"
+],
+"3": [
+"#box-example"
+],
+"4": [
+"#box-example",
+"#box-particle"
+]
+},
+"AI courses sims/thermal and statistical physics/courses/th-two-einstein-solids-sharing.prebuild.html": {
+"0": [
+"#shell-play"
+],
+"1": [
+"#shell-play"
+],
+"2": [
+"#shell-play"
+],
+"3": [
+"#box-qa",
+"#box-qb",
+"#shell-play"
+],
+"4": [
+"#box-qa",
+"#box-qb",
+"#shell-play"
+]
+},
+"AI courses sims/thermal and statistical physics/courses/th-two-level-free-energy.prebuild.html": {
+"0": [
+"#box-p0"
+],
+"1": [
+"#box-w"
+],
+"2": [
+"#box-p0"
+],
+"3": [
+"#box-kT"
+],
+"4": [
+"#box-w",
+"#box-kT"
+]
+},
+"AI courses sims/thermal and statistical physics/courses/th-warming-crystal-two-level.prebuild.html": {
+"0": [
+"#box-warm"
+],
+"1": [
+"#box-warm"
+],
+"2": [
+"#box-temp"
+],
+"3": [
+"#box-warm"
+],
+"4": [
+"#box-temp"
+]
+},
+"AI courses sims/thermal and statistical physics/courses/th-which-way-reaction-runs.prebuild.html": {
+"0": [
+"#box-dphi",
+"#box-xi0",
+"#box-release"
+],
+"1": [
+"#box-xi0",
+"#box-release"
+],
+"2": [
+"#box-dphi",
+"#box-xi0",
+"#box-release"
+],
+"4": [
+"#box-dphi",
+"#box-xi0"
+]
+},
+"AI courses sims/waves and acoustics/courses/wv-antiresonance-coupled.polished.html": {
+"0": [
+"#box-omega"
+],
+"3": [
+"#box-kc",
+"#box-omega"
+],
+"4": [
+"#box-kc",
+"#box-omega",
+"#box-damping"
+]
+},
+"AI courses sims/waves and acoustics/courses/wv-beats-phasor.polished.html": {
+"1": [
+"#shell-play",
+"#box-step"
+],
+"3": [
+"#box-fb"
+]
+},
+"AI courses sims/waves and acoustics/courses/wv-beads-released.polished.html": {
+"1": [
+"#box-run",
+"#box-modes"
+],
+"2": [
+"#box-modes",
+"#box-run"
+],
+"3": [
+"#box-modes",
+"#box-run"
+],
+"4": [
+"#box-run"
+],
+"5": [
+"#box-run"
+]
+},
+"AI courses sims/waves and acoustics/courses/wv-coupled-pendulums.polished.html": {
+"0": [
+"#box-release"
+],
+"1": [
+"#box-kc",
+"#box-release"
+],
+"2": [
+"#box-lii",
+"#box-release"
+],
+"4": [
+"#box-kc",
+"#box-release"
+]
+},
+"AI courses sims/waves and acoustics/courses/wv-damped-phase-plane.polished.html": {
+"0": [
+"#box-damping",
+"#shell-play"
+],
+"1": [
+"#box-restart",
+"#shell-play"
+],
+"2": [
+"#box-damping",
+"#shell-play"
+],
+"3": [
+"#box-damping"
+],
+"4": [
+"#box-damping",
+"#shell-play"
+],
+"5": [
+"#box-restart",
+"#box-damping",
+"#shell-play"
+]
+},
+"AI courses sims/waves and acoustics/courses/wv-duct-modes.polished.html": {
+"0": [
+"#shell-play",
+"#box-mode"
+],
+"1": [
+"#box-freq"
+],
+"2": [
+"#box-freq"
+],
+"3": [
+"#box-freq"
+],
+"4": [
+"#box-mode",
+"#box-freq"
+]
+},
+"AI courses sims/waves and acoustics/courses/wv-end-loads.polished.html": {
+"0": [
+"#box-load"
+],
+"1": [
+"#box-ratio"
+],
+"2": [
+"#box-ratio"
+],
+"3": [
+"#box-load"
+],
+"4": [
+"#box-ratio",
+"#box-load"
+]
+},
+"AI courses sims/waves and acoustics/courses/wv-evanescent-stretch.polished.html": {
+"0": [
+"#box-len"
+],
+"1": [
+"#box-len"
+],
+"2": [
+"#box-len"
+],
+"3": [
+"#box-len",
+"#box-freq"
+],
+"4": [
+"#box-freq",
+"#box-len"
+]
+},
+"AI courses sims/waves and acoustics/courses/wv-fluid-layers-sound.polished.html": {
+"0": [
+"#box-layer"
+],
+"1": [
+"#box-layer",
+"#shell-play"
+],
+"2": [
+"#box-time",
+"#box-step"
+],
+"3": [
+"#box-time",
+"#box-direction"
+]
+},
+"AI courses sims/waves and acoustics/courses/wv-loaded-modes.polished.html": {
+"0": [
+"#box-beads-N",
+"#box-mode-n"
+],
+"1": [
+"#box-mode-n"
+],
+"2": [
+"#box-mode-n"
+],
+"3": [
+"#box-mode-n"
+],
+"4": [
+"#box-beads-N",
+"#box-mode-n"
+],
+"5": [
+"#box-mode-n"
+]
+},
+"AI courses sims/waves and acoustics/courses/wv-launched-pulse.polished.html": {
+"0": [
+"#box-shape",
+"#box-alpha",
+"#box-t-zero"
+],
+"1": [
+"#box-vt"
+],
+"2": [
+"#box-alpha",
+"#shell-play"
+],
+"3": [
+"#shell-play",
+"#box-alpha"
+],
+"4": [
+"#box-shape",
+"#box-alpha",
+"#shell-play"
+]
+},
+"AI courses sims/waves and acoustics/courses/wv-loudspeaker-row.polished.html": {
+"0": [
+"#box-n"
+],
+"1": [
+"#box-dphi"
+],
+"2": [
+"#box-n",
+"#box-dphi"
+],
+"3": [
+"#box-n",
+"#box-dphi"
+],
+"4": [
+"#box-n",
+"#box-dphi"
+],
+"5": [
+"#box-dphi"
+]
+},
+"AI courses sims/waves and acoustics/courses/wv-packet-spreading.polished.html": {
+"0": [
+"#box-string",
+"#box-sigma1",
+"#box-sigma2"
+],
+"1": [
+"#box-sigma2",
+"#box-t-zero",
+"#shell-play"
+],
+"2": [
+"#shell-play"
+],
+"3": [
+"#box-sigma1",
+"#box-sigma2",
+"#box-t-zero"
+],
+"4": [
+"#box-t-zero",
+"#shell-play"
+],
+"5": [
+"#box-string",
+"#box-sigma1",
+"#box-sigma2"
+]
+},
+"AI courses sims/waves and acoustics/courses/wv-phase-group-velocity.polished.html": {
+"0": [
+"#shell-play"
+],
+"1": [
+"#shell-play"
+],
+"2": [
+"#box-t-zero",
+"#shell-play",
+"#box-string"
+],
+"3": [
+"#box-t-zero",
+"#shell-play",
+"#box-kbar"
+],
+"4": [
+"#shell-play",
+"#box-kbar"
+],
+"5": [
+"#shell-play"
+]
+},
+"AI courses sims/waves and acoustics/courses/wv-plucked-string.polished.html": {
+"0": [
+"#box-time"
+],
+"1": [
+"#box-time"
+],
+"2": [
+"#box-time"
+],
+"3": [
+"#box-time"
+],
+"4": [
+"#box-modes"
+],
+"5": [
+"#box-xp",
+"#box-time"
+]
+},
+"AI courses sims/waves and acoustics/courses/wv-pulse-junction.polished.html": {
+"0": [
+"#box-time"
+],
+"2": [
+"#box-shape",
+"#box-time"
+],
+"3": [
+"#box-shape",
+"#box-mu",
+"#box-time"
+],
+"4": [
+"#box-time"
+],
+"5": [
+"#box-time"
+]
+},
+"AI courses sims/waves and acoustics/courses/wv-power-resonance.polished.html": {
+"0": [
+"#box-omega"
+],
+"1": [
+"#box-omega"
+],
+"2": [
+"#box-q",
+"#box-omega"
+],
+"3": [
+"#box-omega"
+],
+"4": [
+"#box-q",
+"#box-mark"
+],
+"5": [
+"#box-q",
+"#box-omega",
+"#box-mark"
+]
+},
+"AI courses sims/waves and acoustics/courses/wv-shaken-string.polished.html": {
+"0": [
+"#box-omega"
+],
+"2": [
+"#box-omega"
+],
+"3": [
+"#box-omega"
+],
+"4": [
+"#box-omega"
+]
+},
+"AI courses sims/waves and acoustics/courses/wv-quarter-wave-match.polished.html": {
+"2": [
+"#box-omega"
+],
+"3": [
+"#box-omega"
+],
+"4": [
+"#box-z2"
+]
+},
+"AI courses sims/waves and acoustics/courses/wv-sound-heat-flow.polished.html": {
+"0": [
+"#box-p",
+"#box-lambda",
+"#box-hold"
+],
+"1": [
+"#box-lambda",
+"#box-hold"
+],
+"2": [
+"#box-lambda",
+"#box-hold"
+],
+"3": [
+"#box-lambda"
+],
+"4": [
+"#box-p",
+"#box-lambda"
+]
+},
+"AI courses sims/waves and acoustics/courses/wv-square-wave-drive.polished.html": {
+"0": [
+"#shell-play"
+],
+"3": [
+"#box-q"
+],
+"4": [
+"#box-wave"
+]
+},
+"AI courses sims/waves and acoustics/courses/wv-string-end-dashpot.polished.html": {
+"0": [
+"#shell-play"
+],
+"1": [
+"#box-bres",
+"#box-mu"
+],
+"2": [
+"#shell-play",
+"#box-freq"
+],
+"3": [
+"#box-shape"
+],
+"4": [
+"#box-mu"
+]
+},
+"AI courses sims/waves and acoustics/courses/wv-vibration-isolation.polished.html": {
+"0": [
+"#box-stiffness",
+"#box-damping",
+"#box-omega"
+],
+"1": [
+"#box-omega"
+],
+"2": [
+"#box-keep",
+"#box-damping"
+],
+"3": [
+"#box-omega",
+"#box-damping"
+],
+"4": [
+"#box-keep",
+"#box-stiffness",
+"#box-omega"
+]
+},
+"AI courses sims/waves and acoustics/courses/wv-wave-energy.polished.html": {
+"1": [
+"#box-x0"
+],
+"2": [
+"#shell-play"
+],
+"3": [
+"#box-t-zero",
+"#shell-play"
+],
+"4": [
+"#box-t-zero",
+"#box-tension"
+],
+"5": [
+"#box-tension",
+"#box-t-zero",
+"#box-x0"
+]
+},
+"Fermi_testprep_jee_sims/Module-01-Kinematics/C021-equations-of-motion-for-uniform-acceleration.html": {
+"0": [
+"#shell-play"
+],
+"2": [
+"#shell-play"
+],
+"3": [
+"#shell-play"
+],
+"4": [
+"#box-u",
+"#box-a"
+]
+},
+"Fermi_testprep_jee_sims/Module-01-Kinematics/C023-reading-x-t-v-t-and-a-t-graphs.html": {
+"0": [
+"#box-v0",
+"#box-a"
+],
+"1": [
+"#shell-play"
+],
+"3": [
+"#box-v0",
+"#box-a",
+"#shell-play"
+],
+"4": [
+"#box-v0",
+"#box-a"
+]
+},
+"Fermi_testprep_jee_sims/Module-01-Kinematics/C024-relative-velocity-in-one-dimension.html": {
+"2": [
+"#box-frame"
+],
+"3": [
+"#box-vB"
+],
+"4": [
+"#box-vA",
+"#box-vB",
+"#box-frame"
+]
+},
+"Fermi_testprep_jee_sims/Module-01-Kinematics/C025-projectile-motion-ground-to-ground--with-air-drag.html": {
+"0": [
+"#box-launch"
+],
+"2": [
+"#box-theta"
+],
+"4": [
+"#box-b",
+"#box-m"
+]
+},
+"Fermi_testprep_jee_sims/Module-01-Kinematics/C025-projectile-motion-ground-to-ground.html": {
+"0": [
+"#btn-launch"
+],
+"2": [
+"#btn-launch"
+],
+"3": [
+"#box-theta"
+]
+},
+"Fermi_testprep_jee_sims/Module-01-Kinematics/C028-relative-velocity-in-2d-river-boat-rain-man.html": {
+"2": [
+"#box-heading"
+]
+},
+"Fermi_testprep_jee_sims/Module-02-Laws-of-Motion-and-Friction/C030-newtons-first-law-and-inertia.html": {
+"0": [
+"#shell-play"
+],
+"2": [
+"#grp-force",
+"#grp-model"
+],
+"3": [
+"#grp-force",
+"#grp-model"
+]
+},
+"Fermi_testprep_jee_sims/Module-02-Laws-of-Motion-and-Friction/C031-newtons-second-law-f-ma.html": {
+"2": [
+"#shell-play",
+"#grp-mass",
+"#grp-model"
+]
+},
+"Fermi_testprep_jee_sims/Module-02-Laws-of-Motion-and-Friction/C032-newtons-third-law-pairs.html": {
+"2": [
+"#shell-play",
+"#grp-mA"
+],
+"3": [
+"#grp-model"
+]
+},
+"Fermi_testprep_jee_sims/Module-02-Laws-of-Motion-and-Friction/C033-free-body-diagrams-the-master-skill.html": {
+"4": [
+"#panel-scenario",
+"#panel-check"
+]
+},
+"Fermi_testprep_jee_sims/Module-02-Laws-of-Motion-and-Friction/C037-static-and-kinetic-friction.html": {
+"0": [
+"#box-F"
+],
+"1": [
+"#shell-play"
+],
+"3": [
+"#box-F",
+"#shell-play",
+"#box-m"
+]
+},
+"Fermi_testprep_jee_sims/Module-02-Laws-of-Motion-and-Friction/C036-pseudo-forces-and-non-inertial-frames.html": {
+"0": [
+"#box-release"
+],
+"4": [
+"#box-frame",
+"#box-release"
+]
+},
+"Fermi_testprep_jee_sims/Module-02-Laws-of-Motion-and-Friction/C041-banking-of-roads.html": {
+"2": [
+"#box-mu"
+],
+"3": [
+"#box-v",
+"#box-theta"
+]
+},
+"Fermi_testprep_jee_sims/Module-02-Laws-of-Motion-and-Friction/C039-motion-on-inclined-planes-with-friction.html": {
+"2": [
+"#shell-play"
+],
+"4": [
+"#mass-box",
+"#actions-box",
+"#frictionWrap"
+]
+},
+"Fermi_testprep_jee_sims/Module-02-Laws-of-Motion-and-Friction/C042-vertical-circular-motion.html": {
+"1": [
+"#shell-play"
+],
+"2": [
+"#box-v",
+"#box-r"
+],
+"3": [
+"#box-v",
+"#box-r"
+]
+},
+"Fermi_testprep_jee_sims/Module-03-Work-Energy-and-Power/C046-work-energy-theorem.html": {
+"0": [
+"#shell-play"
+],
+"2": [
+"#box-angle",
+"#shell-play",
+"#box-force"
+],
+"3": [
+"#box-angle",
+"#box-force"
+],
+"5": [
+"#box-force",
+"#box-angle",
+"#box-mass"
+]
+},
+"Fermi_testprep_jee_sims/Module-03-Work-Energy-and-Power/C051-conservation-of-mechanical-energy.html": {
+"2": [
+"#shell-play"
+],
+"3": [
+"#box-height",
+"#box-mass"
+]
+},
+"Fermi_testprep_jee_sims/Module-03-Work-Energy-and-Power/C053-potential-energy-curves-and-equilibrium-stable-unstable.html": {
+"2": [
+"#shell-play"
+],
+"4": [
+"#box-fate"
+],
+"5": [
+"#speed-rule-box"
+]
+},
+"Fermi_testprep_jee_sims/Module-03-Work-Energy-and-Power/C054-elastic-and-inelastic-collisions-in-1d.html": {
+"3": [
+"#box-elast"
+]
+},
+"Fermi_testprep_jee_sims/Module-03-Work-Energy-and-Power/C054-elastic-and-inelastic-collisions-in-1d--momentum-and-energy.html": {
+"0": [
+"#shell-play"
+],
+"2": [
+"#g-rest"
+],
+"3": [
+"#g-boost"
+],
+"4": [
+"#g-m"
+]
+},
+"Fermi_testprep_jee_sims/Module-04-Centre-of-Mass-Momentum-and-Rotation/C059-impulse-momentum-theorem.html": {
+"0": [
+"#shell-play"
+],
+"2": [
+"#box-dt"
+],
+"4": [
+"#box-w"
+]
+},
+"Fermi_testprep_jee_sims/Module-03-Work-Energy-and-Power/C055-collisions-in-2d-and-coefficient-of-restitution.html": {
+"1": [
+"#shell-play",
+"#box-off"
+],
+"3": [
+"#box-m1",
+"#box-m2"
+]
+},
+"Fermi_testprep_jee_sims/Module-04-Centre-of-Mass-Momentum-and-Rotation/C062-torque-moment-of-force.html": {
+"2": [
+"#box-x"
+]
+},
+"Fermi_testprep_jee_sims/Module-04-Centre-of-Mass-Momentum-and-Rotation/C063-moment-of-inertia-and-radius-of-gyration.html": {
+"0": [
+"#shell-play"
+],
+"2": [
+"#box-d"
+],
+"3": [
+"#box-d",
+"#box-m"
+],
+"4": [
+"#box-m",
+"#box-d"
+]
+},
+"Fermi_testprep_jee_sims/Module-04-Centre-of-Mass-Momentum-and-Rotation/C064-parallel-and-perpendicular-axis-theorems.html": {
+"2": [
+"#box-offset"
+],
+"3": [
+"#box-shape"
+],
+"4": [
+"#box-shape",
+"#box-mass",
+"#box-offset"
+]
+},
+"Fermi_testprep_jee_sims/Module-04-Centre-of-Mass-Momentum-and-Rotation/C067-conservation-of-angular-momentum.html": {
+"2": [
+"#box-arm"
+],
+"3": [
+"#box-arm"
+],
+"4": [
+"#box-arm",
+"#box-w0"
+]
+},
+"Fermi_testprep_jee_sims/Module-04-Centre-of-Mass-Momentum-and-Rotation/C069-rolling-motion-without-slipping.html": {
+"3": [
+"#box-shape"
+],
+"4": [
+"#box-shape",
+"#box-m",
+"#box-v"
+]
+},
+"Fermi_testprep_jee_sims/Module-04-Centre-of-Mass-Momentum-and-Rotation/C070-rolling-on-an-inclined-plane.html": {
+"1": [
+"#shell-play"
+],
+"3": [
+"#box-size",
+"#box-angle"
+]
+},
+"Fermi_testprep_jee_sims/Module-04-Centre-of-Mass-Momentum-and-Rotation/C072-toppling-vs-sliding-combined-equilibrium.html": {
+"0": [
+"#shell-play"
+],
+"2": [
+"#shell-play"
+],
+"3": [
+"#box-ph",
+"#box-w",
+"#box-mu"
+]
+},
+"Fermi_testprep_jee_sims/Module-05-Gravitation/C077-escape-velocity.html": {
+"0": [
+"#shell-play"
+],
+"2": [
+"#shell-play"
+],
+"4": [
+"#box-v0",
+"#box-planet"
+]
+},
+"Fermi_testprep_jee_sims/Module-05-Gravitation/C078-orbital-velocity-and-satellite-time-period.html": {
+"0": [
+"#shell-play"
+],
+"4": [
+"#box-planet"
+]
+},
+"Fermi_testprep_jee_sims/Module-05-Gravitation/C079-geostationary-and-polar-satellites.html": {
+"0": [
+"#shell-play"
+],
+"4": [
+"#box-alt",
+"#box-inc",
+"#box-presets"
+]
+},
+"Fermi_testprep_jee_sims/Module-05-Gravitation/C080-keplers-three-laws.html": {
+"0": [
+"#panel-k12"
+],
+"4": [
+"#panel-k3"
+]
+},
+"Fermi_testprep_jee_sims/Module-05-Gravitation/C080-keplers-three-laws--solar-system.html": {
+"0": [
+"#shell-play"
+]
+},
+"Fermi_testprep_jee_sims/Module-05-Gravitation/C081-energy-of-a-satellite-and-binding-energy.html": {
+"0": [
+"#shell-play"
+],
+"1": [
+"#box-e"
+],
+"2": [
+"#box-e"
+],
+"4": [
+"#box-presets"
+]
+},
+"Fermi_testprep_jee_sims/Module-06-Properties-of-Matter-and-Thermal/C088-buoyancy-and-archimedes-principle.html": {
+"1": [
+"#shell-play"
+],
+"4": [
+"#box-depth",
+"#box-rho-obj"
+]
+},
+"Fermi_testprep_jee_sims/Module-06-Properties-of-Matter-and-Thermal/C090-equation-of-continuity.html": {
+"0": [
+"#shell-play"
+],
+"2": [
+"#box-a2"
+]
+},
+"Fermi_testprep_jee_sims/Module-06-Properties-of-Matter-and-Thermal/C092-viscosity-stokes-law-and-terminal-velocity--raindrop-in-air.html": {
+"2": [
+"#shell-play"
+],
+"4": [
+"#box-mass",
+"#box-drag"
+]
+},
+"Fermi_testprep_jee_sims/Module-06-Properties-of-Matter-and-Thermal/C097-thermal-expansion-linear-areal-volumetric.html": {
+"1": [
+"#box-dT"
+],
+"2": [
+"#box-dT",
+"#box-material"
+]
+},
+"Fermi_testprep_jee_sims/Module-06-Properties-of-Matter-and-Thermal/C099-latent-heat-and-change-of-state.html": {
+"1": [
+"#shell-play"
+],
+"3": [
+"#box-mass"
+]
+},
+"Fermi_testprep_jee_sims/Module-06-Properties-of-Matter-and-Thermal/C100-heat-conduction-steady-state-thermal-resistance.html": {
+"2": [
+"#box-insul",
+"#box-brick"
+]
+},
+"Fermi_testprep_jee_sims/Module-06-Properties-of-Matter-and-Thermal/C103-black-body-radiation-stefan-boltzmann-and-wiens-law.html": {
+"2": [
+"#box-temp"
+],
+"3": [
+"#box-area"
+]
+},
+"Fermi_testprep_jee_sims/Module-07-Kinetic-Theory-and-Thermodynamics/C104-ideal-gas-equation-and-the-gas-laws.html": {
+"1": [
+"#box-heavy"
+],
+"3": [
+"#box-heat"
+],
+"4": [
+"#box-heat"
+]
+},
+"Fermi_testprep_jee_sims/Module-07-Kinetic-Theory-and-Thermodynamics/C106-rms-average-and-most-probable-speeds.html": {
+"1": [
+"#shell-play"
+],
+"3": [
+"#box-gas"
+]
+},
+"Fermi_testprep_jee_sims/Module-07-Kinetic-Theory-and-Thermodynamics/C108-degrees-of-freedom-and-equipartition-of-energy.html": {
+"2": [
+"#box-species"
+],
+"3": [
+"#box-species"
+],
+"4": [
+"#box-temp"
+]
+},
+"Fermi_testprep_jee_sims/Module-07-Kinetic-Theory-and-Thermodynamics/C113-thermodynamic-processes-isothermal-adiabatic-isobaric-isochoric.html": {
+"0": [
+"#box-v2"
+],
+"2": [
+"#box-process",
+"#box-v2"
+]
+},
+"Fermi_testprep_jee_sims/Module-07-Kinetic-Theory-and-Thermodynamics/C118-the-carnot-cycle.html": {
+"0": [
+"#shell-play"
+],
+"2": [
+"#box-th",
+"#box-tc"
+],
+"4": [
+"#box-th",
+"#box-tc"
+]
+},
+"Fermi_testprep_jee_sims/Module-08-Oscillations-and-Waves/C120-shm-defining-relation-and-phasor-picture.html": {
+"2": [
+"#box-a1",
+"#wrap-a2"
+]
+},
+"Fermi_testprep_jee_sims/Module-08-Oscillations-and-Waves/C123-spring-block-systems-series-and-parallel-springs.html": {
+"1": [
+"#shell-play"
+],
+"2": [
+"#box-k2"
+],
+"3": [
+"#box-k1",
+"#box-k2"
+]
+},
+"Fermi_testprep_jee_sims/Module-08-Oscillations-and-Waves/C124-the-simple-pendulum.html": {
+"5": [
+"#box-len"
+]
+},
+"Fermi_testprep_jee_sims/Module-08-Oscillations-and-Waves/C126-damped-oscillations--three-regimes.html": {},
+"Fermi_testprep_jee_sims/Module-08-Oscillations-and-Waves/C127-forced-oscillations-and-resonance.html": {},
+"Fermi_testprep_jee_sims/Module-08-Oscillations-and-Waves/C132-principle-of-superposition.html": {
+"2": [
+"#shell-play",
+"#box-amp-right"
+]
+},
+"Fermi_testprep_jee_sims/Module-08-Oscillations-and-Waves/C134-standing-waves-on-strings-and-harmonics.html": {},
+"Fermi_testprep_jee_sims/Module-08-Oscillations-and-Waves/C135-standing-waves-in-air-columns-open-and-closed-pipes.html": {},
+"Fermi_testprep_jee_sims/Module-08-Oscillations-and-Waves/C136-beats.html": {
+"3": [
+"#box-f2"
+]
+},
+"Fermi_testprep_jee_sims/Module-08-Oscillations-and-Waves/C137-the-doppler-effect-sound.html": {
+"0": [
+"#box-vs"
+],
+"1": [
+"#box-vs",
+"#box-vo"
+],
+"2": [
+"#box-vs",
+"#box-vo"
+],
+"3": [
+"#box-vs"
+]
+},
+"Fermi_testprep_jee_sims/Module-09-Electrostatics/C139-electric-charge-quantisation-and-coulombs-law.html": {
+"3": [
+"#box-q2",
+"#box-q1"
+]
+},
+"Fermi_testprep_jee_sims/Module-09-Electrostatics/C140-electric-field-and-field-lines.html": {
+"2": [
+"#box-sign"
+]
+},
+"Fermi_testprep_jee_sims/Module-09-Electrostatics/C142-electric-dipole-and-its-field.html": {
+"2": [
+"#box-r"
+],
+"4": [
+"#box-r"
+]
+},
+"Fermi_testprep_jee_sims/Module-09-Electrostatics/C143-dipole-in-a-uniform-field-torque-and-energy.html": {
+"1": [
+"#shell-play"
+],
+"3": [
+"#box-theta",
+"#shell-play"
+],
+"4": [
+"#box-E",
+"#box-p",
+"#box-theta"
+]
+},
+"Fermi_testprep_jee_sims/Module-09-Electrostatics/C144-electric-flux-and-gausss-law.html": {
+"2": [
+"#box-R"
+],
+"4": [
+"#box-d"
+]
+},
+"Fermi_testprep_jee_sims/Module-09-Electrostatics/C148-relation-between-field-and-potential-gradient.html": {
+"3": [
+"#box-q"
+]
+},
+"Fermi_testprep_jee_sims/Module-09-Electrostatics/C149-equipotential-surfaces.html": {
+"3": [
+"#box-q2",
+"#box-level"
+]
+},
+"Fermi_testprep_jee_sims/Module-09-Electrostatics/C152-capacitors-in-series-and-parallel.html": {
+"1": [
+"#shell-play"
+],
+"3": [
+"#box-c2"
+]
+},
+"Fermi_testprep_jee_sims/Module-09-Electrostatics/C154-dielectrics-polarisation-and-capacitance-change.html": {
+"2": [
+"#box-ins"
+],
+"3": [
+"#box-ins"
+],
+"4": [
+"#box-batt"
+]
+},
+"Fermi_testprep_jee_sims/Module-10-Current-Electricity/C156-electric-current-drift-velocity-and-mobility.html": {
+"2": [
+"#box-field"
+],
+"3": [
+"#box-cur",
+"#box-rad"
+]
+},
+"Fermi_testprep_jee_sims/Module-10-Current-Electricity/C157-ohms-law-and-resistance.html": {
+"2": [
+"#box-volt"
+],
+"4": [
+"#box-res"
+]
+},
+"Fermi_testprep_jee_sims/Module-10-Current-Electricity/C160-emf-internal-resistance-and-terminal-voltage.html": {
+"2": [
+"#box-R"
+]
+},
+"Fermi_testprep_jee_sims/Module-10-Current-Electricity/C159-resistors-in-series-and-parallel.html": {
+"4": [
+"#box-r1",
+"#box-r2"
+]
+},
+"Fermi_testprep_jee_sims/Module-10-Current-Electricity/C166-rc-circuits-charging-and-discharging.html": {},
+"Fermi_testprep_jee_sims/Module-10-Current-Electricity/C161-kirchhoffs-laws.html": {},
+"Fermi_testprep_jee_sims/Module-11-Magnetic-Effects-and-Magnetism/C169-charged-particle-in-a-magnetic-field-circular-and-helical.html": {
+"2": [
+"#box-v"
+]
+},
+"Fermi_testprep_jee_sims/Module-11-Magnetic-Effects-and-Magnetism/C170-the-cyclotron.html": {},
+"Fermi_testprep_jee_sims/Module-11-Magnetic-Effects-and-Magnetism/C171-force-on-a-current-carrying-conductor.html": {
+"1": [
+"#box-theta"
+],
+"2": [
+"#box-current",
+"#box-field"
+]
+},
+"Fermi_testprep_jee_sims/Module-11-Magnetic-Effects-and-Magnetism/C173-torque-on-a-current-loop-magnetic-moment.html": {},
+"Fermi_testprep_jee_sims/Module-11-Magnetic-Effects-and-Magnetism/C175-field-due-to-a-straight-wire-and-a-circular-loop.html": {},
+"Fermi_testprep_jee_sims/Module-12-EMI-AC-and-EM-Waves/C183-magnetic-flux-and-faradays-law.html": {},
+"Fermi_testprep_jee_sims/Module-12-EMI-AC-and-EM-Waves/C185-motional-emf.html": {
+"3": [
+"#box-v",
+"#box-b"
+]
+},
+"Fermi_testprep_jee_sims/Module-12-EMI-AC-and-EM-Waves/C190-growth-and-decay-of-current-in-an-lr-circuit.html": {},
+"Fermi_testprep_jee_sims/Module-12-EMI-AC-and-EM-Waves/C192-ac-through-r-l-and-c-separately.html": {
+"3": [
+"#box-omega"
+]
+},
+"Fermi_testprep_jee_sims/Module-12-EMI-AC-and-EM-Waves/C193-series-lcr-circuit-and-impedance.html": {},
+"Fermi_testprep_jee_sims/Module-12-EMI-AC-and-EM-Waves/C194-resonance-in-a-series-lcr-circuit.html": {
+"2": [
+"#box-omega"
+],
+"3": [
+"#box-omega"
+],
+"4": [
+"#box-R"
+]
+},
+"Fermi_testprep_jee_sims/Module-12-EMI-AC-and-EM-Waves/C198-displacement-current.html": {
+"2": [
+"#box-current"
+],
+"3": [
+"#box-maxwell",
+"#box-current"
+]
+},
+"Fermi_testprep_jee_sims/Module-12-EMI-AC-and-EM-Waves/C199-electromagnetic-waves-nature-and-properties.html": {
+"1": [
+"#box-freq"
+],
+"3": [
+"#box-e0"
+]
+},
+"Fermi_testprep_jee_sims/Module-13-Optics/C202-spherical-mirrors-and-the-mirror-formula.html": {
+"2": [
+"#box-u"
+],
+"4": [
+"#box-u"
+]
+},
+"Fermi_testprep_jee_sims/Module-13-Optics/C203-refraction-and-snells-law.html": {
+"2": [
+"#box-theta"
+],
+"3": [
+"#box-depth"
+],
+"4": [
+"#box-theta"
+]
+},
+"Fermi_testprep_jee_sims/Module-13-Optics/C204-total-internal-reflection-and-applications.html": {
+"0": [
+"#box-theta"
+],
+"3": [
+"#box-theta"
+],
+"4": [
+"#box-n1",
+"#box-n2",
+"#box-theta"
+],
+"5": [
+"#box-n1",
+"#box-n2",
+"#box-theta"
+]
+},
+"Fermi_testprep_jee_sims/Module-13-Optics/C206-thin-lens-formula-and-lensmakers-equation.html": {
+"1": [
+"#box-u"
+],
+"4": [
+"#box-R",
+"#box-n"
+]
+},
+"Fermi_testprep_jee_sims/Module-13-Optics/C208-prism-deviation-and-dispersion.html": {
+"1": [
+"#shell-play",
+"#box-i"
+],
+"4": [
+"#box-i",
+"#box-A",
+"#box-source"
+]
+},
+"Fermi_testprep_jee_sims/Module-13-Optics/C210-the-astronomical-and-terrestrial-telescope.html": {},
+"Fermi_testprep_jee_sims/Module-13-Optics/C213-interference-and-youngs-double-slit-experiment.html": {},
+"Fermi_testprep_jee_sims/Module-13-Optics/C215-single-slit-diffraction.html": {
+"1": [
+"#box-slit"
+],
+"3": [
+"#box-wl"
+],
+"4": [
+"#box-slit",
+"#box-wl"
+]
+},
+"Fermi_testprep_jee_sims/Module-13-Optics/C216-resolving-power-of-instruments.html": {
+"1": [
+"#box-D"
+],
+"2": [
+"#box-D"
+]
+},
+"Fermi_testprep_jee_sims/Module-13-Optics/C217-polarisation-and-maluss-law.html": {
+"3": [
+"#box-t2"
+],
+"5": [
+"#t3-box"
+]
+},
+"Fermi_testprep_jee_sims/Module-14-Modern-Physics/C219-the-photoelectric-effect-observations.html": {},
+"Fermi_testprep_jee_sims/Module-14-Modern-Physics/C222-de-broglie-waves-and-the-davisson-germer-experiment.html": {
+"3": [
+"#box-particle",
+"#box-ke"
+]
+},
+"Fermi_testprep_jee_sims/Module-14-Modern-Physics/C223-rutherfords-model-and-alpha-particle-scattering.html": {
+"2": [
+"#shell-play",
+"#box-model"
+],
+"5": [
+"#box-z",
+"#box-ke"
+]
+},
+"Fermi_testprep_jee_sims/Module-14-Modern-Physics/C224-bohrs-model-of-the-hydrogen-atom.html": {},
+"Fermi_testprep_jee_sims/Module-14-Modern-Physics/C225-energy-levels-and-the-hydrogen-spectral-series--emission-and-absorption.html": {
+"2": [
+"#box-manual"
+],
+"5": [
+"#modeSection",
+"#box-manual"
+]
+},
+"Fermi_testprep_jee_sims/Module-14-Modern-Physics/C225-energy-levels-and-the-hydrogen-spectral-series.html": {
+"0": [
+"#box-ni",
+"#box-nf"
+],
+"2": [
+"#box-ni"
+],
+"4": [
+"#box-ni",
+"#box-nf"
+]
+},
+"Fermi_testprep_jee_sims/Module-14-Modern-Physics/C230-radioactive-decay-law-and-half-life.html": {
+"2": [
+"#box-n0"
+],
+"4": [
+"#box-tau",
+"#box-n0"
+]
+},
+"Fermi_university_sim_lab_sims/CM_sims/Collisions.html": {},
+"Fermi_university_sim_lab_sims/CM_sims/Free-Body Diagram Builder.html": {
+"1": [
+"#add-arrow-btn"
+],
+"3": [
+"#add-arrow-btn",
+"#btn-commit"
+],
+"4": [
+"#scenario",
+"#panel-check"
+]
+},
+"Fermi_university_sim_lab_sims/CM_sims/Galperins_Billiard.html": {},
+"Fermi_university_sim_lab_sims/CM_sims/L16-Friction-in-3d.html": {
+"0": [
+"#uv-box-launch"
+],
+"2": [
+"#uv-box-theta"
+],
+"4": [
+"#box-b",
+"#uv-box-m"
+],
+"5": [
+"#uv-box-v0"
+]
+},
+"Fermi_university_sim_lab_sims/CM_sims/L1-Solar System Orbits.html": {
+"5": [
+"#panel-planet-list"
+]
+},
+"Fermi_university_sim_lab_sims/CM_sims/L2-Newtons-laws.html": {
+"5": [
+"#grp-mA",
+"#grp-mB"
+]
+},
+"Fermi_university_sim_lab_sims/CM_sims/L17-The damped HO.html": {
+"1": [
+"#shell-play"
+],
+"5": [
+"#grp-alpha"
+]
+},
+"Fermi_university_sim_lab_sims/CM_sims/L29-The centrifugal-force-shell.html": {
+"2": [
+"#grp-release"
+]
+},
+"Fermi_university_sim_lab_sims/CM_sims/L30-Coriolis on a Rotating Sphere.html": {},
+"Fermi_university_sim_lab_sims/CM_sims/L35-Orbits.html": {
+"0": [
+"#shell-play"
+],
+"5": [
+"#box-presets"
+]
+},
+"Fermi_university_sim_lab_sims/CM_sims/L30-The coriolis-force.html": {
+"2": [
+"#grp-view"
+],
+"3": [
+"#grp-launch"
+]
+},
+"Fermi_university_sim_lab_sims/CM_sims/L36-Scattering Extension.html": {
+"0": [
+"#ctrl-b",
+"#row-fire"
+],
+"1": [
+"#row-spread"
+],
+"2": [
+"#ctrl-v",
+"#row-fire"
+],
+"3": [
+"#ctrl-b"
+],
+"4": [
+"#row-spread"
+]
+},
+"Fermi_university_sim_lab_sims/CM_sims/L37-Kepler's Laws.html": {
+"0": [
+"#panel-k12"
+]
+},
+"Fermi_university_sim_lab_sims/CM_sims/L36-The Energy of the Orbit-new.html": {
+"4": [
+"#cg-theta-box"
+]
+},
+"Fermi_university_sim_lab_sims/CM_sims/L4-Forces on objects explorer.html": {},
+"Fermi_university_sim_lab_sims/CM_sims/L4-Projectile motion.html": {},
+"Fermi_university_sim_lab_sims/CM_sims/L7-Motion in a potential.html": {
+"2": [
+"#shell-play"
+],
+"4": [
+"#box-fate"
+]
+},
+"Fermi_university_sim_lab_sims/CM_sims/L6-The harmonic oscillator.html": {
+"2": [
+"#shell-play",
+"#box-a1",
+"#wrap-a2"
+]
+},
+"Fermi_university_sim_lab_sims/CM_sims/cm-brachistochrone-race.polished.html": {
+"2": [
+"#shell-play"
+]
+},
+"Fermi_university_sim_lab_sims/CM_sims/L9-The pendulum.html": {
+"2": [
+"#shell-play"
+],
+"5": [
+"#box-len"
+]
+},
+"Fermi_university_sim_lab_sims/CM_sims/cm-spinning-book.polished.html": {
+"0": [
+"#box-axis"
+],
+"1": [
+"#box-axis"
+],
+"2": [
+"#box-axis"
+],
+"3": [
+"#box-axis"
+],
+"5": [
+"#box-eps"
+],
+"6": [
+"#box-axis",
+"#box-eps"
+]
+},
+"Fermi_university_sim_lab_sims/CM_sims/cm-phase-plane.polished.html": {
+"0": [
+"#shell-play"
+],
+"1": [
+"#box-system"
+],
+"2": [
+"#shell-play"
+],
+"3": [
+"#box-system"
+],
+"4": [
+"#box-system"
+],
+"5": [
+"#box-system",
+"#box-contours"
+],
+"6": [
+"#box-cloud",
+"#box-dir"
+]
+},
+"Fermi_university_sim_lab_sims/Condensed_matter_sims/cm-bloch-oscillations.html": {
+"2": [
+"#shell-play"
+],
+"5": [
+"#box-field"
+],
+"6": [
+"#box-bw"
+]
+},
+"Fermi_university_sim_lab_sims/Condensed_matter_sims/cm-crystal-diffraction-2d-polished.html": {
+"2": [
+"#box-a"
+],
+"3": [
+"#box-b"
+],
+"5": [
+"#box-g"
+]
+},
+"Fermi_university_sim_lab_sims/Condensed_matter_sims/cm-kronig-penney-bands-polished.html": {
+"2": [
+"#box-P"
+],
+"7": [
+"#box-a"
+]
+},
+"Fermi_university_sim_lab_sims/Condensed_matter_sims/cm-phonon-diatomic-chain-polished.html": {
+"2": [
+"#box-freq"
+],
+"4": [
+"#box-massB"
+],
+"5": [
+"#box-freq"
+]
+},
+"Fermi_university_sim_lab_sims/Condensed_matter_sims/cm-superconductor.polished.html": {
+"2": [
+"#box-temp"
+],
+"4": [
+"#box-temp"
+],
+"6": [
+"#box-kappa"
+],
+"8": [
+"#box-field"
+]
+},
+"Fermi_university_sim_lab_sims/Condensed_matter_sims/mc-random-walker.eval-newcontract.polished.html": {
+"0": [
+"#box-single"
+],
+"2": [
+"#shell-play",
+"#box-rate"
+],
+"5": [
+"#shell-play"
+],
+"7": [
+"#box-walkers",
+"#box-rate"
+]
+},
+"Fermi_university_sim_lab_sims/Condensed_matter_sims/sc-ising-order.html": {
+"0": [
+"#shell-play"
+],
+"2": [
+"#box-temp"
+],
+"3": [
+"#box-temp"
+],
+"5": [
+"#box-temp",
+"#box-record"
+],
+"6": [
+"#box-record",
+"#box-size"
+]
+},
+"Fermi_university_sim_lab_sims/Condensed_matter_sims/qs-rabi-bloch-sphere.html": {
+"0": [
+"#shell-play"
+],
+"2": [
+"#box-omega"
+],
+"5": [
+"#box-delta"
+]
+},
+"Fermi_university_sim_lab_sims/Condensed_matter_sims/sm-heat-capacity-steps.eval-newcontract.polished.html": {
+"2": [
+"#box-temp"
+],
+"4": [
+"#box-temp"
+],
+"5": [
+"#box-eps"
+]
+},
+"Fermi_university_sim_lab_sims/Condensed_matter_sims/sm-energy-sharing.html": {
+"2": [
+"#shell-play"
+],
+"5": [
+"#box-start",
+"#shell-play"
+],
+"6": [
+"#box-log"
+],
+"7": [
+"#box-quanta"
+]
+},
+"Fermi_university_sim_lab_sims/Condensed_matter_sims/sm-rubber-band.html": {
+"0": [
+"#shell-play"
+],
+"2": [
+"#box-force"
+],
+"5": [
+"#box-temp"
+],
+"7": [
+"#box-force",
+"#box-temp"
+]
+},
+"Fermi_university_sim_lab_sims/Condensed_matter_sims/sm-identical-counting.html": {
+"2": [
+"#box-mode"
+],
+"4": [
+"#box-mode"
+],
+"6": [
+"#box-mode",
+"#box-n"
+]
+},
+"Fermi_university_sim_lab_sims/PP_sims/build-a-baryon.html": {},
+"Fermi_university_sim_lab_sims/PP_sims/dirac-s-sea-of-electrons.html": {},
+"Fermi_university_sim_lab_sims/PP_sims/exploring-the-standard-model.html": {},
+"Fermi_university_sim_lab_sims/PP_sims/feynman-diagram-sandbox.html": {},
+"Fermi_university_sim_lab_sims/PP_sims/geiger-marsden-gold-foil-experiment.html": {},
+"Fermi_university_sim_lab_sims/PP_sims/how-to-make-a-particle.html": {},
+"Fermi_university_sim_lab_sims/PP_sims/ma-perturbation-breakdown.opus-5.html": {
+"0": [
+"#box-terms"
+],
+"2": [
+"#box-terms"
+],
+"3": [
+"#box-lam"
+],
+"5": [
+"#box-sign"
+]
+},
+"Fermi_university_sim_lab_sims/PP_sims/navigating-the-eight-fold-way.html": {},
+"Fermi_university_sim_lab_sims/PP_sims/particle-detector-headquarters.html": {
+"5": [
+"#ctl-mom"
+]
+},
+"Fermi_university_sim_lab_sims/PP_sims/scale-of-the-universe.html": {},
+"Fermi_university_sim_lab_sims/PP_sims/spin-and-helicity.html": {},
+"Fermi_university_sim_lab_sims/PP_sims/the-wine-bottle-potential-continuous-symmetr.html": {
+"0": [
+"#panel-potential"
+]
+},
+"Fermi_university_sim_lab_sims/PP_sims/virtual-cloud-chamber.html": {},
+"Fermi_university_sim_lab_sims/PP_sims/virtual-particle-collider.html": {},
+"Fermi_university_sim_lab_sims/PP_sims/wu-experiment-and-the-death-of-parity.html": {
+"0": [
+"#runBtn"
+],
+"1": [
+"#flipBtn",
+"#runBtn"
+]
+},
+"Fermi_university_sim_lab_sims/QM_sims/2d_wavefunction_collapse_measurement.html": {
+"1": [
+"#measureBtn"
+]
+},
+"Fermi_university_sim_lab_sims/QM_sims/A(k)-vs-k-plot.html": {},
+"Fermi_university_sim_lab_sims/QM_sims/Bound_states.html": {},
+"Fermi_university_sim_lab_sims/QM_sims/Classical-vs-schrodinger-ANHARMONIC.html": {},
+"Fermi_university_sim_lab_sims/QM_sims/Classical-vs-schrodinger.html": {
+"3": [
+"#boxMass",
+"#boxOmega",
+"#boxAmplitude"
+],
+"4": [
+"#boxAmplitude"
+]
+},
+"Fermi_university_sim_lab_sims/QM_sims/Double-slit-experiment.html": {},
+"Fermi_university_sim_lab_sims/QM_sims/Double_slit_exp_Measurement.html": {},
+"Fermi_university_sim_lab_sims/QM_sims/Finite_well_probability_plot.html": {
+"3": [
+"#boxStateNav"
+],
+"4": [
+"#boxV0",
+"#boxWidth"
+]
+},
+"Fermi_university_sim_lab_sims/QM_sims/Fourier-series.html": {
+"3": [
+"#waveTypeBox"
+],
+"4": [
+"#sigmaControl"
+]
+},
+"Fermi_university_sim_lab_sims/QM_sims/Harmonic-oscillator.html": {
+"3": [
+"#boxN"
+]
+},
+"Fermi_university_sim_lab_sims/QM_sims/Harmonic_Oscillator_High_Energies.html": {
+"2": [
+"#boxN"
+]
+},
+"Fermi_university_sim_lab_sims/QM_sims/Hydrogen_atom_energy_spectrum.html": {},
+"Fermi_university_sim_lab_sims/QM_sims/Hydrogen_atom_wavefunctions.html": {},
+"Fermi_university_sim_lab_sims/QM_sims/Particle-on-a-circle.html": {
+"5": [
+"#boxN"
+]
+},
+"Fermi_university_sim_lab_sims/QM_sims/Quantum_Tunneling_Gaussian_Wave.html": {},
+"Fermi_university_sim_lab_sims/QM_sims/Multi_Stage_Stern_Gerlach_New.html": {},
+"Fermi_university_sim_lab_sims/QM_sims/Quantum_tunneling_Plane_Wave.html": {},
+"Fermi_university_sim_lab_sims/QM_sims/Single_Gaussian_plot.html": {},
+"Fermi_university_sim_lab_sims/QM_sims/Spin-X-measurement-probability.html": {
+"1": [
+"#boxAlpha"
+],
+"3": [
+"#boxAlpha"
+],
+"4": [
+"#boxOmega"
+]
+},
+"Fermi_university_sim_lab_sims/QM_sims/Spherical_harmonics_Explorer.html": {
+"2": [
+"#lmBox"
+],
+"3": [
+"#lmBox"
+],
+"4": [
+"#lmBox"
+]
+},
+"Fermi_university_sim_lab_sims/QM_sims/Time_evolution_Gaussian_Fourier-comps.html": {},
+"Fermi_university_sim_lab_sims/QM_sims/Spin_Measurement.html": {
+"2": [
+"#measureButtons"
+],
+"5": [
+"#measureButtons"
+]
+},
+"Fermi_university_sim_lab_sims/QM_sims/Time_evolution_Gaussian_wavepacket.html": {
+"5": [
+"#boxMass"
+]
+},
+"Fermi_university_sim_lab_sims/QM_sims/Time_evolution_QHO_v2.html": {},
+"Fermi_university_sim_lab_sims/QM_sims/Two_Gaussian_superposition.html": {},
+"Fermi_university_sim_lab_sims/QM_sims/Transmission_probability_plot.html": {},
+"Fermi_university_sim_lab_sims/QM_sims/Vector_Space_Finite_Vectors_Updated.html": {},
+"Fermi_university_sim_lab_sims/QM_sims/infinite-potential-well.html": {
+"2": [
+"#boxN"
+],
+"3": [
+"#boxN"
+]
+},
+"Fermi_university_sim_lab_sims/QM_sims/qm-blackbody-spectrum.polished.html": {},
+"Fermi_university_sim_lab_sims/QM_sims/qm-compton-scattering.polished.html": {},
+"Fermi_university_sim_lab_sims/QM_sims/wavefunctions-and-probability.html": {},
+"Fermi_university_sim_lab_sims/QM_sims/stern-gerlach-NEW.html": {
+"3": [
+"#boxSpin"
+]
+},
+"Fermi_university_sim_lab_sims/SR_sims/L00-s2-Fly_on_a_boat_v2.html": {},
+"Fermi_university_sim_lab_sims/SR_sims/L00-s1-supplementalball-on-a-train-shell.html": {},
+"Fermi_university_sim_lab_sims/SR_sims/L01-s2-supplementaldifferent-coordinate-frames-shell.html": {
+"4": [
+"#box-theta"
+]
+},
+"Fermi_university_sim_lab_sims/SR_sims/L01-s1-polar-vs-cartesian-one-window-showing-an-shell.html": {
+"2": [
+"#box-omega"
+]
+},
+"Fermi_university_sim_lab_sims/SR_sims/L02-s2-supplementaleuclidean-space-and-metric-shell.html": {},
+"Fermi_university_sim_lab_sims/SR_sims/L02-s1-inner-product-shell.html": {
+"4": [
+"#shell-play"
+]
+},
+"Fermi_university_sim_lab_sims/SR_sims/L04-s1-supplementalscalars-vs-vectors-shell.html": {},
+"Fermi_university_sim_lab_sims/SR_sims/L03-s1-supplementalshape-rotation-and-symmetry-shell.html": {},
+"Fermi_university_sim_lab_sims/SR_sims/L04-s2-supplementaleuclidean-space-and-metric-shell.html": {},
+"Fermi_university_sim_lab_sims/SR_sims/L05-s1-frame-clock-and-event-time-shell.html": {},
+"Fermi_university_sim_lab_sims/SR_sims/L05-s2-spacetime-diagram-explorer-new.html": {
+"3": [
+"#worldline"
+]
+},
+"Fermi_university_sim_lab_sims/SR_sims/L06-s1-supplementaldodgeball-shell.html": {
+"0": [
+"#shell-play"
+],
+"1": [
+"#box-vA"
+],
+"2": [
+"#box-frames"
+]
+},
+"Fermi_university_sim_lab_sims/SR_sims/L06-s2-Rel_vel_of_a_plane_v2.html": {},
+"Fermi_university_sim_lab_sims/SR_sims/L08-s1-relativity-of-simultaneity-shell.html": {
+"1": [
+"#vcGroup"
+],
+"3": [
+"#vcGroup"
+],
+"4": [
+"#shell-play"
+]
+},
+"Fermi_university_sim_lab_sims/SR_sims/L08-s2-spacetime-diagram-explorer-new.html": {
+"1": [
+"#lecture-controls"
+],
+"3": [
+"#coord-entry-panel",
+"#velocity-group"
+],
+"4": [
+"#velocity-group",
+"#coord-entry-panel"
+]
+},
+"Fermi_university_sim_lab_sims/SR_sims/L07-s1-Michelson_Morley_experiment_3D.html": {
+"3": [
+"#box-theta"
+],
+"5": [
+"#box-theta"
+]
+},
+"Fermi_university_sim_lab_sims/SR_sims/L09-s1-worldline-length-and-proper-time-shell.html": {
+"2": [
+"#box-worldline"
+],
+"3": [
+"#box-frame",
+"#betaSection"
+]
+},
+"Fermi_university_sim_lab_sims/SR_sims/L10-s1-supplementalminkowski-space-and-metric-shell.html": {},
+"Fermi_university_sim_lab_sims/SR_sims/L10-s2-lorentz-transformation-vs-euclidean-rota-shell.html": {
+"4": [
+"#inv-btn"
+]
+},
+"Fermi_university_sim_lab_sims/SR_sims/L11-s2-light-clock-and-geometric-derivation-of--shell.html": {
+"1": [
+"#shell-play"
+],
+"4": [
+"#vGroup"
+]
+},
+"Fermi_university_sim_lab_sims/SR_sims/L11-s3-Length_contraction___simultaneity_v2.html": {
+"1": [
+"#frame-toggle",
+"#measure-alice"
+],
+"2": [
+"#frame-toggle"
+],
+"3": [
+"#measure-bella"
+],
+"4": [
+"#box-v"
+]
+},
+"Fermi_university_sim_lab_sims/SR_sims/L12-s0-Twin_paradox_Alice___Bella_turnaround.html": {
+"1": [
+"#shell-play"
+],
+"3": [
+"#shell-play"
+],
+"4": [
+"#box-t",
+"#shell-play"
+]
+},
+"Fermi_university_sim_lab_sims/SR_sims/L11-s1-Time-dilation-train-paradox-shell_updated.html": {
+"1": [
+"#panel-frame"
+],
+"3": [
+"#box-beta"
+]
+},
+"Fermi_university_sim_lab_sims/SR_sims/L12-s1-twin-paradox-worldline-comparison-shell.html": {
+"2": [
+"#vGroup"
+],
+"3": [
+"#frameGroup"
+],
+"4": [
+"#frameGroup"
+]
+},
+"Fermi_university_sim_lab_sims/SR_sims/L12-s2-Twin_Paradox_v2.html": {
+"3": [
+"#box-v"
+],
+"4": [
+"#panel-frame"
+]
+},
+"Fermi_university_sim_lab_sims/SR_sims/L13-s1-lorentz-transformations-on-vectors-shell.html": {
+"1": [
+"#betaGroup"
+],
+"3": [
+"#betaGroup"
+]
+},
+"Fermi_university_sim_lab_sims/SR_sims/L14-s1-momentum-vs-velocity-shell.html": {
+"1": [
+"#vGroup"
+],
+"3": [
+"#m0Group"
+],
+"4": [
+"#vGroup"
+]
+},
+"Fermi_university_sim_lab_sims/SR_sims/L15-s1-relativistic-constant-acceleration-shell.html": {
+"0": [
+"#shell-play"
+],
+"1": [
+"#layer2"
+],
+"2": [
+"#layer-lowv",
+"#shell-play"
+],
+"3": [
+"#forceGroup",
+"#shell-play"
+]
+},
+"Fermi_university_sim_lab_sims/SR_sims/L16-s1-energy-momentum-conservation-in-a-collis-shell.html": {
+"1": [
+"#shell-play"
+],
+"4": [
+"#g-boost"
+]
+},
+"Fermi_university_sim_lab_sims/SR_sims/L17-s1-photon-worldline-shell.html": {},
+"Fermi_university_sim_lab_sims/SR_sims/L18-s0-tachyon-causality-violation-shell.html": {},
+"Fermi_university_sim_lab_sims/SR_sims/L18-s1-tachyon-causality-violation-shell.html": {
+"3": [
+"#boostCtrl"
+],
+"4": [
+"#boostCtrl"
+]
+},
+"Fermi_university_sim_lab_sims/SR_sims/L18-s2-causality-misconceptions-spacetime-explorer-new.html": {
+"2": [
+"#velocity-group"
+],
+"3": [
+"#velocity-group"
+],
+"4": [
+"#velocity-group"
+]
+},
+"Fermi_university_sim_lab_sims/SR_sims/L19-s2-E_&_B_boost_v2-new.html": {
+"3": [
+"#ctrl-frame",
+"#ctrl-vel"
+],
+"4": [
+"#ctrl-vel"
+]
+},
+"Fermi_university_sim_lab_sims/SR_sims/L7-s2-Airplane_&_wind_v2.html": {}
+}

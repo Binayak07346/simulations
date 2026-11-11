@@ -1545,7 +1545,7 @@ body.light-theme .legend, html[data-theme="light"] .legend{background:rgba(248,2
       <div class="shell-group">
         <button id="shell-reset" class="shell-btn">↻ Reset</button>
         <button id="shell-play" class="shell-btn">⏸ Pause</button>
-      </div></div>
+      </div><button id="shell-fullscreen" class="shell-btn shell-icon-btn" type="button" data-no-reset title="Full screen" aria-label="Full screen" aria-pressed="false"><svg class="fs-on" viewBox="0 0 20 20" width="16" height="16" aria-hidden="true"><path d="M3 7.5V3h4.5M12.5 3H17v4.5M17 12.5V17h-4.5M7.5 17H3v-4.5" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"/></svg><svg class="fs-off" viewBox="0 0 20 20" width="16" height="16" aria-hidden="true"><path d="M7.5 3v4.5H3M17 7.5h-4.5V3M12.5 17v-4.5H17M3 12.5h4.5V17" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"/></svg></button></div>
   </header>
 
   <main class="shell-hero"><div class="jx-hero">
@@ -5404,6 +5404,136 @@ html body #phys-backdrop .phys-head{flex-wrap:nowrap !important;}
 html body #phys-backdrop #phys-download.phys-icon-btn,html body #phys-backdrop #phys-close{flex-shrink:0 !important;}
 html body #phys-backdrop .phys-head .phys-title-row h2{min-width:0;flex:0 1 auto;}
 </style>
+<style id="fermi-fullscreen-css">
+/* Full-screen button (EM course sims, owner 2026-10-12), at the right end of the top bar; the icon flips while on. */
+#shell-fullscreen{display:inline-flex;align-items:center;justify-content:center;min-width:36px;padding-left:9px !important;padding-right:9px !important;flex:0 0 auto;}
+#shell-fullscreen[hidden]{display:none !important;}
+#shell-fullscreen svg{display:block;}
+#shell-fullscreen .fs-off{display:none;}
+#shell-fullscreen.active .fs-on{display:none;}
+#shell-fullscreen.active .fs-off{display:block;}
+/* The top bar never wraps and never grows (owner 2026-11-11): only the title gives way. The script first tightens the
+   gaps (fs-tight), then steps the title size down, and a title that still does not fit ends in "..." (full text on hover). */
+.shell-header{flex-wrap:nowrap !important;}
+.shell-header .shell-title{flex:0 1 auto !important;min-width:0 !important;overflow:hidden !important;text-overflow:ellipsis !important;white-space:nowrap !important;}
+.shell-header .shell-nav,.shell-header .shell-controls,.shell-header .shell-group{flex-wrap:nowrap !important;flex-shrink:0 !important;}
+html.fs-tight .shell-header{column-gap:10px !important;}
+html.fs-tight .shell-header .shell-controls,html.fs-tight .shell-header .shell-group,html.fs-tight .shell-header .shell-nav{gap:5px !important;}
+html.fs-tight .shell-header .shell-btn{padding-left:8px !important;padding-right:8px !important;}
+html.fs-tight .shell-header .shell-sep{margin-left:0 !important;margin-right:0 !important;}
+@layer fermi.tokens{.shell-header{flex-wrap:nowrap !important;}.shell-header .shell-title{min-width:0 !important;overflow:hidden !important;text-overflow:ellipsis !important;white-space:nowrap !important;}html.fs-tight .shell-header .shell-controls,html.fs-tight .shell-header .shell-group,html.fs-tight .shell-header .shell-nav{gap:5px !important;}html.fs-tight .shell-header .shell-btn{padding-left:8px !important;padding-right:8px !important;}}
+</style>
+<script id="fermi-fullscreen">(function(){
+  var d = document, el = d.documentElement, b = d.getElementById("shell-fullscreen");
+  /* One-line top bar: tighten the gaps, then step the title size down; a title that still does not fit ends in "...". */
+  function fit(){
+    var h = d.querySelector(".shell-header"); if (!h) return; var t = h.querySelector(".shell-title"), c = el.classList;
+    c.remove("fs-tight"); if (t) t.style.fontSize = "";
+    var over = function(){ return h.scrollWidth > h.clientWidth + 1 || (t && t.scrollWidth > t.clientWidth + 1); };
+    if (over()) { c.add("fs-tight");
+      if (t && over()) { var base = parseFloat(getComputedStyle(t).fontSize) || 18, k = [0.92, 0.85, 0.78];
+        for (var i = 0; i < k.length && over(); i++) t.style.fontSize = (base * k[i]).toFixed(1) + "px"; } }
+    if (t) { if (!t.hasAttribute("data-fs-t0")) t.setAttribute("data-fs-t0", t.getAttribute("title") || "");
+      var cut = t.scrollWidth > t.clientWidth + 1; var t0 = t.getAttribute("data-fs-t0");
+      if (cut) t.setAttribute("title", t.textContent.trim()); else if (t0) t.setAttribute("title", t0); else t.removeAttribute("title"); }
+  }
+  var ft; window.addEventListener("resize", function(){ clearTimeout(ft); ft = setTimeout(fit, 60); });
+  if (d.readyState === "complete") fit(); else window.addEventListener("load", fit); setTimeout(fit, 400);
+  if (d.fonts && d.fonts.ready) d.fonts.ready.then(fit);
+  /* Browser full screen for the whole sim page (the EM course sims' #shell-fullscreen). Hidden where the page
+     may not go full screen (an iframe without allow="fullscreen", some phones). */
+  if (!b) return;
+  if (!(d.fullscreenEnabled || d.webkitFullscreenEnabled)) { b.hidden = true; fit(); return; }
+  function cur(){ return d.fullscreenElement || d.webkitFullscreenElement; }
+  b.addEventListener("click", function(e){
+    e.stopPropagation();
+    if (cur()) { (d.exitFullscreen || d.webkitExitFullscreen).call(d); return; }
+    var r = el.requestFullscreen || el.webkitRequestFullscreen; var p = r && r.call(el);
+    if (p && p.catch) p.catch(function(){});
+  });
+  function sync(){
+    var on = !!cur(); b.classList.toggle("active", on);
+    b.title = on ? "Exit full screen" : "Full screen"; b.setAttribute("aria-label", b.title); b.setAttribute("aria-pressed", String(on));
+    requestAnimationFrame(function(){ window.dispatchEvent(new Event("resize")); });
+  }
+  d.addEventListener("fullscreenchange", sync); d.addEventListener("webkitfullscreenchange", sync);
+})();</script>
+<style id="fermi-gi-try-css">
+/* Guided Inquiry: the control a card asks the student to use glows (as in the EM course sims), until it is used. In
+   fermi.tokens, the first cascade layer, so it beats fermi-sim.css's layered !important borders and shadows. */
+@layer fermi.tokens{.fermi-try{border-color:var(--color-accent,#4169e1) !important;box-shadow:0 0 0 2px var(--color-accent,#4169e1),0 0 12px 3px color-mix(in srgb,var(--color-accent,#4169e1) 40%,transparent) !important;animation:fermiTry 1.2s ease-in-out infinite alternate !important;border-radius:8px;}}
+@keyframes fermiTry{from{box-shadow:0 0 0 2px var(--color-accent,#4169e1),0 0 5px 1px color-mix(in srgb,var(--color-accent,#4169e1) 28%,transparent);}to{box-shadow:0 0 0 2px var(--color-accent,#4169e1),0 0 16px 4px color-mix(in srgb,var(--color-accent,#4169e1) 45%,transparent);}}
+@media (prefers-reduced-motion:reduce){.fermi-try{animation:none !important;}}
+</style>
+<script id="fermi-gi-try">(function(){
+  /* card index -> the controls that card asks the student to use (selectors of their control boxes / buttons) */
+  var MAP = {"0":["#box-time"],"2":["#box-shape","#box-time"],"3":["#box-shape","#box-mu","#box-time"],"4":["#box-time"],"5":["#box-time"]};
+  var d = document, root = d.documentElement, cur = -2, timer = 0;
+  function clear(){ var l = d.querySelectorAll(".fermi-try"); for (var i = 0; i < l.length; i++) l[i].classList.remove("fermi-try"); }
+  function active(){
+    if (root.classList.contains("gi-off")) return -1;
+    var cards = d.querySelectorAll("#inq-cards .inq-step");
+    for (var i = 0; i < cards.length; i++) if (cards[i].classList.contains("active") && cards[i].getBoundingClientRect().height > 0) return i;
+    return -1;
+  }
+  function check(){
+    var a = active(); if (a === cur) return; cur = a; clearTimeout(timer); clear();
+    var s = MAP[a]; if (!s || !s.length) return;
+    timer = setTimeout(function(){   /* after the card's own set-up has landed */
+      if (active() !== a) return;
+      for (var k = 0; k < s.length; k++) { var e = d.querySelector(s[k]); if (e && e.getBoundingClientRect().width > 0) e.classList.add("fermi-try"); }
+    }, 450);
+  }
+  ["pointerdown", "input", "click", "keydown"].forEach(function(ev){ d.addEventListener(ev, function(e){
+    var t = e.isTrusted && e.target && e.target.closest && e.target.closest(".fermi-try"); if (t) t.classList.remove("fermi-try");
+  }, true); });
+  function start(){
+    var box = d.getElementById("inq-cards"); if (!box || !window.MutationObserver) return;
+    var mo = new MutationObserver(function(){ check(); });
+    mo.observe(box, { subtree: true, attributes: true, attributeFilter: ["class", "hidden", "style"] });
+    mo.observe(root, { attributes: true, attributeFilter: ["class"] });
+    check();
+  }
+  if (d.readyState === "loading") d.addEventListener("DOMContentLoaded", start); else start();
+})();</script>
+<script id="fermi-reset-defaults">(function(){
+  /* Reset in free exploration = the first-load view: the panel's controls go back to their starting values, then
+     the sim's own Reset runs (this listener runs first: capture phase). Guided Inquiry / the guide are untouched. */
+  var d = document, root = d.documentElement, snap = null;
+  var RESET = "#shell-reset,#resetBtn,#btnReset,#btnResetDefault,#rsB,#reset,#reset-btn,#btn-reset,#resetButton";
+  var CTRL = "input[type=range],input[type=number],select,input[type=checkbox],input[type=radio]";
+  function panel(){ return d.body; }   /* every control on the page (side panel, stage, top bar), minus the zones below */
+  function take(){
+    var p = panel(); if (!p) return; var l = p.querySelectorAll(CTRL); snap = [];
+    for (var i = 0; i < l.length; i++) { var e = l[i]; if (e.closest("#inq-cards,#phys-backdrop,[id^=gv-],.fapp-rail,#welcome-overlay")) continue; snap.push({ e: e, id: e.id, v: e.value, c: e.checked }); }
+  }
+  function free(){
+    if (!root.classList.contains("gi-off")) return false;
+    var t = d.getElementById("gv-tour"); return !(t && !t.hidden && t.getBoundingClientRect().width > 0);
+  }
+  function fire(e){ e.dispatchEvent(new Event("input", { bubbles: true })); e.dispatchEvent(new Event("change", { bubbles: true })); }
+  function restore(){
+    for (var i = 0; i < snap.length; i++) { var s = snap[i], e = s.e;
+      if (!e.isConnected && s.id) e = d.getElementById(s.id);   /* panels some sims rebuild: find the control again by id */
+      if (!e || !e.isConnected || e.disabled) continue;
+      if (e.type === "checkbox" || e.type === "radio") { if (e.checked !== s.c) { e.checked = s.c; fire(e); } }
+      else if (e.value !== s.v) {
+        var proto = e.tagName === "SELECT" ? HTMLSelectElement.prototype : HTMLInputElement.prototype;
+        Object.getOwnPropertyDescriptor(proto, "value").set.call(e, s.v); fire(e); } }
+  }
+  d.addEventListener("click", function(ev){
+    var r = ev.target && ev.target.closest && ev.target.closest(RESET);
+    if (!r || !snap || !free() || r.closest("#inq-cards,[id^=gv-]")) return;
+    try { restore(); } catch (e) {}
+    /* and again once the sim's own Reset has run: some reset to their own internal defaults, not the first-load ones */
+    [0, 350, 900].forEach(function(ms){ setTimeout(function(){ try { restore(); } catch (e) {} }, ms); });
+  }, true);
+  /* the defaults = what a fresh entry into free exploration shows: recorded once the sim has booted and is in free
+     exploration (some sims stage their own free-mode values on entry), after it settles */
+  var tk = 0; function arm(){ if (snap || !free()) return; clearTimeout(tk); tk = setTimeout(function(){ if (!snap && free()) take(); }, 900); }
+  function boot(){ arm(); if (window.MutationObserver) new MutationObserver(arm).observe(root, { attributes: true, attributeFilter: ["class"] }); }
+  if (d.readyState === "complete") setTimeout(boot, 300); else window.addEventListener("load", function(){ setTimeout(boot, 300); });
+})();</script>
 <script id="fermi-app-mode">
 /* fermi-app-mode 0.1.0 (pilot, 2026-10-30) - the mobile-app view of a Fermi sim.
  *
