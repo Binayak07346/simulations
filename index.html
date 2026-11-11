@@ -4,267 +4,212 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Interactive Physics Simulations</title>
-  <meta name="description" content="Interactive physics demos." />
+  <meta name="description" content="Interactive physics simulations by course: quantum mechanics, special relativity, classical mechanics, particle physics and electromagnetism." />
   <style>
     :root {
-      --bg: #070914;
-      --text: #eef2ff;
-      --muted: rgba(203, 213, 255, 0.72);
-
-      --accent: #7c3aed;     /* violet */
-      --accent-2: #22d3ee;   /* cyan */
-      --accent-3: #a3ffbd;   /* mint */
-
-      --card: rgba(255, 255, 255, 0.055);
-      --card-2: rgba(255, 255, 255, 0.085);
-      --stroke: rgba(255, 255, 255, 0.10);
-      --stroke-2: rgba(255, 255, 255, 0.16);
-
-      --shadow: 0 18px 60px rgba(0,0,0,0.55);
-      --shadow-soft: 0 12px 40px rgba(0,0,0,0.45);
+      --bg: #0a0c16;
+      --surface: rgba(255, 255, 255, 0.035);
+      --surface-hover: rgba(255, 255, 255, 0.06);
+      --line: rgba(255, 255, 255, 0.08);
+      --line-strong: rgba(255, 255, 255, 0.16);
+      --text: #eef1fb;
+      --muted: #9aa3c0;
+      --faint: #6b7392;
     }
     * { box-sizing: border-box; }
-    html, body { height: 100%; }
+    html { -webkit-text-size-adjust: 100%; }
     body {
       margin: 0;
-      font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Apple Color Emoji", "Segoe UI Emoji";
-      background: #070914;
-      background-image:
-        radial-gradient(1100px 650px at 15% -10%, rgba(124, 58, 237, 0.44) 0%, rgba(124, 58, 237, 0.0) 58%),
-        radial-gradient(900px 520px at 96% 0%, rgba(34, 211, 238, 0.34) 0%, rgba(34, 211, 238, 0.0) 55%),
-        radial-gradient(900px 520px at 60% 110%, rgba(163, 255, 189, 0.16) 0%, rgba(163, 255, 189, 0.0) 55%),
-        linear-gradient(180deg, rgba(255,255,255,0.05), rgba(255,255,255,0.0) 40%),
-        radial-gradient(1200px 700px at 20% 0%, rgba(23, 33, 74, 0.75) 0%, rgba(7, 9, 20, 1) 62%);
-      color: var(--text);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      padding: clamp(16px, 3vw, 28px);
-      overflow-y: auto;
-    }
-    body::before {
-      content: "";
-      position: fixed;
-      inset: 0;
-      pointer-events: none;
-      z-index: 0;
+      min-height: 100vh;                 /* grows with the content: nothing is cut off at the top or bottom */
       background:
-        linear-gradient(rgba(255,255,255,0.035) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(255,255,255,0.035) 1px, transparent 1px);
-      background-size: 52px 52px;
-      mask-image: radial-gradient(ellipse 70% 55% at 50% 20%, black 20%, transparent 76%);
-      opacity: 0.55;
+        radial-gradient(900px 480px at 50% -120px, rgba(99, 102, 241, 0.22), transparent 70%),
+        var(--bg);
+      color: var(--text);
+      font-family: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      line-height: 1.5;
+      -webkit-font-smoothing: antialiased;
     }
     .wrap {
-      width: 100%;
-      max-width: 1040px;
-      position: relative;
-      z-index: 1;
-    }
-    header {
-      text-align: center;
-      margin-bottom: 36px;
-    }
-    h1 {
-      margin: 0 0 12px;
-      font-weight: 850;
-      letter-spacing: -0.02em;
-      font-size: clamp(1.7rem, 4.8vw, 2.45rem);
-      line-height: 1.1;
-    }
-    p.lead {
-      margin: 0;
-      color: var(--muted);
-      font-size: 1.05rem;
-    }
-    .grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-      gap: 20px;
-      margin-top: 28px;
-    }
-    .card {
-      position: relative;
-      background:
-        radial-gradient(900px 260px at 20% 0%, rgba(124, 58, 237, 0.22), transparent 55%),
-        radial-gradient(900px 260px at 90% 0%, rgba(34, 211, 238, 0.16), transparent 55%),
-        linear-gradient(180deg, var(--card-2) 0%, var(--card) 100%);
-      border: 1px solid var(--stroke);
-      border-radius: 22px;
-      padding: 24px;
+      max-width: 1120px;
+      margin: 0 auto;
+      padding: clamp(40px, 8vh, 88px) 24px 32px;
       display: flex;
       flex-direction: column;
-      justify-content: space-between;
-      min-height: 180px;
-      box-shadow: var(--shadow-soft);
-      transition: transform 0.18s ease, box-shadow 0.22s ease, border-color 0.2s ease, filter 0.22s ease;
-      overflow: hidden;
-    }
-    .card::before {
-      content: "";
-      position: absolute;
-      inset: 0;
-      background: linear-gradient(135deg, rgba(255,255,255,0.12), rgba(255,255,255,0.0) 35%);
-      opacity: 0.8;
-      pointer-events: none;
-    }
-    .card:hover {
-      transform: translateY(-4px);
-      box-shadow: var(--shadow);
-      border-color: var(--stroke-2);
-      filter: saturate(1.08);
-    }
-    .card h2 {
-      font-size: 1.3rem;
-      margin: 0 0 10px;
-      position: relative;
-      letter-spacing: -0.01em;
-    }
-    .card p {
-      color: var(--muted);
-      margin: 0 0 18px;
-      line-height: 1.4;
-      font-size: 0.95rem;
-    }
-    .actions {
-      margin-top: auto;
-    }
-    .btn {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      gap: 8px;
-      text-decoration: none;
-      background: var(--accent-2);
-      color: rgba(7, 9, 20, 0.92);
-      font-weight: 800;
-      padding: 12px 18px;
-      border-radius: 999px;
-      border: 0;
-      cursor: pointer;
-      transition: transform 0.06s ease-in-out, filter 0.18s ease, box-shadow 0.18s ease;
-      user-select: none;
-      box-shadow: 0 14px 28px rgba(0,0,0,0.35);
-    }
-    .btn:hover {
-      filter: brightness(1.06) saturate(1.06);
-      box-shadow: 0 18px 34px rgba(0,0,0,0.42);
-    }
-    .btn:active {
-      transform: translateY(1px) scale(0.99);
-    }
-    .badge {
-      display: inline-block;
-      padding: 4px 10px;
-      border-radius: 999px;
-      background: rgba(163, 255, 189, 0.14);
-      color: rgba(163, 255, 189, 0.95);
-      border: 1px solid rgba(163, 255, 189, 0.22);
-      font-weight: 700;
-      font-size: 0.75rem;
-      margin-left: 10px;
-      vertical-align: middle;
-    }
-    footer {
-      text-align: center;
-      margin-top: 32px;
-      color: #a3b2ff88;
-      font-size: 0.9rem;
+      min-height: 100vh;
     }
 
-    @media (prefers-reduced-motion: no-preference) {
-      .card { will-change: transform; }
+    /* ---------- header ---------- */
+    header { text-align: center; margin-bottom: clamp(32px, 5vh, 56px); }
+    .eyebrow {
+      display: inline-flex; align-items: center; gap: 8px;
+      font-size: 0.78rem; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase;
+      color: var(--muted);
+      padding: 6px 12px; border: 1px solid var(--line); border-radius: 999px; background: var(--surface);
+      margin-bottom: 20px;
+    }
+    .eyebrow::before { content: ""; width: 6px; height: 6px; border-radius: 50%; background: #818cf8; }
+    h1 {
+      margin: 0 0 14px;
+      font-size: clamp(2rem, 4.6vw, 3rem);
+      font-weight: 750;
+      letter-spacing: -0.025em;
+      line-height: 1.1;
+    }
+    .lead {
+      margin: 0 auto;
+      max-width: 620px;
+      color: var(--muted);
+      font-size: clamp(1rem, 1.6vw, 1.1rem);
+    }
+
+    /* ---------- course cards ---------- */
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+      gap: 16px;
+    }
+    .card {
+      --c: #818cf8;                      /* per-course accent */
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      padding: 22px 22px 20px;
+      background: var(--surface);
+      border: 1px solid var(--line);
+      border-radius: 16px;
+      transition: background-color 0.18s ease, border-color 0.18s ease, transform 0.18s ease;
+    }
+    .card[hidden] { display: none; }    /* hidden cards stay in the page, just not shown */
+    .card:hover, .card:focus-within {
+      background: var(--surface-hover);
+      border-color: color-mix(in srgb, var(--c) 55%, transparent);
+      transform: translateY(-2px);
+    }
+    .card .top { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+    .code {
+      display: inline-grid; place-items: center;
+      min-width: 40px; height: 40px; padding: 0 8px;
+      border-radius: 10px;
+      font-size: 0.85rem; font-weight: 700; letter-spacing: 0.02em;
+      color: var(--c);
+      background: color-mix(in srgb, var(--c) 14%, transparent);
+      border: 1px solid color-mix(in srgb, var(--c) 28%, transparent);
+    }
+    .badge {
+      font-size: 0.68rem; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase;
+      color: #86efac;
+      padding: 3px 8px; border-radius: 999px;
+      background: rgba(134, 239, 172, 0.1); border: 1px solid rgba(134, 239, 172, 0.22);
+    }
+    .card h2 { margin: 6px 0 0; font-size: 1.2rem; font-weight: 650; letter-spacing: -0.01em; }
+    .card p { margin: 0; color: var(--muted); font-size: 0.95rem; }
+    .card a {
+      margin-top: auto;
+      padding-top: 10px;
+      display: inline-flex; align-items: center; gap: 6px;
+      color: var(--c);
+      font-weight: 600; font-size: 0.95rem;
+      text-decoration: none;
+    }
+    .card a::after { content: ""; position: absolute; inset: 0; border-radius: inherit; }  /* the whole card is the link */
+    .card a .arrow { transition: transform 0.18s ease; }
+    .card:hover a .arrow { transform: translateX(3px); }
+    .card a:focus-visible { outline: none; }
+    .card:focus-within { outline: 2px solid var(--c); outline-offset: 2px; }
+
+    .qm { --c: #a78bfa; }
+    .sr { --c: #22d3ee; }
+    .cm { --c: #fbbf24; }
+    .pp { --c: #f472b6; }
+    .em { --c: #4ade80; }
+
+    /* ---------- footer ---------- */
+    footer {
+      margin-top: auto;
+      padding-top: 48px;
+      text-align: center;
+      color: var(--faint);
+      font-size: 0.85rem;
+    }
+    footer span.rule { display: block; border-top: 1px solid var(--line); margin-bottom: 18px; }
+
+    @media (prefers-reduced-motion: reduce) {
+      .card, .card a .arrow { transition: none; }
+      .card:hover, .card:focus-within { transform: none; }
     }
   </style>
 </head>
 <body>
   <main class="wrap">
     <header>
-      <h1>Interactive Physics Visualizations</h1>
-      <p class="lead">Explore classical mechanics, special relativity, quantum mechanics, and particle physics through interactive simulations</p>
+      <div class="eyebrow">Fermi simulations</div>
+      <h1>Interactive Physics Simulations</h1>
+      <p class="lead">Explore quantum mechanics, special relativity, classical mechanics, particle physics and electromagnetism through interactive simulations.</p>
     </header>
 
     <section class="grid">
-      <article class="card">
-        <div>
-          <h2>Quantum Mechanics</h2>
-        </div>
-        <div class="actions">
-          <a class="btn" href="./Fermi_QM_simulations/">QM simulations</a>
-        </div>
+      <article class="card qm">
+        <div class="top"><span class="code">QM</span></div>
+        <h2>Quantum Mechanics</h2>
+        <p>Wavefunctions, tunnelling, spin, the harmonic oscillator and the hydrogen atom.</p>
+        <a href="./Fermi_QM_simulations/">QM simulations <span class="arrow" aria-hidden="true">→</span></a>
       </article>
 
-      <article class="card">
-        <div>
-          <h2>Special Relativity<span class="badge">NEW</span></h2>
-        </div>
-        <div class="actions">
-          <a class="btn" href="./Fermi_SR_simulations/Capacity_SR_simulations_v1_engine/">SR simulations</a>
-        </div>
+      <article class="card sr">
+        <div class="top"><span class="code">SR</span><span class="badge">New</span></div>
+        <h2>Special Relativity</h2>
+        <p>From Galilean relativity to spacetime diagrams, Lorentz boosts and four-vectors.</p>
+        <a href="./Fermi_SR_simulations/Capacity_SR_simulations_v1_engine/">SR simulations <span class="arrow" aria-hidden="true">→</span></a>
       </article>
 
-      <article class="card">
-        <div>
-          <h2>Classical Mechanics<span class="badge">NEW</span></h2>
-        </div>
-        <div class="actions">
-          <a class="btn" href="./Fermi_CM_simulations/">CM simulations</a>
-        </div>
+      <article class="card cm">
+        <div class="top"><span class="code">CM</span><span class="badge">New</span></div>
+        <h2>Classical Mechanics</h2>
+        <p>Forces, oscillations, potentials, orbits and rotating frames.</p>
+        <a href="./Fermi_CM_simulations/">CM simulations <span class="arrow" aria-hidden="true">→</span></a>
       </article>
 
-      <article class="card">
-        <div>
-          <h2>Particle Physics<span class="badge">NEW</span></h2>
-        </div>
-        <div class="actions">
-          <a class="btn" href="./Fermi_Particle_physics_sims/Sims_v2_lecture_versions/">PP simulations</a>
-        </div>
+      <article class="card pp">
+        <div class="top"><span class="code">PP</span><span class="badge">New</span></div>
+        <h2>Particle Physics</h2>
+        <p>The Standard Model, building hadrons, Feynman diagrams and particle detectors.</p>
+        <a href="./Fermi_Particle_physics_sims/Sims_v2_lecture_versions/">PP simulations <span class="arrow" aria-hidden="true">→</span></a>
       </article>
 
-      <article class="card">
-        <div>
-          <h2>Testprep JEE sims<span class="badge">NEW</span></h2>
-          <p>102 simulations across the complete JEE physics syllabus — 14 modules from kinematics to modern physics.</p>
-        </div>
-        <div class="actions">
-          <a class="btn" href="./Fermi_testprep_jee_sims/">JEE simulations</a>
-        </div>
+      <!-- Hidden from the main page for now (kept, not removed): remove `hidden` to show a card again. -->
+      <article class="card" hidden>
+        <div class="top"><span class="code">JEE</span><span class="badge">New</span></div>
+        <h2>Testprep JEE sims</h2>
+        <p>102 simulations across the complete JEE physics syllabus — 14 modules from kinematics to modern physics.</p>
+        <a href="./Fermi_testprep_jee_sims/">JEE simulations <span class="arrow" aria-hidden="true">→</span></a>
       </article>
 
-      <article class="card">
-        <div>
-          <h2>University Sim Lab<span class="badge">USER VERSIONS</span></h2>
-          <p>116 user-facing builds across CM, QM, SR, particle physics and condensed matter — welcome overlay, guided inquiry and controls tutorial included.</p>
-        </div>
-        <div class="actions">
-          <a class="btn" href="./Fermi_university_sim_lab_sims/">Sim Lab</a>
-        </div>
+      <article class="card" hidden>
+        <div class="top"><span class="code">LAB</span><span class="badge">User versions</span></div>
+        <h2>University Sim Lab</h2>
+        <p>116 user-facing builds across CM, QM, SR, particle physics and condensed matter — welcome overlay, guided inquiry and controls tutorial included.</p>
+        <a href="./Fermi_university_sim_lab_sims/">Sim Lab <span class="arrow" aria-hidden="true">→</span></a>
       </article>
 
-      <article class="card">
-        <div>
-          <h2>AI Courses<span class="badge">NEW</span></h2>
-          <p>200 simulations across five AI courses — electromagnetism, quantum mechanics, thermal and statistical physics, waves and acoustics, and mathematical methods.</p>
-        </div>
-        <div class="actions">
-          <a class="btn" href="./AI%20courses%20sims/">AI Courses</a>
-        </div>
+      <article class="card" hidden>
+        <div class="top"><span class="code">AI</span><span class="badge">New</span></div>
+        <h2>AI Courses</h2>
+        <p>200 simulations across five AI courses — electromagnetism, quantum mechanics, thermal and statistical physics, waves and acoustics, and mathematical methods.</p>
+        <a href="./AI%20courses%20sims/">AI Courses <span class="arrow" aria-hidden="true">→</span></a>
       </article>
 
-      <article class="card">
-        <div>
-          <h2>EM course simulations<span class="badge">NEW</span></h2>
-          <p>10 simulations for the electromagnetism course — point charges, Gauss’ law, conductors, currents, magnetic fields, induction and waves.</p>
-        </div>
-        <div class="actions">
-          <a class="btn" href="./Fermi_EM_Course_Sims/">EM simulations</a>
-        </div>
+      <article class="card em">
+        <div class="top"><span class="code">EM</span><span class="badge">New</span></div>
+        <h2>EM course simulations</h2>
+        <p>10 simulations for the electromagnetism course — point charges, Gauss’ law, conductors, currents, magnetic fields, induction and waves.</p>
+        <a href="./Fermi_EM_Course_Sims/">EM simulations <span class="arrow" aria-hidden="true">→</span></a>
       </article>
-
     </section>
 
     <footer>
-      <span>© <span id="year"></span> • GitHub Pages</span>
+      <span class="rule"></span>
+      <span>© <span id="year"></span> Fermi · GitHub Pages</span>
     </footer>
   </main>
 
