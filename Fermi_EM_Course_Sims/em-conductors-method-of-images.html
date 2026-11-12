@@ -1155,6 +1155,7 @@ body{background:var(--bg);color:var(--ink);font-family:var(--font-sans);overflow
 .slider-val,.control-value{min-width:30px;text-align:right;font-weight:600;font-size:15px;font-family:var(--font-nums);font-variant-numeric:tabular-nums;color:var(--accent);}
 .control-range{font-size:.75rem;font-family:var(--font-nums);font-variant-numeric:tabular-nums;color:var(--text-muted);margin-top:4px;display:flex;justify-content:space-between;}
 .stat-row{display:flex;justify-content:space-between;align-items:center;gap:10px;font-size:14px;padding:6px 0;font-family:var(--font-sans);}
+.stat-row[hidden]{display:none;}
 .ctrl-box .stat-row:first-child{padding-top:0;}
 .ctrl-box .stat-row:last-child{padding-bottom:0;}
 .stat-label{color:var(--muted);display:flex;align-items:center;font-weight:600;flex-shrink:0;}
@@ -1674,6 +1675,7 @@ html.no-voice #inq-voice, html.no-voice #inq-auto, html.no-voice .cg-row-voice, 
 /* Same rule for readout rows: a long value wraps under itself, the label keeps its width. */
 #panel-readouts .stat-row .stat-label{flex:0 0 auto;max-width:48%;min-width:32%;}
 #panel-readouts .stat-row .stat-value{flex:1 1 auto;min-width:0;white-space:normal;overflow-wrap:anywhere;text-align:right;}
+#box-d.is-locked .ctrl-box-head,#box-d.is-locked .control-range{opacity:.45;}
 .kit-note{font-size:13px;color:var(--muted);margin:10px 2px 0;line-height:1.45;}
 .ctrl-box.kit-changing{border-color:var(--accent);box-shadow:0 0 0 1px var(--accent),0 0 14px 2px var(--accent-soft);transition:box-shadow 200ms,border-color 200ms;}
 .kit-try{border-color:var(--warn) !important;box-shadow:0 0 0 2px var(--warn),0 0 18px 4px rgba(251,191,36,.45);animation:kit-try 1.2s ease-in-out infinite alternate;}
@@ -1765,7 +1767,7 @@ html.no-voice #inq-voice, html.no-voice #inq-auto, html.no-voice .cg-row-voice, 
       </div>
       <div class="shell-modal-body"><h3>About this simulation</h3>
 <dl class="shell-info-dl">
-  <dt>On screen</dt><dd>Left: a slice through the conductor on fixed axes, −3a to 3a in the first mode and −5R to 5R in the second and third. Blue lines with arrows are field lines; thin grey contours are equipotentials, every 0.1 Q/4πε<sub>0a</sub> in the first mode, at 0, ±0.1, ±0.2, ±0.5 and ±1 q/4πε<sub>0R</sub> for the point charge, every 0.5E<sub>0R</sub> for the uniform field and every 0.25 η/2πε<sub>0</sub> for the line charge. The teal contour is the equipotential at the conductor's potential. The colour along the outline is the surface charge, red for positive and blue for negative. In the numerical solution the conductor is shaded grey with no field inside; in the image solution its outline is dashed, the field runs through it and the image is a hollow circle or arrow. In the first mode the red dots are the mobile charge and the small grey arrows the field inside. Right: σ/σ<sub>0</sub> along the outline, s/S from the blunt end (0) to the point (1), first mode only.</dd>
+  <dt>On screen</dt><dd>Left: a slice through the conductor on fixed axes, −3a to 3a in the first mode and −5R to 5R in the second and third. Blue lines with arrows are field lines; thin grey contours are equipotentials, every 0.1 Q/4πε<sub>0</sub>a in the first mode, at 0, ±0.1, ±0.2, ±0.5 and ±1 q/4πε<sub>0</sub>R for the point charge, every 0.5E<sub>0</sub>R for the uniform field and every 0.25 η/2πε<sub>0</sub> for the line charge. The teal contour is the equipotential at the conductor's potential. The colour along the outline is the surface charge, red for positive and blue for negative. In the numerical solution the conductor is shaded grey with no field inside; in the image solution its outline is dashed, the field runs through it and the image is a hollow circle or arrow. In the first mode the red dots are the mobile charge and the small grey arrows the field inside. Right: σ/σ<sub>0</sub> along the outline, s/S from the blunt end (0) to the point (1), first mode only.</dd>
   <dt>Controls</dt><dd>Mode picks the problem. In the first mode, Shape picks a ball of radius a or an egg (the ball joined smoothly by a cone to a point of radius 0.2a or 0.05a, centred 2.5a from the ball's centre); ▶ Play releases the charge. In the second mode, Conductor picks a grounded plane, a grounded sphere of radius R or the sphere in a uniform field E<sub>0</sub>; Charge distance d (1.5R to 4R, from the plane or the sphere's centre) is hidden for the uniform field; Solution switches between the numerical and the image solution, and ▶ Play computes the numerical one. In the third mode, Line-charge distance d (1.5R to 4R from the axis) and Solution do the same for a line charge η beside a cylinder carrying −η per unit length.</dd>
   <dt>Measured</dt><dd>σ<sub>0</sub> = Q/4πa² is the ball's value. The numerical solutions are boundary-element solutions of Laplace's equation: the surface is cut into rings (strips in the third mode) whose charges relax until the surface is an equipotential; the plane is a grounded disc of radius 400R. The induced charge is the sum of the numerical solution's ring charges, in units of q.</dd>
 </dl></div>
@@ -1822,7 +1824,7 @@ html.no-voice #inq-voice, html.no-voice #inq-auto, html.no-voice .cg-row-voice, 
 <tr><td><b>Mode</b></td><td>The problem: a lone charged conductor, a point charge by a grounded conductor, or a line charge by a cylinder.</td><td>three choices<br><small>opens on charged conductor</small></td><td><button type="button" class="ps-loc" data-locate="#box-mode" title="Show it in the sim">⌖</button></td></tr>
 <tr><td><b>Shape</b> <small>(first mode)</small></td><td>The ball of radius a, or the egg with a rounded (0.2a) or sharp (0.05a) point. ▶ Play releases the charge.</td><td>ball / egg, rounded / egg, sharp<br><small>opens on ball</small></td><td><button type="button" class="ps-loc" data-locate="#box-shape" title="Show it in the sim">⌖</button></td></tr>
 <tr><td><b>Conductor</b> <small>(second mode)</small></td><td>A grounded plane, a grounded sphere of radius R, or the sphere in a uniform field E<sub>0</sub>.</td><td>three choices<br><small>opens on grounded plane</small></td><td><button type="button" class="ps-loc" data-locate="#box-conductor" title="Show it in the sim">⌖</button></td></tr>
-<tr><td><b>Charge distance d</b> <small>(second mode)</small></td><td>Where the point charge sits, from the plane or the sphere’s centre. Hidden for the uniform field.</td><td>1.50 R to 4.00 R<br><small>opens at 2.00 R</small></td><td><button type="button" class="ps-loc" data-locate="#box-d" title="Show it in the sim">⌖</button></td></tr>
+<tr><td><b>Charge distance d</b> <small>(second mode)</small></td><td>Where the point charge sits, from the plane or the sphere’s centre. Greyed out for the uniform field.</td><td>1.50 R to 4.00 R<br><small>opens at 2.00 R</small></td><td><button type="button" class="ps-loc" data-locate="#box-d" title="Show it in the sim">⌖</button></td></tr>
 <tr><td><b>Solution</b> <small>(second mode)</small></td><td>Numerical: the conductor’s own surface charge, computed with ▶ Play. Image: the conductor removed and an image inside.</td><td>numerical / image<br><small>opens on numerical</small></td><td><button type="button" class="ps-loc" data-locate="#box-sol2" title="Show it in the sim">⌖</button></td></tr>
 <tr><td><b>Line-charge distance d</b> <small>(third mode)</small></td><td>Where the line charge sits, from the cylinder’s axis.</td><td>1.50 R to 4.00 R<br><small>opens at 4.00 R</small></td><td><button type="button" class="ps-loc" data-locate="#box-d3" title="Show it in the sim">⌖</button></td></tr>
 <tr><td><b>Solution</b> <small>(third mode)</small></td><td>The cylinder’s own surface charge, or the image solution.</td><td>numerical / image<br><small>opens on image</small></td><td><button type="button" class="ps-loc" data-locate="#box-sol3" title="Show it in the sim">⌖</button></td></tr>
@@ -1846,18 +1848,18 @@ html.no-voice #inq-voice, html.no-voice #inq-auto, html.no-voice .cg-row-voice, 
 <div class="ps-h"><span class="ps-no">04</span><h3>A sharper curve holds more charge per unit area</h3></div>
 <p class="ps-p">Take two balls of radii R<sub>1</sub> and R<sub>2</sub> joined by a long, thin conducting rod: they are at the same potential, but far enough apart that each feels little of the field of the other. Each ball has potential Q<sub>i</sub>/4πε<sub>0</sub>R<sub>i</sub>, so Q<sub>1</sub>/R<sub>1</sub> = Q<sub>2</sub>/R<sub>2</sub>, and writing Q<sub>i</sub> = 4πR<sub>i</sub><sup>2</sup>σ<sub>i</sub> gives</p>
 <div class="board"><div class="ps-eq" data-tex="\sigma_1 R_1=\sigma_2 R_2" data-display></div><div class="cap">The smaller ball has the greater charge per unit area.</div></div>
-<div class="fig f1"><svg viewBox="0 0 300 120" role="img" aria-label="A large ball and a small ball joined by a thin rod; the small ball's surface charge dots are closer together">
+<div class="fig f1"><svg viewBox="0 0 300 120" role="img" aria-label="A large ball with 11 surface charge dots and a small ball with 4, joined by a thin rod: the charge is in proportion to the radius">
 <circle cx="70" cy="60" r="40" fill="none" stroke="currentColor" stroke-width="1.8"/>
 <circle cx="236" cy="60" r="14" fill="none" stroke="currentColor" stroke-width="1.8"/>
 <line x1="110" y1="60" x2="222" y2="60" stroke="currentColor" stroke-width="2.2"/>
 <g class="cc-pos" fill="#d9534f">
-<circle cx="70" cy="18" r="2.3"/><circle cx="100" cy="30" r="2.3"/><circle cx="40" cy="30" r="2.3"/><circle cx="28" cy="60" r="2.3"/><circle cx="40" cy="90" r="2.3"/><circle cx="70" cy="102" r="2.3"/><circle cx="100" cy="90" r="2.3"/>
-<circle cx="236" cy="44" r="2.3"/><circle cx="247" cy="49" r="2.3"/><circle cx="252" cy="60" r="2.3"/><circle cx="247" cy="71" r="2.3"/><circle cx="236" cy="76" r="2.3"/><circle cx="225" cy="71" r="2.3"/><circle cx="225" cy="49" r="2.3"/>
+<circle cx="110.6" cy="49.1" r="2.3"/><circle cx="98.1" cy="28.8" r="2.3"/><circle cx="76.6" cy="18.5" r="2.3"/><circle cx="52.9" cy="21.6" r="2.3"/><circle cx="34.8" cy="37.1" r="2.3"/><circle cx="28" cy="60" r="2.3"/><circle cx="34.8" cy="82.9" r="2.3"/><circle cx="52.9" cy="98.4" r="2.3"/><circle cx="76.6" cy="101.5" r="2.3"/><circle cx="98.1" cy="91.2" r="2.3"/><circle cx="110.6" cy="70.9" r="2.3"/>
+<circle cx="247.3" cy="48.7" r="2.3"/><circle cx="224.7" cy="48.7" r="2.3"/><circle cx="224.7" cy="71.3" r="2.3"/><circle cx="247.3" cy="71.3" r="2.3"/>
 </g>
 <text x="62" y="64" font-size="11" font-style="italic" fill="currentColor">R₁</text>
 <text x="228" y="100" font-size="11" font-style="italic" fill="currentColor">R₂</text>
 <text x="130" y="52" font-size="10" fill="currentColor" opacity=".8">same potential</text>
-</svg><div class="cap">The same number of dots on each ball: on the smaller one they sit closer together.</div></div>
+</svg><div class="cap">The charge is in proportion to the radius: the small ball holds less of it, but on a far smaller area, so its σ = Q/4πR<sup>2</sup> is larger.</div></div>
 <p class="ps-p">On a single body this is only a rough guide, since its parts are close together, but on the egg σ is largest at the point and grows as the point is made sharper. The settled values, with σ<sub>0</sub> = Q/4πa<sup>2</sup> the value for the ball:</p>
 <table class="ps-ctl"><thead><tr><th>Shape</th><th>σ/σ<sub>0</sub> at blunt end</th><th>σ/σ<sub>0</sub> at point</th></tr></thead><tbody>
 <tr><td>ball</td><td>1.00</td><td>1.00</td></tr><tr><td>egg, rounded point (0.2a)</td><td>0.82</td><td>2.44</td></tr><tr><td>egg, sharp point (0.05a)</td><td>0.86</td><td>6.54</td></tr></tbody></table>
@@ -1912,7 +1914,7 @@ html.no-voice #inq-voice, html.no-voice #inq-auto, html.no-voice .cg-row-voice, 
 <p class="ps-p">A line charge η per unit length runs a distance d from the axis of a long conducting cylinder of radius R. Together with an image −η a distance R<sup>2</sup>/d from the axis it has potential</p>
 <div class="board"><div class="ps-eq" data-tex="\phi=\frac{\eta}{2\pi\epsilon_0}\ln\frac{r_2}{r_1}" data-display></div><div class="cap">r₁ and r₂ are the distances to the line charge and to the image.</div></div>
 <p class="ps-p">At every point of the circle of radius R the ratio r<sub>2</sub>/r<sub>1</sub> equals R/d, so the cylinder is an equipotential. As the line charge comes in from 4R to 1.5R, the image moves out from 0.25R to 0.67R. In two dimensions the potential of a line charge grows without limit far away, so the cylinder carries a fixed charge −η in place of being grounded.</p>
-<p class="ps-p">In every case the image solution and the numerical solution agree outside the conductor, because both satisfy Laplace’s equation there with the surface of the conductor as an equipotential, and that solution is unique.</p>
+<p class="ps-p">In every case the image solution and the numerical solution agree outside the conductor, because both satisfy Laplace’s equation there with the surface of the conductor an equipotential at the same potential (grounded: φ = 0) or carrying the same total charge (the cylinder: −η), and that solution is unique.</p>
 <div class="ps-try"><div class="ps-try-txt"><span class="ps-try-tag">See it</span>The image solution with the line charge at d = 1.5R. <span class="ps-watch">Watch for: the hollow image at 0.67R, and the teal contour on the dashed cylinder.</span></div><button type="button" class="shell-btn seesim" data-show="line" data-live="Image distance from axis=#ro-img">▶ Show me in the sim</button></div>
 <div class="ps-try"><div class="ps-try-txt"><span class="ps-try-tag">See it</span>The numerical solution at d = 1.5R. <span class="ps-watch">Watch for: the outside field lines matching the image solution’s, ending on the grey cylinder.</span></div><button type="button" class="shell-btn seesim" data-show="lineNum">▶ Show me in the sim</button></div>
 </section>
@@ -2009,10 +2011,10 @@ html.no-voice #inq-voice, html.no-voice #inq-auto, html.no-voice .cg-row-voice, 
 <div class="inq-step" data-gate data-card="4" data-kind="predict">
   <h4>4 · An egg with a point</h4>
   <p>Now choose the egg with the sharp point. Before pressing release, predict where the charge per unit area will be largest once the charge has settled.</p>
-  <button class="choice" data-correct data-fb="Two balls at the same potential satisfy σ&lt;sub&gt;1R&lt;/sub&gt;&lt;sub&gt;1&lt;/sub&gt; = σ&lt;sub&gt;2R&lt;/sub&gt;&lt;sub&gt;2&lt;/sub&gt;, so the more sharply curved part of a surface needs more charge per unit area to sit at the same potential as the rest. An equipotential surface does not mean an even surface charge.">At the point</button>
-  <button class="choice" data-fb="The blunt end is the least sharply curved part, and σ&lt;sub&gt;1R&lt;/sub&gt;&lt;sub&gt;1&lt;/sub&gt; = σ&lt;sub&gt;2R&lt;/sub&gt;&lt;sub&gt;2&lt;/sub&gt; gives the least charge per unit area to the larger radius.">At the blunt end, which has more surface nearby to hold the charge</button>
+  <button class="choice" data-correct data-fb="Two balls at the same potential satisfy σ&lt;sub&gt;1&lt;/sub&gt;R&lt;sub&gt;1&lt;/sub&gt; = σ&lt;sub&gt;2&lt;/sub&gt;R&lt;sub&gt;2&lt;/sub&gt;, so the more sharply curved part of a surface needs more charge per unit area to sit at the same potential as the rest. An equipotential surface does not mean an even surface charge.">At the point</button>
+  <button class="choice" data-fb="The blunt end is the least sharply curved part, and σ&lt;sub&gt;1&lt;/sub&gt;R&lt;sub&gt;1&lt;/sub&gt; = σ&lt;sub&gt;2&lt;/sub&gt;R&lt;sub&gt;2&lt;/sub&gt; gives the least charge per unit area to the larger radius.">At the blunt end, which has more surface nearby to hold the charge</button>
   <button class="choice" data-fb="An equipotential surface does not mean an even surface charge: a sharply curved part needs more σ to sit at the same potential.">The same everywhere, since the surface is an equipotential</button>
-  <button class="choice" data-fb="The widest part is not the most sharply curved; by σ&lt;sub&gt;1R&lt;/sub&gt;&lt;sub&gt;1&lt;/sub&gt; = σ&lt;sub&gt;2R&lt;/sub&gt;&lt;sub&gt;2&lt;/sub&gt; the charge per unit area follows the curvature.">Around the widest part of the egg</button>
+  <button class="choice" data-fb="The widest part is not the most sharply curved; by σ&lt;sub&gt;1&lt;/sub&gt;R&lt;sub&gt;1&lt;/sub&gt; = σ&lt;sub&gt;2&lt;/sub&gt;R&lt;sub&gt;2&lt;/sub&gt; the charge per unit area follows the curvature.">Around the widest part of the egg</button>
   <div class="predict-eval"></div>
 </div>
 <div class="inq-step" data-card="5" data-kind="observe">
@@ -2049,9 +2051,9 @@ html.no-voice #inq-voice, html.no-voice #inq-auto, html.no-voice .cg-row-voice, 
   <h4>10 · A sphere in a uniform field</h4>
   <p>Choose the sphere in a uniform field. Before switching to the image solution, predict what will appear at the centre of the sphere.</p>
   <button class="choice" data-fb="The sphere is neutral, so its image carries no net charge; a single charge would change the total.">A single negative charge</button>
-  <button class="choice" data-fb="Neutral overall, but something must still cancel the uniform field's potential −E&lt;sub&gt;0R&lt;/sub&gt; cos θ on the surface.">Nothing, since the sphere is neutral</button>
-  <button class="choice" data-correct data-fb="The sphere is neutral, so there is no net image charge, and the term needed to cancel the potential −E&lt;sub&gt;0R&lt;/sub&gt; cos θ of the uniform field on the surface varies as cos θ/r&lt;sup&gt;2&lt;/sup&gt;, the potential of a dipole p = 4πε&lt;sub&gt;0E&lt;/sub&gt;&lt;sub&gt;0R&lt;/sub&gt;&lt;sup&gt;3&lt;/sup&gt; x̂ along the field.">A dipole pointing along the field</button>
-  <button class="choice" data-fb="A dipole against the field would add to −E&lt;sub&gt;0R&lt;/sub&gt; cos θ on the surface instead of cancelling it.">A dipole pointing against the field</button>
+  <button class="choice" data-fb="Neutral overall, but something must still cancel the uniform field's potential −E&lt;sub&gt;0&lt;/sub&gt;R cos θ on the surface.">Nothing, since the sphere is neutral</button>
+  <button class="choice" data-correct data-fb="The sphere is neutral, so there is no net image charge, and the term needed to cancel the potential −E&lt;sub&gt;0&lt;/sub&gt;R cos θ of the uniform field on the surface varies as cos θ/r&lt;sup&gt;2&lt;/sup&gt;, the potential of a dipole p = 4πε&lt;sub&gt;0&lt;/sub&gt;E&lt;sub&gt;0&lt;/sub&gt;R&lt;sup&gt;3&lt;/sup&gt; x̂ along the field.">A dipole pointing along the field</button>
+  <button class="choice" data-fb="A dipole against the field would add to −E&lt;sub&gt;0&lt;/sub&gt;R cos θ on the surface instead of cancelling it.">A dipole pointing against the field</button>
   <div class="predict-eval"></div>
 </div>
 <div class="inq-step" data-card="11" data-kind="observe">
@@ -2073,7 +2075,7 @@ html.no-voice #inq-voice, html.no-voice #inq-auto, html.no-voice .cg-row-voice, 
 </div>
 <div class="inq-step" data-card="14" data-kind="synthesis">
   <h4>14 · One idea, three cases</h4>
-  <p>Free charge moves until no field is left inside, so a conductor's surface is an equipotential. Any image whose equipotential lands on that surface gives the unique field outside.</p>
+  <p>Free charge moves until no field is left inside, so a conductor's surface is an equipotential. Any image that makes that surface an equipotential at the right potential (φ = 0 when grounded), or with the right total charge, gives the unique field outside.</p>
 </div></div>
       <div class="inq-listen">
         <span class="inq-listen-lab">Listen</span>
@@ -4098,7 +4100,7 @@ window.Kit = (function () {
 </script>
 <script id="sim-ops"></script>
 <script>/* v2 sim sim — manifest compiled by pipeline/v2/compile.mjs; physics + painters by the build model. */
-window.__SIM_MANIFEST = {"title":"Conductors and Their Images","time":{"mode":"continuous","timeless":false,"autoplay":false,"onParamChange":"keep"},"params":[{"id":"mode","type":"select","label":"Mode","default":"cond","options":[{"value":"cond","label":"charged conductor"},{"value":"point","label":"point charge and grounded conductor"},{"value":"line","label":"line charge and cylinder"}],"help":"The problem: a charged conductor, a charge by a grounded conductor, or a line charge.","domId":"p-mode"},{"id":"shape","type":"select","label":"Shape","default":"ball","showWhen":{"mode":"cond"},"options":[{"value":"ball","label":"ball"},{"value":"eggRound","label":"egg with a rounded point"},{"value":"eggSharp","label":"egg with a sharp point"}],"help":"Shape of the charged conductor; the charge starts spread through the inside.","domId":"p-shape"},{"id":"conductor","type":"select","label":"Conductor","default":"plane","showWhen":{"mode":"point"},"options":[{"value":"plane","label":"grounded plane"},{"value":"sphere","label":"grounded sphere"},{"value":"field","label":"sphere in a uniform field"}],"help":"The grounded conductor beside the charge, or the sphere in a uniform field.","domId":"p-conductor"},{"id":"d","type":"slider","label":"Charge distance d","min":1.5,"max":4,"step":0.05,"default":2,"decimals":2,"unit":"R","showWhen":{"mode":"point","conductor":["plane","sphere"]},"help":"Distance of the point charge from the plane or from the sphere's centre.","domId":"p-d"},{"id":"sol2","type":"segmented","label":"Solution","default":"numerical","showWhen":{"mode":"point"},"options":[{"value":"numerical","label":"numerical"},{"value":"image","label":"image"}],"help":"Numerical: the conductor's own surface charge. Image: the conductor removed, an image inside.","domId":"p-sol2"},{"id":"d3","type":"slider","label":"Line-charge distance d","min":1.5,"max":4,"step":0.05,"default":4,"decimals":2,"unit":"R","showWhen":{"mode":"line"},"help":"Distance of the line charge from the axis of the cylinder.","domId":"p-d3"},{"id":"sol3","type":"segmented","label":"Solution","default":"image","showWhen":{"mode":"line"},"options":[{"value":"numerical","label":"numerical"},{"value":"image","label":"image"}],"help":"Numerical: the cylinder's own surface charge. Image: the cylinder removed, an image inside.","domId":"p-sol3"}],"readouts":[{"id":"sb","label":"σ/σ₀ at blunt end","key":"sigBlunt","decimals":2,"unit":"","domId":"ro-sb","rowId":"row-sb"},{"id":"sp","label":"σ/σ₀ at point","key":"sigPoint","decimals":2,"unit":"","domId":"ro-sp","rowId":"row-sp"},{"id":"ein","label":"Largest field inside","key":"eIn","decimals":2,"unit":"of release","from":2,"domId":"ro-ein","rowId":"row-ein"},{"id":"dd","label":"d","key":"dR","decimals":2,"unit":"R","from":5,"domId":"ro-dd","rowId":"row-dd"},{"id":"qi","label":"Induced charge","key":"qInd","decimals":2,"unit":"q","from":5,"domId":"ro-qi","rowId":"row-qi"},{"id":"img","label":"Image distance from axis","key":"imgD","decimals":2,"unit":"R","from":11,"domId":"ro-img","rowId":"row-img"}],"buttons":[],"keys":{},"canvases":[{"id":"slice","aspect":null},{"id":"sigma","aspect":null}],"stage":[],"steps":[{"set":{"mode":"cond","shape":"ball"},"restart":true,"pause":true},{"set":{"mode":"cond","shape":"ball"},"restart":true,"pause":true},{"set":{"mode":"cond","shape":"ball"},"restart":true,"pause":true,"try":["play"]},{"set":{"mode":"cond","shape":"eggSharp"},"restart":true,"pause":true},{"set":{"mode":"cond","shape":"eggSharp"},"restart":true,"pause":true,"try":["play"]},{"set":{"mode":"point","conductor":"plane","sol2":"numerical","d":2},"restart":true,"pause":true,"focus":"slice"},{"set":{"mode":"point","conductor":"plane","sol2":"numerical","d":2},"restart":true,"pause":true,"focus":"slice","try":["play"]},{"set":{"mode":"point","conductor":"sphere","sol2":"numerical","d":1.5},"restart":true,"pause":true,"focus":"slice"},{"set":{"mode":"point","conductor":"sphere","sol2":"numerical","d":1.5},"play":true,"focus":"slice","try":["d"]},{"set":{"mode":"point","conductor":"field","sol2":"numerical"},"restart":true,"play":true,"focus":"slice"},{"set":{"mode":"point","conductor":"field","sol2":"numerical"},"play":true,"focus":"slice","try":["sol2"]},{"set":{"mode":"line","sol3":"image","d3":4},"restart":true,"pause":true,"focus":"slice"},{"set":{"mode":"line","sol3":"image","d3":4},"pause":true,"focus":"slice","try":["d3"]},{"set":{"mode":"line","sol3":"numerical","d3":1.5},"restart":true,"play":true,"focus":"slice"}],"audit":null};
+window.__SIM_MANIFEST = {"title":"Conductors and Their Images","time":{"mode":"continuous","timeless":false,"autoplay":false,"onParamChange":"keep"},"params":[{"id":"mode","type":"select","label":"Mode","default":"cond","options":[{"value":"cond","label":"charged conductor"},{"value":"point","label":"point charge and grounded conductor"},{"value":"line","label":"line charge and cylinder"}],"help":"The problem: a charged conductor, a charge by a grounded conductor, or a line charge.","domId":"p-mode"},{"id":"shape","type":"select","label":"Shape","default":"ball","showWhen":{"mode":"cond"},"options":[{"value":"ball","label":"ball"},{"value":"eggRound","label":"egg with a rounded point"},{"value":"eggSharp","label":"egg with a sharp point"}],"help":"Shape of the charged conductor; the charge starts spread through the inside.","domId":"p-shape"},{"id":"conductor","type":"select","label":"Conductor","default":"plane","showWhen":{"mode":"point"},"options":[{"value":"plane","label":"grounded plane"},{"value":"sphere","label":"grounded sphere"},{"value":"field","label":"sphere in a uniform field"}],"help":"The grounded conductor beside the charge, or the sphere in a uniform field.","domId":"p-conductor"},{"id":"d","type":"slider","label":"Charge distance d","min":1.5,"max":4,"step":0.05,"default":2,"decimals":2,"unit":"R","showWhen":{"mode":"point"},"help":"Distance of the point charge from the plane or from the sphere's centre.","domId":"p-d"},{"id":"sol2","type":"segmented","label":"Solution","default":"numerical","showWhen":{"mode":"point"},"options":[{"value":"numerical","label":"numerical"},{"value":"image","label":"image"}],"help":"Numerical: the conductor's own surface charge. Image: the conductor removed, an image inside.","domId":"p-sol2"},{"id":"d3","type":"slider","label":"Line-charge distance d","min":1.5,"max":4,"step":0.05,"default":4,"decimals":2,"unit":"R","showWhen":{"mode":"line"},"help":"Distance of the line charge from the axis of the cylinder.","domId":"p-d3"},{"id":"sol3","type":"segmented","label":"Solution","default":"image","showWhen":{"mode":"line"},"options":[{"value":"numerical","label":"numerical"},{"value":"image","label":"image"}],"help":"Numerical: the cylinder's own surface charge. Image: the cylinder removed, an image inside.","domId":"p-sol3"}],"readouts":[{"id":"sb","label":"σ/σ₀ at blunt end","key":"sigBlunt","decimals":2,"unit":"","domId":"ro-sb","rowId":"row-sb"},{"id":"sp","label":"σ/σ₀ at point","key":"sigPoint","decimals":2,"unit":"","domId":"ro-sp","rowId":"row-sp"},{"id":"ein","label":"Largest field inside","key":"eIn","decimals":2,"unit":"of release","from":2,"domId":"ro-ein","rowId":"row-ein"},{"id":"dd","label":"d","key":"dR","decimals":2,"unit":"R","from":5,"domId":"ro-dd","rowId":"row-dd"},{"id":"qi","label":"Induced charge","key":"qInd","decimals":2,"unit":"q","from":5,"domId":"ro-qi","rowId":"row-qi"},{"id":"img","label":"Image distance from axis","key":"imgD","decimals":2,"unit":"R","from":11,"domId":"ro-img","rowId":"row-img"}],"buttons":[],"keys":{},"canvases":[{"id":"slice","aspect":null},{"id":"sigma","aspect":null}],"stage":[],"steps":[{"set":{"mode":"cond","shape":"ball"},"restart":true,"pause":true},{"set":{"mode":"cond","shape":"ball"},"restart":true,"pause":true},{"set":{"mode":"cond","shape":"ball"},"restart":true,"pause":true,"try":["play"]},{"set":{"mode":"cond","shape":"eggSharp"},"restart":true,"pause":true},{"set":{"mode":"cond","shape":"eggSharp"},"restart":true,"pause":true,"try":["play"]},{"set":{"mode":"point","conductor":"plane","sol2":"numerical","d":2},"restart":true,"pause":true,"focus":"slice"},{"set":{"mode":"point","conductor":"plane","sol2":"numerical","d":2},"restart":true,"pause":true,"focus":"slice","try":["play"]},{"set":{"mode":"point","conductor":"sphere","sol2":"numerical","d":1.5},"restart":true,"pause":true,"focus":"slice"},{"set":{"mode":"point","conductor":"sphere","sol2":"numerical","d":1.5},"play":true,"focus":"slice","try":["d"]},{"set":{"mode":"point","conductor":"field","sol2":"numerical"},"restart":true,"play":true,"focus":"slice"},{"set":{"mode":"point","conductor":"field","sol2":"numerical"},"play":true,"focus":"slice","try":["sol2"]},{"set":{"mode":"line","sol3":"image","d3":4},"restart":true,"pause":true,"focus":"slice"},{"set":{"mode":"line","sol3":"image","d3":4},"pause":true,"focus":"slice","try":["d3"]},{"set":{"mode":"line","sol3":"numerical","d3":1.5},"restart":true,"play":true,"focus":"slice"}],"audit":null};
 // ═══ Physics core: ring charges, boundary elements and their relaxation; used by advance, derive AND the painters ═══
 // Units: 1/(4πε0) = 1. First mode: a = 1, Q = 1, σ0 = Q/4πa² = 1/4π, φ in Q/4πε0a. Second: R = 1, q = 1, E0 = 1, φ in q/4πε0R
 // (uniform field: E0R). Third (two-dimensional): R = 1, η = 1, φ in η/2πε0. In the axisymmetric cases the symmetry axis is the
@@ -4345,7 +4347,12 @@ function step1(s) {
   }
   s.eIn = eM / m.E0;
   s.t = t1; s.ver++;
-  if (Math.exp(-t1 / TAU) < 2e-3 && s.spread < 2e-4 && inside === 0) s.settled = true;
+  const done = Math.exp(-t1 / TAU) < 2e-3 && s.spread < 2e-4;
+  if (done && inside) {        // the volume charge is gone and the surface has settled: a dot still inside sits at a null of the
+    for (const d of s.dots) if (!d.on) land(m, d);      // tiny numerical residue field, so it is put on the surface
+    inside = 0;
+  }
+  if (done && inside === 0) s.settled = true;
 }
 function surfU(m, u, sv) {     // tangential speed of the surface charge at arc length sv (zero at the two poles)
   const nf = u.length, sF = m.sF;
@@ -4636,6 +4643,12 @@ function drawBands(g, v, bands, ptAt, out, full) {
 }
 function outlinePath(g, v, pts) { const c = g.ctx; c.beginPath(); pts.forEach(([x, y], k) => (k ? c.lineTo(v.x(x), v.y(y)) : c.moveTo(v.x(x), v.y(y)))); c.closePath(); }
 const circlePts = (N) => Array.from({ length: N + 1 }, (_, k) => [Math.cos(2 * PI * k / N), Math.sin(2 * PI * k / N)]);
+// the charge distance means nothing for the sphere in a uniform field: its slider stays in view, greyed out
+function lockD(p) {
+  const el = document.getElementById('p-d'), box = document.getElementById('box-d'), off = p.mode === 'point' && p.conductor === 'field';
+  if (el && el.disabled !== off) el.disabled = off;
+  if (box) box.classList.toggle('is-locked', off);
+}
 
 Kit.sim({
   state(p) {
@@ -4661,7 +4674,10 @@ Kit.sim({
   onParam(id, v, s, p, kit, prev, source) {
     if (id === 'mode' || id === 'shape') { kit.pause(); return 'restart'; }
     if (id === 'conductor') return 'restart';
-    if (id === 'sol2' || id === 'sol3') return 'keep';           // both solutions are kept: switching only changes what is drawn
+    if (id === 'sol2' || id === 'sol3') {                        // both solutions are kept: switching only changes what is drawn,
+      if (v === 'numerical' && source === 'user' && s.mode === (id === 'sol2' ? 'point' : 'line') && s.res > (id === 'sol2' ? 2e-5 : 1e-5)) kit.play();
+      return 'keep';                                             // but a numerical one left behind by a change of d relaxes again
+    }
     if (id === 'd' || id === 'd3') {                             // the conductor keeps its charge and relaxes again from there
       s.res = 1; if (source === 'user' && (id === 'd' ? p.sol2 : p.sol3) === 'numerical') kit.play();
       return 'keep';
@@ -4670,6 +4686,7 @@ Kit.sim({
   },
 
   derive(s, p) {
+    lockD(p);
     if (s.mode === 'cond') {
       const m = model1(s.kind), n = m.n;
       return { sigBlunt: s.Q[0] / m.P[0].area / SIG0, sigPoint: s.Q[n - 1] / m.P[n - 1].area / SIG0, eIn: Math.round(s.eIn * 100) / 100, settled: s.settled };
@@ -4740,7 +4757,7 @@ Kit.sim({
             const X0 = v.x(-0.32), X1 = v.x(0.32), Y = v.y(0), hw = 4, hh = 9;
             c.save(); c.strokeStyle = g.colormap('diverging', -1); c.lineWidth = 1.8; c.beginPath();
             c.moveTo(X0, Y - hw); c.lineTo(X1 - hh, Y - hw); c.lineTo(X1 - hh, Y - 2 * hw); c.lineTo(X1, Y); c.lineTo(X1 - hh, Y + 2 * hw); c.lineTo(X1 - hh, Y + hw); c.lineTo(X0, Y + hw); c.closePath(); c.stroke(); c.restore();
-            g.label('dipole p = 4πε_0E_0R^3 x̂ at the centre', v.x(0), v.y(-1.35), { anchor: 'n', size: 12, backing: true });
+            g.label('dipole p = 4πε_{0}E_{0}R^3 x̂ at the centre', v.x(0), v.y(-1.35), { anchor: 'n', size: 12, backing: true });
             g.region('image', { x: X0 - 6, y: Y - 14, w: X1 - X0 + 12, h: 28 });
           }
         } else {
@@ -5748,7 +5765,7 @@ window.__giSpots = [{"target":"slice","region":"conductor","label":"the charged 
   window.__psWatch=function(btn,msg){
     var s=btn.closest('.ps-sec'), i=secs.indexOf(s); if(i<0) return false;
     var box=btn.closest('.ps-try'), w=box&&box.querySelector('.ps-watch');
-    showWatch(i,msg,w?w.textContent:'',btn.getAttribute('data-live'));
+    showWatch(i,msg,w?w.innerHTML:'',btn.getAttribute('data-live'));
     return true;
   };
   $('ps-w-back').addEventListener('click',function(){ window.__openPhysics(wSec); });
@@ -5768,7 +5785,7 @@ window.__giSpots = [{"target":"slice","region":"conductor","label":"the charged 
     btn.addEventListener('click',function(){
       var fn=(window.__psDemos||{})[btn.getAttribute('data-demo')]; if(!fn) return;
       var i=secs.indexOf(btn.closest('.ps-sec')), box=btn.closest('.ps-try'), w=box&&box.querySelector('.ps-watch');
-      var api={ watchText:w?w.textContent:'', close:function(){ toWatch=true; $('phys-close').click(); },
+      var api={ watchText:w?w.innerHTML:'', close:function(){ toWatch=true; $('phys-close').click(); },
         show:function(msg,live,noWatch){ var t=demoToken; showWatch(i,msg,noWatch?'':api.watchText,live||null); demoToken=t; },
         alive:null };
       api.close(); demoToken++; var tok=demoToken; api.alive=function(){ return tok===demoToken; };

@@ -1155,6 +1155,7 @@ body{background:var(--bg);color:var(--ink);font-family:var(--font-sans);overflow
 .slider-val,.control-value{min-width:30px;text-align:right;font-weight:600;font-size:15px;font-family:var(--font-nums);font-variant-numeric:tabular-nums;color:var(--accent);}
 .control-range{font-size:.75rem;font-family:var(--font-nums);font-variant-numeric:tabular-nums;color:var(--text-muted);margin-top:4px;display:flex;justify-content:space-between;}
 .stat-row{display:flex;justify-content:space-between;align-items:center;gap:10px;font-size:14px;padding:6px 0;font-family:var(--font-sans);}
+.stat-row[hidden]{display:none;}
 .ctrl-box .stat-row:first-child{padding-top:0;}
 .ctrl-box .stat-row:last-child{padding-bottom:0;}
 .stat-label{color:var(--muted);display:flex;align-items:center;font-weight:600;flex-shrink:0;}
@@ -1926,9 +1927,9 @@ html.no-voice #inq-voice, html.no-voice #inq-auto, html.no-voice .cg-row-voice, 
 <!-- ============ 07 · THE SLIDING BAR ============ -->
 <section class="ps-sec" data-short="The sliding bar">
 <div class="ps-h"><span class="ps-no">07</span><h3>The sliding bar: magnetic braking</h3></div>
-<p class="ps-p">A bar of length d, mass M and resistance R slides on resistanceless rails in a uniform field B. Its motion gives ℰ = −Bdẋ, and the force IBd on the induced current gives Mẍ = −(B²d²/R)ẋ. A bar released with velocity −v<sub>0</sub> moves as</p>
+<p class="ps-p">A bar of length d, mass M and resistance R slides on resistanceless rails in a uniform field B. Its motion gives <span data-tex="\mathcal{E} = -Bd\dot{x}">ℰ = −Bd dx/dt</span>, and the force IBd on the induced current gives <span data-tex="M\ddot{x} = -(B^2d^2/R)\,\dot{x}">M d²x/dt² = −(B²d²/R) dx/dt</span>. A bar released with velocity −v<sub>0</sub> moves as</p>
 <div class="board"><div class="ps-eq" data-tex="\dot{x}(t) = -v_0\,e^{-t/\tau}, \qquad \tau = \frac{MR}{B^2d^2}" data-display></div><div class="cap">M = 20 g, d = 20 cm, B = 0.5 T: τ = 2 s for every ohm of R.</div></div>
-<p class="ps-p">The speed falls by the same fraction in each equal interval, and the bar stops after v<sub>0</sub>τ: 20 cm at 1 Ω, 40 cm at 2 Ω. The power I²R = B²d²ẋ²/R is exactly the rate at which the kinetic energy falls, so the total heat is</p>
+<p class="ps-p">The speed falls by the same fraction in each equal interval, and the bar stops after v<sub>0</sub>τ: 20 cm at 1 Ω, 40 cm at 2 Ω. The power <span data-tex="I^2R = B^2d^2\dot{x}^2/R">I²R = B²d²(dx/dt)²/R</span> is exactly the rate at which the kinetic energy falls, so the total heat is</p>
 <div class="board"><div class="ps-eq" data-tex="\int_0^\infty I^2R\,\mathrm{d}t = \frac{B^2d^2 v_0^2}{R}\,\frac{\tau}{2} = \frac{1}{2}Mv_0^2" data-display></div><div class="cap">0.1 mJ for v₀ = 0.1 m/s, at every resistance.</div></div>
 <p class="ps-p">A larger resistance makes the braking weaker and longer without changing the heat.</p>
 <div class="fig f4"><svg viewBox="0 0 300 150" role="img" aria-label="A bar on rails in a field out of the screen, with the induced current, its velocity and the force on it">
@@ -2123,7 +2124,7 @@ html.no-voice #inq-voice, html.no-voice #inq-auto, html.no-voice .cg-row-voice, 
 </div>
 <div class="inq-step" data-card="13" data-kind="observe">
   <h4>13 · Release it at 2 Ω</h4>
-  <p>The resistance is now 2 Ω. Press ▶ Play to release the bar again. Compare where it stops with the dashed mark of the last run, and the energy curves with the dashed ones.</p>
+  <p>The resistance is now 2 Ω. Press ▶ Play to release the bar again. Compare where it stops with the dashed mark of the 1 Ω run, and the energy curves with the dashed ones.</p>
 </div>
 <div class="inq-step" data-card="14" data-kind="synthesis">
   <h4>14 · One rule, two mechanisms</h4>
@@ -3708,6 +3709,9 @@ window.Kit = (function () {
     }
     syncRoleVars();
     writeReadouts();
+    const pb = $('shell-play');
+    if (pb && pendingStep && pendingStep.playReq) { if (pb.textContent !== '⏳ Starting…') pb.textContent = '⏳ Starting…'; }
+    else if (pb && pb.hasAttribute('aria-busy')) { pb.removeAttribute('aria-busy'); if (pb.textContent === '⏳ Starting…') pb.textContent = Shell.playing ? '⏸ Pause' : '▶ Play'; }
   }
   const escH = (t) => String(t).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
   // Readout / slider-value text is rendered WITH notation (μ_B -> μ<sub>B</sub>).
@@ -3992,6 +3996,12 @@ window.Kit = (function () {
     if (!still()) aim(paramDef(moving[0]), () => pendingStep === ps);
     ps.timer = setTimeout(() => finishStep(ps, 'glide'), POINT_MS);
   }
+  // ▶ held while a card's set-up lands: the button says so (and is busy) until the set-up is in place or the press is let go
+  function holdPlay(ps, on) {
+    const b = $('shell-play'); ps.playReq = on; if (!b) return;
+    if (on) { ps.playTxt = b.textContent; b.textContent = '⏳ Starting…'; b.setAttribute('aria-busy', 'true'); }
+    else if (ps.playTxt !== undefined) { if (b.textContent === '⏳ Starting…') b.textContent = ps.playTxt; ps.playTxt = undefined; b.removeAttribute('aria-busy'); }
+  }
   // how: 'glide' (drag the controls, then pace the start), 'now' (pace the start), 'flush' (just
   // land the set-up: another card, free exploration or a replay is taking over)
   function finishStep(ps, how) {
@@ -4014,8 +4024,10 @@ window.Kit = (function () {
     if (!t.timeless && token === pace) pause();
     if (SIM.onStep) { const r = SIM.onStep(i, S, P, Kit); if (r && typeof r === 'object') S = r; }
     render(); updateButtons();
+    const playReq = ps.playReq; holdPlay(ps, false);
     if (how === 'flush' || token !== pace) return;
-    hintTry(st.try);
+    if (playReq && !t.timeless) play();                 // the ▶ pressed while the set-up was landing
+    hintTry(playReq ? [] : st.try);
     if (window.__giSpot && !freeMode) window.__giSpot(i);   // this card's spotlight, once its set-up has landed
     if (how === 'dragged') setTimeout(() => { if (token === pace) hideCursor(); }, PRESS_MS);
     if (how !== 'now') document.dispatchEvent(new CustomEvent('sim:change-done'));
@@ -4078,7 +4090,7 @@ window.Kit = (function () {
     cfg.restartOnParamChange = false;   // Kit owns param restarts
     Shell.init({
       onFrame(dt) { if (SIM.advance) { advancing = true; try { const r = SIM.advance(S, P, dt, Kit); if (r && typeof r === 'object' && r !== S) S = r; } finally { advancing = false; } } render(); updateButtons(); },
-      onReset() { if (pendingStep) clearTimeout(pendingStep.timer); pendingStep = null; ++pace; onNarrationEnd = null; hideCursor(); ended = false;
+      onReset() { if (pendingStep) { clearTimeout(pendingStep.timer); holdPlay(pendingStep, false); } pendingStep = null; ++pace; onNarrationEnd = null; hideCursor(); ended = false;
         for (const c of Object.values(cameras)) Object.assign(c, c.home); resetDefaults('reset'); applyVisibility(freeMode ? Infinity : step); render(); updateButtons(); },
       onResize() { fitAll(); render(); },
       onStep(i) { applyStep(i); },
@@ -4098,7 +4110,18 @@ window.Kit = (function () {
     new MutationObserver(() => render()).observe(document.body, { attributes: true, attributeFilter: ['class'] });
     const playBtn = $('shell-play');
     // capture: runs before the shell's own ▶ handler, which then just resumes
-    document.addEventListener('click', e => { if (e.target.closest && e.target.closest('#shell-play') && !Shell.playing) replayIfEnded(); }, true);
+    document.addEventListener('click', e => {
+      if (!(e.target.closest && e.target.closest('#shell-play'))) return;
+      // a card's set-up still landing would cancel this ▶ when it lands: hold the press, and run it once the set-up is in place;
+      // a second press while it is held lets it go
+      const ps = pendingStep;
+      if (ps && !freeMode && (ps.playReq || !Shell.playing)) {
+        e.stopImmediatePropagation(); e.preventDefault();
+        if (ps.playReq) { holdPlay(ps, false); return; }
+        holdPlay(ps, true); if (ps.held) finishStep(ps, 'glide'); return;
+      }
+      if (!Shell.playing) replayIfEnded();
+    }, true);
     if (playBtn) playBtn.addEventListener('click', () => setTimeout(updateButtons, 0));
     render(); updateButtons();
     return Kit;
@@ -4165,6 +4188,8 @@ const PAL = {
   metal: { dark: '#cbd5e1', light: '#475569' },
 };
 const GHOST = { ring: null, bar: null };    // the last run of the first and third arrangements, drawn dashed for comparison
+// from card 13 on in the inquiry the bar's reference is card 12's whole 1 Ω run (a closed form), from the moment the card opens
+const barGhost = (kit) => (!kit.free && kit.step >= 12 && !(GHOST.bar && GHOST.bar.ref)) ? { R: 1, tEnd: A3.T, ref: true } : GHOST.bar;
 
 // first arrangement: z = the dipole's position relative to the ring's plane, along the moment
 const flux1 = (z) => MU0 * A1.m * A1.a * A1.a / (2 * Math.pow(A1.a * A1.a + z * z, 1.5));
@@ -4185,11 +4210,12 @@ function phys(p, s) {
     return { Phi, dPhi, eField, eMove: 0, E: eField, I, Iw: s.Iw, Bind: brect(I, A2.b, A2.w) };
   }
   if (p.arr === 'bar') {
-    const b = bar3(s.t, p.R), Phi = A3.B * A3.d * b.x, dPhi = A3.B * A3.d * b.v;
-    const eMove = -A3.B * A3.d * b.v, I = eMove / p.R, KE = 0.5 * A3.M * b.v * b.v;   // ∮(v×B)·dx along the moving bar; B is steady
-    return { Phi, dPhi, eField: 0, eMove, E: eMove, I, xb: b.x, vb: b.v, F: I * A3.B * A3.d, KE, Q: K0 - KE, Bind: brect(I, A3.d, b.x) };
+    const b = bar3(s.t, p.R), vb = s.t > 0 ? b.v : 0, Phi = A3.B * A3.d * b.x, dPhi = A3.B * A3.d * vb;   // the bar rests until ▶ Play releases it
+    const eMove = -A3.B * A3.d * vb, I = eMove / p.R, KE = 0.5 * A3.M * vb * vb;   // ∮(v×B)·dx along the moving bar; B is steady
+    return { Phi, dPhi, eField: 0, eMove, E: eMove, I, xb: b.x, vb, F: I * A3.B * A3.d, KE, Q: s.t > 0 ? K0 - KE : 0, Bind: brect(I, A3.d, b.x) };
   }
-  const v = p.speed, z = -A1.z0 + v * s.t, ringMoves = p.what === 'ring';
+  const z = -A1.z0 + p.speed * s.t, ringMoves = p.what === 'ring';
+  const v = s.t > 0 && s.t < T1(p.speed) ? p.speed : 0;                        // at rest before the pass starts and once it has ended
   const Phi = flux1(z), dPhi = v * dflux1(z);
   const eField = ringMoves ? 0 : -dPhi;                                        // ring at rest: −∫(∂B/∂t)·dS = −∂Φ/∂t
   const eMove = ringMoves ? 2 * Math.PI * A1.a * (-v) * brho1(-z) : 0;          // ring moving at −v along the axis: ∮(v×B)·dx = 2πa(−v)B_ρ
@@ -4211,10 +4237,10 @@ const bbox = (pts, pad) => {
   return { x: x0 - pad, y: y0 - pad, w: x1 - x0 + 2 * pad, h: y1 - y0 + 2 * pad };
 };
 // ⊗ (into the screen) or ⊙ (out of it); ring = draw the circle too
-function sym(g, x, y, r, into, color, width, ring) {
-  if (ring) g.circle(x, y, r, { color, width });
-  if (into) { const k = r * (ring ? 0.55 : 0.72); g.line(x - k, y - k, x + k, y + k, { color, width }); g.line(x - k, y + k, x + k, y - k, { color, width }); }
-  else g.circle(x, y, Math.max(1.4, r * (ring ? 0.28 : 0.42)), { fill: color, color });
+function sym(g, x, y, r, into, color, width, ring, alpha) {
+  if (ring) g.circle(x, y, r, { color, width, alpha });
+  if (into) { const k = r * (ring ? 0.55 : 0.72); g.line(x - k, y - k, x + k, y + k, { color, width, alpha }); g.line(x - k, y + k, x + k, y - k, { color, width, alpha }); }
+  else g.circle(x, y, Math.max(1.4, r * (ring ? 0.28 : 0.42)), { fill: color, color, alpha });
 }
 
 // ── first arrangement: the ring and the magnet in 3D ──
@@ -4306,8 +4332,8 @@ function paintWire(g, s, p, q, kit, A) {
   // the wire's field B = μ0 I_w / 2πr: × (into the screen) to its right, • (out of it) to its left, sized by B (full size at 0.2 mT)
   const B0 = MU0 * 20 / (2 * Math.PI * 0.02), cs = Math.min(10, 0.33 * u);
   for (const x of [-4, -2, 1, 3, 5, 7, 9, 11]) for (const y of [-6, -4, -2, 0, 2, 4, 6]) {      // the column right of 11 cm is left clear for the 10 cm dimension
-    const B = MU0 * q.Iw / (2 * Math.PI * Math.abs(x) / 100), r = Math.min(cs, cs * B / B0);
-    if (r >= 1) sym(g, v.x(x), v.y(y), r, x > 0, 'muted', 1.6, false);
+    const B = MU0 * q.Iw / (2 * Math.PI * Math.abs(x) / 100), r = Math.min(cs, cs * B / B0), rMin = 3 / 0.72;   // a cross never shrinks below 3 px a side, or it reads as a dot
+    if (r >= 0.4) sym(g, v.x(x), v.y(y), Math.max(rMin, r), x > 0, 'muted', 1.6, false, Math.min(1, 0.35 + 0.65 * r / rMin));   // below that size: the same size, fainter
   }
   g.line(v.x(0), v.y(-7.6), v.x(0), v.y(7.6), { color: 'ink', width: 5 });
   if (q.Iw > 0.05) {
@@ -4360,11 +4386,11 @@ function paintBar(g, s, p, q, kit, A) {
     g.line(X, Y, X, Y + (i % 5 === 0 ? 9 : 5), { color: 'muted', width: 1 });
     if (i % 5 === 0) g.label(i === 0 ? '0' : i === 5 ? '0.5 m' : '1 m', X, Y + 11, { size: 12, color: 'muted', anchor: 'n', backing: true });
   }
-  const gh = GHOST.bar, showGhost = gh && (kit.free || kit.step >= 12);
+  const gh = barGhost(kit), showGhost = gh && (kit.free || kit.step >= 12);
   if (showGhost) {
     const gx = v.x(bar3(gh.tEnd, gh.R).x), y0 = v.y(0.118), y1 = v.y(-0.118);
     g.path([[gx - 7, y0], [gx + 7, y0], [gx + 7, y1], [gx - 7, y1], [gx - 7, y0]], { color: 'neutral', width: 1.5, dash: [4, 4] });
-    g.label('last run, ' + kit.fmt(gh.R, 1, 'Ω'), gx, y0 - 4, { size: 12, color: 'muted', anchor: 's', backing: true });
+    g.label(gh.ref ? kit.fmt(gh.R, 1, 'Ω') + ' run' : 'last run, ' + kit.fmt(gh.R, 1, 'Ω'), gx, y0 - 4, { size: 12, color: 'muted', anchor: 's', backing: true });
   }
   const bx = v.x(xb), by0 = v.y(0.115), by1 = v.y(-0.115);
   g.rect(bx - 7, by0, 14, by1 - by0, { fill: PAL.metal, radius: 3 });
@@ -4396,15 +4422,16 @@ function paintBar(g, s, p, q, kit, A) {
 }
 
 Kit.sim({
-  // a fresh run; the run it replaces becomes the dashed "last run" if it had started
+  // a fresh run; the run it replaces becomes the dashed "last run" if it had started, drawn in full (its curves are closed forms)
   state(p, kit, reason) {
     const prev = kit.s;
     if (reason === 'boot' || reason === 'reset') { GHOST.ring = null; GHOST.bar = null; }
-    else if (prev && prev.t > 0) {
-      if (prev.arr === 'ring') GHOST.ring = { speed: prev.speed, what: prev.what, tEnd: prev.t };
-      if (prev.arr === 'bar') GHOST.bar = { R: prev.R, tEnd: prev.t };
+    if (kit.free && GHOST.bar && GHOST.bar.ref) GHOST.bar = null;             // card 13's 1 Ω reference stays with the inquiry
+    if (reason !== 'boot' && reason !== 'reset' && prev && prev.t > 0) {
+      if (prev.arr === 'ring') GHOST.ring = { speed: prev.speed, what: prev.what, tEnd: T1(prev.speed) };
+      if (prev.arr === 'bar' && !(GHOST.bar && GHOST.bar.ref)) GHOST.bar = { R: prev.R, tEnd: A3.T };   // a rerun on cards 13-14 keeps it
     }
-    const s = { arr: p.arr, what: p.what, speed: p.speed, R: p.R, t: 0, Iw: p.iw, dIdt: 0, hist: [] };
+    const s = { arr: p.arr, what: p.what, speed: p.speed, R: p.R, t: 0, Iw: p.iw, dIdt: 0, slew: A2.rate, tIn: null, hist: [] };
     if (p.arr === 'wire') s.hist = [{ t: -A2.win, Iw: p.iw, E: 0 }, { t: 0, Iw: p.iw, E: 0 }];   // a fresh run: the current has been held at the slider's value
     return s;
   },
@@ -4415,19 +4442,31 @@ Kit.sim({
       if ((s.hold || 0) >= 0.5) kit.pause(); return;
     }
     if (p.arr === 'bar') { s.t = Math.min(A3.T, s.t + dt); if (s.t >= A3.T) kit.pause(); return; }                      // the plot's axis ends at 12 s
-    s.t += dt;                                                    // the wire's current heads for the slider at no more than 40 A/s
-    const dI = Math.max(-A2.rate * dt, Math.min(A2.rate * dt, p.iw - s.Iw));
-    s.dIdt = dt > 0 ? dI / dt : 0;
+    s.t += dt;                                                    // the wire's current heads for the slider at the rate the hand moved it (onParam), no more than 40 A/s
+    const dI = Math.max(-s.slew * dt, Math.min(s.slew * dt, p.iw - s.Iw));
     s.Iw = Math.abs(p.iw - s.Iw - dI) < 1e-9 ? p.iw : s.Iw + dI;
-    s.hist.push({ t: s.t, Iw: s.Iw, E: -K2 * s.dIdt });
+    // dI_w/dt is the mean rate over the last 0.1 s, so the uneven steps of a dragged slider read as one steady emf
+    s.hist.push({ t: s.t, Iw: s.Iw, dI, dt, E: 0 });
+    let sum = 0, w = 0;
+    for (let i = s.hist.length - 1; i >= 0 && s.hist[i].dt && s.hist[i].t > s.t - 0.1; i--) { sum += s.hist[i].dI; w += s.hist[i].dt; }
+    s.dIdt = w > 0 ? sum / w : 0;
+    s.hist[s.hist.length - 1].E = -K2 * s.dIdt;
     while (s.hist.length > 2 && s.hist[1].t < s.t - A2.win - 0.2) s.hist.shift();
   },
 
   // the student's hand on the wire-current slider: the current follows it (the clock runs); a card's set-up starts from a held current
   onParam(id, v, s, p, kit, prev, source) {
-    if (id === 'iw' && source === 'user' && p.arr === 'wire') { if (!kit.playing) kit.play(); return 'keep'; }
+    if (id === 'iw' && source === 'user' && p.arr === 'wire') {
+      // the hand's rate: this step over the time since the last one, that time at most 0.5 s (so a first step of 20 A runs at 40 A/s)
+      const now = performance.now() / 1000, dtIn = s.tIn == null ? 0.5 : Math.min(0.5, Math.max(1e-3, now - s.tIn));
+      s.tIn = now; s.slew = Math.min(A2.rate, Math.abs(v - s.Iw) / dtIn);
+      if (!kit.playing) kit.play(); return 'keep';
+    }
     return 'restart';
   },
+
+  // card 13 (step 12): the dashed reference is always card 12's whole run at 1 Ω (a closed form), however soon card 12 was left
+  onStep(i) { if (i === 12) GHOST.bar = { R: 1, tEnd: A3.T, ref: true }; },
 
   derive(s, p) {
     const r = phys(p, s);
@@ -4464,12 +4503,12 @@ Kit.sim({
       if (p.arr === 'bar') {
         const v = g.view({ x0: 0, x1: A3.T, y0: 0, y1: 0.12 }, R);
         g.axes(v, { x: { step: 2, title: 't (s)', decimals: 0 }, y: { labels: [0, 0.03, 0.06, 0.09, 0.12], grid: 0.03, title: 'energy (mJ)', decimals: 2 } });
-        const gh = GHOST.bar;
+        const gh = barGhost(kit);
         if (gh && (kit.free || kit.step >= 12)) {
           const x1 = Math.min(gh.tEnd, A3.T);
           g.plot(v, (t) => ke3(t, gh.R) * 1e3, { x0: 0, x1, color: 'series3', width: 1.5, dash: [5, 4], alpha: 0.75 });
           g.plot(v, (t) => (K0 - ke3(t, gh.R)) * 1e3, { x0: 0, x1, color: 'warm', width: 1.5, dash: [5, 4], alpha: 0.75 });
-          g.caption(['dashed: last run, R = ' + kit.fmt(gh.R, 1, 'Ω')], 'tr', { rect: R, size: 12 });
+          g.caption([(gh.ref ? 'dashed: the run at R = ' : 'dashed: last run, R = ') + kit.fmt(gh.R, 1, 'Ω')], 'tr', { rect: R, size: 12 });
         }
         if (s.t > 1e-4) {
           g.plot(v, (t) => ke3(t, p.R) * 1e3, { x0: 0, x1: s.t, color: 'series3', width: 2.6 });
@@ -4507,7 +4546,19 @@ Kit.sim({
       g.label('ℰ', lx, ye, { size: 14, color: 'blue', anchor: la, backing: true });
     },
   },
-});</script>
+});
+// the Physics sheet's ⌖ for a control that only one arrangement shows: in free exploration, switch to that arrangement first
+// (capture: before the sheet's own handler looks for the box)
+// in the inquiry the arrangement is the card's, so the toast names the arrangement the control belongs to
+document.addEventListener('click', (e) => {
+  const b = e.target.closest && e.target.closest('.ps-loc[data-locate]'); if (!b) return;
+  const want = { '#box-what': 'ring', '#box-speed': 'ring', '#box-iw': 'wire', '#box-R': 'bar' }[b.getAttribute('data-locate')];
+  b.removeAttribute('data-locate-miss');
+  if (!want || Kit.p.arr === want) return;
+  if (Kit.free) { Kit.setParam('arr', want); return; }
+  const name = { ring: 'Moving magnet and ring', wire: 'Changing current beside a loop', bar: 'Sliding bar' }[want];
+  b.setAttribute('data-locate-miss', 'That control belongs to the <b>' + name + '</b> arrangement, not the one this card uses. In Free Exploration, ⌖ switches to it.');
+}, true);</script>
 
 <script>
 /* ===== Card voiceover engine (recorded clips only) ===== */
@@ -4754,7 +4805,7 @@ Kit.sim({
 (function(){
   const giBtn = document.getElementById('btn-gi'), cgBtn = document.getElementById('btn-cg'), root = document.documentElement;
   if(!giBtn || !cgBtn) return;
-  let cgOn = false, cgStep = 0, cgMax = 0, callout = null, nav = null, cgVoice = null, cgAuto = false;
+  let cgOn = false, cgStep = 0, cgMax = 0, callout = null, nav = null, cgVoice = null, cgAuto = false, cgArr0 = null;
   function setCgAuto(on){
     cgAuto = on;
     if(nav) nav.querySelector('#cg-auto').classList.toggle('active', on);
@@ -4763,12 +4814,6 @@ Kit.sim({
 // Generated by the v2 compiler from the manifest (params, readouts, buttons).
 // Skipped (with reasons): #shell-speed, #shell-play: shell transport (playback meta-UI); #panel-controls, #panel-readouts: wrapper panels (each item inside is toured); inputs and value spans inside each #box-*: toured with their box; canvases: the scene, not controls.
 const cgSteps = [
-  {
-    sel: "#shell-maximize",
-    mode: "veil",
-    title: "Maximize",
-    text: "Opens the sim in full screen; press it again, or Esc, to leave."
-  },
   {
     sel: "#toggle-formal",
     mode: "veil",
@@ -4790,24 +4835,28 @@ const cgSteps = [
   {
     sel: "#box-what",
     mode: "hide",
+    arr: "ring",
     title: "What moves",
     text: "Moves the magnet through the fixed ring, or the ring towards the stationary magnet."
   },
   {
     sel: "#box-speed",
     mode: "hide",
+    arr: "ring",
     title: "Speed v",
     text: "Sets the steady speed of the pass, 0.2 to 0.5 m/s."
   },
   {
     sel: "#box-iw",
     mode: "hide",
+    arr: "wire",
     title: "Wire current Iw",
     text: "Sets the wire current, 0 to 20 A; it follows at up to 40 A/s."
   },
   {
     sel: "#box-R",
     mode: "hide",
+    arr: "bar",
     title: "Bar resistance R",
     text: "Sets the bar's resistance, 0.5 to 2 Ω; ▶ Play releases the bar."
   },
@@ -4924,6 +4973,11 @@ const cgSteps = [
   function cgShow(n){
     cgStep = Math.max(0, Math.min(n, cgSteps.length-1));
     cgMax = Math.max(cgMax, cgStep);
+    { // a control only one arrangement shows: switch to that arrangement for its step, and back afterwards
+      const want = cgSteps[cgStep].arr, k = window.__kit;
+      if(k && want){ if(cgArr0 === null) cgArr0 = k.p.arr; if(k.p.arr !== want) k.setParam('arr', want); }
+      else if(k && cgArr0 !== null){ if(k.p.arr !== cgArr0) k.setParam('arr', cgArr0); cgArr0 = null; }
+    }
     const introduced = new Set(cgSteps.slice(0, cgMax+1).map(s=>s.sel));
     cgSteps.forEach(st=>{ [st.sel].concat(st.also||[]).forEach(sl=>{ const t=cel(sl); if(!t) return;
       t.classList.remove('cg-glow'); t.classList.toggle(st.mode==='hide'?'cg-hidden':'cg-veiled', !introduced.has(st.sel)); }); });
@@ -4962,6 +5016,7 @@ const cgSteps = [
     } else {
       if(cgAuto) setCgAuto(false);
       if(cgVoice) cgVoice.stop();
+      cgArr0 = null;
       if(callout){ callout.style.display='none'; nav.style.display='none'; }
       placeSpot();
       cgSteps.forEach(st=>[st.sel].concat(st.also||[]).forEach(sl=>{ const t=cel(sl); if(t) t.classList.remove('cg-hidden','cg-veiled','cg-glow'); }));
@@ -5440,7 +5495,7 @@ window.__giSpots = [{"target":"scene","region":"ring","label":"the copper ring"}
   window.__psWatch=function(btn,msg){
     var s=btn.closest('.ps-sec'), i=secs.indexOf(s); if(i<0) return false;
     var box=btn.closest('.ps-try'), w=box&&box.querySelector('.ps-watch');
-    showWatch(i,msg,w?w.textContent:'',btn.getAttribute('data-live'));
+    showWatch(i,msg,w?w.innerHTML:'',btn.getAttribute('data-live'));
     return true;
   };
   $('ps-w-back').addEventListener('click',function(){ window.__openPhysics(wSec); });
@@ -5460,7 +5515,7 @@ window.__giSpots = [{"target":"scene","region":"ring","label":"the copper ring"}
     btn.addEventListener('click',function(){
       var fn=(window.__psDemos||{})[btn.getAttribute('data-demo')]; if(!fn) return;
       var i=secs.indexOf(btn.closest('.ps-sec')), box=btn.closest('.ps-try'), w=box&&box.querySelector('.ps-watch');
-      var api={ watchText:w?w.textContent:'', close:function(){ toWatch=true; $('phys-close').click(); },
+      var api={ watchText:w?w.innerHTML:'', close:function(){ toWatch=true; $('phys-close').click(); },
         show:function(msg,live,noWatch){ var t=demoToken; showWatch(i,msg,noWatch?'':api.watchText,live||null); demoToken=t; },
         alive:null };
       api.close(); demoToken++; var tok=demoToken; api.alive=function(){ return tok===demoToken; };

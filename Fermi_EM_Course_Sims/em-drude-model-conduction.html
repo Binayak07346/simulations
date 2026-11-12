@@ -1155,6 +1155,7 @@ body{background:var(--bg);color:var(--ink);font-family:var(--font-sans);overflow
 .slider-val,.control-value{min-width:30px;text-align:right;font-weight:600;font-size:15px;font-family:var(--font-nums);font-variant-numeric:tabular-nums;color:var(--accent);}
 .control-range{font-size:.75rem;font-family:var(--font-nums);font-variant-numeric:tabular-nums;color:var(--text-muted);margin-top:4px;display:flex;justify-content:space-between;}
 .stat-row{display:flex;justify-content:space-between;align-items:center;gap:10px;font-size:14px;padding:6px 0;font-family:var(--font-sans);}
+.stat-row[hidden]{display:none}
 .ctrl-box .stat-row:first-child{padding-top:0;}
 .ctrl-box .stat-row:last-child{padding-bottom:0;}
 .stat-label{color:var(--muted);display:flex;align-items:center;font-weight:600;flex-shrink:0;}
@@ -4152,7 +4153,6 @@ function rnd(s) {
 function gauss(s) { let u = 0; while (u < 1e-12) u = rnd(s); return Math.sqrt(-2 * Math.log(u)) * Math.cos(2 * Math.PI * rnd(s)); }
 const expT = (s, tau) => -tau * Math.log(1 - rnd(s));          // time to the next collision: exponential, mean tau
 const wrapX = (x) => x - L * Math.floor(x / L);
-const wrapD = (d) => d - L * Math.floor((d + L / 2) / L);      // a displacement folded into [-L/2, L/2)
 function foldY(y, vy) { while (y < 0 || y > H) { y = y < 0 ? -y : 2 * H - y; vy = -vy; } return [y, vy]; }
 
 function trailPoint(s, t, x, y) {
@@ -4163,9 +4163,9 @@ function trailPoint(s, t, x, y) {
 // one sub-step h for every electron: free flight under a = qE/m, collisions at their own random times
 function stepAll(s, p, h) {
   const ph = phys(p.E, p.tau), a = ph.a, tau = ph.tau;
-  let sx = 0, s2 = 0, sd = 0;
+  let sx = 0, s2 = 0, sd = 0, sg = 0;
   for (let i = 0; i < N; i++) {
-    let x = s.x[i], y = s.y[i], vx = s.vx[i], vy = s.vy[i], tc = s.tc[i], rem = h;
+    let x = s.x[i], y = s.y[i], vx = s.vx[i], vy = s.vy[i], ux = s.ux[i], tc = s.tc[i], rem = h;
     while (tc <= rem) {
       const m = vx * tc + 0.5 * a * tc * tc;
       x += m; sd += m; vx += a * tc;
@@ -4173,25 +4173,31 @@ function stepAll(s, p, h) {
       rem -= tc;
       if (i === 0) { const tt = s.t + h - rem, xw = wrapX(x); trailPoint(s, tt, xw, y); s.flashes.push([tt, xw, y]); }
       vx = gauss(s) * SIG; vy = gauss(s) * SIG; tc = expT(s, tau);   // a fresh thermal velocity, no preferred direction
+      ux = vx;
     }
     const m = vx * rem + 0.5 * a * rem * rem;
     x += m; sd += m; vx += a * rem; tc -= rem;
     [y, vy] = foldY(y + vy * rem, vy);
     x = wrapX(x);
-    s.x[i] = x; s.y[i] = y; s.vx[i] = vx; s.vy[i] = vy; s.tc[i] = tc;
-    sx += vx; s2 += vx * vx + vy * vy;
+    s.x[i] = x; s.y[i] = y; s.vx[i] = vx; s.vy[i] = vy; s.ux[i] = ux; s.tc[i] = tc;
+    sx += vx; s2 += vx * vx + vy * vy; sg += vx - ux;
   }
   s.t += h;
   s.D += sd / N;                                               // average displacement along the wire (unwrapped)
   trailPoint(s, s.t, s.x[0], s.y[0]);
   s.inst = { vx: sx / N, v2: s2 / N };
-  s.hist.push([s.t, h, sx / N, s2 / N]);
+  s.inst.g = sg / N;
+  if (s.t - s.tE > 3 * tau) s.hist.push([s.t, h, sx / N, s2 / N, sg / N]);   // the window restarts 3 tau after E or tau last changed
   while (s.hist.length && s.hist[0][0] <= s.t - WIN) s.hist.shift();
   while (s.trail.length && s.trail[0][0] < s.t - TRAIL) s.trail.shift();
   while (s.flashes.length && s.flashes[0][0] < s.t - FLASH) s.flashes.shift();
-  // the hold: E and tau unchanged; average J once the first 3 tau have passed, leave a point at 5 s
+  // the hold: E and tau unchanged; average J once the first 3 tau have passed, leave a point at 5 s.
+  // It averages the velocity gained from the field since each electron's last collision, v_x - u_x: the same mean
+  // as <v_x> (the thermal u_x averages to exactly 0) without the thermal scatter, so the points show J against E clearly.
+  // The live point uses the same estimator over the same window, so it lands on the point it leaves; the readouts keep
+  // the plain sample average <v_x>, with its finite-N fluctuations.
   s.hold += h;
-  if (s.hold > 3 * tau) { s.hSum += (sx / N) * h; s.hW += h; }
+  if (s.hold > 3 * tau) { s.hSum += (sg / N) * h; s.hW += h; }
   if (!s.held && s.hold >= HOLD && s.hW > 0) {
     s.pts.push([p.E, -(s.hSum / s.hW) / VT, p.tau]);
     if (s.pts.length > 40) s.pts.shift();
@@ -4209,17 +4215,17 @@ function tauColor(g, tau) {                                    // 0.5 tau0 green
 Kit.sim({
   state(p) {
     const s = { r: SEED, t: 0, x: new Float64Array(N), y: new Float64Array(N), vx: new Float64Array(N), vy: new Float64Array(N),
-                tc: new Float64Array(N), D: 0, dRef: 0, tRef: 0, mCount: 0, mdots: [], hist: [], trail: [], flashes: [],
+                ux: new Float64Array(N), tc: new Float64Array(N), D: 0, dRef: 0, tRef: 0, mCount: 0, mdots: [], hist: [], tE: -Infinity, trail: [], flashes: [],
                 hold: 0, hSum: 0, hW: 0, held: false, pts: [] };
     const tau = phys(p.E, p.tau).tau;
     let sx = 0, s2 = 0;
     for (let i = 0; i < N; i++) {
       s.x[i] = rnd(s) * L; s.y[i] = rnd(s) * H;
-      s.vx[i] = gauss(s) * SIG; s.vy[i] = gauss(s) * SIG; s.tc[i] = expT(s, tau);
+      s.vx[i] = gauss(s) * SIG; s.vy[i] = gauss(s) * SIG; s.ux[i] = s.vx[i]; s.tc[i] = expT(s, tau);
       sx += s.vx[i]; s2 += s.vx[i] ** 2 + s.vy[i] ** 2;
     }
     s.x[0] = L / 2; s.y[0] = H / 2;                            // the highlighted electron starts in the middle
-    s.inst = { vx: sx / N, v2: s2 / N };
+    s.inst = { vx: sx / N, v2: s2 / N, g: 0 };                // g: <v_x - u_x>, zero until the first sub-step
     s.trail.push([0, s.x[0], s.y[0], 0]);
     return s;
   },
@@ -4232,6 +4238,7 @@ Kit.sim({
   onParam(id, v, s, p, kit, prev) {
     if (v === prev) return 'keep';
     s.hold = 0; s.hSum = 0; s.hW = 0; s.held = false;          // a new hold starts
+    s.hist = []; s.tE = s.t;                                   // the 5 s window restarts with the hold
     if (id === 'E') { s.dRef = s.D; s.tRef = s.t; s.mCount = 0; s.mdots = []; }   // the marker restarts from 0
     if (id === 'tau') { const tau = phys(p.E, v).tau; for (let i = 0; i < N; i++) s.tc[i] = expT(s, tau); }   // memoryless: redraw the clocks
     return 'keep';
@@ -4245,13 +4252,16 @@ Kit.sim({
 
   derive(s, p, kit) {
     let w = 0, ax = 0, a2 = 0;
-    for (const e of s.hist) { w += e[1]; ax += e[2] * e[1]; a2 += e[3] * e[1]; }
-    const vx = (w > 0 ? ax / w : s.inst.vx) / VT, vrms = Math.sqrt(w > 0 ? a2 / w : s.inst.v2) / VT;
+    let ag = 0;                                                // <v_x - u_x>: the hold points' estimator, for the live point
+    for (const e of s.hist) { w += e[1]; ax += e[2] * e[1]; a2 += e[3] * e[1]; ag += e[4] * e[1]; }
+    const vx = (w > 0 ? ax / w : s.inst.vx) / VT, vg = (w > 0 ? ag / w : s.inst.g) / VT, vrms = Math.sqrt(w > 0 ? a2 / w : s.inst.v2) / VT;
     const hide = hidden(kit, HIDE_RMS), hideAvg = hidden(kit, HIDE_AVG);
     const ph = phys(p.E, p.tau);
     const f3 = (v) => (Math.abs(v) < 0.0005 ? '0.000' : (v < 0 ? '−' : '+') + Math.abs(v).toFixed(3));   // fixed 3 decimals, never 10^-n
-    return { eRel: p.E, tauRel: p.tau, vrms: hide ? '—' : vrms.toFixed(3), vx: hideAvg ? '—' : f3(vx), J: hideAvg ? '—' : f3(-vx), vxN: vx, Jn: -vx, vrmsN: vrms,
-             disp: s.D - s.dRef, driftVT: ph.driftVT, Jss: ph.Jss };
+    const live = w >= 0.5 || !(s.tE > -Infinity);            // after a change of E or tau: '—' and no live point until 0.5 s of the window has filled
+    const dash = hideAvg || !live;
+    return { eRel: p.E, tauRel: p.tau, vrms: hide ? '—' : vrms.toFixed(3) + ' v_T', vx: dash ? '—' : f3(vx) + ' v_T', J: dash ? '—' : f3(-vx) + ' nev_T', vxN: vx, Jn: -vg, vrmsN: vrms,
+             disp: s.D - s.dRef, driftVT: ph.driftVT, Jss: ph.Jss, live };
   },
 
   paint: {
@@ -4318,9 +4328,13 @@ Kit.sim({
         if (major) g.label(d === 0 ? '0' : (d > 0 ? String(d) : '−' + Math.abs(d)), tx, yT + 11, { size: 12, color: 'muted', anchor: 'n' });
       }
       if (!hidden(kit, HIDE_MARK)) {
-        for (const d of s.mdots) g.circle(xc + wrapD(d) * k, yT, 3, { fill: 'highlight', fillAlpha: 0.45, color: 'highlight', width: 1, alpha: 0.6 });
-        const xm = xc + wrapD(q.disp) * k;
+        for (const d of s.mdots) if (Math.abs(d) <= L / 2) g.circle(xc + d * k, yT, 3, { fill: 'highlight', fillAlpha: 0.45, color: 'highlight', width: 1, alpha: 0.6 });
+        const off = Math.abs(q.disp) > L / 2, xm = xc + Math.max(-L / 2, Math.min(L / 2, q.disp)) * k;   // off the track: held at its end
         g.polygon([[xm, yT - 2], [xm - 7, yT - 15], [xm + 7, yT - 15]], { fill: 'highlight' });
+        if (off) {
+          const dir = Math.sign(q.disp), txt = (dir < 0 ? '← −' : '+') + Math.abs(q.disp).toFixed(0) + 'ℓ_0' + (dir > 0 ? ' →' : '');
+          g.label(txt, xm - dir * 11, yT - 9, { size: 12, color: 'highlight', anchor: dir < 0 ? 'w' : 'e', backing: true });
+        }
       }
       g.label('average displacement ⟨Δx⟩ (ℓ_0)', xc, yT + 30, { size: 12, color: 'inkMid', anchor: 'n' });
       g.region('displacement marker', { x: X0, y: yT - 20, w: bw, h: 48 });
@@ -4350,7 +4364,7 @@ Kit.sim({
       const hideAvg = hidden(kit, HIDE_AVG);
       if (!hideAvg) for (const pt of s.pts) g.dot(v.x(pt[0]), v.y(cl(pt[1])), 5, tauColor(g, pt[2]), true);
       // the live point: J averaged over the last 5 s (from the first observe card on)
-      if ((kit.free || kit.step >= 2) && !hideAvg) {
+      if ((kit.free || kit.step >= 2) && !hideAvg && q.live) {
         const lx = v.x(p.E), ly = v.y(cl(q.Jn));
         g.circle(lx, ly, 7, { color: 'ink', width: 2 });
         g.line(lx - 3, ly, lx + 3, ly, { color: 'ink', width: 1.5 });
@@ -5276,7 +5290,7 @@ window.__giSpots = [{"target":"scene","region":"highlighted electron","label":"t
   window.__psWatch=function(btn,msg){
     var s=btn.closest('.ps-sec'), i=secs.indexOf(s); if(i<0) return false;
     var box=btn.closest('.ps-try'), w=box&&box.querySelector('.ps-watch');
-    showWatch(i,msg,w?w.textContent:'',btn.getAttribute('data-live'));
+    showWatch(i,msg,w?w.innerHTML:'',btn.getAttribute('data-live'));
     return true;
   };
   $('ps-w-back').addEventListener('click',function(){ window.__openPhysics(wSec); });
@@ -5296,7 +5310,7 @@ window.__giSpots = [{"target":"scene","region":"highlighted electron","label":"t
     btn.addEventListener('click',function(){
       var fn=(window.__psDemos||{})[btn.getAttribute('data-demo')]; if(!fn) return;
       var i=secs.indexOf(btn.closest('.ps-sec')), box=btn.closest('.ps-try'), w=box&&box.querySelector('.ps-watch');
-      var api={ watchText:w?w.textContent:'', close:function(){ toWatch=true; $('phys-close').click(); },
+      var api={ watchText:w?w.innerHTML:'', close:function(){ toWatch=true; $('phys-close').click(); },
         show:function(msg,live,noWatch){ var t=demoToken; showWatch(i,msg,noWatch?'':api.watchText,live||null); demoToken=t; },
         alive:null };
       api.close(); demoToken++; var tok=demoToken; api.alive=function(){ return tok===demoToken; };
