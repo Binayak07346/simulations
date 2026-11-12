@@ -1144,6 +1144,7 @@ body{background:var(--bg);color:var(--ink);font-family:var(--font-sans);overflow
 .ctrl-box{background:var(--ctrl-bg);border:1px solid var(--ctrl-border);border-radius:5px;padding:12px;margin-bottom:8px;box-sizing:border-box;}
 .ctrl-box[hidden]{display:none !important;}
 .stat-row[hidden]{display:none !important;}   /* .stat-row{display:flex} overrode [hidden]: a readout staged with from/until stayed visible (2026-11-10) */
+.stat-row.kit-off,.fapp-chip-b .stat-row.kit-off{display:none !important;}   /* a readout row whose showWhen fails (another mode's row) */
 .ctrl-box:last-child{margin-bottom:0;}
 .ctrl-box--slider{min-height:73px;display:flex;flex-direction:column;justify-content:center;}
 .ctrl-box-label{display:block;font-size:13px;font-weight:600;color:var(--text);line-height:1.2;}
@@ -1803,7 +1804,7 @@ html.no-voice #inq-voice, html.no-voice #inq-auto, html.no-voice .cg-row-voice, 
 <line x1="152" y1="104" x2="152" y2="160" stroke="currentColor" stroke-width="4" opacity=".45"/>
 <polygon points="200,103 192,115 175,122 152,124 129,121 112,113 106,103 114,92 131,85 152,83 175,86 192,93" fill="none" stroke="currentColor" stroke-width="1.8"/>
 <g fill="currentColor"><circle cx="200" cy="103" r="2.6"/><circle cx="192" cy="115" r="2.6"/><circle cx="175" cy="122" r="2.6"/><circle cx="152" cy="124" r="2.6"/><circle cx="129" cy="121" r="2.6"/><circle cx="112" cy="113" r="2.6"/><circle cx="106" cy="103" r="2.6"/><circle cx="114" cy="92" r="2.6"/><circle cx="131" cy="85" r="2.6"/><circle cx="152" cy="83" r="2.6"/><circle cx="175" cy="86" r="2.6"/><circle cx="192" cy="93" r="2.6"/></g>
-<line x1="160" y1="123.5" x2="146" y2="124" stroke="currentColor" stroke-width="1.8" marker-end="url(#wl0-ar)"/>
+<line x1="157" y1="123.6" x2="171" y2="122.4" stroke="currentColor" stroke-width="1.8" marker-end="url(#wl0-ar)"/>
 <line x1="152" y1="104" x2="152" y2="14" stroke="currentColor" stroke-width="4"/>
 <line x1="152" y1="62" x2="152" y2="32" class="wl-i" stroke="#6d28d9" stroke-width="3" marker-end="url(#wl0-ai)"/>
 <text x="160" y="40" font-size="12" font-style="italic" class="wl-it" fill="#6d28d9">I</text>
@@ -1856,7 +1857,7 @@ html.no-voice #inq-voice, html.no-voice #inq-auto, html.no-voice .cg-row-voice, 
 <defs><marker id="wl1-ar" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0 L8,4 L0,8 z" fill="currentColor"/></marker>
 <marker id="wl1-ai" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="8" markerHeight="8" orient="auto"><path d="M0,0 L8,4 L0,8 z" class="wl-if" fill="#6d28d9"/></marker></defs>
 <path d="M150,62 C210,58 238,78 226,100 C214,122 160,126 112,120 C70,114 62,92 84,76 C100,64 124,63 150,62 Z" fill="currentColor" fill-opacity=".07" stroke="currentColor" stroke-width="2"/>
-<path d="M188,121 L176,123" stroke="currentColor" stroke-width="2" marker-end="url(#wl1-ar)"/>
+<path d="M156,122.5 L169,121.9" stroke="currentColor" stroke-width="2" marker-end="url(#wl1-ar)"/>
 <line x1="150" y1="92" x2="150" y2="22" stroke="currentColor" stroke-width="1.3" marker-end="url(#wl1-ar)"/>
 <text x="156" y="28" font-size="12" font-weight="bold" fill="currentColor">n̂</text>
 <line x1="186" y1="140" x2="186" y2="40" class="wl-i" stroke="#6d28d9" stroke-width="3" marker-end="url(#wl1-ai)"/>
@@ -1951,7 +1952,7 @@ html.no-voice #inq-voice, html.no-voice #inq-auto, html.no-voice .cg-row-voice, 
 <ul class="pts">
 <li><b>Fields from symmetry.</b> Where symmetry fixes the direction of B, as round a long straight wire or inside a long solenoid, Ampère's law in integral form gives B in one line.</li>
 <li><b>Uniform fields.</b> A long solenoid gives a nearly uniform field μ<sub>0</sub>NI inside and very little field outside, so long coils are used wherever a steady, uniform magnetic field is needed.</li>
-<li><b>Magnetic dipoles.</b> Far away, every loop of current looks like a magnetic dipole m = IπR²ẑ, whatever happens close to its wire.</li>
+<li><b>Magnetic dipoles.</b> Far away, every loop of current looks like a magnetic dipole m = I a, where a is the vector area of the loop (IπR²ẑ for this circular loop), whatever happens close to its wire.</li>
 </ul>
 </section>
 
@@ -1964,7 +1965,7 @@ html.no-voice #inq-voice, html.no-voice #inq-auto, html.no-voice .cg-row-voice, 
 <li>∮<sub>C</sub> B·dx = μ<sub>0</sub>I, with I the net current through any surface bounded by C.</li>
 <li>Round a straight wire each step adds (μ<sub>0</sub>I/2π) dφ.</li>
 <li>A long solenoid gives B = μ<sub>0</sub>NI inside; a finite one, μ<sub>0</sub>NI × (ℓ/2)/√(ℓ²/4 + R²) at the centre.</li>
-<li>Far from a current loop its field approaches the dipole field of m = IπR²ẑ.</li>
+<li>Far from a current loop its field approaches the dipole field of m = I a, where a is the vector area of the loop: m = IπR²ẑ for this circular loop.</li>
 </ul>
 <h4 class="ps-sub">Common mix-ups</h4>
 <ul class="ps-myth">
@@ -2165,7 +2166,7 @@ html.no-voice #inq-voice, html.no-voice #inq-auto, html.no-voice .cg-row-voice, 
   <select class="shell-select kit-select" id="kit-view" aria-label="View"><option value="all">Both panels</option><option value="panel-main">Main 3D scene</option><option value="panel-inset">Inset plot</option></select>
 </div>
 
-<div class="kit-note" id="note-1">▶ Play sends the marker once round the Ampère loop</div>
+<div class="kit-note" id="note-1">In the Ampère-loop mode, ▶ Play sends the marker once round the Ampère loop</div>
 </div>
 </div>
 <div class="shell-panel" id="panel-readouts">
@@ -2174,8 +2175,8 @@ html.no-voice #inq-voice, html.no-voice #inq-auto, html.no-voice .cg-row-voice, 
 <div class="stat-row" id="row-sum"><span class="stat-label">∮B·dx so far</span><span class="stat-value highlight" id="ro-sum">—</span></div>
 <div class="stat-row" id="row-frac"><span class="stat-label">fraction of C traversed</span><span class="stat-value" id="ro-frac">—</span></div>
 <div class="stat-row" id="row-ellr"><span class="stat-label">ℓ</span><span class="stat-value" id="ro-ellr">—</span></div>
-<div class="stat-row" id="row-bzc"><span class="stat-label">B<sub>z</sub> at centre</span><span class="stat-value highlight" id="ro-bzc">—</span></div>
-<div class="stat-row" id="row-bzo"><span class="stat-label">B<sub>z</sub> at 1.5R outside</span><span class="stat-value" id="ro-bzo">—</span></div>
+<div class="stat-row" id="row-bzc"><span class="stat-label"><span>B<sub>z</sub> at centre</span></span><span class="stat-value highlight" id="ro-bzc">—</span></div>
+<div class="stat-row" id="row-bzo"><span class="stat-label"><span>B<sub>z</sub> at 1.5R outside</span></span><span class="stat-value" id="ro-bzo">—</span></div>
 <div class="stat-row" id="row-lr"><span class="stat-label">L</span><span class="stat-value" id="ro-lr">—</span></div>
 <div class="stat-row" id="row-rax"><span class="stat-label">exact/dipole on axis at L</span><span class="stat-value" id="ro-rax">—</span></div>
 <div class="stat-row" id="row-rpl"><span class="stat-label">exact/dipole in plane at L</span><span class="stat-value" id="ro-rpl">—</span></div>
@@ -3680,11 +3681,17 @@ window.Kit = (function () {
       const ok = Object.entries(p.showWhen).every(([k, v]) => (Array.isArray(v) ? v : [v]).map(String).includes(String(P[k])));
       const el = $('box-' + p.id); if (el && el.hidden === ok) el.hidden = !ok;
     }
+    // readouts take showWhen too: a row of another mode is hidden on top of its from/until staging
+    for (const r of manifest().readouts || []) {
+      if (!r.showWhen || typeof r.showWhen !== 'object') continue;
+      const ok = Object.entries(r.showWhen).every(([k, v]) => (Array.isArray(v) ? v : [v]).map(String).includes(String(P[k])));
+      const el = $(r.rowId || ('row-' + r.id)); if (el && el.classList.contains('kit-off') === ok) el.classList.toggle('kit-off', !ok);
+    }
   }
   function render() {
     if (!SIM || !S) return;
     Q = (SIM.derive ? SIM.derive(S, P, Kit) : {}) || {};
-    applyShowWhen();
+    applyShowWhen(); syncPlay();
     for (const cv of canvases) {
       if (!cv.g) fitCanvas(cv);
       const painter = SIM.paint && SIM.paint[cv.id];
@@ -3834,7 +3841,22 @@ window.Kit = (function () {
     if (r && typeof r === 'object' && r !== S) S = r;
     render(); updateButtons();
   }
+  // why ▶ Play has nothing to run right now ('' = it can run): SIM.playBlock(P, { free, step, waiting }), where
+  // waiting = the open inquiry card is a data-gate card not yet answered
+  function playWhy() {
+    if (!SIM || !SIM.playBlock) return '';
+    const card = freeMode ? null : document.querySelectorAll('#inq-cards .inq-step')[step];
+    return SIM.playBlock(P, { free: freeMode, step, waiting: !!(card && card.hasAttribute('data-gate') && !card.hasAttribute('data-ready')) }, Kit) || '';
+  }
+  function syncPlay() {
+    const pb = $('shell-play'); if (!pb || !SIM || !SIM.playBlock) return;
+    const why = playWhy();
+    if (pb.disabled !== !!why) pb.disabled = !!why;
+    if (pb.title !== why) pb.title = why;
+    if (why && window.Shell && Shell.playing) Shell.setPlaying(false);
+  }
   function updateButtons() {
+    syncPlay();
     for (const b of manifest().buttons || []) {
       const el = $(b.domId || ('btn-' + b.id)); if (!el) continue;
       const on = b.when === 'paused' ? !(window.Shell && Shell.playing) : b.when === 'playing' ? !!(window.Shell && Shell.playing) : true;
@@ -4092,6 +4114,9 @@ window.Kit = (function () {
     // capture: runs before the shell's own ▶ handler, which then just resumes
     document.addEventListener('click', e => { if (e.target.closest && e.target.closest('#shell-play') && !Shell.playing) replayIfEnded(); }, true);
     if (playBtn) playBtn.addEventListener('click', () => setTimeout(updateButtons, 0));
+    // answering a predict card (the shell marks it data-ready) can unlock ▶
+    const inqHost = $('inq-cards');
+    if (inqHost) inqHost.addEventListener('click', e => { if (e.target.closest && e.target.closest('.choice')) setTimeout(updateButtons, 0); });
     render(); updateButtons();
     return Kit;
   }
@@ -4137,7 +4162,7 @@ window.Kit = (function () {
 </script>
 <script id="sim-ops"></script>
 <script>/* v2 sim sim — manifest compiled by pipeline/v2/compile.mjs; physics + painters by the build model. */
-window.__SIM_MANIFEST = {"title":"Wires, Loops, and Solenoids","time":{"mode":"continuous","timeless":false,"autoplay":false,"onParamChange":"pause"},"params":[{"id":"mode","type":"segmented","label":"Mode","default":"ampere","options":[{"value":"ampere","label":"Ampère loop"},{"value":"solenoid","label":"finite solenoid"},{"value":"dipole","label":"loop and dipole"}],"help":"Chooses the Ampère loop, the finite solenoid, or the loop and its dipole.","domId":"p-mode"},{"id":"source","type":"segmented","label":"Source","default":"wire","showWhen":{"mode":"ampere"},"options":[{"value":"wire","label":"infinite straight wire"},{"value":"pair","label":"pair of coaxial loops"}],"help":"The wire, or two loops of radius R a distance R apart, same sense.","domId":"p-source"},{"id":"ell","type":"slider","label":"Solenoid length ℓ","min":2,"max":16,"step":0.25,"default":2,"decimals":2,"unit":"R","showWhen":{"mode":"solenoid"},"help":"Sets the length of the solenoid, 2R to 16R, 4 turns per R.","domId":"p-ell"},{"id":"field","type":"segmented","label":"Field drawn","default":"dipole","showWhen":{"mode":"dipole"},"options":[{"value":"exact","label":"exact"},{"value":"dipole","label":"dipole approximation"}],"help":"Draws the exact Biot–Savart field of the loop, or the dipole field.","domId":"p-field"},{"id":"halfWidth","type":"slider","label":"View half-width L","min":2,"max":20,"step":0.5,"default":2,"decimals":1,"unit":"R","showWhen":{"mode":"dipole"},"help":"Sets the half-width of the view, 2R to 20R.","domId":"p-halfWidth"}],"readouts":[{"id":"sum","label":"∮B·dx so far","key":"sum","decimals":3,"unit":"μ_0 I","highlight":true,"from":0,"until":7,"domId":"ro-sum","rowId":"row-sum"},{"id":"frac","label":"fraction of C traversed","key":"frac","decimals":2,"unit":"","from":0,"until":7,"domId":"ro-frac","rowId":"row-frac"},{"id":"ellr","label":"ℓ","key":"ellR","decimals":2,"unit":"R","from":7,"until":11,"domId":"ro-ellr","rowId":"row-ellr"},{"id":"bzc","label":"B_z at centre","key":"bzC","decimals":3,"unit":"μ_0 NI","highlight":true,"from":7,"until":11,"domId":"ro-bzc","rowId":"row-bzc"},{"id":"bzo","label":"B_z at 1.5R outside","key":"bzO","decimals":3,"unit":"μ_0 NI","from":7,"until":11,"domId":"ro-bzo","rowId":"row-bzo"},{"id":"lr","label":"L","key":"Lr","decimals":1,"unit":"R","from":11,"domId":"ro-lr","rowId":"row-lr"},{"id":"rax","label":"exact/dipole on axis at L","key":"rAx","decimals":3,"unit":"","from":12,"domId":"ro-rax","rowId":"row-rax"},{"id":"rpl","label":"exact/dipole in plane at L","key":"rPl","decimals":3,"unit":"","from":12,"domId":"ro-rpl","rowId":"row-rpl"}],"buttons":[],"keys":{},"canvases":[{"id":"scene","aspect":null},{"id":"plot","aspect":null}],"stage":[],"steps":[{"set":{"mode":"ampere","source":"wire"},"restart":true,"pause":true,"try":["play"]},{"set":{"mode":"ampere","source":"wire"},"restart":true,"pause":true},{"set":{"mode":"ampere","source":"wire"},"restart":true,"pause":true,"try":["play"]},{"set":{"mode":"ampere","source":"wire"},"restart":true,"pause":true},{"set":{"mode":"ampere","source":"wire"},"restart":true,"pause":true,"try":["play"]},{"set":{"mode":"ampere","source":"pair"},"restart":true,"pause":true},{"set":{"mode":"ampere","source":"pair"},"restart":true,"pause":true,"try":["play"]},{"set":{"mode":"solenoid","ell":2},"pause":true},{"set":{"mode":"solenoid","ell":2},"pause":true,"try":["ell"]},{"set":{"mode":"solenoid","ell":16},"pause":true},{"set":{"mode":"solenoid","ell":16},"pause":true,"focus":"inset"},{"set":{"mode":"dipole","field":"dipole","halfWidth":2},"pause":true},{"set":{"mode":"dipole","field":"dipole","halfWidth":2},"pause":true,"try":["field","halfWidth"]},{"set":{"mode":"dipole","field":"exact","halfWidth":20},"pause":true}],"audit":null};
+window.__SIM_MANIFEST = {"title":"Wires, Loops, and Solenoids","time":{"mode":"continuous","timeless":false,"autoplay":false,"onParamChange":"pause"},"params":[{"id":"mode","type":"segmented","label":"Mode","default":"ampere","options":[{"value":"ampere","label":"Ampère loop"},{"value":"solenoid","label":"finite solenoid"},{"value":"dipole","label":"loop and dipole"}],"help":"Chooses the Ampère loop, the finite solenoid, or the loop and its dipole.","domId":"p-mode"},{"id":"source","type":"segmented","label":"Source","default":"wire","showWhen":{"mode":"ampere"},"options":[{"value":"wire","label":"infinite straight wire"},{"value":"pair","label":"pair of coaxial loops"}],"help":"The wire, or two loops of radius R a distance R apart, same sense.","domId":"p-source"},{"id":"ell","type":"slider","label":"Solenoid length ℓ","min":2,"max":16,"step":0.25,"default":2,"decimals":2,"unit":"R","showWhen":{"mode":"solenoid"},"help":"Sets the length of the solenoid, 2R to 16R, 4 turns per R.","domId":"p-ell"},{"id":"field","type":"segmented","label":"Field drawn","default":"dipole","showWhen":{"mode":"dipole"},"options":[{"value":"exact","label":"exact"},{"value":"dipole","label":"dipole approximation"}],"help":"Draws the exact Biot–Savart field of the loop, or the dipole field.","domId":"p-field"},{"id":"halfWidth","type":"slider","label":"View half-width L","min":2,"max":20,"step":0.5,"default":2,"decimals":1,"unit":"R","showWhen":{"mode":"dipole"},"help":"Sets the half-width of the view, 2R to 20R.","domId":"p-halfWidth"}],"readouts":[{"id":"sum","label":"∮B·dx so far","key":"sum","decimals":3,"unit":"μ_0 I","highlight":true,"from":0,"until":7,"showWhen":{"mode":"ampere"},"domId":"ro-sum","rowId":"row-sum"},{"id":"frac","label":"fraction of C traversed","key":"frac","decimals":2,"unit":"","from":0,"until":7,"showWhen":{"mode":"ampere"},"domId":"ro-frac","rowId":"row-frac"},{"id":"ellr","label":"ℓ","key":"ellR","decimals":2,"unit":"R","from":7,"until":11,"showWhen":{"mode":"solenoid"},"domId":"ro-ellr","rowId":"row-ellr"},{"id":"bzc","label":"B_z at centre","key":"bzC","decimals":3,"unit":"μ_0 NI","highlight":true,"from":7,"until":11,"showWhen":{"mode":"solenoid"},"domId":"ro-bzc","rowId":"row-bzc"},{"id":"bzo","label":"B_z at 1.5R outside","key":"bzO","decimals":3,"unit":"μ_0 NI","from":7,"until":11,"showWhen":{"mode":"solenoid"},"domId":"ro-bzo","rowId":"row-bzo"},{"id":"lr","label":"L","key":"Lr","decimals":1,"unit":"R","from":11,"showWhen":{"mode":"dipole"},"domId":"ro-lr","rowId":"row-lr"},{"id":"rax","label":"exact/dipole on axis at L","key":"rAx","decimals":3,"unit":"","from":12,"showWhen":{"mode":"dipole"},"domId":"ro-rax","rowId":"row-rax"},{"id":"rpl","label":"exact/dipole in plane at L","key":"rPl","decimals":3,"unit":"","from":12,"showWhen":{"mode":"dipole"},"domId":"ro-rpl","rowId":"row-rpl"}],"buttons":[],"keys":{},"canvases":[{"id":"scene","aspect":null},{"id":"plot","aspect":null}],"stage":[],"steps":[{"set":{"mode":"ampere","source":"wire"},"restart":true,"pause":true,"try":["play"]},{"set":{"mode":"ampere","source":"wire"},"restart":true,"pause":true},{"set":{"mode":"ampere","source":"wire"},"restart":true,"pause":true,"try":["play"]},{"set":{"mode":"ampere","source":"wire"},"restart":true,"pause":true},{"set":{"mode":"ampere","source":"wire"},"restart":true,"pause":true,"try":["play"]},{"set":{"mode":"ampere","source":"pair"},"restart":true,"pause":true},{"set":{"mode":"ampere","source":"pair"},"restart":true,"pause":true,"try":["play"]},{"set":{"mode":"solenoid","ell":2},"pause":true},{"set":{"mode":"solenoid","ell":2},"pause":true,"try":["ell"]},{"set":{"mode":"solenoid","ell":16},"pause":true},{"set":{"mode":"solenoid","ell":16},"pause":true,"focus":"inset"},{"set":{"mode":"dipole","field":"dipole","halfWidth":2},"pause":true},{"set":{"mode":"dipole","field":"dipole","halfWidth":2},"pause":true,"try":["field","halfWidth"]},{"set":{"mode":"dipole","field":"exact","halfWidth":20},"pause":true}],"audit":null};
 // Wires, loops and solenoids. Lengths in R. B in μ0 I/R for the wire, the pair of loops and the single loop, in μ0 N I
 // for the solenoid (N = 4 turns per R); the running sum (1/μ0 I)∮B·dx is a pure number. The physics lives in ONE block
 // (ringB, wireB, pairB, solB, stepSum) used by derive and by both painters.
@@ -4306,7 +4331,7 @@ const HOME = { wire: { yaw: -30, pitch: 30 }, pair: { yaw: 0, pitch: 20 }, solen
 const CAMS = {};
 for (const k in HOME) CAMS[k] = { ...HOME[k], zoom: 1, home: { ...HOME[k], zoom: 1 } };
 const camKey = (p) => (p.mode === 'ampere' ? p.source : p.mode);
-const resetCam = (k) => { if (CAMS[k]) Object.assign(CAMS[k], HOME[k]); };
+const resetCam = (k) => { if (CAMS[k]) Object.assign(CAMS[k], HOME[k], { zoom: 1 }); };
 function viewDir(cam) { const y = cam.yaw * Math.PI / 180, t = cam.pitch * Math.PI / 180; return [-Math.sin(y) * Math.cos(t), -Math.cos(y) * Math.cos(t), Math.sin(t)]; }   // towards the viewer
 const FRAME = {
   wire: [[-H, -H, 0], [H, -H, 0], [H, H, 0], [-H, H, 0], [0, 0, WIRE_L + 0.8], [0, 0, -WIRE_L - 0.8]],
@@ -4392,6 +4417,7 @@ function wire(g, kit) {
   const up = (e) => { if (DRAG && DRAG.id === e.pointerId) DRAG = null; cv.style.cursor = 'grab'; };
   cv.addEventListener('pointerup', up); cv.addEventListener('pointercancel', up);
   cv.addEventListener('dblclick', () => { resetCam(camKey(kit.p)); kit.render(); });
+  cv.addEventListener('wheel', (e) => { const c = CAMS[camKey(kit.p)]; if (!c) return; e.preventDefault(); c.zoom = clamp(c.zoom * Math.exp(-e.deltaY * 0.0015), 0.5, 4); kit.render(); }, { passive: false });
 }
 
 // ── drawing helpers ──
@@ -4492,7 +4518,7 @@ function paintAmpere(g, s, p, q, kit, area) {
   g.region('field arrows', bbox(sq, 0));
   g.region(src === 'wire' ? 'wire' : 'current loops', bbox(srcPts, 8));
   captions(g, area, src === 'wire' ? ['infinite straight wire, current I', 'Ampère plane perpendicular to the wire'] : ['two coaxial loops, radius R, R apart, current I each', 'Ampère plane contains their common axis']);
-  g.label('drag a corner or the loop · drag empty space to turn the view', area.x + 4, area.y + area.h - 2, { size: 12, color: 'muted', anchor: 'sw', backing: true });
+  g.label('drag a corner or the loop · drag empty space to turn the view · scroll to zoom', area.x + 4, area.y + area.h - 2, { size: 12, color: 'muted', anchor: 'sw', backing: true });
 }
 
 function paintSolenoid(g, s, p, q, kit, area) {
@@ -4533,7 +4559,7 @@ function paintSolenoid(g, s, p, q, kit, area) {
   g.region('solenoid', bbox(ends, 6));
   g.region('field-line plane', bbox(fr, 0));
   captions(g, area, ['solenoid, radius R, 4 turns per length R', 'field lines in the plane through its axis']);
-  g.label('drag to turn the view', area.x + 4, area.y + area.h - 2, { size: 12, color: 'muted', anchor: 'sw', backing: true });
+  g.label('drag to turn the view · scroll to zoom', area.x + 4, area.y + area.h - 2, { size: 12, color: 'muted', anchor: 'sw', backing: true });
 }
 
 function paintDipole(g, s, p, q, kit, area) {
@@ -4570,10 +4596,10 @@ function paintDipole(g, s, p, q, kit, area) {
   g.region('current loop', { x: cx - rw / 2, y: cy - rh / 2, w: rw, h: rh });
   g.region('field lines', bbox(all, 0));
   captions(g, area, ['single loop, radius R, current I', dip ? 'dipole field of m = IπR^2 ẑ at the centre' : 'exact field (Biot–Savart)', 'three planes through the axis, 60° apart']);
-  g.label('drag to turn the view', area.x + 4, area.y + area.h - 2, { size: 12, color: 'muted', anchor: 'sw', backing: true });
+  g.label('drag to turn the view · scroll to zoom', area.x + 4, area.y + area.h - 2, { size: 12, color: 'muted', anchor: 'sw', backing: true });
 }
 
-const HIDE_PLOT = { 9: true, 11: true };   // the inset holds the answers to these predict cards
+const HIDE_PLOT = { 8: true, 9: true, 11: true };   // the inset holds the answers to these predict cards (8: card 10 asks about it next)
 
 Kit.sim({
   state(p, kit, reason) {
@@ -4592,6 +4618,12 @@ Kit.sim({
     if (id === 'source') { setLoop(v, SRC[v].start()); resetCam(v); }
     if (id === 'mode') resetCam(camKey(p));
     return 'restart';
+  },
+
+  // ▶ Play: only the Ampère-loop mode has a clock, and a predict card holds it until it is answered
+  playBlock(p, c) {
+    if (p.mode !== 'ampere') return 'Time runs in the Ampère-loop mode only';
+    return c.waiting ? 'Commit a prediction to unlock' : '';
   },
 
   // each card pins the Ampère loop it describes, and starts from the case's own camera
@@ -4640,7 +4672,7 @@ Kit.sim({
         }
       } else if (p.mode === 'solenoid') {
         const v = g.view({ x0: -ZAX, x1: ZAX, y0: -0.2, y1: 1.1 }, rect), d = solData(p.ell), half = p.ell / 2;
-        g.axes(v, { x: { labels: [-5, 0, 5, 10], grid: 1, decimals: 0 },
+        g.axes(v, { x: { labels: [-10, -5, 0, 5, 10], grid: 1, decimals: 0 },
                     y: { labels: [0, 0.5, 1], grid: 0.1, decimals: 1 }, frame: 'box' });
         titles(v, 'z along the axis (R)', 'B_z (μ_0 NI)');
         g.line(v.x(-ZAX), v.y(0), v.x(ZAX), v.y(0), { color: 'neutral', width: 1 });
@@ -5605,7 +5637,7 @@ window.__giSpots = [{"target":"scene","region":"Ampère loop","label":"the Ampè
   window.__psWatch=function(btn,msg){
     var s=btn.closest('.ps-sec'), i=secs.indexOf(s); if(i<0) return false;
     var box=btn.closest('.ps-try'), w=box&&box.querySelector('.ps-watch');
-    showWatch(i,msg,w?w.textContent:'',btn.getAttribute('data-live'));
+    showWatch(i,msg,w?w.innerHTML:'',btn.getAttribute('data-live'));
     return true;
   };
   $('ps-w-back').addEventListener('click',function(){ window.__openPhysics(wSec); });
@@ -5625,7 +5657,7 @@ window.__giSpots = [{"target":"scene","region":"Ampère loop","label":"the Ampè
     btn.addEventListener('click',function(){
       var fn=(window.__psDemos||{})[btn.getAttribute('data-demo')]; if(!fn) return;
       var i=secs.indexOf(btn.closest('.ps-sec')), box=btn.closest('.ps-try'), w=box&&box.querySelector('.ps-watch');
-      var api={ watchText:w?w.textContent:'', close:function(){ toWatch=true; $('phys-close').click(); },
+      var api={ watchText:w?w.innerHTML:'', close:function(){ toWatch=true; $('phys-close').click(); },
         show:function(msg,live,noWatch){ var t=demoToken; showWatch(i,msg,noWatch?'':api.watchText,live||null); demoToken=t; },
         alive:null };
       api.close(); demoToken++; var tok=demoToken; api.alive=function(){ return tok===demoToken; };

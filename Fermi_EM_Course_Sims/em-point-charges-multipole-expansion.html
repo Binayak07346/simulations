@@ -1144,6 +1144,7 @@ body{background:var(--bg);color:var(--ink);font-family:var(--font-sans);overflow
 .ctrl-box{background:var(--ctrl-bg);border:1px solid var(--ctrl-border);border-radius:5px;padding:12px;margin-bottom:8px;box-sizing:border-box;}
 .ctrl-box[hidden]{display:none !important;}
 .stat-row[hidden]{display:none !important;}   /* .stat-row{display:flex} overrode [hidden]: a readout staged with from/until stayed visible (2026-11-10) */
+.stat-row.kit-when-off,.kit-btn.kit-when-off,.kit-actions.kit-when-off{display:none !important;}   /* readout/button showWhen (2026-11-11) */
 .ctrl-box:last-child{margin-bottom:0;}
 .ctrl-box--slider{min-height:73px;display:flex;flex-direction:column;justify-content:center;}
 .ctrl-box-label{display:block;font-size:13px;font-weight:600;color:var(--text);line-height:1.2;}
@@ -1644,6 +1645,13 @@ html.no-voice #inq-voice, html.no-voice #inq-auto, html.no-voice .cg-row-voice, 
 .kit-band > .plot-box{flex:1 1 0;min-width:0;}
 .kit-hero.kit-one .plot-box:not(.kit-shown),.kit-hero.kit-one .kit-split:not(:has(.kit-shown)),.kit-hero.kit-one .kit-band:not(:has(.kit-shown)){display:none;}
 .kit-hero.kit-one .kit-band:has(.kit-shown){flex:1 1 0;height:auto !important;}
+/* Corner inset (spec, 2026-11-11): none in Charges in a plane; in Multipoles and Cube a smaller inset in one corner
+   of the main view, which keeps the full width. The sim's scene painter sets data-mode on #kit-hero. */
+#kit-hero .kit-split{position:relative;}
+#kit-hero:not(.kit-one)[data-mode="plane"] #panel-inset{display:none;}
+#kit-hero:not(.kit-one)[data-mode="multi"] #panel-inset,#kit-hero:not(.kit-one)[data-mode="cube"] #panel-inset{position:absolute;z-index:2;width:min(34%,360px);height:min(42%,330px);box-shadow:0 2px 10px rgba(0,0,0,.18);}
+#kit-hero:not(.kit-one)[data-mode="multi"] #panel-inset{left:84px;bottom:54px;}   /* inside the log-log axes, bottom left, where no curve goes */
+#kit-hero:not(.kit-one)[data-mode="cube"] #panel-inset{right:12px;bottom:12px;}
 .kit-stage{position:relative;flex:1 1 auto;min-height:0;min-width:0;display:flex;align-items:center;justify-content:center;overflow:hidden;}
 .kit-stage > canvas{display:block;flex:0 0 auto;}
 
@@ -1766,7 +1774,7 @@ html.no-voice #inq-voice, html.no-voice #inq-auto, html.no-voice .cg-row-voice, 
       </div>
       <div class="shell-modal-body"><h3>About this simulation</h3>
 <dl class="shell-info-dl">
-  <dt>On screen</dt><dd>Charges in a plane: the box of side 8a, the horizontal plane of the charges with a grid every a, +q red and −q blue, field lines (darker in the plane, paler out of it), equipotential contours in the plane at φ = ±0.1, ±0.25, ±0.5, ±1 and ±2 q/4πε<sub>0</sub> a, the probe (a ring), thin arrows for the field of each charge alone and a thick arrow for their sum (a field of q/4πε<sub>0</sub> a² is drawn 0.5a long), the dashed field line through the probe and the orange trace of the released test charge. Multipoles: |φ| against r on log–log axes along the ray (2, 1, 2)/3, with the arrangement and the ray in the inset. Cube of equal charges: eight +q on the corners of a cube of side a, the dashed line of the displacement and the test charge; the inset plots φ − φ<sub>0</sub> along that line.</dd>
+  <dt>On screen</dt><dd>Charges in a plane: the box of side 8a, the horizontal plane of the charges with a grid every a, +q red and −q blue, field lines (darker in the plane, paler out of it), equipotential contours in the plane at φ = ±0.1, ±0.25, ±0.5, ±1 and ±2 q/4πε<sub>0</sub> a, the probe (a ring), thin arrows for the field of each charge alone and a thick arrow for their sum (all to one scale: a field of q/4πε<sub>0</sub> a² is drawn 0.5a long, times the factor shown at the probe), the dashed field line through the probe and the orange trace of the released test charge. Multipoles: |φ| against r on log–log axes along the ray (2, 1, 2)/3, with the arrangement and the ray in the inset. Cube of equal charges: eight +q on the corners of a cube of side a, the dashed line of the displacement and the test charge; the inset plots φ − φ<sub>0</sub> along that line.</dd>
   <dt>Controls</dt><dd>Mode switches between the three cases. Charges in a plane: click the plane to place a charge of the chosen sign (up to four), drag a charge to move it, tap it to remove it; drag the probe or set Probe x and Probe y (it stays at least 0.5a from every charge); Release lets a positive test charge go from rest at the probe. Multipoles: choose the arrangement and slide the probe distance r from a to 100a. Cube of equal charges: choose the direction and the size of the displacement, 0.05a to 0.3a, then Release. Drag a 3D view to turn it.</dd>
   <dt>Measured</dt><dd>φ in q/4πε<sub>0</sub> a, |E| in q/4πε<sub>0</sub> a², kinetic energy, qφ and their sum in q²/4πε<sub>0</sub> a, the force in q²/4πε<sub>0</sub> a², all from the exact sum over the point charges. The test charge (mass m) is moved by fourth-order Runge–Kutta steps; the local slope is a central difference of ln|φ| in ln r.</dd>
 </dl></div>
@@ -1818,7 +1826,7 @@ html.no-voice #inq-voice, html.no-voice #inq-auto, html.no-voice .cg-row-voice, 
 <li><i class="ps-chip" style="border-color:#c81e1e"></i><b>Red and blue balls</b>: charges +q and −q. In the cube mode all eight are +q.</li>
 <li><i class="ps-chip" style="border-color:#c81e1e"></i><b>Coloured rings</b>: equipotentials in the plane at φ = ±0.1, ±0.25, ±0.5, ±1 and ±2 q/4πε<sub>0</sub>a (red positive, blue negative).</li>
 <li><i class="ps-chip" style="border-color:#334155"></i><b>Grey lines</b>: field lines, darker in the plane of the charges.</li>
-<li><i class="ps-chip" style="border-color:#0e7490"></i><b>Arrows at the probe</b>: thin for each charge alone, thick for their sum; a field of q/4πε<sub>0</sub>a² is drawn 0.5a long.</li>
+<li><i class="ps-chip" style="border-color:#0e7490"></i><b>Arrows at the probe</b>: thin for each charge alone, thick for their sum, all to one scale: a field of q/4πε<sub>0</sub>a² is drawn 0.5a long, times the factor shown beside the probe (“arrows ×4”), raised as needed to keep the sum arrow at least about 0.8a long while every arrow stays within 1.6a and inside the box.</li>
 <li><i class="ps-chip ps-dash" style="border-color:#b45309"></i><b>Dashed line</b>: the field line through the probe.</li>
 <li><i class="ps-chip" style="border-color:#c2410c"></i><b>Orange ball and trace</b>: the released test charge and its path.</li>
 <li><i class="ps-chip ps-box"></i><b>Inset</b>: the arrangement and its ray (Multipoles), or φ − φ<sub>0</sub> along the line (Cube).</li>
@@ -1939,7 +1947,7 @@ html.no-voice #inq-voice, html.no-voice #inq-auto, html.no-voice .cg-row-voice, 
 <!-- ============ 07 · EARNSHAW ============ -->
 <section class="ps-sec" data-short="No stable equilibrium">
 <div class="ps-h"><span class="ps-no">07</span><h3>No stable equilibrium: Earnshaw’s theorem</h3></div>
-<p class="ps-p">The force pushes the test charge back along some directions and out along others. Displaced towards a corner, it comes closer to a charge that repels it, the potential rises, and it is pushed back and oscillates through the centre. Displaced towards a face, it moves into the gap between four charges, the potential falls, and it drifts away, slowly at first and then faster, and leaves the cube through the face.</p>
+<p class="ps-p">The force pushes the test charge back along some directions and out along others. Displaced towards a corner, it comes closer to a charge that repels it, the potential rises, and it is pushed back and oscillates through the centre. Even this oscillation is unstable: any sideways nudge grows, and after a few swings the charge slips out through a face. Displaced towards a face, it moves into the gap between four charges, the potential falls, and it drifts away, slowly at first and then faster, and leaves the cube through the face.</p>
 <p class="ps-p">This is no accident of the cube. In empty space φ obeys Laplace’s equation, ∇²φ = 0, so a rise along some directions must be balanced by a fall along others. The potential has no minimum in empty space, and no arrangement of charges holds a test charge in stable equilibrium in every direction. This is Earnshaw’s theorem.</p>
 <div class="ps-try"><div class="ps-try-txt"><span class="ps-try-tag">See it</span>Released 0.3a towards a corner. <span class="ps-watch">Watch for: the test charge swinging back through the centre.</span></div><button type="button" class="shell-btn seesim" data-show="corner" data-live="s/a=#ro-SA">▶ Show me in the sim</button></div>
 <div class="ps-try"><div class="ps-try-txt"><span class="ps-try-tag">See it</span>Released 0.2a towards a face. <span class="ps-watch">Watch for: the test charge speeding up and leaving through the face.</span></div><button type="button" class="shell-btn seesim" data-show="face" data-live="s/a=#ro-SA">▶ Show me in the sim</button></div>
@@ -2015,7 +2023,7 @@ html.no-voice #inq-voice, html.no-voice #inq-auto, html.no-voice .cg-row-voice, 
       </div><button id="shell-fullscreen" class="shell-btn shell-icon-btn" type="button" data-no-reset title="Full screen" aria-label="Full screen" aria-pressed="false"><svg class="fs-on" viewBox="0 0 20 20" width="16" height="16" aria-hidden="true"><path d="M3 7.5V3h4.5M12.5 3H17v4.5M17 12.5V17h-4.5M7.5 17H3v-4.5" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"/></svg><svg class="fs-off" viewBox="0 0 20 20" width="16" height="16" aria-hidden="true"><path d="M7.5 3v4.5H3M17 7.5h-4.5V3M12.5 17v-4.5H17M3 12.5h4.5V17" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"/></svg></button></div>
   </header>
 
-  <main class="shell-hero"><div class="kit-hero" id="kit-hero">
+  <main class="shell-hero"><div class="kit-hero" id="kit-hero" data-mode="plane">
 <div class="kit-split"><div class="plot-box" id="panel-main" style="flex:2.4 1 0">
   <div class="plot-title">Field and potential</div>
   <div class="kit-stage" id="stage-scene"><canvas id="scene"></canvas></div>
@@ -2113,7 +2121,7 @@ html.no-voice #inq-voice, html.no-voice #inq-auto, html.no-voice .cg-row-voice, 
 </div>
 <div class="inq-step" data-card="13" data-kind="observe">
   <h4>13 · Release both ways</h4>
-  <p>The test charge sits 0.2a towards a corner. Press Release and watch it move; then switch the direction to towards a face and release again. The inset plots φ − φ<sub>0</sub> along the line.</p>
+  <p>The test charge sits 0.2a towards a corner. Press Release and watch it move; then switch the direction to towards a face and release again. The inset plots φ − φ<sub>0</sub> along the line. Left running, even the corner swing is unstable: after a few swings the charge slips out through a face.</p>
 </div>
 <div class="inq-step" data-card="14" data-kind="synthesis">
   <h4>14 · What the charges do</h4>
@@ -3698,11 +3706,18 @@ window.Kit = (function () {
       const ok = Object.entries(p.showWhen).every(([k, v]) => (Array.isArray(v) ? v : [v]).map(String).includes(String(P[k])));
       const el = $('box-' + p.id); if (el && el.hidden === ok) el.hidden = !ok;
     }
+    // readouts and buttons take showWhen too (2026-11-11), as a class, so the inquiry's from/until staging still owns [hidden];
+    // while a card's set-up is still gliding they follow the card's target values (P lands only when the glide ends)
+    const T = pendingStep && !freeMode ? { ...P, ...((pendingStep.st && pendingStep.st.set) || {}) } : P;
+    const when = (o) => !o.showWhen || typeof o.showWhen !== 'object' || Object.entries(o.showWhen).every(([k, v]) => (Array.isArray(v) ? v : [v]).map(String).includes(String(T[k])));
+    for (const r of manifest().readouts || []) { const el = $(r.rowId || ('row-' + r.id)); if (el && r.showWhen) el.classList.toggle('kit-when-off', !when(r)); }
+    for (const b of manifest().buttons || []) { const el = $(b.domId || ('btn-' + b.id)); if (el && b.showWhen) el.classList.toggle('kit-when-off', !when(b)); }
+    document.querySelectorAll('.kit-actions').forEach((box) => { const bs = [...box.querySelectorAll('.kit-btn')]; if (bs.length) box.classList.toggle('kit-when-off', bs.every((b) => b.classList.contains('kit-when-off'))); });
   }
   function render() {
     if (!SIM || !S) return;
     Q = (SIM.derive ? SIM.derive(S, P, Kit) : {}) || {};
-    applyShowWhen();
+    applyShowWhen(); syncPlay();
     for (const cv of canvases) {
       if (!cv.g) fitCanvas(cv);
       const painter = SIM.paint && SIM.paint[cv.id];
@@ -3806,7 +3821,7 @@ window.Kit = (function () {
   // with the current controls; any other pause is resumed where it stopped.
   let ended = false, advancing = false;
   function replayIfEnded() { if (!ended) return; ended = false; S = SIM.state(P, Kit, 'restart'); render(); }
-  const play = () => { if (sketching) return; replayIfEnded(); if (window.Shell && Shell.setPlaying) Shell.setPlaying(true); setTimeout(updateButtons, 0); };
+  const play = () => { if (sketching || playWhy()) return; replayIfEnded(); if (window.Shell && Shell.setPlaying) Shell.setPlaying(true); setTimeout(updateButtons, 0); };
   const pause = () => { if (sketching) return; if (advancing) ended = true; if (window.Shell && Shell.setPlaying) Shell.setPlaying(false); setTimeout(updateButtons, 0); };
   const defaultOf = (p) => p.type === 'slider' ? snap(p.default, p.step, p.min, p.decimals) : p.default;
   function resetDefaults(reason = 'reset') {
@@ -3852,7 +3867,17 @@ window.Kit = (function () {
     if (r && typeof r === 'object' && r !== S) S = r;
     render(); updateButtons();
   }
+  // why ▶ Play has nothing to run right now ('' = it can run): SIM.playBlock(P, { free, step }, Kit)
+  function playWhy() { return (SIM && SIM.playBlock && SIM.playBlock(P, { free: freeMode, step }, Kit)) || ''; }
+  function syncPlay() {
+    const pb = $('shell-play'); if (!pb || !SIM || !SIM.playBlock) return;
+    const why = playWhy();
+    if (pb.disabled !== !!why) pb.disabled = !!why;
+    if (pb.title !== why) pb.title = why;
+    if (why && window.Shell && Shell.playing) Shell.setPlaying(false);
+  }
   function updateButtons() {
+    syncPlay();
     for (const b of manifest().buttons || []) {
       const el = $(b.domId || ('btn-' + b.id)); if (!el) continue;
       const on = b.when === 'paused' ? !(window.Shell && Shell.playing) : b.when === 'playing' ? !!(window.Shell && Shell.playing) : true;
@@ -3998,6 +4023,7 @@ window.Kit = (function () {
     const moving = Object.entries(st.set || {}).filter(([id, v]) => { const p = paramDef(id); return p && !same(P[id], valueFor(p, v)); }).map(([id]) => id);
     announce = moving.length ? (announcements()[i] || '') : '';
     const ps = pendingStep = { token, i, st, wasPlaying, held: false, timer: 0, dragging: false, changed: false };
+    applyShowWhen();                                    // the card's readouts at once, before its set-up lands
     if (!moving.length) { hideCursor(); return finishStep(ps, 'now'); }
     if (!still()) aim(paramDef(moving[0]), () => pendingStep === ps);
     ps.timer = setTimeout(() => finishStep(ps, 'glide'), POINT_MS);
@@ -4155,7 +4181,7 @@ window.Kit = (function () {
 </script>
 <script id="sim-ops"></script>
 <script>/* v2 sim sim — manifest compiled by pipeline/v2/compile.mjs; physics + painters by the build model. */
-window.__SIM_MANIFEST = {"title":"Arranging Point Charges","time":{"mode":"continuous","timeless":false,"autoplay":false,"onParamChange":"pause"},"params":[{"id":"mode","type":"segmented","label":"Mode","default":"plane","options":[{"value":"plane","label":"Charges in a plane"},{"value":"multi","label":"Multipoles"},{"value":"cube","label":"Cube of equal charges"}],"help":"Switches between charges in a plane, multipoles and the cube of equal charges.","domId":"p-mode"},{"id":"newSign","type":"segmented","label":"Charge to place","default":"pos","view":true,"showWhen":{"mode":"plane"},"options":[{"value":"pos","label":"+q"},{"value":"neg","label":"−q"}],"help":"Sign of the next charge clicked into the plane; drag to move, tap to remove.","domId":"p-newSign"},{"id":"probeX","type":"slider","label":"Probe x","min":-3.75,"max":3.75,"step":0.05,"default":0,"decimals":2,"unit":"a","showWhen":{"mode":"plane"},"help":"Moves the probe along x in the plane; you can also drag the probe.","domId":"p-probeX"},{"id":"probeY","type":"slider","label":"Probe y","min":-3.75,"max":3.75,"step":0.05,"default":1,"decimals":2,"unit":"a","showWhen":{"mode":"plane"},"help":"Moves the probe along y in the plane; you can also drag the probe.","domId":"p-probeY"},{"id":"arr","type":"segmented","label":"Arrangement","default":"dipole","showWhen":{"mode":"multi"},"options":[{"value":"single","label":"Single charge"},{"value":"dipole","label":"Dipole"},{"value":"square","label":"Square"},{"value":"cube","label":"Cube"}],"help":"Chooses the arrangement centred on the origin: one charge, dipole, square or cube.","domId":"p-arr"},{"id":"logR","type":"slider","label":"Probe distance r","min":0,"max":2,"step":0.01,"default":2,"decimals":2,"showWhen":{"mode":"multi"},"help":"Moves the probe along the ray (2, 1, 2)/3, from r = a to 100a.","domId":"p-logR"},{"id":"dDir","type":"segmented","label":"Displacement direction","default":"face","showWhen":{"mode":"cube"},"options":[{"value":"face","label":"Towards a face centre"},{"value":"corner","label":"Towards a corner"}],"help":"Displaces the test charge from the centre towards a face centre or a corner.","domId":"p-dDir"},{"id":"sDisp","type":"slider","label":"Displacement size","min":0.05,"max":0.3,"step":0.01,"default":0.2,"decimals":2,"unit":"a","showWhen":{"mode":"cube"},"help":"How far the test charge starts from the centre, 0.05a to 0.3a.","domId":"p-sDisp"}],"readouts":[{"id":"phiP","label":"φ at probe","key":"phiProbe","decimals":3,"unit":"q/4πε_0 a","until":5,"domId":"ro-phiP","rowId":"row-phiP"},{"id":"EP","label":"|E| at probe","key":"Eprobe","decimals":3,"unit":"q/4πε_0 a²","from":2,"until":5,"domId":"ro-EP","rowId":"row-EP"},{"id":"KE","label":"KE","key":"ke","decimals":3,"unit":"q²/4πε_0 a","from":3,"until":5,"domId":"ro-KE","rowId":"row-KE"},{"id":"QPHI","label":"qφ","key":"qphi","decimals":3,"unit":"q²/4πε_0 a","from":3,"until":5,"domId":"ro-QPHI","rowId":"row-QPHI"},{"id":"ETOT","label":"KE + qφ","key":"etot","decimals":3,"unit":"q²/4πε_0 a","highlight":true,"from":3,"until":5,"domId":"ro-ETOT","rowId":"row-ETOT"},{"id":"RA","label":"r/a","key":"rOverA","decimals":2,"from":5,"until":9,"domId":"ro-RA","rowId":"row-RA"},{"id":"ABSPHI","label":"|φ|","key":"absPhi","from":5,"until":9,"domId":"ro-ABSPHI","rowId":"row-ABSPHI"},{"id":"SLOPE","label":"d ln|φ|/d ln r","key":"slope","decimals":2,"highlight":true,"from":5,"until":9,"domId":"ro-SLOPE","rowId":"row-SLOPE"},{"id":"SA","label":"s/a","key":"sOverA","decimals":3,"from":9,"domId":"ro-SA","rowId":"row-SA"},{"id":"DPHI","label":"φ − φ_0","key":"dphi","decimals":4,"unit":"q/4πε_0 a","from":12,"domId":"ro-DPHI","rowId":"row-DPHI"},{"id":"FORCE","label":"|F|","key":"force","decimals":3,"unit":"q²/4πε_0 a²","highlight":true,"from":9,"domId":"ro-FORCE","rowId":"row-FORCE"}],"buttons":[{"id":"release","label":"Release","action":"release","when":"always","help":"Lets the positive test charge go from rest, at the probe or at the displacement.","where":"sidebar","domId":"btn-release"}],"keys":{},"canvases":[{"id":"scene","aspect":null},{"id":"inset","aspect":null}],"stage":[],"steps":[{"set":{"mode":"plane","probeX":0,"probeY":1},"restart":true,"pause":true,"focus":"main"},{"set":{"mode":"plane","probeX":0,"probeY":1},"restart":true,"pause":true,"focus":"main"},{"set":{"mode":"plane","probeX":0,"probeY":1},"pause":true,"focus":"main","try":["probeY"]},{"set":{"mode":"plane","probeX":-1,"probeY":1},"restart":true,"pause":true,"focus":"main"},{"set":{"mode":"plane","probeX":-1,"probeY":1},"restart":true,"pause":true,"focus":"main","try":["release"]},{"set":{"mode":"multi","arr":"dipole","logR":0},"try":["logR"]},{"set":{"mode":"multi","arr":"square","logR":0},"try":["logR"]},{"set":{"mode":"multi","arr":"square","logR":2}},{"set":{"mode":"multi","arr":"cube","logR":0},"try":["logR"]},{"set":{"mode":"cube","dDir":"face","sDisp":0.2},"restart":true,"pause":true,"focus":"main"},{"set":{"mode":"cube","dDir":"face","sDisp":0.2},"pause":true,"focus":"main","try":["sDisp"]},{"set":{"mode":"cube","dDir":"corner","sDisp":0.2},"restart":true,"pause":true,"focus":"main"},{"set":{"mode":"cube","dDir":"corner","sDisp":0.2},"restart":true,"pause":true,"try":["release","dDir"]},{"set":{}}],"audit":null};
+window.__SIM_MANIFEST = {"title":"Arranging Point Charges","time":{"mode":"continuous","timeless":false,"autoplay":false,"onParamChange":"pause"},"params":[{"id":"mode","type":"segmented","label":"Mode","default":"plane","options":[{"value":"plane","label":"Charges in a plane"},{"value":"multi","label":"Multipoles"},{"value":"cube","label":"Cube of equal charges"}],"help":"Switches between charges in a plane, multipoles and the cube of equal charges.","domId":"p-mode"},{"id":"newSign","type":"segmented","label":"Charge to place","default":"pos","view":true,"showWhen":{"mode":"plane"},"options":[{"value":"pos","label":"+q"},{"value":"neg","label":"−q"}],"help":"Sign of the next charge clicked into the plane; drag to move, tap to remove.","domId":"p-newSign"},{"id":"probeX","type":"slider","label":"Probe x","min":-3.75,"max":3.75,"step":0.05,"default":0,"decimals":2,"unit":"a","showWhen":{"mode":"plane"},"help":"Moves the probe along x in the plane; you can also drag the probe.","domId":"p-probeX"},{"id":"probeY","type":"slider","label":"Probe y","min":-3.75,"max":3.75,"step":0.05,"default":1,"decimals":2,"unit":"a","showWhen":{"mode":"plane"},"help":"Moves the probe along y in the plane; you can also drag the probe.","domId":"p-probeY"},{"id":"arr","type":"segmented","label":"Arrangement","default":"dipole","showWhen":{"mode":"multi"},"options":[{"value":"single","label":"Single charge"},{"value":"dipole","label":"Dipole"},{"value":"square","label":"Square"},{"value":"cube","label":"Cube"}],"help":"Chooses the arrangement centred on the origin: one charge, dipole, square or cube.","domId":"p-arr"},{"id":"logR","type":"slider","label":"Probe distance r","min":0,"max":2,"step":0.01,"default":2,"decimals":2,"showWhen":{"mode":"multi"},"help":"Moves the probe along the ray (2, 1, 2)/3, from r = a to 100a.","domId":"p-logR"},{"id":"dDir","type":"segmented","label":"Displacement direction","default":"face","showWhen":{"mode":"cube"},"options":[{"value":"face","label":"Towards a face centre"},{"value":"corner","label":"Towards a corner"}],"help":"Displaces the test charge from the centre towards a face centre or a corner.","domId":"p-dDir"},{"id":"sDisp","type":"slider","label":"Displacement size","min":0.05,"max":0.3,"step":0.01,"default":0.2,"decimals":2,"unit":"a","showWhen":{"mode":"cube"},"help":"How far the test charge starts from the centre, 0.05a to 0.3a.","domId":"p-sDisp"}],"readouts":[{"id":"phiP","label":"φ at probe","key":"phiProbe","decimals":3,"unit":"q/4πε_0 a","until":5,"showWhen":{"mode":"plane"},"domId":"ro-phiP","rowId":"row-phiP"},{"id":"EP","label":"|E| at probe","key":"Eprobe","decimals":3,"unit":"q/4πε_0 a²","from":2,"until":5,"showWhen":{"mode":"plane"},"domId":"ro-EP","rowId":"row-EP"},{"id":"KE","label":"KE","key":"ke","decimals":3,"unit":"q²/4πε_0 a","from":3,"until":5,"showWhen":{"mode":"plane"},"domId":"ro-KE","rowId":"row-KE"},{"id":"QPHI","label":"qφ","key":"qphi","decimals":3,"unit":"q²/4πε_0 a","from":3,"until":5,"showWhen":{"mode":"plane"},"domId":"ro-QPHI","rowId":"row-QPHI"},{"id":"ETOT","label":"KE + qφ","key":"etot","decimals":3,"unit":"q²/4πε_0 a","highlight":true,"from":3,"until":5,"showWhen":{"mode":"plane"},"domId":"ro-ETOT","rowId":"row-ETOT"},{"id":"RA","label":"r/a","key":"rOverA","decimals":2,"from":5,"until":9,"showWhen":{"mode":"multi"},"domId":"ro-RA","rowId":"row-RA"},{"id":"ABSPHI","label":"|φ|","key":"absPhi","from":5,"until":9,"showWhen":{"mode":"multi"},"domId":"ro-ABSPHI","rowId":"row-ABSPHI"},{"id":"SLOPE","label":"d ln|φ|/d ln r","key":"slope","decimals":2,"highlight":true,"from":5,"until":9,"showWhen":{"mode":"multi"},"domId":"ro-SLOPE","rowId":"row-SLOPE"},{"id":"SA","label":"s/a","key":"sOverA","decimals":3,"from":9,"showWhen":{"mode":"cube"},"domId":"ro-SA","rowId":"row-SA"},{"id":"DPHI","label":"φ − φ_0","key":"dphi","decimals":4,"unit":"q/4πε_0 a","from":12,"showWhen":{"mode":"cube"},"domId":"ro-DPHI","rowId":"row-DPHI"},{"id":"FORCE","label":"|F|","key":"force","decimals":3,"unit":"q²/4πε_0 a²","highlight":true,"from":9,"showWhen":{"mode":"cube"},"domId":"ro-FORCE","rowId":"row-FORCE"}],"buttons":[{"id":"release","label":"Release","action":"release","when":"always","showWhen":{"mode":["plane","cube"]},"help":"Lets the positive test charge go from rest, at the probe or at the displacement.","where":"sidebar","domId":"btn-release"}],"keys":{},"canvases":[{"id":"scene","aspect":null},{"id":"inset","aspect":null}],"stage":[],"steps":[{"set":{"mode":"plane","probeX":0,"probeY":1},"restart":true,"pause":true,"focus":"main"},{"set":{"mode":"plane","probeX":0,"probeY":1},"restart":true,"pause":true,"focus":"main"},{"set":{"mode":"plane","probeX":0,"probeY":1},"pause":true,"focus":"main","try":["probeY"]},{"set":{"mode":"plane","probeX":-1,"probeY":1},"restart":true,"pause":true,"focus":"main"},{"set":{"mode":"plane","probeX":-1,"probeY":1},"restart":true,"pause":true,"focus":"main","try":["release"]},{"set":{"mode":"multi","arr":"dipole","logR":0},"try":["logR"]},{"set":{"mode":"multi","arr":"square","logR":0},"try":["logR"]},{"set":{"mode":"multi","arr":"square","logR":2}},{"set":{"mode":"multi","arr":"cube","logR":0},"try":["logR"]},{"set":{"mode":"cube","dDir":"face","sDisp":0.2},"restart":true,"pause":true,"focus":"main"},{"set":{"mode":"cube","dDir":"face","sDisp":0.2},"pause":true,"focus":"main","try":["sDisp"]},{"set":{"mode":"cube","dDir":"corner","sDisp":0.2},"restart":true,"pause":true,"focus":"main"},{"set":{"mode":"cube","dDir":"corner","sDisp":0.2},"restart":true,"pause":true,"try":["release","dDir"]},{"set":{}}],"audit":null};
 // Units throughout: q/4πε0 = 1, a = 1 and the test charge's mass m = 1, so φ is in q/4πε0a, E in q/4πε0a²,
 // energies in q²/4πε0a, forces in q²/4πε0a², and time in √(4πε0 m a³/q²).
 const PAL = { pos: { dark: '#f87171', light: '#c81e1e' }, neg: { dark: '#60a5fa', light: '#1d4ed8' } };
@@ -4163,7 +4189,7 @@ const BOX = 4;            // half the side of the box (8a)
 const PMAX = 3.75;        // the probe sliders' range; charges stay inside it too
 const KEEP = 0.5;         // the probe stays at least 0.5a from every charge
 const END_R = 0.1;        // a run ends within 0.1a of a charge
-const ARROW = 0.5;        // a field of q/4πε0a² is drawn as an arrow 0.5a long
+const ARROW = 0.5;        // a field of q/4πε0a² is drawn as an arrow 0.5a long (× the probe's arrow factor, see paintPlane)
 const TS = 0.5;           // time units per screen second (× Speed): slow enough to follow by eye
 const LEVELS = [0.1, 0.25, 0.5, 1, 2];
 const RAY = [2 / 3, 1 / 3, 2 / 3];
@@ -4209,6 +4235,7 @@ function sig3(v) {
   let e = Math.floor(Math.log10(v)); if (+(v / 10 ** e).toFixed(2) >= 10) e += 1;
   return `${(v / 10 ** e).toFixed(2)} × 10${String(e).split('').map((ch) => SUPD[ch]).join('')}`;
 }
+const sig3s = (v) => (Math.abs(v) < 1e-12 ? '0' : (v < 0 ? '−' : '') + sig3(Math.abs(v)));   // signed, 3 significant figures
 
 // field lines: midpoint steps along ±E/|E| until the box edge or a charge of the other sign
 function trace(Q, x, y, z, sg, max) {
@@ -4292,7 +4319,7 @@ function rk4(Q, s, h) {
 const cam = (yaw, pitch) => ({ yaw, pitch, zoom: 1, home: { yaw, pitch, zoom: 1 } });
 const CAM = { plane: cam(0, 60), cube: cam(-123.69, 22.59) };   // 60° above the plane of the charges; looking along (3, 2, 1.5)
 const CAM_INSET = cam(-35, 22);
-const homeCams = () => { for (const c of Object.values(CAM)) Object.assign(c, c.home); };
+const homeCams = () => { for (const c of [...Object.values(CAM), CAM_INSET]) Object.assign(c, c.home); };
 let V3 = null;            // the main view's last projection (mode 1), for picking
 function unproject(mx, my) {
   if (!V3) return null;
@@ -4376,6 +4403,25 @@ function wire(cv, kit) {
     }
   };
   cv.addEventListener('pointerup', up); cv.addEventListener('pointercancel', () => { drag = null; cv.style.cursor = 'grab'; });
+  cv.addEventListener('wheel', (e) => { const c = CAM[kit.p.mode]; if (!c) return; e.preventDefault(); c.zoom = Math.max(0.5, Math.min(4, c.zoom * Math.exp(-e.deltaY * 0.0015))); kit.render(); }, { passive: false });
+}
+// the 3D arrangement inset (Multipoles mode): drag to turn, scroll to zoom, double-click to reset
+const WIRED_INSET = new WeakSet();
+function wireInset(cv, kit) {
+  if (!cv || !cv.addEventListener || WIRED_INSET.has(cv)) return;
+  WIRED_INSET.add(cv); cv.style.touchAction = 'none';
+  const live = () => kit.p.mode === 'multi'; let d = null;
+  cv.addEventListener('pointerdown', (e) => { if (!live()) return; d = { x: e.clientX, y: e.clientY }; try { cv.setPointerCapture(e.pointerId); } catch (err) { /* capture is optional */ } cv.style.cursor = 'grabbing'; });
+  cv.addEventListener('pointermove', (e) => {
+    if (!live()) { cv.style.cursor = ''; return; }
+    if (!d) { cv.style.cursor = 'grab'; return; }
+    CAM_INSET.yaw += (e.clientX - d.x) * 0.45; CAM_INSET.pitch = Math.max(-90, Math.min(90, CAM_INSET.pitch + (e.clientY - d.y) * 0.45));
+    d = { x: e.clientX, y: e.clientY }; kit.render();
+  });
+  const up = () => { d = null; if (live()) cv.style.cursor = 'grab'; };
+  cv.addEventListener('pointerup', up); cv.addEventListener('pointercancel', up);
+  cv.addEventListener('wheel', (e) => { if (!live()) return; e.preventDefault(); CAM_INSET.zoom = Math.max(0.5, Math.min(4, CAM_INSET.zoom * Math.exp(-e.deltaY * 0.0015))); kit.render(); }, { passive: false });
+  cv.addEventListener('dblclick', () => { if (!live()) return; Object.assign(CAM_INSET, CAM_INSET.home); kit.render(); });
 }
 
 const EDGES = (() => { const e = []; for (const a of [-1, 1]) for (const b of [-1, 1]) e.push([[-1, a, b], [1, a, b]], [[a, -1, b], [a, 1, b]], [[a, b, -1], [a, b, 1]]); return e; })();
@@ -4421,19 +4467,39 @@ function paintPlane(g, s, p, q, kit) {
     g.ball(X, Y, rq, { color: c.q > 0 ? PAL.pos : PAL.neg });
     g.label(c.q > 0 ? '+q' : '−q', X + rq + 2, Y - rq + 2, { size: 13, color: c.q > 0 ? PAL.pos : PAL.neg, anchor: 'sw', backing: true });
   }
-  // the probe: thin arrows for each charge alone, the thick arrow for their sum (one fixed scale)
+  // the probe: thin arrows for each charge alone, the thick arrow for their sum, all to ONE scale so the sum stays exact.
+  // k = 1 is the 0.5a-per-q/4πε0a² scale; while the sum arrow would be shorter than max(0.8a, 45 px), k steps up
+  // in steps 2, 3, 4, 6, 8, 12 … (k ≤ 1024; no drawn arrow beyond 1.6a; every tip inside the box's outline on screen and
+  // the canvas), and a k above 1
+  // is shown beside the probe as "arrows ×k".
   const [PX, PY] = pr(p.probeX, p.probeY, 0), tips = [[PX, PY]];
-  // the probe ring first, so the arrows (to the fixed 0.5a scale) are drawn over it
-  g.circle(PX, PY, 7, { color: 'ink', width: 2 });
-  for (const [ux, uy] of [[1, 0], [-1, 0], [0, 1], [0, -1]]) g.line(PX + 7 * ux, PY + 7 * uy, PX + 11 * ux, PY + 11 * uy, { color: 'ink', width: 1.4, alpha: 0.7 });
-  g.label('probe', PX - 12, PY + 12, { size: 12, color: 'inkMid', anchor: 'ne', backing: true });
+  const fSum = field(CHARGES, p.probeX, p.probeY, 0), fParts = CHARGES.map((c) => field([c], p.probeX, p.probeY, 0));
+  const want = Math.max(0.8, 45 / v3.scale);
+  const hull = ((pts) => {                           // the box's outline on screen: convex hull of its projected corners
+    pts = pts.slice().sort((a, b) => a[0] - b[0] || a[1] - b[1]);
+    const cr = (o, a, b) => (a[0] - o[0]) * (b[1] - o[1]) - (a[1] - o[1]) * (b[0] - o[0]), half = (list) => {
+      const h = []; for (const q of list) { while (h.length > 1 && cr(h[h.length - 2], h[h.length - 1], q) <= 0) h.pop(); h.push(q); } return h.slice(0, -1); };
+    return half(pts).concat(half(pts.slice().reverse()));
+  })(box.map((b) => pr(b[0], b[1], b[2])));
+  const inside = (t) => t[0] >= 4 && t[0] <= g.w - 4 && t[1] >= 4 && t[1] <= g.h - 4 && hull.every((a, i) => {
+    const b = hull[(i + 1) % hull.length]; return (b[0] - a[0]) * (t[1] - a[1]) - (b[1] - a[1]) * (t[0] - a[0]) >= 6 * Math.hypot(b[0] - a[0], b[1] - a[1]); });
+  const fits = (kk) => [fSum, ...fParts].every((f) => { const t = pr(p.probeX + kk * ARROW * f.ex, p.probeY + kk * ARROW * f.ey, 0);
+    return Math.hypot(t[0] - PX, t[1] - PY) <= 1.6 * v3.scale && inside(t); });   // drawn length ≤ 1.6a on screen
+  const KS = [1, 2, 3, 4, 6, 8, 12, 16, 24, 32, 48, 64, 96, 128, 192, 256, 384, 512, 768, 1024];   // 1, 2, then ×1.5 / ×4/3 steps
+  let k = 1; for (let i = 1; i < KS.length && k * ARROW * fSum.E < want && fits(KS[i]); i++) k = KS[i];
+  const AK = k * ARROW;
+  // the probe ring first, small and light, so the arrows are drawn over it
+  g.circle(PX, PY, 4.5, { color: 'ink', width: 1.4, alpha: 0.75 });
+  for (const [ux, uy] of [[1, 0], [-1, 0], [0, 1], [0, -1]]) g.line(PX + 4.5 * ux, PY + 4.5 * uy, PX + 7.5 * ux, PY + 7.5 * uy, { color: 'ink', width: 1.2, alpha: 0.5 });
+  const lab = g.label(show && k > 1 ? `probe · arrows ×${k}` : 'probe', PX - 12, PY + 12, { size: 12, color: 'inkMid', anchor: 'ne', backing: true });
+  if (lab) tips.push([lab.x, lab.y], [lab.x + lab.w, lab.y + lab.h]);   // the spotlight box below takes in the label too
   if (show) {
-    for (const c of CHARGES) {
-      const f = field([c], p.probeX, p.probeY, 0), t = pr(p.probeX + ARROW * f.ex, p.probeY + ARROW * f.ey, 0);
-      g.arrow(PX, PY, t[0], t[1], { color: c.q > 0 ? PAL.pos : PAL.neg, width: 1.6, head: 8 }); tips.push(t);
+    for (const [n, c] of CHARGES.entries()) {
+      const f = fParts[n], t = pr(p.probeX + AK * f.ex, p.probeY + AK * f.ey, 0);
+      g.arrow(PX, PY, t[0], t[1], { color: c.q > 0 ? PAL.pos : PAL.neg, width: 1.8, head: 8, headFrac: 0.35 }); tips.push(t);
     }
-    const f = field(CHARGES, p.probeX, p.probeY, 0), t = pr(p.probeX + ARROW * f.ex, p.probeY + ARROW * f.ey, 0);
-    g.arrow(PX, PY, t[0], t[1], { color: 'primary', width: 4.2, head: 13 }); tips.push(t);
+    const t = pr(p.probeX + AK * fSum.ex, p.probeY + AK * fSum.ey, 0);
+    g.arrow(PX, PY, t[0], t[1], { color: 'primary', width: 4.2, head: 13, headFrac: 0.4 }); tips.push(t);
   }
   if (s.released) { const [X, Y] = pr(s.x, s.y, s.z); g.ball(X, Y, 6, { color: 'warm' }); }
   if (live) {
@@ -4441,7 +4507,7 @@ function paintPlane(g, s, p, q, kit) {
     if (cpts.length) g.region('charges', bbox(cpts, rq + 16, g));
     g.region('probe', bbox(tips, 16, g));
   }
-  g.caption(['drag: turn the view · click the plane: add a ' + (p.newSign === 'neg' ? '−q' : '+q'), 'drag a charge or the probe to move it · tap a charge to remove it'], 'bl', { size: 12 });
+  g.caption(['drag: turn the view · scroll to zoom · click the plane: add a ' + (p.newSign === 'neg' ? '−q' : '+q'), 'drag a charge or the probe to move it · tap a charge to remove it'], 'bl', { size: 12 });
   if (s.ended) g.caption([s.ended === 'box' ? 'Run ended: the test charge has left the box.' : 'Run ended: the test charge came within 0.1a of a charge.', 'Release starts again from the probe.'], 'tr', { size: 12 });
 }
 
@@ -4468,7 +4534,9 @@ function paintLog(g, s, p, q, kit) {
 function paintCube(g, s, p, q, kit) {
   const live = !!(g.canvas && g.canvas.id === 'scene');
   const fitPts = CUBE8.map((c) => [c.x, c.y, c.z]).concat([[S_OUT, 0, 0], [-S_OUT, 0, 0]]);
-  const v3 = g.fit3d(CAM.cube, fitPts, { radius: 1.2, margin: 0.07, rect: g.inset(null, 6, 6, 26, 6) });
+  const ins = live ? document.getElementById('panel-inset') : null;   // the corner inset over this view (Both panels): keep the cube clear of it
+  const side = ins && ins.offsetWidth && getComputedStyle(ins).position === 'absolute' ? ins.offsetWidth + 12 : 0;
+  const v3 = g.fit3d(CAM.cube, fitPts, { radius: 1.2, margin: 0.07, rect: g.inset(null, 6, 6 + side, 26, 6) });
   const pr = (x, y, z) => { const o = v3.project(x, y, z); return [o.x, o.y]; };
   const d = DIRS[p.dDir];
   if (p.dDir === 'face') g.polygon([pr(HALF, -HALF, -HALF), pr(HALF, HALF, -HALF), pr(HALF, HALF, HALF), pr(HALF, -HALF, HALF)], { fill: 'neutral', fillAlpha: 0.08 });
@@ -4493,7 +4561,7 @@ function paintCube(g, s, p, q, kit) {
     g.region('cube', bbox(CUBE8.map((c) => pr(c.x, c.y, c.z)), 16, g));
     g.region('test charge', { x: T.x - 16, y: T.y - 16, w: 32, h: 32 });
   }
-  g.caption(['drag: turn the view'], 'bl', { size: 12 });
+  g.caption(['drag: turn the view · scroll to zoom'], 'bl', { size: 12 });
   if (s.ended) g.caption(['Run ended: the test charge has left the cube through the face.', 'Release starts again from the displacement.'], 'tr', { size: 12 });
 }
 
@@ -4534,6 +4602,9 @@ Kit.sim({
     if (i <= 4 && (CHARGES.length !== 2 || CHARGES.some((c, k) => c.x !== d[k].x || c.y !== d[k].y || c.q !== d[k].q))) { CHARGES = d; CVER++; Object.assign(s, fresh(p)); }
   },
 
+  // ▶ Play: the Multipoles mode has no clock (nothing moves there)
+  playBlock(p) { return p.mode === 'multi' ? 'Time runs in the plane and cube modes only' : ''; },
+
   formatParam(id, v) {
     if (id === 'logR') { const r = 10 ** v; return (r < 9.995 ? r.toFixed(2) : r < 99.95 ? r.toFixed(1) : r.toFixed(0)) + ' a'; }
     return undefined;
@@ -4553,7 +4624,7 @@ Kit.sim({
       o.rOverA = r; o.absPhi = `${sig3(Math.abs(phiRay(p.arr, r)))} q/4πε_0 a`; o.slope = slopeAt(p.arr, r);
     } else {
       const d = DIRS[p.dDir], f = field(CUBE8, s.x, s.y, s.z);
-      o.sOverA = s.x * d[0] + s.y * d[1] + s.z * d[2]; o.dphi = f.phi - PHI0; o.force = f.E;
+      o.sOverA = s.x * d[0] + s.y * d[1] + s.z * d[2]; o.dphi = `${sig3s(f.phi - PHI0)} q/4πε_0 a`; o.force = `${sig3s(f.E)} q²/4πε_0 a²`;
     }
     return o;
   },
@@ -4567,13 +4638,18 @@ Kit.sim({
 
   paint: {
     scene(g, s, p, q, kit) {
-      if (g.canvas && g.canvas.id === 'scene') wire(g.canvas, kit);
+      if (g.canvas && g.canvas.id === 'scene') {
+        wire(g.canvas, kit);
+        const hero = document.getElementById('kit-hero');                 // the corner inset's layout follows the mode (CSS)
+        if (hero && hero.dataset.mode !== p.mode) hero.dataset.mode = p.mode;
+      }
       if (p.mode === 'plane') paintPlane(g, s, p, q, kit);
       else if (p.mode === 'multi') paintLog(g, s, p, q, kit);
       else paintCube(g, s, p, q, kit);
     },
 
     inset(g, s, p, q, kit) {
+      if (g.canvas && g.canvas.id === 'inset') wireInset(g.canvas, kit);
       if (p.mode === 'plane') {                     // no inset in this mode: an empty, dashed frame
         const R = g.inset(null, 12, 12, 12, 12);
         g.rect(R.x, R.y, R.w, R.h, { color: 'neutral', width: 2, dash: [8, 6], radius: 10, alpha: 0.8 });
@@ -5574,7 +5650,7 @@ window.__giSpots = [{"target":"scene","region":"charges","label":"+q and −q"},
   window.__psWatch=function(btn,msg){
     var s=btn.closest('.ps-sec'), i=secs.indexOf(s); if(i<0) return false;
     var box=btn.closest('.ps-try'), w=box&&box.querySelector('.ps-watch');
-    showWatch(i,msg,w?w.textContent:'',btn.getAttribute('data-live'));
+    showWatch(i,msg,w?w.innerHTML:'',btn.getAttribute('data-live'));
     return true;
   };
   $('ps-w-back').addEventListener('click',function(){ window.__openPhysics(wSec); });
@@ -5594,7 +5670,7 @@ window.__giSpots = [{"target":"scene","region":"charges","label":"+q and −q"},
     btn.addEventListener('click',function(){
       var fn=(window.__psDemos||{})[btn.getAttribute('data-demo')]; if(!fn) return;
       var i=secs.indexOf(btn.closest('.ps-sec')), box=btn.closest('.ps-try'), w=box&&box.querySelector('.ps-watch');
-      var api={ watchText:w?w.textContent:'', close:function(){ toWatch=true; $('phys-close').click(); },
+      var api={ watchText:w?w.innerHTML:'', close:function(){ toWatch=true; $('phys-close').click(); },
         show:function(msg,live,noWatch){ var t=demoToken; showWatch(i,msg,noWatch?'':api.watchText,live||null); demoToken=t; },
         alive:null };
       api.close(); demoToken++; var tok=demoToken; api.alive=function(){ return tok===demoToken; };

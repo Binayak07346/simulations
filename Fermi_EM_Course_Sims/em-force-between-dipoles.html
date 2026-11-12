@@ -1155,6 +1155,7 @@ body{background:var(--bg);color:var(--ink);font-family:var(--font-sans);overflow
 .slider-val,.control-value{min-width:30px;text-align:right;font-weight:600;font-size:15px;font-family:var(--font-nums);font-variant-numeric:tabular-nums;color:var(--accent);}
 .control-range{font-size:.75rem;font-family:var(--font-nums);font-variant-numeric:tabular-nums;color:var(--text-muted);margin-top:4px;display:flex;justify-content:space-between;}
 .stat-row{display:flex;justify-content:space-between;align-items:center;gap:10px;font-size:14px;padding:6px 0;font-family:var(--font-sans);}
+.stat-row[hidden]{display:none}
 .ctrl-box .stat-row:first-child{padding-top:0;}
 .ctrl-box .stat-row:last-child{padding-bottom:0;}
 .stat-label{color:var(--muted);display:flex;align-items:center;font-weight:600;flex-shrink:0;}
@@ -4283,12 +4284,13 @@ function drawDipole(g, v, x, y, ang, kind) {
 // a curved arrow for a torque τ (positive anticlockwise) round a dipole at (x, y) pointing at ang; returns its box
 function torqueArc(g, v, x, y, ang, tau) {
   if (Math.abs(tau) < 5e-4) return null;
-  const R = 0.5, sweep = Math.min(1, Math.abs(tau) / TAU_FULL) * 1.5 * Math.PI, sg = Math.sign(tau), mid = ang + Math.PI / 2;
+  const R = 0.5, sweep = Math.max(0.8, Math.min(1, Math.abs(tau) / TAU_FULL) * 1.5 * Math.PI), sg = Math.sign(tau), mid = ang + Math.PI / 2;   // at least 0.8 rad so the sense reads
   const a0 = mid - sg * sweep / 2, n = Math.max(6, Math.ceil(sweep * 30)), pts = [];
   for (let i = 0; i <= n; i++) { const a = a0 + sg * sweep * i / n; pts.push(v.px(x + R * Math.cos(a), y + R * Math.sin(a))); }
-  const last = pts[pts.length - 1], prev = pts[Math.max(0, pts.length - 3)];
+  const last = pts[pts.length - 1], prev = pts[pts.length - 2];
+  const tx = last[0] - prev[0], ty = last[1] - prev[1], tm = Math.hypot(tx, ty) || 1, HL = 12;   // end tangent, fixed 12 px stem
   g.path(pts.slice(0, -1), { color: 'secondary', width: 2.6 });
-  g.arrow(prev[0], prev[1], last[0], last[1], { color: 'secondary', width: 2.6, head: 9, headFrac: 1 });
+  g.arrow(last[0] - HL * tx / tm, last[1] - HL * ty / tm, last[0], last[1], { color: 'secondary', width: 2.6, head: 10, headFrac: 1 });
   let x0 = Infinity, y0 = Infinity, x1 = -Infinity, y1 = -Infinity;
   for (const q of pts) { x0 = Math.min(x0, q[0]); x1 = Math.max(x1, q[0]); y0 = Math.min(y0, q[1]); y1 = Math.max(y1, q[1]); }
   const lp = v.px(x + (R + 0.32) * Math.cos(mid), y + (R + 0.32) * Math.sin(mid));
@@ -5333,7 +5335,7 @@ window.__giSpots = [{"target":"scene","region":"second dipole","label":"drag to 
   window.__psWatch=function(btn,msg){
     var s=btn.closest('.ps-sec'), i=secs.indexOf(s); if(i<0) return false;
     var box=btn.closest('.ps-try'), w=box&&box.querySelector('.ps-watch');
-    showWatch(i,msg,w?w.textContent:'',btn.getAttribute('data-live'));
+    showWatch(i,msg,w?w.innerHTML:'',btn.getAttribute('data-live'));
     return true;
   };
   $('ps-w-back').addEventListener('click',function(){ window.__openPhysics(wSec); });
@@ -5353,7 +5355,7 @@ window.__giSpots = [{"target":"scene","region":"second dipole","label":"drag to 
     btn.addEventListener('click',function(){
       var fn=(window.__psDemos||{})[btn.getAttribute('data-demo')]; if(!fn) return;
       var i=secs.indexOf(btn.closest('.ps-sec')), box=btn.closest('.ps-try'), w=box&&box.querySelector('.ps-watch');
-      var api={ watchText:w?w.textContent:'', close:function(){ toWatch=true; $('phys-close').click(); },
+      var api={ watchText:w?w.innerHTML:'', close:function(){ toWatch=true; $('phys-close').click(); },
         show:function(msg,live,noWatch){ var t=demoToken; showWatch(i,msg,noWatch?'':api.watchText,live||null); demoToken=t; },
         alive:null };
       api.close(); demoToken++; var tok=demoToken; api.alive=function(){ return tok===demoToken; };

@@ -1675,6 +1675,8 @@ html.no-voice #inq-voice, html.no-voice #inq-auto, html.no-voice .cg-row-voice, 
 /* Same rule for readout rows: a long value wraps under itself, the label keeps its width. */
 #panel-readouts .stat-row .stat-label{flex:0 0 auto;max-width:48%;min-width:32%;}
 #panel-readouts .stat-row .stat-value{flex:1 1 auto;min-width:0;white-space:normal;overflow-wrap:anywhere;text-align:right;}
+/* A flex label blockified its <sub> and ate the space after it ("Eyat x = 2L"): labels flow as text. */
+#panel-readouts .stat-row .stat-label{display:block;}
 .kit-note{font-size:13px;color:var(--muted);margin:10px 2px 0;line-height:1.45;}
 .ctrl-box.kit-changing{border-color:var(--accent);box-shadow:0 0 0 1px var(--accent),0 0 14px 2px var(--accent-soft);transition:box-shadow 200ms,border-color 200ms;}
 .kit-try{border-color:var(--warn) !important;box-shadow:0 0 0 2px var(--warn),0 0 18px 4px rgba(251,191,36,.45);animation:kit-try 1.2s ease-in-out infinite alternate;}
@@ -1936,10 +1938,10 @@ html.no-voice #inq-voice, html.no-voice #inq-auto, html.no-voice .cg-row-voice, 
 <div class="ps-h"><span class="ps-no">06</span><h3>Two components of E trace an ellipse</h3></div>
 <p class="ps-p">The most general wave of fixed frequency moving along k̂ has two independent transverse components. Let ê<sub>1</sub> and ê<sub>2</sub> be orthonormal with ê<sub>1</sub> × ê<sub>2</sub> = k̂, and write the complex amplitude as E<sub>0</sub> = αe<sup>iδ<sub>1</sub></sup>ê<sub>1</sub> − iβe<sup>iδ<sub>2</sub></sup>ê<sub>2</sub>, with α and β real. Taking the real part, the field at x = 0 is</p>
 <div class="board"><div class="ps-eq" data-tex="\mathbf{E}(0,t)=\alpha\,\hat{\mathbf e}_1\cos(\omega t-\delta_1)-\beta\,\hat{\mathbf e}_2\sin(\omega t-\delta_2)=E_1\hat{\mathbf e}_1+E_2\hat{\mathbf e}_2" data-display></div><div class="cap">Two perpendicular components, each with its own amplitude and phase.</div></div>
-<p class="ps-p">The double-angle formulae eliminate t:</p>
+<p class="ps-p">The angle-addition formulae eliminate t:</p>
 <div class="board"><div class="ps-eq" data-tex="\left(\frac{E_1}{\alpha}\right)^2+\left(\frac{E_2}{\beta}\right)^2+\frac{2E_1E_2}{\alpha\beta}\,\sin(\delta_1-\delta_2)=\cos^2(\delta_1-\delta_2)" data-display></div><div class="cap">The path of the tip of E at x = 0.</div></div>
 <p class="ps-p">This is the equation of an ellipse. The cross term tilts its axes whenever sin(δ<sub>1</sub> − δ<sub>2</sub>) ≠ 0.</p>
-<p class="ps-note">In the sim ê<sub>1</sub> = ŷ, ê<sub>2</sub> = ẑ, λ = 2L (a period of 2 L/c, 4 s on screen) and δ<sub>2</sub> = 0; the slider sets δ<sub>1</sub> − δ<sub>2</sub>.</p>
+<p class="ps-note">In the sim ê<sub>1</sub> = ŷ, ê<sub>2</sub> = ẑ, λ = 2L (a period of 2 L/c, 4 s on screen) and δ<sub>2</sub> = 0; the slider sets δ<sub>1</sub> − δ<sub>2</sub>. Because of the factor −i in E<sub>0</sub>, the two components themselves are a quarter period apart when δ<sub>1</sub> − δ<sub>2</sub> = 0.</p>
 <div class="ps-try"><div class="ps-try-txt"><span class="ps-try-tag">See it</span>α = β = E<sub>0</sub> with δ<sub>1</sub> − δ<sub>2</sub> = π/4, in the inset at full size. <span class="ps-watch">Watch for: the trace closing into an ellipse whose axes are tilted away from ŷ and ẑ.</span></div><button type="button" class="shell-btn seesim" data-show="ellipse">▶ Show me in the sim</button></div>
 </section>
 
@@ -1948,7 +1950,7 @@ html.no-voice #inq-voice, html.no-voice #inq-auto, html.no-voice .cg-row-voice, 
 <div class="ps-h"><span class="ps-no">07</span><h3>Lines, circles and the sense of rotation</h3></div>
 <p class="ps-p">When δ<sub>1</sub> − δ<sub>2</sub> = ±π/2 the right-hand side vanishes, the left-hand side is a perfect square, and βE<sub>1</sub> = ∓αE<sub>2</sub>. That is a straight line: linear polarisation.</p>
 <p class="ps-p">When α = β and δ<sub>1</sub> − δ<sub>2</sub> is 0 or π, the equation is a circle: circular polarisation.</p>
-<p class="ps-p">Seen facing the oncoming wave, E turns clockwise when cos(δ<sub>1</sub> − δ<sub>2</sub>) &gt; 0, which is called right-handed, and anticlockwise when it is negative, which is called left-handed. Every other choice gives elliptic polarisation. The shape is set by the two amplitudes and the relative phase, and the sense of rotation by the sign of cos(δ<sub>1</sub> − δ<sub>2</sub>).</p>
+<p class="ps-p">Seen facing the oncoming wave, E turns clockwise when cos(δ<sub>1</sub> − δ<sub>2</sub>) &gt; 0, which is called right-handed, and anticlockwise when it is negative, which is called left-handed. When α or β is zero the field is linear at any phase. Every other choice gives elliptic polarisation. The shape is set by the two amplitudes and the relative phase, and the sense of rotation by the sign of cos(δ<sub>1</sub> − δ<sub>2</sub>).</p>
 <div class="fig f4">
 <svg viewBox="0 0 300 120" role="img" aria-label="Four traces in the plane x = 0 with alpha equal to beta: a line at pi over 2, a tilted ellipse at pi over 4, a clockwise circle at 0, an anticlockwise circle at pi">
 <defs><marker id="wpf4-a" viewBox="0 0 8 8" refX="5" refY="4" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0 L8,4 L0,8 z" class="wp-ef" fill="#0b63a5"/></marker></defs>
@@ -2127,10 +2129,10 @@ html.no-voice #inq-voice, html.no-voice #inq-auto, html.no-voice .cg-row-voice, 
 <div class="inq-step" data-gate data-card="10" data-kind="predict">
   <h4>10 · Sweep the phase</h4>
   <p>Keep α = β and sweep δ<sub>1</sub> − δ<sub>2</sub> slowly from 0 to π/2. Before moving the slider, predict how the trace changes.</p>
-  <button class="choice" data-fb="The size is set by α and β, which stay fixed; the phase changes the shape through the cross term in E&lt;sub&gt;1E&lt;/sub&gt;&lt;sub&gt;2&lt;/sub&gt;.">The circle grows larger</button>
-  <button class="choice" data-fb="The ellipse equation gains a cross term in E&lt;sub&gt;1E&lt;/sub&gt;&lt;sub&gt;2&lt;/sub&gt; as soon as δ&lt;sub&gt;1&lt;/sub&gt; − δ&lt;sub&gt;2&lt;/sub&gt; leaves 0, and that reshapes the trace.">The circle stays a circle and only its speed changes</button>
-  <button class="choice" data-correct data-fb="At δ&lt;sub&gt;1&lt;/sub&gt; − δ&lt;sub&gt;2&lt;/sub&gt; = π/2 the two components have the same phase, because of the relative factor of −i in E&lt;sub&gt;0&lt;/sub&gt;, so the field points along a fixed line, and in between the ellipse equation has a cross term in E&lt;sub&gt;1E&lt;/sub&gt;&lt;sub&gt;2&lt;/sub&gt; that tilts its axes.">The circle flattens into ellipses with tilted axes, and becomes a straight line at π/2</button>
-  <button class="choice" data-fb="The cross term in E&lt;sub&gt;1E&lt;/sub&gt;&lt;sub&gt;2&lt;/sub&gt; grows steadily with the phase, so the change is gradual, and the final line is tilted, not along ê&lt;sub&gt;1&lt;/sub&gt;.">The circle turns suddenly into a straight line along ê<sub>1</sub></button>
+  <button class="choice" data-fb="The size is set by α and β, which stay fixed; the phase changes the shape through the cross term in E&lt;sub&gt;1&lt;/sub&gt;E&lt;sub&gt;2&lt;/sub&gt;.">The circle grows larger</button>
+  <button class="choice" data-fb="The ellipse equation gains a cross term in E&lt;sub&gt;1&lt;/sub&gt;E&lt;sub&gt;2&lt;/sub&gt; as soon as δ&lt;sub&gt;1&lt;/sub&gt; − δ&lt;sub&gt;2&lt;/sub&gt; leaves 0, and that reshapes the trace.">The circle stays a circle and only its speed changes</button>
+  <button class="choice" data-correct data-fb="At δ&lt;sub&gt;1&lt;/sub&gt; − δ&lt;sub&gt;2&lt;/sub&gt; = π/2 the two components are exactly out of phase, opposite in sign at every instant, because of the relative factor of −i in E&lt;sub&gt;0&lt;/sub&gt;, so the field points along a fixed line, and in between the ellipse equation has a cross term in E&lt;sub&gt;1&lt;/sub&gt;E&lt;sub&gt;2&lt;/sub&gt; that tilts its axes.">The circle flattens into ellipses with tilted axes, and becomes a straight line at π/2</button>
+  <button class="choice" data-fb="The cross term in E&lt;sub&gt;1&lt;/sub&gt;E&lt;sub&gt;2&lt;/sub&gt; grows steadily with the phase, so the change is gradual, and the final line is tilted, not along ê&lt;sub&gt;1&lt;/sub&gt;.">The circle turns suddenly into a straight line along ê<sub>1</sub></button>
   <div class="predict-eval"></div>
 </div>
 <div class="inq-step" data-card="11" data-kind="observe">
@@ -3720,11 +3722,19 @@ window.Kit = (function () {
 
   // showWhen (2026-10-28): a param is shown only while other params have the stated values, e.g. "showWhen": {"meter": "amm"} or
   // {"meter": ["amm", "volt"], "conv": "conv"}. A hidden control keeps its value; no control ever changes another to make room.
+  let visStep = 0;   // the card index applyVisibility last staged
   function applyShowWhen() {
     for (const p of manifest().params || []) {
       if (!p.showWhen || typeof p.showWhen !== 'object') continue;
       const ok = Object.entries(p.showWhen).every(([k, v]) => (Array.isArray(v) ? v : [v]).map(String).includes(String(P[k])));
       const el = $('box-' + p.id); if (el && el.hidden === ok) el.hidden = !ok;
+    }
+    // readouts take showWhen too (2026-11-11): a row shows only in its own mode, and still obeys its from/until staging
+    for (const r of manifest().readouts || []) {
+      if (!r.showWhen || typeof r.showWhen !== 'object') continue;
+      const ok = Object.entries(r.showWhen).every(([k, v]) => (Array.isArray(v) ? v : [v]).map(String).includes(String(P[k])));
+      const staged = freeMode || ((r.from ?? 0) <= visStep && (r.until === undefined || visStep < r.until));
+      const el = $(r.rowId || ('row-' + r.id)); if (el && el.hidden !== !(ok && staged)) el.hidden = !(ok && staged);
     }
   }
   function render() {
@@ -3890,6 +3900,7 @@ window.Kit = (function () {
 
   // ── staging (inquiry) ─────────────────────────────────────────────────────
   function applyVisibility(i) {
+    visStep = i;
     const vis = (from, until) => freeMode || ((from ?? 0) <= i && (until === undefined || i < until));
     for (const e of manifest().stage || []) {
       const el = $(e.domId || e.id); if (el) el.hidden = !vis(e.from, e.until);
@@ -3898,6 +3909,7 @@ window.Kit = (function () {
       if (r.from === undefined && r.until === undefined) continue;
       const el = $(r.rowId || ('row-' + r.id)); if (el) el.hidden = !vis(r.from, r.until);
     }
+    applyShowWhen();
   }
   // The View dropdown's state: 'all', or the DOM id of the one panel that fills the hero.
   function setView(v) {
@@ -4183,7 +4195,7 @@ window.Kit = (function () {
 </script>
 <script id="sim-ops"></script>
 <script>/* v2 sim sim — manifest compiled by pipeline/v2/compile.mjs; physics + painters by the build model. */
-window.__SIM_MANIFEST = {"title":"Waves and Polarisation","time":{"mode":"continuous","timeless":false,"autoplay":false,"onParamChange":"keep"},"params":[{"id":"mode","type":"segmented","label":"Mode","default":"wave","options":[{"value":"wave","label":"travelling wave"},{"value":"pulses","label":"two pulses"},{"value":"pol","label":"polarisation"}],"help":"Switches between a travelling wave, two pulses meeting, and polarisation.","domId":"p-mode"},{"id":"lambda","type":"slider","label":"Wavelength λ","min":0.5,"max":2,"step":0.05,"default":2,"decimals":2,"unit":"L","showWhen":{"mode":"wave"},"help":"Sets the wavelength, 0.5L to 2L; the period at a point follows.","domId":"p-lambda"},{"id":"dir","type":"segmented","label":"Direction of travel","default":"right","options":[{"value":"right","label":"right"},{"value":"left","label":"left"}],"showWhen":{"mode":"wave"},"help":"Sends the wave to the right or to the left along x.","domId":"p-dir"},{"id":"pulseH","type":"slider","label":"Left-moving pulse height","min":-1,"max":1,"step":0.05,"default":0.5,"decimals":2,"unit":"E_0","showWhen":{"mode":"pulses"},"help":"Height of the pulse starting at 3.5L, from −E_0 to E_0.","domId":"p-pulseH"},{"id":"alpha","type":"slider","label":"Amplitude α","min":0,"max":1,"step":0.05,"default":1,"decimals":2,"unit":"E_0","showWhen":{"mode":"pol"},"help":"Amplitude of the component of E along ê_1 = ŷ.","domId":"p-alpha"},{"id":"beta","type":"slider","label":"Amplitude β","min":0,"max":1,"step":0.05,"default":0.5,"decimals":2,"unit":"E_0","showWhen":{"mode":"pol"},"help":"Amplitude of the component of E along ê_2 = ẑ.","domId":"p-beta"},{"id":"delta","type":"slider","label":"Relative phase δ_1 − δ_2","min":-1,"max":1,"step":0.025,"default":0,"decimals":3,"unit":"π","showWhen":{"mode":"pol"},"help":"Relative phase of the two components, from −π to π.","domId":"p-delta"}],"readouts":[{"id":"lam","label":"λ","key":"lam","decimals":2,"unit":"L","domId":"ro-lam","rowId":"row-lam"},{"id":"per","label":"T","key":"per","decimals":2,"unit":"L/c","from":4,"domId":"ro-per","rowId":"row-per"},{"id":"spd","label":"λ/T","key":"spd","decimals":2,"unit":"c","from":4,"domId":"ro-spd","rowId":"row-spd"},{"id":"time","label":"t","key":"time","decimals":2,"unit":"L/c","from":6,"domId":"ro-time","rowId":"row-time"},{"id":"ey2","label":"E_y at x = 2L","key":"ey2","decimals":2,"unit":"E_0","signed":true,"from":6,"domId":"ro-ey2","rowId":"row-ey2"},{"id":"cb2","label":"cB_z at x = 2L","key":"cb2","decimals":2,"unit":"E_0","signed":true,"from":6,"domId":"ro-cb2","rowId":"row-cb2"},{"id":"ra","label":"α","key":"ra","decimals":2,"unit":"E_0","from":8,"domId":"ro-ra","rowId":"row-ra"},{"id":"rb","label":"β","key":"rb","decimals":2,"unit":"E_0","from":8,"domId":"ro-rb","rowId":"row-rb"},{"id":"rd","label":"δ_1 − δ_2","key":"rd","from":8,"domId":"ro-rd","rowId":"row-rd"}],"buttons":[],"keys":{},"canvases":[{"id":"scene","aspect":null},{"id":"inset","aspect":null}],"stage":[],"steps":[{"set":{"mode":"wave","lambda":2,"dir":"right"},"restart":true,"pause":true},{"set":{"mode":"wave","lambda":2,"dir":"right"},"restart":true,"pause":true},{"set":{"mode":"wave","lambda":2,"dir":"right"},"pause":true,"try":["play","dir"]},{"set":{"mode":"wave","lambda":2,"dir":"right"},"restart":true,"pause":true},{"set":{"mode":"wave","lambda":1,"dir":"right"},"restart":true,"pause":true,"try":["play"]},{"set":{"mode":"wave","lambda":1,"dir":"right"},"pause":true},{"set":{"mode":"pulses","pulseH":1},"restart":true,"pause":true,"try":["play"]},{"set":{"mode":"pulses","pulseH":1},"pause":true},{"set":{"mode":"pol","alpha":1,"beta":1,"delta":0},"restart":true,"pause":true,"focus":"modeInset","try":["play"]},{"set":{"mode":"pol","alpha":1,"beta":1,"delta":0},"pause":true},{"set":{"mode":"pol","alpha":1,"beta":1,"delta":0},"play":true,"focus":"modeInset","try":["delta"]},{"set":{"mode":"pol","alpha":1,"beta":1,"delta":0.5},"restart":true,"pause":true},{"set":{"mode":"pol","alpha":1,"beta":1,"delta":1},"restart":true,"pause":true,"focus":"modeInset","try":["play"]},{"set":{"mode":"pol","alpha":1,"beta":1,"delta":1},"play":true,"focus":"modeInset"}],"audit":null};
+window.__SIM_MANIFEST = {"title":"Waves and Polarisation","time":{"mode":"continuous","timeless":false,"autoplay":false,"onParamChange":"keep"},"params":[{"id":"mode","type":"segmented","label":"Mode","default":"wave","options":[{"value":"wave","label":"travelling wave"},{"value":"pulses","label":"two pulses"},{"value":"pol","label":"polarisation"}],"help":"Switches between a travelling wave, two pulses meeting, and polarisation.","domId":"p-mode"},{"id":"lambda","type":"slider","label":"Wavelength λ","min":0.5,"max":2,"step":0.05,"default":2,"decimals":2,"unit":"L","showWhen":{"mode":"wave"},"help":"Sets the wavelength, 0.5L to 2L; the period at a point follows.","domId":"p-lambda"},{"id":"dir","type":"segmented","label":"Direction of travel","default":"right","options":[{"value":"right","label":"right"},{"value":"left","label":"left"}],"showWhen":{"mode":"wave"},"help":"Sends the wave to the right or to the left along x.","domId":"p-dir"},{"id":"pulseH","type":"slider","label":"Left-moving pulse height","min":-1,"max":1,"step":0.05,"default":0.5,"decimals":2,"unit":"E_0","showWhen":{"mode":"pulses"},"help":"Height of the pulse starting at 3.5L, from −E_0 to E_0.","domId":"p-pulseH"},{"id":"alpha","type":"slider","label":"Amplitude α","min":0,"max":1,"step":0.05,"default":1,"decimals":2,"unit":"E_0","showWhen":{"mode":"pol"},"help":"Amplitude of the component of E along ê_1 = ŷ.","domId":"p-alpha"},{"id":"beta","type":"slider","label":"Amplitude β","min":0,"max":1,"step":0.05,"default":0.5,"decimals":2,"unit":"E_0","showWhen":{"mode":"pol"},"help":"Amplitude of the component of E along ê_2 = ẑ.","domId":"p-beta"},{"id":"delta","type":"slider","label":"Relative phase δ_1 − δ_2","min":-1,"max":1,"step":0.025,"default":0,"decimals":3,"unit":"π","showWhen":{"mode":"pol"},"help":"The phase δ_1 − δ_2 in the complex amplitude E_0, from −π to π; its factor −i puts the two components a quarter period apart when δ_1 − δ_2 = 0.","domId":"p-delta"}],"readouts":[{"id":"lam","label":"λ","key":"lam","decimals":2,"unit":"L","domId":"ro-lam","rowId":"row-lam","showWhen":{"mode":"wave"}},{"id":"per","label":"T","key":"per","decimals":2,"unit":"L/c","from":4,"domId":"ro-per","rowId":"row-per","showWhen":{"mode":"wave"}},{"id":"spd","label":"λ/T","key":"spd","decimals":2,"unit":"c","from":4,"domId":"ro-spd","rowId":"row-spd","showWhen":{"mode":"wave"}},{"id":"time","label":"t","key":"time","decimals":2,"unit":"L/c","from":6,"domId":"ro-time","rowId":"row-time","showWhen":{"mode":"pulses"}},{"id":"ey2","label":"E_y at x = 2L","key":"ey2","decimals":2,"unit":"E_0","signed":true,"from":6,"domId":"ro-ey2","rowId":"row-ey2","showWhen":{"mode":"pulses"}},{"id":"cb2","label":"cB_z at x = 2L","key":"cb2","decimals":2,"unit":"E_0","signed":true,"from":6,"domId":"ro-cb2","rowId":"row-cb2","showWhen":{"mode":"pulses"}},{"id":"ra","label":"α","key":"ra","decimals":2,"unit":"E_0","from":8,"domId":"ro-ra","rowId":"row-ra","showWhen":{"mode":"pol"}},{"id":"rb","label":"β","key":"rb","decimals":2,"unit":"E_0","from":8,"domId":"ro-rb","rowId":"row-rb","showWhen":{"mode":"pol"}},{"id":"rd","label":"δ_1 − δ_2","key":"rd","from":8,"domId":"ro-rd","rowId":"row-rd","showWhen":{"mode":"pol"}}],"buttons":[],"keys":{},"canvases":[{"id":"scene","aspect":null},{"id":"inset","aspect":null}],"stage":[],"steps":[{"set":{"mode":"wave","lambda":2,"dir":"right"},"restart":true,"pause":true},{"set":{"mode":"wave","lambda":2,"dir":"right"},"restart":true,"pause":true},{"set":{"mode":"wave","lambda":2,"dir":"right"},"pause":true,"try":["play","dir"]},{"set":{"mode":"wave","lambda":2,"dir":"right"},"restart":true,"pause":true},{"set":{"mode":"wave","lambda":1,"dir":"right"},"restart":true,"pause":true,"try":["play"]},{"set":{"mode":"wave","lambda":1,"dir":"right"},"pause":true},{"set":{"mode":"pulses","pulseH":1},"restart":true,"pause":true,"try":["play"]},{"set":{"mode":"pulses","pulseH":1},"pause":true},{"set":{"mode":"pol","alpha":1,"beta":1,"delta":0},"restart":true,"pause":true,"focus":"modeInset","try":["play"]},{"set":{"mode":"pol","alpha":1,"beta":1,"delta":0},"pause":true},{"set":{"mode":"pol","alpha":1,"beta":1,"delta":0},"play":true,"focus":"modeInset","try":["delta"]},{"set":{"mode":"pol","alpha":1,"beta":1,"delta":0.5},"restart":true,"pause":true},{"set":{"mode":"pol","alpha":1,"beta":1,"delta":1},"restart":true,"pause":true,"focus":"modeInset","try":["play"]},{"set":{"mode":"pol","alpha":1,"beta":1,"delta":1},"play":true,"focus":"modeInset"}],"audit":null};
 // Physics: exact closed forms in scaled units (L = 1, c = 1, fields in E_0), in ONE function used by derive and the painters.
 const XLEN = 4, SIG = 0.2, T_LOOP = 4.5, LAM_POL = 2, RATE = 0.5;   // axis 0..4L; pulse sigma 0.2L; pulse run 4.5 L/c; light travels L in 2 s
 const A = 0.42, NPTS = 49, FMAX = 2.2;                               // world length of E_0 in the 3D view; arrow sites; fixed field scale
@@ -4243,13 +4255,16 @@ Kit.sim({
   derive(s, p) {
     const o = { shape: shapeName(p) };
     if (p.mode === 'wave') { o.lam = p.lambda; o.per = p.lambda; o.spd = p.lambda / p.lambda; }   // T = lambda/c, lambda/T = c
-    if (p.mode === 'pulses') { const f = phys(p, 2, s.t); o.time = s.t; o.ey2 = f.e1; o.cb2 = f.cbz; }
+    const z = (v) => Math.abs(v) < 0.005 ? 0 : v;   // below 2 dp reads 0.00, never 6.03 × 10⁻⁹
+    if (p.mode === 'pulses') { const f = phys(p, 2, s.t); o.time = z(s.t); o.ey2 = z(f.e1); o.cb2 = z(f.cbz); }
     if (p.mode === 'pol') { o.ra = p.alpha; o.rb = p.beta; o.rd = piText(p.delta); }
     return o;
   },
 
   paint: {
     scene(g, s, p, q, kit) {
+      const sub = document.querySelector('#panel-main .plot-inline'), cap = (kit.p && kit.p.mode || p.mode) === 'pol' ? 'E along the x-axis' : 'E and cB along the x-axis';   // no cB is drawn in the polarisation mode
+      if (sub && sub.textContent !== cap) sub.textContent = cap;
       const cam = kit.camera('scene', { yaw: -24, pitch: 14 });
       const R = FMAX * A, H = 2.3 * A;
       const FRAME = [];
@@ -4402,7 +4417,7 @@ Kit.sim({
       }
       const f = phys(p, 0, s.t);
       g.arrow(X(0), Y(0), X(f.e2), Y(f.e1), { color: 'series1', width: 3, head: 9 });
-      if (kit.free || kit.step >= 13) g.label(q.shape, sq.x + sq.w + 12, sq.y + sq.h / 2, { size: 13, color: 'ink', anchor: 'w' });
+      if (kit.free ? s.t >= T : kit.step >= 13) g.label(q.shape, sq.x + sq.w + 12, sq.y + sq.h / 2, { size: 13, color: 'ink', anchor: 'w' });
     },
   },
 });</script>
@@ -4723,7 +4738,7 @@ const cgSteps = [
     sel: "#box-delta",
     mode: "hide",
     title: "Relative phase δ1 − δ2",
-    text: "Relative phase of the two components, from −π to π."
+    text: "The phase δ1 − δ2 in the complex amplitude E0, from −π to π; its factor −i puts the two components a quarter period apart when δ1 − δ2 = 0."
   },
   {
     sel: "#box-view",
@@ -4735,7 +4750,7 @@ const cgSteps = [
     sel: "#panel-readouts",
     mode: "hide",
     title: "Readouts",
-    text: "Live values: λ."
+    text: "Live values for the current mode: λ, T and λ/T; t, Ey and cBz at x = 2L; or α, β and δ1 − δ2."
   },
   {
     sel: null,
@@ -5354,7 +5369,7 @@ window.__giSpots = [{"target":"scene","region":"wave along the axis","label":"E 
   window.__psWatch=function(btn,msg){
     var s=btn.closest('.ps-sec'), i=secs.indexOf(s); if(i<0) return false;
     var box=btn.closest('.ps-try'), w=box&&box.querySelector('.ps-watch');
-    showWatch(i,msg,w?w.textContent:'',btn.getAttribute('data-live'));
+    showWatch(i,msg,w?w.innerHTML:'',btn.getAttribute('data-live'));
     return true;
   };
   $('ps-w-back').addEventListener('click',function(){ window.__openPhysics(wSec); });
@@ -5374,7 +5389,7 @@ window.__giSpots = [{"target":"scene","region":"wave along the axis","label":"E 
     btn.addEventListener('click',function(){
       var fn=(window.__psDemos||{})[btn.getAttribute('data-demo')]; if(!fn) return;
       var i=secs.indexOf(btn.closest('.ps-sec')), box=btn.closest('.ps-try'), w=box&&box.querySelector('.ps-watch');
-      var api={ watchText:w?w.textContent:'', close:function(){ toWatch=true; $('phys-close').click(); },
+      var api={ watchText:w?w.innerHTML:'', close:function(){ toWatch=true; $('phys-close').click(); },
         show:function(msg,live,noWatch){ var t=demoToken; showWatch(i,msg,noWatch?'':api.watchText,live||null); demoToken=t; },
         alive:null };
       api.close(); demoToken++; var tok=demoToken; api.alive=function(){ return tok===demoToken; };

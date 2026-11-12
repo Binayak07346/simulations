@@ -1155,6 +1155,7 @@ body{background:var(--bg);color:var(--ink);font-family:var(--font-sans);overflow
 .slider-val,.control-value{min-width:30px;text-align:right;font-weight:600;font-size:15px;font-family:var(--font-nums);font-variant-numeric:tabular-nums;color:var(--accent);}
 .control-range{font-size:.75rem;font-family:var(--font-nums);font-variant-numeric:tabular-nums;color:var(--text-muted);margin-top:4px;display:flex;justify-content:space-between;}
 .stat-row{display:flex;justify-content:space-between;align-items:center;gap:10px;font-size:14px;padding:6px 0;font-family:var(--font-sans);}
+.stat-row[hidden]{display:none !important;}
 .ctrl-box .stat-row:first-child{padding-top:0;}
 .ctrl-box .stat-row:last-child{padding-bottom:0;}
 .stat-label{color:var(--muted);display:flex;align-items:center;font-weight:600;flex-shrink:0;}
@@ -1806,7 +1807,7 @@ html.no-voice #inq-voice, html.no-voice #inq-auto, html.no-voice .cg-row-voice, 
 <text x="95" y="168" font-size="10" text-anchor="middle" fill="currentColor" opacity=".8">the plane, seen from above</text>
 </svg><div class="cap">The probes: a box of side s = 0.5ℓ that you drag through a current, and a loop of side ℓ that you can divide into small loops.</div></div></div>
 <h4 class="ps-sub">What's on screen</h4>
-<ul class="ps-keys"><li><i class="ps-chip ps-k-ink"></i><b>Arrows</b>: the chosen field (J, B or A) on a regular grid, length proportional to its size.</li><li><i class="ps-chip ps-k-mut"></i><b>Thin lines</b>: field lines of the same field.</li><li><i class="ps-chip ps-k-cy"></i><b>Square outline</b>: the probe, a box, a loop of side ℓ, or a loop you resize.</li><li><i class="ps-chip ps-k-bl"></i><b>Colour</b>: ρ in the continuity mode, circulation per unit area of each small loop, or B<sub>z</sub>. The key sits beside the plane.</li><li><i class="ps-chip ps-box"></i><b>Charge in the box</b>: Q against t, in the continuity mode.</li></ul>
+<ul class="ps-keys"><li><i class="ps-chip ps-k-ink"></i><b>Arrows</b>: the chosen field (J, B or A) on a regular grid, length proportional to its size.</li><li><i class="ps-chip ps-k-mut"></i><b>Thin lines</b>: field lines of the same field.</li><li><i class="ps-chip ps-k-cy"></i><b>Square outline</b>: the probe, a box, a loop of side ℓ, or a loop you resize.</li><li><i class="ps-chip ps-k-cy"></i><b>Arrows on the loop edges</b>: the sense of traversal, anticlockwise as seen from above; Φ is taken with the normal out of the screen.</li><li><i class="ps-chip ps-k-bl"></i><b>Colour</b>: ρ in the continuity mode, circulation per unit area of each small loop, or B<sub>z</sub>. The key sits beside the plane.</li><li><i class="ps-chip ps-box"></i><b>Charge in the box</b>: Q against t, in the continuity mode.</li></ul>
 <div class="ps-try"><div class="ps-try-txt"><span class="ps-try-tag">See it</span>Opens the continuity mode with the box near the edge of the plane. <span class="ps-watch">Watch for: the box outline on the plane and the empty Q plot beside it.</span></div><button type="button" class="shell-btn seesim" data-show="setup">▶ Show me in the sim</button></div>
 </section>
 <section class="ps-sec" data-short="The controls">
@@ -3652,11 +3653,18 @@ window.Kit = (function () {
       const ok = Object.entries(p.showWhen).every(([k, v]) => (Array.isArray(v) ? v : [v]).map(String).includes(String(P[k])));
       const el = $('box-' + p.id); if (el && el.hidden === ok) el.hidden = !ok;
     }
+    // a readout with showWhen shows only in that state, and only while its inquiry staging (from/until) allows it
+    for (const r of manifest().readouts || []) {
+      if (!r.showWhen || typeof r.showWhen !== 'object') continue;
+      const ok = Object.entries(r.showWhen).every(([k, v]) => (Array.isArray(v) ? v : [v]).map(String).includes(String(P[k])));
+      const el = $(r.rowId || ('row-' + r.id)), h = !ok || (el && el.dataset.kitStaged === 'off');
+      if (el && el.hidden !== h) el.hidden = h;
+    }
   }
   function render() {
     if (!SIM || !S) return;
     Q = (SIM.derive ? SIM.derive(S, P, Kit) : {}) || {};
-    applyShowWhen();
+    applyShowWhen(); syncPlay();
     for (const cv of canvases) {
       if (!cv.g) fitCanvas(cv);
       const painter = SIM.paint && SIM.paint[cv.id];
@@ -3760,7 +3768,7 @@ window.Kit = (function () {
   // with the current controls; any other pause is resumed where it stopped.
   let ended = false, advancing = false;
   function replayIfEnded() { if (!ended) return; ended = false; S = SIM.state(P, Kit, 'restart'); render(); }
-  const play = () => { if (sketching) return; replayIfEnded(); if (window.Shell && Shell.setPlaying) Shell.setPlaying(true); setTimeout(updateButtons, 0); };
+  const play = () => { if (sketching || playWhy()) return; replayIfEnded(); if (window.Shell && Shell.setPlaying) Shell.setPlaying(true); setTimeout(updateButtons, 0); };
   const pause = () => { if (sketching) return; if (advancing) ended = true; if (window.Shell && Shell.setPlaying) Shell.setPlaying(false); setTimeout(updateButtons, 0); };
   const defaultOf = (p) => p.type === 'slider' ? snap(p.default, p.step, p.min, p.decimals) : p.default;
   function resetDefaults(reason = 'reset') {
@@ -3806,7 +3814,22 @@ window.Kit = (function () {
     if (r && typeof r === 'object' && r !== S) S = r;
     render(); updateButtons();
   }
+  // why ▶ Play has nothing to run right now ('' = it can run): SIM.playBlock(P, { free, step, waiting }), where
+  // waiting = the open inquiry card is a data-gate card not yet answered
+  function playWhy() {
+    if (!SIM || !SIM.playBlock) return '';
+    const card = freeMode ? null : document.querySelectorAll('#inq-cards .inq-step')[step];
+    return SIM.playBlock(P, { free: freeMode, step, waiting: !!(card && card.hasAttribute('data-gate') && !card.hasAttribute('data-ready')) }, Kit) || '';
+  }
+  function syncPlay() {
+    const pb = $('shell-play'); if (!pb || !SIM || !SIM.playBlock) return;
+    const why = playWhy();
+    if (pb.disabled !== !!why) pb.disabled = !!why;
+    if (pb.title !== why) pb.title = why;
+    if (why && window.Shell && Shell.playing) Shell.setPlaying(false);
+  }
   function updateButtons() {
+    syncPlay();
     for (const b of manifest().buttons || []) {
       const el = $(b.domId || ('btn-' + b.id)); if (!el) continue;
       const on = b.when === 'paused' ? !(window.Shell && Shell.playing) : b.when === 'playing' ? !!(window.Shell && Shell.playing) : true;
@@ -3822,8 +3845,9 @@ window.Kit = (function () {
     }
     for (const r of manifest().readouts || []) {
       if (r.from === undefined && r.until === undefined) continue;
-      const el = $(r.rowId || ('row-' + r.id)); if (el) el.hidden = !vis(r.from, r.until);
+      const el = $(r.rowId || ('row-' + r.id)); if (el) { el.hidden = !vis(r.from, r.until); el.dataset.kitStaged = el.hidden ? 'off' : 'on'; }
     }
+    applyShowWhen();
   }
   // The View dropdown's state: 'all', or the DOM id of the one panel that fills the hero.
   function setView(v) {
@@ -4064,6 +4088,9 @@ window.Kit = (function () {
     // capture: runs before the shell's own ▶ handler, which then just resumes
     document.addEventListener('click', e => { if (e.target.closest && e.target.closest('#shell-play') && !Shell.playing) replayIfEnded(); }, true);
     if (playBtn) playBtn.addEventListener('click', () => setTimeout(updateButtons, 0));
+    // answering a predict card (the shell marks it data-ready) can unlock ▶
+    const inqHost = $('inq-cards');
+    if (inqHost) inqHost.addEventListener('click', e => { if (e.target.closest && e.target.closest('.choice')) setTimeout(updateButtons, 0); });
     render(); updateButtons();
     return Kit;
   }
@@ -4109,7 +4136,7 @@ window.Kit = (function () {
 </script>
 <script id="sim-ops"></script>
 <script>/* v2 sim sim — manifest compiled by pipeline/v2/compile.mjs; physics + painters by the build model. */
-window.__SIM_MANIFEST = {"title":"Boxes and Loops in a Field","time":{"mode":"continuous","timeless":false,"autoplay":false,"onParamChange":"pause"},"params":[{"id":"mode","type":"segmented","label":"Mode","default":"cont","options":[{"value":"cont","label":"continuity"},{"value":"circ","label":"circulation"},{"value":"vp","label":"vector potential"}],"help":"Chooses the box and a current, the loop and a field, or the vector potential.","domId":"p-mode"},{"id":"fieldJ","type":"segmented","label":"Field","default":"swirl","showWhen":{"mode":"cont"},"options":[{"value":"spread","label":"spreading"},{"value":"swirl","label":"swirling"},{"value":"oneway","label":"one-directional"}],"help":"Chooses the current: spreading, swirling or along x; t returns to 0.","domId":"p-fieldJ"},{"id":"fieldB","type":"segmented","label":"Field","default":"rot","showWhen":{"mode":"circ"},"options":[{"value":"x2x","label":"(x², 0, 0)"},{"value":"x2y","label":"(0, x², 0)"},{"value":"rot","label":"(y, −x, 0)"}],"help":"Chooses B, with x and y in units of ℓ and B in fixed units.","domId":"p-fieldB"},{"id":"fieldA","type":"segmented","label":"Field","default":"uniform","showWhen":{"mode":"vp"},"options":[{"value":"uniform","label":"uniform field"},{"value":"solenoid","label":"solenoid"}],"help":"A uniform field B, or a long solenoid of radius R with field B inside.","domId":"p-fieldA"},{"id":"boxX","type":"slider","label":"Box centre x","min":-1.75,"max":1.75,"step":0.05,"default":1.5,"decimals":2,"unit":"ℓ","showWhen":{"mode":"cont"},"help":"Moves the box sideways; dragging the box on the plane does the same.","domId":"p-boxX"},{"id":"boxY","type":"slider","label":"Box centre y","min":-1.75,"max":1.75,"step":0.05,"default":1,"decimals":2,"unit":"ℓ","showWhen":{"mode":"cont"},"help":"Moves the box up or down; the run keeps going while you drag.","domId":"p-boxY"},{"id":"loopX","type":"slider","label":"Loop centre x","min":-1.5,"max":1.5,"step":0.05,"default":0,"decimals":2,"unit":"ℓ","showWhen":{"mode":"circ"},"help":"Moves the loop of side ℓ sideways; or drag it on the plane.","domId":"p-loopX"},{"id":"loopY","type":"slider","label":"Loop centre y","min":-1.5,"max":1.5,"step":0.05,"default":0,"decimals":2,"unit":"ℓ","showWhen":{"mode":"circ"},"help":"Moves the loop of side ℓ up or down; or drag it on the plane.","domId":"p-loopY"},{"id":"n","type":"segmented","label":"Subdivisions per side","default":1,"showWhen":{"mode":"circ"},"options":[{"value":1,"label":"1"},{"value":2,"label":"2"},{"value":4,"label":"4"},{"value":8,"label":"8"}],"help":"Divides the loop into n × n small loops.","domId":"p-n"},{"id":"vpX","type":"slider","label":"Loop centre x","min":-1.85,"max":1.85,"step":0.05,"default":0,"decimals":2,"unit":"R","showWhen":{"mode":"vp"},"help":"Moves the loop sideways; it always stays inside the plane.","domId":"p-vpX"},{"id":"vpY","type":"slider","label":"Loop centre y","min":-1.85,"max":1.85,"step":0.05,"default":0,"decimals":2,"unit":"R","showWhen":{"mode":"vp"},"help":"Moves the loop up or down; it always stays inside the plane.","domId":"p-vpY"},{"id":"vpSide","type":"slider","label":"Loop side","min":0.25,"max":3.5,"step":0.05,"default":1,"decimals":2,"unit":"R","showWhen":{"mode":"vp"},"help":"Resizes the loop, 0.25R to 3.5R; or drag one of its corners.","domId":"p-vpSide"},{"id":"lambda","type":"slider","label":"Gauge parameter λ","min":-0.5,"max":0.5,"step":0.05,"default":0,"decimals":2,"unit":"B","signed":true,"showWhen":{"mode":"vp"},"help":"Adds ∇χ to A, with χ = λxy, from −B/2 to B/2.","domId":"p-lambda"}],"readouts":[{"id":"t","label":"t","key":"tT","decimals":2,"unit":"T","from":0,"until":5,"domId":"ro-t","rowId":"row-t"},{"id":"q","label":"Q","key":"Q","decimals":3,"unit":"aTℓ³","from":0,"until":5,"domId":"ro-q","rowId":"row-q"},{"id":"dqdt","label":"dQ/dt","key":"dQdt","decimals":3,"unit":"aℓ³","from":0,"until":5,"domId":"ro-dqdt","rowId":"row-dqdt"},{"id":"flux","label":"∮_S J·dS","key":"flux","decimals":3,"unit":"aℓ³","from":0,"until":5,"domId":"ro-flux","rowId":"row-flux"},{"id":"circl","label":"∮ B·dx, large loop","key":"circL","decimals":3,"unit":"","from":5,"until":9,"domId":"ro-circl","rowId":"row-circl"},{"id":"circsum","label":"Σ small loops","key":"circSum","decimals":3,"unit":"","from":5,"until":9,"domId":"ro-circsum","rowId":"row-circsum"},{"id":"circarea","label":"∮ B·dx / area","key":"circArea","decimals":3,"unit":"","from":5,"until":9,"domId":"ro-circarea","rowId":"row-circarea"},{"id":"lam","label":"λ","key":"lam","decimals":2,"unit":"B","signed":true,"from":9,"domId":"ro-lam","rowId":"row-lam"},{"id":"circa","label":"∮_C A·dx","key":"circA","decimals":3,"unit":"BR²","from":9,"domId":"ro-circa","rowId":"row-circa"},{"id":"phi","label":"Φ","key":"Phi","decimals":3,"unit":"BR²","from":9,"domId":"ro-phi","rowId":"row-phi"}],"buttons":[],"keys":{},"canvases":[{"id":"plane","aspect":null},{"id":"charge","aspect":null}],"stage":[],"steps":[{"set":{"mode":"cont","fieldJ":"swirl","boxX":1.5,"boxY":1},"restart":true,"pause":true},{"set":{"mode":"cont","fieldJ":"swirl","boxX":1.5,"boxY":1},"restart":true,"pause":true},{"set":{"mode":"cont","fieldJ":"swirl","boxX":1.5,"boxY":1},"try":["play"]},{"set":{"mode":"cont","fieldJ":"spread","boxX":1.5,"boxY":0},"restart":true,"pause":true},{"set":{"mode":"cont","fieldJ":"spread","boxX":1.5,"boxY":0},"try":["play"]},{"set":{"mode":"circ","fieldB":"rot","n":1,"loopX":0,"loopY":0},"pause":true,"focus":"main"},{"set":{"mode":"circ","fieldB":"rot","n":1,"loopX":0,"loopY":0},"focus":"main","try":["n"]},{"set":{"mode":"circ","fieldB":"x2x","n":4,"loopX":1,"loopY":0},"pause":true,"focus":"main"},{"set":{"mode":"circ","fieldB":"x2x","n":4,"loopX":1,"loopY":0},"focus":"main","try":["fieldB"]},{"set":{"mode":"vp","fieldA":"uniform","lambda":0,"vpX":0,"vpY":0,"vpSide":1},"pause":true,"focus":"main"},{"set":{"mode":"vp","fieldA":"uniform","lambda":0,"vpX":0,"vpY":0,"vpSide":1},"focus":"main","try":["lambda"]},{"set":{"mode":"vp","fieldA":"solenoid","lambda":0,"vpX":0,"vpY":0,"vpSide":1},"pause":true,"focus":"main"},{"set":{"mode":"vp","fieldA":"solenoid","lambda":0,"vpX":0,"vpY":0,"vpSide":1},"focus":"main","try":["vpSide"]},{"set":{"mode":"vp","fieldA":"solenoid"},"focus":"main"}],"audit":null,"links":[{"from":"vpSide","to":"vpX","kind":"math","rule":"Math.sign(p.vpX) * Math.min(Math.abs(p.vpX), Number((Math.floor((2 - p.vpSide / 2) / 0.05 + 1e-9) * 0.05).toFixed(2)))","why":"range rule: the loop stays inside the plane, |x_c| + side/2 ≤ 2R"},{"from":"vpSide","to":"vpY","kind":"math","rule":"Math.sign(p.vpY) * Math.min(Math.abs(p.vpY), Number((Math.floor((2 - p.vpSide / 2) / 0.05 + 1e-9) * 0.05).toFixed(2)))","why":"range rule: the loop stays inside the plane, |y_c| + side/2 ≤ 2R"}]};
+window.__SIM_MANIFEST = {"title":"Boxes and Loops in a Field","time":{"mode":"continuous","timeless":false,"autoplay":false,"onParamChange":"pause"},"params":[{"id":"mode","type":"segmented","label":"Mode","default":"cont","options":[{"value":"cont","label":"continuity"},{"value":"circ","label":"circulation"},{"value":"vp","label":"vector potential"}],"help":"Chooses the box and a current, the loop and a field, or the vector potential.","domId":"p-mode"},{"id":"fieldJ","type":"segmented","label":"Field","default":"swirl","showWhen":{"mode":"cont"},"options":[{"value":"spread","label":"spreading"},{"value":"swirl","label":"swirling"},{"value":"oneway","label":"one-directional"}],"help":"Chooses the current: spreading, swirling or along x; t returns to 0.","domId":"p-fieldJ"},{"id":"fieldB","type":"segmented","label":"Field","default":"rot","showWhen":{"mode":"circ"},"options":[{"value":"x2x","label":"(x², 0, 0)"},{"value":"x2y","label":"(0, x², 0)"},{"value":"rot","label":"(y, −x, 0)"}],"help":"Chooses B, with x and y in units of ℓ and B in fixed units.","domId":"p-fieldB"},{"id":"fieldA","type":"segmented","label":"Field","default":"uniform","showWhen":{"mode":"vp"},"options":[{"value":"uniform","label":"uniform field"},{"value":"solenoid","label":"solenoid"}],"help":"A uniform field B, or a long solenoid of radius R with field B inside.","domId":"p-fieldA"},{"id":"boxX","type":"slider","label":"Box centre x","min":-1.75,"max":1.75,"step":0.05,"default":1.5,"decimals":2,"unit":"ℓ","showWhen":{"mode":"cont"},"help":"Moves the box sideways; dragging the box on the plane does the same.","domId":"p-boxX"},{"id":"boxY","type":"slider","label":"Box centre y","min":-1.75,"max":1.75,"step":0.05,"default":1,"decimals":2,"unit":"ℓ","showWhen":{"mode":"cont"},"help":"Moves the box up or down; the run keeps going while you drag.","domId":"p-boxY"},{"id":"loopX","type":"slider","label":"Loop centre x","min":-1.5,"max":1.5,"step":0.05,"default":0,"decimals":2,"unit":"ℓ","showWhen":{"mode":"circ"},"help":"Moves the loop of side ℓ sideways; or drag it on the plane.","domId":"p-loopX"},{"id":"loopY","type":"slider","label":"Loop centre y","min":-1.5,"max":1.5,"step":0.05,"default":0,"decimals":2,"unit":"ℓ","showWhen":{"mode":"circ"},"help":"Moves the loop of side ℓ up or down; or drag it on the plane.","domId":"p-loopY"},{"id":"n","type":"segmented","label":"Subdivisions per side","default":1,"showWhen":{"mode":"circ"},"options":[{"value":1,"label":"1"},{"value":2,"label":"2"},{"value":4,"label":"4"},{"value":8,"label":"8"}],"help":"Divides the loop into n × n small loops.","domId":"p-n"},{"id":"vpX","type":"slider","label":"Loop centre x","min":-1.85,"max":1.85,"step":0.05,"default":0,"decimals":2,"unit":"R","showWhen":{"mode":"vp"},"help":"Moves the loop sideways; it always stays inside the plane.","domId":"p-vpX"},{"id":"vpY","type":"slider","label":"Loop centre y","min":-1.85,"max":1.85,"step":0.05,"default":0,"decimals":2,"unit":"R","showWhen":{"mode":"vp"},"help":"Moves the loop up or down; it always stays inside the plane.","domId":"p-vpY"},{"id":"vpSide","type":"slider","label":"Loop side","min":0.25,"max":3.5,"step":0.05,"default":1,"decimals":2,"unit":"R","showWhen":{"mode":"vp"},"help":"Resizes the loop, 0.25R to 3.5R; or drag one of its corners.","domId":"p-vpSide"},{"id":"lambda","type":"slider","label":"Gauge parameter λ","min":-0.5,"max":0.5,"step":0.05,"default":0,"decimals":2,"unit":"B","signed":true,"showWhen":{"mode":"vp"},"help":"Adds ∇χ to A, with χ = λxy, from −B/2 to B/2.","domId":"p-lambda"}],"readouts":[{"id":"t","label":"t","key":"tT","decimals":2,"unit":"T","from":0,"until":5,"domId":"ro-t","rowId":"row-t","showWhen":{"mode":"cont"}},{"id":"q","label":"Q","key":"Q","decimals":3,"unit":"aTℓ³","from":0,"until":5,"domId":"ro-q","rowId":"row-q","showWhen":{"mode":"cont"}},{"id":"dqdt","label":"dQ/dt","key":"dQdt","decimals":3,"unit":"aℓ³","from":0,"until":5,"domId":"ro-dqdt","rowId":"row-dqdt","showWhen":{"mode":"cont"}},{"id":"flux","label":"∮_S J·dS","key":"flux","decimals":3,"unit":"aℓ³","from":0,"until":5,"domId":"ro-flux","rowId":"row-flux","showWhen":{"mode":"cont"}},{"id":"circl","label":"∮ B·dx, large loop","key":"circL","decimals":3,"unit":"","from":5,"until":9,"domId":"ro-circl","rowId":"row-circl","showWhen":{"mode":"circ"}},{"id":"circsum","label":"Σ small loops","key":"circSum","decimals":3,"unit":"","from":5,"until":9,"domId":"ro-circsum","rowId":"row-circsum","showWhen":{"mode":"circ"}},{"id":"circarea","label":"∮ B·dx / area","key":"circArea","decimals":3,"unit":"","from":5,"until":9,"domId":"ro-circarea","rowId":"row-circarea","showWhen":{"mode":"circ"}},{"id":"lam","label":"λ","key":"lam","decimals":2,"unit":"B","signed":true,"from":9,"domId":"ro-lam","rowId":"row-lam","showWhen":{"mode":"vp"}},{"id":"circa","label":"∮_C A·dx","key":"circA","decimals":3,"unit":"BR²","from":9,"domId":"ro-circa","rowId":"row-circa","showWhen":{"mode":"vp"}},{"id":"phi","label":"Φ","key":"Phi","decimals":3,"unit":"BR²","from":9,"domId":"ro-phi","rowId":"row-phi","showWhen":{"mode":"vp"}}],"buttons":[],"keys":{},"canvases":[{"id":"plane","aspect":null},{"id":"charge","aspect":null}],"stage":[],"steps":[{"set":{"mode":"cont","fieldJ":"swirl","boxX":1.5,"boxY":1},"restart":true,"pause":true},{"set":{"mode":"cont","fieldJ":"swirl","boxX":1.5,"boxY":1},"restart":true,"pause":true},{"set":{"mode":"cont","fieldJ":"swirl","boxX":1.5,"boxY":1},"try":["play"]},{"set":{"mode":"cont","fieldJ":"spread","boxX":1.5,"boxY":0},"restart":true,"pause":true},{"set":{"mode":"cont","fieldJ":"spread","boxX":1.5,"boxY":0},"try":["play"]},{"set":{"mode":"circ","fieldB":"rot","n":1,"loopX":0,"loopY":0},"pause":true,"focus":"main"},{"set":{"mode":"circ","fieldB":"rot","n":1,"loopX":0,"loopY":0},"focus":"main","try":["n"]},{"set":{"mode":"circ","fieldB":"x2x","n":4,"loopX":1,"loopY":0},"pause":true,"focus":"main"},{"set":{"mode":"circ","fieldB":"x2x","n":4,"loopX":1,"loopY":0},"focus":"main","try":["fieldB"]},{"set":{"mode":"vp","fieldA":"uniform","lambda":0,"vpX":0,"vpY":0,"vpSide":1},"pause":true,"focus":"main"},{"set":{"mode":"vp","fieldA":"uniform","lambda":0,"vpX":0,"vpY":0,"vpSide":1},"focus":"main","try":["lambda"]},{"set":{"mode":"vp","fieldA":"solenoid","lambda":0,"vpX":0,"vpY":0,"vpSide":1},"pause":true,"focus":"main"},{"set":{"mode":"vp","fieldA":"solenoid","lambda":0,"vpX":0,"vpY":0,"vpSide":1},"focus":"main","try":["vpSide"]},{"set":{"mode":"vp","fieldA":"solenoid"},"focus":"main"}],"audit":null,"links":[{"from":"vpSide","to":"vpX","kind":"math","rule":"Math.sign(p.vpX) * Math.min(Math.abs(p.vpX), Number((Math.floor((2 - p.vpSide / 2) / 0.05 + 1e-9) * 0.05).toFixed(2)))","why":"range rule: the loop stays inside the plane, |x_c| + side/2 ≤ 2R"},{"from":"vpSide","to":"vpY","kind":"math","rule":"Math.sign(p.vpY) * Math.min(Math.abs(p.vpY), Number((Math.floor((2 - p.vpSide / 2) / 0.05 + 1e-9) * 0.05).toFixed(2)))","why":"range rule: the loop stays inside the plane, |y_c| + side/2 ≤ 2R"}]};
 // Boxes and loops in a vector field. Lengths in ℓ (in R in the vector potential mode); a, T, B and the
 // field unit of the circulation mode are fixed at 1, so every number below is in those units.
 const S_BOX = 0.5, T_SCREEN = 20, GRID = 0.4, BZN = 120;        // box side (ℓ), screen seconds for t: 0 → T, arrow grid, colour cells per side
@@ -4304,6 +4331,12 @@ Kit.sim({
     return 'keep';                                              // moving a probe never restarts the run (the box is dragged while time runs)
   },
 
+  // ▶ Play: only the continuity mode has a clock, and a predict card holds it until it is answered
+  playBlock(p, c) {
+    if (p.mode !== 'cont') return 'Time runs in the continuity mode only';
+    return c.waiting ? 'Commit a prediction to unlock' : '';
+  },
+
   derive(s, p, kit) {
     const hide = !kit.free && PREDICT.includes(kit.step), D = '—';
     const o = { tT: D, Q: D, dQdt: D, flux: D, circL: D, circSum: D, circArea: D, lam: D, circA: D, Phi: D, ended: s.ended, hide, cells: null };
@@ -4383,10 +4416,10 @@ Kit.sim({
         const d = Math.min(7, 0.17 * cpx), A = 0.42 * cpx, hd = n >= 8 ? 3 : Math.max(4, Math.min(8, A * 0.45)), wd = n >= 8 ? 1.1 : 1.7;
         for (const c of cells) {
           const xl = v.x(c.x - c.c / 2), xr = xl + cpx, yt = v.y(c.y + c.c / 2), yb = yt + cpx, xm = (xl + xr) / 2, ym = (yt + yb) / 2;
-          g.arrow(xm - A / 2, yb - d, xm + A / 2, yb - d, { color: 'ink', width: wd, head: hd });   // bottom edge: +x
-          g.arrow(xr - d, ym + A / 2, xr - d, ym - A / 2, { color: 'ink', width: wd, head: hd });   // right edge: +y
-          g.arrow(xm + A / 2, yt + d, xm - A / 2, yt + d, { color: 'ink', width: wd, head: hd });   // top edge: −x
-          g.arrow(xl + d, ym - A / 2, xl + d, ym + A / 2, { color: 'ink', width: wd, head: hd });   // left edge: −y
+          g.arrow(xm - A / 2, yb - d, xm + A / 2, yb - d, { color: 'primary', width: wd, head: hd });   // bottom edge: +x
+          g.arrow(xr - d, ym + A / 2, xr - d, ym - A / 2, { color: 'primary', width: wd, head: hd });   // right edge: +y
+          g.arrow(xm + A / 2, yt + d, xm - A / 2, yt + d, { color: 'primary', width: wd, head: hd });   // top edge: −x
+          g.arrow(xl + d, ym - A / 2, xl + d, ym + A / 2, { color: 'primary', width: wd, head: hd });   // left edge: −y
         }
         const r = { x: v.x(p.loopX - 0.5), y: v.y(p.loopY + 0.5), w: v.len(1), h: v.len(1) };
         g.rect(r.x, r.y, r.w, r.h, { color: 'primary', width: 3 });
@@ -4395,6 +4428,12 @@ Kit.sim({
       } else {
         const h = p.vpSide / 2, r = { x: v.x(p.vpX - h), y: v.y(p.vpY + h), w: v.len(p.vpSide), h: v.len(p.vpSide) };
         g.rect(r.x, r.y, r.w, r.h, { color: 'primary', width: 3 });
+        // anticlockwise as seen from above: the sense ∮_C A·dx is taken in, with Φ through C out of the screen
+        const A = Math.min(26, 0.4 * r.w), xm = r.x + r.w / 2, ym = r.y + r.h / 2, ah = { color: 'primary', width: 3, head: Math.min(13, Math.max(7, 0.3 * r.w)) };
+        g.arrow(xm - A / 2, r.y + r.h, xm + A / 2, r.y + r.h, ah);   // bottom edge: +x
+        g.arrow(r.x + r.w, ym + A / 2, r.x + r.w, ym - A / 2, ah);   // right edge: +y
+        g.arrow(xm + A / 2, r.y, xm - A / 2, r.y, ah);               // top edge: −x
+        g.arrow(r.x, ym - A / 2, r.x, ym + A / 2, ah);               // left edge: −y
         for (const [a, b] of [[0, 0], [1, 0], [0, 1], [1, 1]]) g.rect(r.x + a * r.w - 5, r.y + b * r.h - 5, 10, 10, { fill: 'primary', color: 'bg', width: 1.5 });
         g.region('loop', r);
         g.region('corner handle', { x: r.x + r.w - 10, y: r.y - 10, w: 20, h: 20 });
@@ -5405,7 +5444,7 @@ window.__giSpots = [{"target":"plane","region":"box","label":"the box you drag"}
   window.__psWatch=function(btn,msg){
     var s=btn.closest('.ps-sec'), i=secs.indexOf(s); if(i<0) return false;
     var box=btn.closest('.ps-try'), w=box&&box.querySelector('.ps-watch');
-    showWatch(i,msg,w?w.textContent:'',btn.getAttribute('data-live'));
+    showWatch(i,msg,w?w.innerHTML:'',btn.getAttribute('data-live'));
     return true;
   };
   $('ps-w-back').addEventListener('click',function(){ window.__openPhysics(wSec); });
@@ -5425,7 +5464,7 @@ window.__giSpots = [{"target":"plane","region":"box","label":"the box you drag"}
     btn.addEventListener('click',function(){
       var fn=(window.__psDemos||{})[btn.getAttribute('data-demo')]; if(!fn) return;
       var i=secs.indexOf(btn.closest('.ps-sec')), box=btn.closest('.ps-try'), w=box&&box.querySelector('.ps-watch');
-      var api={ watchText:w?w.textContent:'', close:function(){ toWatch=true; $('phys-close').click(); },
+      var api={ watchText:w?w.innerHTML:'', close:function(){ toWatch=true; $('phys-close').click(); },
         show:function(msg,live,noWatch){ var t=demoToken; showWatch(i,msg,noWatch?'':api.watchText,live||null); demoToken=t; },
         alive:null };
       api.close(); demoToken++; var tok=demoToken; api.alive=function(){ return tok===demoToken; };
