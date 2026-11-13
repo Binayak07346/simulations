@@ -1,0 +1,242 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>EM Course Sims V2</title>
+  <meta name="description" content="Interactive simulations for the electromagnetism course." />
+  <style>
+    :root {
+      --bg: #070914;
+      --text: #eef2ff;
+      --muted: rgba(203, 213, 255, 0.72);
+
+      --accent: #7c3aed;     /* violet */
+      --accent-2: #22d3ee;   /* cyan */
+      --accent-3: #a3ffbd;   /* mint */
+
+      --card: rgba(255, 255, 255, 0.055);
+      --card-2: rgba(255, 255, 255, 0.085);
+      --stroke: rgba(255, 255, 255, 0.10);
+      --stroke-2: rgba(255, 255, 255, 0.16);
+
+      --shadow: 0 18px 60px rgba(0,0,0,0.55);
+      --shadow-soft: 0 12px 40px rgba(0,0,0,0.45);
+    }
+    * { box-sizing: border-box; }
+    html, body { min-height: 100%; }
+    body {
+      margin: 0;
+      font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Apple Color Emoji", "Segoe UI Emoji";
+      background: #070914;
+      background-image:
+        radial-gradient(1100px 650px at 15% -10%, rgba(124, 58, 237, 0.44) 0%, rgba(124, 58, 237, 0.0) 58%),
+        radial-gradient(900px 520px at 96% 0%, rgba(34, 211, 238, 0.34) 0%, rgba(34, 211, 238, 0.0) 55%),
+        radial-gradient(900px 520px at 60% 110%, rgba(163, 255, 189, 0.16) 0%, rgba(163, 255, 189, 0.0) 55%),
+        linear-gradient(180deg, rgba(255,255,255,0.05), rgba(255,255,255,0.0) 40%),
+        radial-gradient(1200px 700px at 20% 0%, rgba(23, 33, 74, 0.75) 0%, rgba(7, 9, 20, 1) 62%);
+      background-attachment: fixed;
+      color: var(--text);
+      display: flex;
+      justify-content: center;
+      padding: clamp(16px, 3vw, 40px);
+      min-height: 100vh;
+    }
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 0;
+      background:
+        linear-gradient(rgba(255,255,255,0.035) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255,255,255,0.035) 1px, transparent 1px);
+      background-size: 52px 52px;
+      mask-image: radial-gradient(ellipse 70% 55% at 50% 20%, black 20%, transparent 76%);
+      opacity: 0.55;
+    }
+    .wrap {
+      width: 100%;
+      max-width: 1040px;
+      position: relative;
+      z-index: 1;
+    }
+    .back {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      text-decoration: none;
+      color: var(--muted);
+      font-weight: 600;
+      font-size: 0.92rem;
+      margin-bottom: 22px;
+      transition: color 0.18s ease;
+    }
+    .back:hover { color: var(--text); }
+    header {
+      text-align: center;
+      margin-bottom: 8px;
+    }
+    h1 {
+      margin: 0 0 12px;
+      font-weight: 850;
+      letter-spacing: -0.02em;
+      font-size: clamp(1.7rem, 4.8vw, 2.45rem);
+      line-height: 1.1;
+    }
+    p.lead {
+      margin: 0 auto;
+      max-width: 620px;
+      color: var(--muted);
+      font-size: 1.05rem;
+    }
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+      gap: 20px;
+      margin-top: 36px;
+    }
+    .card {
+      position: relative;
+      background:
+        radial-gradient(900px 260px at 20% 0%, rgba(124, 58, 237, 0.22), transparent 55%),
+        radial-gradient(900px 260px at 90% 0%, rgba(34, 211, 238, 0.16), transparent 55%),
+        linear-gradient(180deg, var(--card-2) 0%, var(--card) 100%);
+      border: 1px solid var(--stroke);
+      border-radius: 22px;
+      padding: 24px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      min-height: 200px;
+      box-shadow: var(--shadow-soft);
+      transition: transform 0.18s ease, box-shadow 0.22s ease, border-color 0.2s ease, filter 0.22s ease;
+      overflow: hidden;
+    }
+    .card::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(135deg, rgba(255,255,255,0.12), rgba(255,255,255,0.0) 35%);
+      opacity: 0.8;
+      pointer-events: none;
+    }
+    .card:hover {
+      transform: translateY(-4px);
+      box-shadow: var(--shadow);
+      border-color: var(--stroke-2);
+      filter: saturate(1.08);
+    }
+    .lecture-tag {
+      position: relative;
+      display: inline-block;
+      font-size: 0.72rem;
+      font-weight: 700;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      color: rgba(34, 211, 238, 0.95);
+      background: rgba(34, 211, 238, 0.12);
+      border: 1px solid rgba(34, 211, 238, 0.22);
+      padding: 3px 9px;
+      border-radius: 999px;
+      margin-bottom: 12px;
+    }
+    .card h3 {
+      font-size: 1.16rem;
+      margin: 0 0 10px;
+      position: relative;
+      letter-spacing: -0.01em;
+      line-height: 1.2;
+    }
+    .card p {
+      color: var(--muted);
+      margin: 0 0 18px;
+      line-height: 1.45;
+      font-size: 0.94rem;
+    }
+    .actions { margin-top: auto; }
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      text-decoration: none;
+      background: var(--accent-2);
+      color: rgba(7, 9, 20, 0.92);
+      font-weight: 800;
+      padding: 11px 17px;
+      border-radius: 999px;
+      border: 0;
+      cursor: pointer;
+      transition: transform 0.06s ease-in-out, filter 0.18s ease, box-shadow 0.18s ease;
+      user-select: none;
+      box-shadow: 0 14px 28px rgba(0,0,0,0.35);
+    }
+    .btn:hover {
+      filter: brightness(1.06) saturate(1.06);
+      box-shadow: 0 18px 34px rgba(0,0,0,0.42);
+    }
+    .btn:active { transform: translateY(1px) scale(0.99); }
+    footer {
+      text-align: center;
+      margin-top: 40px;
+      color: #a3b2ff88;
+      font-size: 0.9rem;
+    }
+    @media (prefers-reduced-motion: no-preference) {
+      .card { will-change: transform; }
+    }
+  </style>
+</head>
+<body>
+  <main class="wrap">
+    <a class="back" href="../">← EM course</a>
+    <header>
+      <h1>EM course simulations · V2</h1>
+      <p class="lead">The same 10 topics, regenerated on Nov 12 with the senior SME’s ideas. Feedback from these sims is tagged “V2”.</p>
+    </header>
+
+    <section class="grid" id="grid"></section>
+
+    <footer>
+      <span>© <span id="year"></span> • GitHub Pages</span>
+    </footer>
+  </main>
+
+  <script>
+    const sims = [
+      { file: "em-point-charges-multipole-expansion.html", lecture: "Electrostatics", title: "Point Charges Near and Far", desc: "Place point charges in 3D, drag a probe through their field and release a test charge. A second mode shows how an arrangement looks from far away." },
+      { file: "em-gauss-flux-closed-surface.html", lecture: "Electrostatics", title: "Flux Through Closed Surfaces", desc: "Charges sit in and around a closed surface you can reshape. Move the charges, pull the surface and read the flux through it." },
+      { file: "em-divergence-curl-charge-conservation.html", lecture: "Vector fields", title: "Charges in a Box, a Wheel", desc: "Charged dots move through a slab while a box counts them, and a paddle wheel sits in a flowing fluid. Choose a flow, run it and read the counts." },
+      { file: "em-conductors-method-of-images.html", lecture: "Electrostatics", title: "A Charge Near Metal", desc: "A metal sphere or a flat metal plate, with point charges you drop beside it. Drop a charge and watch the metal and the field around it." },
+      { file: "em-force-between-dipoles.html", lecture: "Electrostatics", title: "Dipoles Round a Fixed One", desc: "A large dipole sits among small dipoles on pivots. Turn and move it, then watch how the small ones respond." },
+      { file: "em-drude-model-conduction.html", lecture: "Currents", title: "Drude Electrons", desc: "A puff of electrons is let go inside a block of metal. Set the field along the block and the time between collisions, then watch how the puff moves." },
+      { file: "em-ampere-wires-loop-coil.html", lecture: "Magnetostatics", title: "Wires, a Loop and a Coil", desc: "A bead walks round a loop near long straight currents and adds up B·dx. Reshape the loop, move the wires, and watch the running total." },
+      { file: "em-electromagnetic-induction.html", lecture: "Induction", title: "Induction Bench", desc: "A magnet, a copper ring and a meter on a bench. Drag the magnet or the ring and watch the current in the ring." },
+      { file: "em-displacement-current.html", lecture: "Maxwell's equations", title: "Loop Around a Capacitor", desc: "A steady current charges a capacitor inside a fixed loop. Drag the surface the loop bounds and count what crosses it." },
+      { file: "em-waves-polarisation.html", lecture: "EM waves", title: "Shaking a Sheet of Charge", desc: "Two sheets of charge stand at the ends of an axis. Shake one by its red sphere and watch the wave it sends." },
+    ];
+
+    const grid = document.getElementById('grid');
+    sims.forEach(sim => {
+      const card = document.createElement('article');
+      card.className = 'card';
+      const viewerHref = './viewer.html?sim=' + encodeURIComponent(sim.file) +
+                         '&title=' + encodeURIComponent(sim.title);
+      card.innerHTML = `
+        <div>
+          <span class="lecture-tag">${sim.lecture}</span>
+          <h3>${sim.title}</h3>
+          <p>${sim.desc}</p>
+        </div>
+        <div class="actions">
+          <a class="btn" href="${viewerHref}">Open simulation →</a>
+        </div>
+      `;
+      grid.appendChild(card);
+    });
+
+    document.getElementById('year').textContent = new Date().getFullYear();
+  </script>
+</body>
+</html>

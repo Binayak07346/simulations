@@ -193,7 +193,7 @@
     <a class="back" href="../">← All topics</a>
     <header>
       <h1>EM course simulations</h1>
-      <p class="lead">Electromagnetism — point charges, Gauss’ law, conductors, currents, magnetic fields, induction and waves — through interactive, guided simulations.</p>
+      <p class="lead">Electromagnetism — point charges, Gauss’ law, conductors, currents, magnetic fields, induction and waves — through interactive, guided simulations. Choose a version.</p>
     </header>
 
     <section class="grid" id="grid"></section>
@@ -204,33 +204,23 @@
   </main>
 
   <script>
-    const sims = [
-      { file: "em-point-charges-multipole-expansion.html", lecture: "Electrostatics", title: "Arranging Point Charges", desc: "The potential and field of any set of point charges are sums over the charges, and every view in this sim is computed from that sum." },
-      { file: "em-gauss-flux-closed-surface.html", lecture: "Electrostatics", title: "Flux Through Closed Surfaces", desc: "Gauss’ law, met in a case where E cannot be taken out of the integral, because E·n̂ changes from patch to patch." },
-      { file: "em-divergence-curl-vector-potential.html", lecture: "Vector fields", title: "Boxes and Loops in a Field", desc: "A small box reads the divergence of a field and a small loop reads its curl; the magnetic field is the curl of the vector potential." },
-      { file: "em-conductors-method-of-images.html", lecture: "Electrostatics", title: "Conductors and Their Images", desc: "The field inside a conductor decides where its free charge settles, and the shape of the conductor’s equipotential decides where an image must sit." },
-      { file: "em-force-between-dipoles.html", lecture: "Electrostatics", title: "Two Dipoles in a Plane", desc: "One energy U, which depends on the separation and on both orientations, gives every force and torque between two dipoles." },
-      { file: "em-drude-model-conduction.html", lecture: "Currents", title: "Drude Electrons", desc: "The Drude model follows electrons that collide at random in a metal and links their average motion to the field along the wire." },
-      { file: "em-magnetic-fields-steady-currents.html", lecture: "Magnetostatics", title: "Wires, Loops, and Solenoids", desc: "Ampère's law relates the circulation of B round a closed loop to the current through it, and the Biot–Savart law builds B itself from the currents." },
-      { file: "em-electromagnetic-induction.html", lecture: "Induction", title: "Induction Bench", desc: "Faraday’s law links the emf round a circuit to the magnetic flux through it, and this bench splits that emf into its two sources." },
-      { file: "em-displacement-current.html", lecture: "Maxwell's equations", title: "Loop Around a Capacitor", desc: "Ampère's law links the circulation of B around a loop C to what crosses a surface bounded by C; this sim tests that link around a charging capacitor, with and without Maxwell's term." },
-      { file: "em-waves-polarisation.html", lecture: "EM waves", title: "Waves and Polarisation", desc: "The Maxwell equations in vacuum give transverse waves that travel at c, and two components of E with a relative phase set the polarisation." },
+    const versions = [
+      { href: "./v1_sims/", tag: "V1 · Nov 11", title: "EM course sims · V1", desc: "The first build of the 10 simulations, reviewed against the specs and fixed.", cta: "Open V1 sims →" },
+      { href: "./v2_sims%20(Revised%20Nov%2012)/", tag: "V2 · revised Nov 12", title: "EM course sims · V2", desc: "The same 10 topics, regenerated with the senior SME’s ideas.", cta: "Open V2 sims →" },
     ];
 
     const grid = document.getElementById('grid');
-    sims.forEach(sim => {
+    versions.forEach(v => {
       const card = document.createElement('article');
       card.className = 'card';
-      const viewerHref = './viewer.html?sim=' + encodeURIComponent(sim.file) +
-                         '&title=' + encodeURIComponent(sim.title);
       card.innerHTML = `
         <div>
-          <span class="lecture-tag">${sim.lecture}</span>
-          <h3>${sim.title}</h3>
-          <p>${sim.desc}</p>
+          <span class="lecture-tag">${v.tag}</span>
+          <h3>${v.title}</h3>
+          <p>${v.desc}</p>
         </div>
         <div class="actions">
-          <a class="btn" href="${viewerHref}">Open simulation →</a>
+          <a class="btn" href="${v.href}">${v.cta}</a>
         </div>
       `;
       grid.appendChild(card);

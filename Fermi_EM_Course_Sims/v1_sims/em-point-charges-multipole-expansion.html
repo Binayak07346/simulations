@@ -2023,14 +2023,29 @@ html.no-voice #inq-voice, html.no-voice #inq-auto, html.no-voice .cg-row-voice, 
       </div><button id="shell-fullscreen" class="shell-btn shell-icon-btn" type="button" data-no-reset title="Full screen" aria-label="Full screen" aria-pressed="false"><svg class="fs-on" viewBox="0 0 20 20" width="16" height="16" aria-hidden="true"><path d="M3 7.5V3h4.5M12.5 3H17v4.5M17 12.5V17h-4.5M7.5 17H3v-4.5" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"/></svg><svg class="fs-off" viewBox="0 0 20 20" width="16" height="16" aria-hidden="true"><path d="M7.5 3v4.5H3M17 7.5h-4.5V3M12.5 17v-4.5H17M3 12.5h4.5V17" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"/></svg></button></div>
   </header>
 
+<style id="interact-pilot">
+#stage-scene,#stage-inset{position:relative;}
+.orbit-chip{position:absolute;left:10px;bottom:8px;z-index:3;display:flex;align-items:center;gap:4px;padding:5px 9px;border:1px solid var(--line);border-radius:999px;
+  background:var(--panel,#fff);color:var(--ink-mid);box-shadow:0 1px 4px rgba(15,23,42,.10);cursor:help;transition:opacity .4s ease;}
+.orbit-chip svg{width:22px;height:22px;flex:none;}
+.orbit-chip .oc-deg{font:600 11.5px/1 var(--font-mono,ui-monospace,monospace);color:var(--ink-mid);margin:0 4px 0 1px;}
+.orbit-chip .oc-sep{width:1px;height:16px;background:var(--line);margin:0 3px;}
+.orbit-chip:focus-visible{outline:2px solid var(--accent);outline-offset:2px;}
+.orbit-chip .oc-tip{position:absolute;left:0;bottom:calc(100% + 7px);white-space:nowrap;padding:6px 9px;border-radius:7px;background:#1f2937;color:#fff;
+  font-size:12px;line-height:1.2;opacity:0;pointer-events:none;transform:translateY(3px);transition:opacity .15s,transform .15s;}
+.orbit-chip:hover .oc-tip,.orbit-chip:focus-visible .oc-tip{opacity:1;transform:none;}
+.orbit-chip.learned{opacity:.45;}.orbit-chip.learned:hover,.orbit-chip.learned:focus-visible{opacity:1;}
+#orbit-inset{left:6px;bottom:6px;padding:3px 6px;}#orbit-inset svg{width:17px;height:17px;}#orbit-inset .oc-deg{font-size:10.5px;}
+@media (prefers-reduced-motion:reduce){.orbit-chip,.orbit-chip .oc-tip{transition:none;}}
+</style>
   <main class="shell-hero"><div class="kit-hero" id="kit-hero" data-mode="plane">
 <div class="kit-split"><div class="plot-box" id="panel-main" style="flex:2.4 1 0">
   <div class="plot-title">Field and potential</div>
-  <div class="kit-stage" id="stage-scene"><canvas id="scene"></canvas></div>
+  <div class="kit-stage" id="stage-scene"><canvas id="scene"></canvas><div class="orbit-chip" id="orbit-scene" tabindex="0" role="note" aria-label="Drag empty space to rotate · Scroll to zoom"><svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M20.5 12a8.5 8.5 0 1 1-2.5-6"/><path d="M18.6 2.6l-.4 3.6-3.6-.3"/><path d="M12 7.6l3.6 2v4.2L12 15.8l-3.6-2V9.6z"/><path d="M8.4 9.6L12 11.6l3.6-2M12 11.6v4.2"/></svg><span class="oc-deg">360°</span><span class="oc-sep"></span><svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><circle cx="10.5" cy="10.5" r="6.2"/><path d="M15.2 15.2l5.3 5.3M10.5 8v5M8 10.5h5"/></svg><span class="oc-tip">Drag empty space to rotate · Scroll to zoom</span></div></div>
 </div>
 <div class="plot-box" id="panel-inset" style="flex:1 1 0">
   <div class="plot-title">Corner inset<span class="plot-inline">arrangement and ray, or φ − φ<sub>0</sub></span></div>
-  <div class="kit-stage" id="stage-inset"><canvas id="inset"></canvas></div>
+  <div class="kit-stage" id="stage-inset"><canvas id="inset"></canvas><div class="orbit-chip" id="orbit-inset" tabindex="0" role="note" aria-label="Drag to rotate · Scroll to zoom · Double-click to reset"><svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M20.5 12a8.5 8.5 0 1 1-2.5-6"/><path d="M18.6 2.6l-.4 3.6-3.6-.3"/><path d="M12 7.6l3.6 2v4.2L12 15.8l-3.6-2V9.6z"/><path d="M8.4 9.6L12 11.6l3.6-2M12 11.6v4.2"/></svg><span class="oc-deg">360°</span><span class="oc-sep"></span><svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><circle cx="10.5" cy="10.5" r="6.2"/><path d="M15.2 15.2l5.3 5.3M10.5 8v5M8 10.5h5"/></svg><span class="oc-tip">Drag to rotate · Scroll to zoom · Double-click to reset</span></div></div>
 </div></div>
 
 
@@ -2188,7 +2203,7 @@ html.no-voice #inq-voice, html.no-voice #inq-auto, html.no-voice .cg-row-voice, 
 <div class="ctrl-box kit-actions" id="box-actions" data-no-reset>
   <div class="kit-actions-row"><button type="button" class="shell-btn kit-btn" id="btn-release">Release</button></div>
 </div>
-<div class="kit-note" id="note-1">Lengths in a; φ in q/4πε<sub>0</sub> a; |E| in q/4πε<sub>0</sub> a²</div>
+<div class="kit-note" id="note-1">φ in q/4πε<sub>0</sub>a · |E| in q/4πε<sub>0</sub>a²</div>
 </div>
 </div>
 <div class="shell-panel" id="panel-readouts">
@@ -4317,7 +4332,7 @@ function rk4(Q, s, h) {
 
 // 3D views: our own orbit cameras (drag to turn), so a drag on a charge or the probe can move it instead
 const cam = (yaw, pitch) => ({ yaw, pitch, zoom: 1, home: { yaw, pitch, zoom: 1 } });
-const CAM = { plane: cam(0, 60), cube: cam(-123.69, 22.59) };   // 60° above the plane of the charges; looking along (3, 2, 1.5)
+const CAM = { plane: cam(0, 87), cube: cam(-123.69, 22.59) };   // 87° above the plane of the charges (nearly top-down); looking along (3, 2, 1.5)
 const CAM_INSET = cam(-35, 22);
 const homeCams = () => { for (const c of [...Object.values(CAM), CAM_INSET]) Object.assign(c, c.home); };
 let V3 = null;            // the main view's last projection (mode 1), for picking
@@ -4353,6 +4368,28 @@ function legalProbe(id, v, prev, p) {
   for (const sg of [back, -back]) for (let k = 1; k <= 40; k++) { const u = +(v + sg * k * 0.05).toFixed(2); if (Math.abs(u) <= PMAX && ok(u)) return u; }
   return prev ?? v;
 }
+// hover: what a click or drag would act on (ghost charge on the plane, hints on a charge or the probe)
+let HOVER = null;
+function hoverAt(cv, kit, mx, my) {
+  const p = kit.p; let h = null;
+  if (p.mode === 'plane' && V3) {
+    let best = 16;
+    const pp = V3.project(p.probeX, p.probeY, 0), dp = Math.hypot(pp.x - mx, pp.y - my);
+    if (dp < best) { best = dp; h = { kind: 'probe' }; }
+    CHARGES.forEach((c, i) => { const o = V3.project(c.x, c.y, 0), dc = Math.hypot(o.x - mx, o.y - my); if (dc < best) { best = dc; h = { kind: 'charge', i }; } });
+    if (!h) { const w = unproject(mx, my); if (w && Math.abs(w[0]) <= BOX && Math.abs(w[1]) <= BOX) h = { kind: 'plane', x: snap05(w[0]), y: snap05(w[1]) }; }
+  }
+  const canAdd = h && h.kind === 'plane' && CHARGES.length < 4 && chargeOk(h.x, h.y, -1, p);
+  cv.style.cursor = !h ? 'grab' : h.kind === 'plane' ? (canAdd ? 'copy' : 'grab') : 'move';
+  const key = h ? `${h.kind}${h.i ?? ''}${h.x ?? ''},${h.y ?? ''}` : '';
+  if (key !== (HOVER ? HOVER.key : '')) { HOVER = h && { ...h, key }; kit.render(); }
+}
+const learned = (id) => { const el = document.getElementById(id); if (el) el.classList.add('learned'); };
+function syncInteract(p) {
+  const cs = document.getElementById('orbit-scene');
+  if (cs) { cs.style.display = p.mode === 'multi' ? 'none' : ''; const tip = p.mode === 'plane' ? 'Drag empty space to rotate · Scroll to zoom' : 'Drag to rotate · Scroll to zoom'; cs.setAttribute('aria-label', tip); cs.querySelector('.oc-tip').textContent = tip; }
+  const ci = document.getElementById('orbit-inset'); if (ci) ci.style.display = p.mode === 'multi' ? '' : 'none';
+}
 const WIRED = new WeakSet();
 function wire(cv, kit) {
   if (!cv || !cv.addEventListener || WIRED.has(cv)) return;
@@ -4370,15 +4407,16 @@ function wire(cv, kit) {
       CHARGES.forEach((c, i) => { const o = V3.project(c.x, c.y, 0), dc = Math.hypot(o.x - mx, o.y - my); if (dc < best) { best = dc; drag.kind = 'charge'; drag.i = i; } });
     }
     try { cv.setPointerCapture(e.pointerId); } catch (err) { /* capture is optional */ }
+    if (HOVER) { HOVER = null; kit.render(); }
     cv.style.cursor = drag.kind === 'turn' ? 'grabbing' : 'move';
   });
   cv.addEventListener('pointermove', (e) => {
-    if (!drag) return;
+    if (!drag) { hoverAt(cv, kit, ...at(e)); return; }
     const p = kit.p, [mx, my] = at(e), dx = mx - drag.x, dy = my - drag.y;
     drag.x = mx; drag.y = my; drag.moved += Math.abs(dx) + Math.abs(dy);
     if (drag.kind === 'turn') {
       const c = CAM[p.mode]; if (!c) return;
-      c.yaw += dx * 0.45; c.pitch = Math.max(-90, Math.min(90, c.pitch + dy * 0.45)); kit.render(); return;
+      c.yaw += dx * 0.45; c.pitch = Math.max(-90, Math.min(90, c.pitch + dy * 0.45)); if (drag.moved > 6) learned('orbit-scene'); kit.render(); return;
     }
     if (drag.moved < 3) return;
     const w = unproject(mx, my); if (!w) return;
@@ -4403,7 +4441,8 @@ function wire(cv, kit) {
     }
   };
   cv.addEventListener('pointerup', up); cv.addEventListener('pointercancel', () => { drag = null; cv.style.cursor = 'grab'; });
-  cv.addEventListener('wheel', (e) => { const c = CAM[kit.p.mode]; if (!c) return; e.preventDefault(); c.zoom = Math.max(0.5, Math.min(4, c.zoom * Math.exp(-e.deltaY * 0.0015))); kit.render(); }, { passive: false });
+  cv.addEventListener('pointerleave', () => { if (HOVER) { HOVER = null; kit.render(); } });
+  cv.addEventListener('wheel', (e) => { const c = CAM[kit.p.mode]; if (!c) return; e.preventDefault(); learned('orbit-scene'); c.zoom = Math.max(0.5, Math.min(4, c.zoom * Math.exp(-e.deltaY * 0.0015))); kit.render(); }, { passive: false });
 }
 // the 3D arrangement inset (Multipoles mode): drag to turn, scroll to zoom, double-click to reset
 const WIRED_INSET = new WeakSet();
@@ -4415,12 +4454,12 @@ function wireInset(cv, kit) {
   cv.addEventListener('pointermove', (e) => {
     if (!live()) { cv.style.cursor = ''; return; }
     if (!d) { cv.style.cursor = 'grab'; return; }
-    CAM_INSET.yaw += (e.clientX - d.x) * 0.45; CAM_INSET.pitch = Math.max(-90, Math.min(90, CAM_INSET.pitch + (e.clientY - d.y) * 0.45));
+    learned('orbit-inset'); CAM_INSET.yaw += (e.clientX - d.x) * 0.45; CAM_INSET.pitch = Math.max(-90, Math.min(90, CAM_INSET.pitch + (e.clientY - d.y) * 0.45));
     d = { x: e.clientX, y: e.clientY }; kit.render();
   });
   const up = () => { d = null; if (live()) cv.style.cursor = 'grab'; };
   cv.addEventListener('pointerup', up); cv.addEventListener('pointercancel', up);
-  cv.addEventListener('wheel', (e) => { if (!live()) return; e.preventDefault(); CAM_INSET.zoom = Math.max(0.5, Math.min(4, CAM_INSET.zoom * Math.exp(-e.deltaY * 0.0015))); kit.render(); }, { passive: false });
+  cv.addEventListener('wheel', (e) => { if (!live()) return; e.preventDefault(); learned('orbit-inset'); CAM_INSET.zoom = Math.max(0.5, Math.min(4, CAM_INSET.zoom * Math.exp(-e.deltaY * 0.0015))); kit.render(); }, { passive: false });
   cv.addEventListener('dblclick', () => { if (!live()) return; Object.assign(CAM_INSET, CAM_INSET.home); kit.render(); });
 }
 
@@ -4435,7 +4474,7 @@ function bbox(pts, pad, g) {
 function paintPlane(g, s, p, q, kit) {
   const live = !!(g.canvas && g.canvas.id === 'scene');
   const box = []; for (const a of [-BOX, BOX]) for (const b of [-BOX, BOX]) for (const c of [-BOX, BOX]) box.push([a, b, c]);
-  const v3 = g.fit3d(CAM.plane, box, { radius: 2 * BOX, margin: 0.035, rect: g.inset(null, 6, 6, 34, 6) });
+  const v3 = g.fit3d(CAM.plane, box, { radius: 2 * BOX, margin: 0.02, rect: g.inset(null, 6, 6, 6, 6) });
   if (live) V3 = v3;
   const pr = (x, y, z = 0) => { const o = v3.project(x, y, z); return [o.x, o.y]; };
   const show = kit.free || kit.step >= 2;           // field lines and arrows: from the card after the first prediction
@@ -4502,12 +4541,29 @@ function paintPlane(g, s, p, q, kit) {
     g.arrow(PX, PY, t[0], t[1], { color: 'primary', width: 4.2, head: 13, headFrac: 0.4 }); tips.push(t);
   }
   if (s.released) { const [X, Y] = pr(s.x, s.y, s.z); g.ball(X, Y, 6, { color: 'warm' }); }
+  if (live && HOVER && p.mode === 'plane') {
+    if (HOVER.kind === 'plane') {
+      const [GX, GY] = pr(HOVER.x, HOVER.y, 0), pos = p.newSign !== 'neg', col = pos ? PAL.pos : PAL.neg;
+      if (CHARGES.length >= 4) g.label('4 charges max', GX + 10, GY - 8, { size: 12, color: 'inkMid', anchor: 'sw', backing: true });
+      else if (chargeOk(HOVER.x, HOVER.y, -1, p)) {
+        g.ctx.save(); g.ctx.globalAlpha = 0.35; g.ball(GX, GY, rq, { color: col }); g.ctx.restore();
+        g.circle(GX, GY, rq + 3, { color: col, width: 1.2, dash: [3, 3] });
+        g.label('click to add ' + (pos ? '+q' : '−q'), GX + rq + 5, GY - rq + 2, { size: 12, color: col, anchor: 'sw', backing: true });
+      }
+    } else if (HOVER.kind === 'charge' && CHARGES[HOVER.i]) {
+      const c = CHARGES[HOVER.i], [X, Y] = pr(c.x, c.y, 0);
+      g.circle(X, Y, rq + 4, { color: 'ink', width: 1.4, dash: [3, 3] });
+      g.label('drag to move · click to remove', X + rq + 6, Y + rq + 2, { size: 12, color: 'ink', anchor: 'nw', backing: true });
+    } else if (HOVER.kind === 'probe') {
+      const [X, Y] = pr(p.probeX, p.probeY, 0);
+      g.label('drag to move the probe', X + 12, Y + 12, { size: 12, color: 'ink', anchor: 'nw', backing: true });
+    }
+  }
   if (live) {
     g.region('box', bbox(box.map((b) => pr(b[0], b[1], b[2])), 4, g));
     if (cpts.length) g.region('charges', bbox(cpts, rq + 16, g));
     g.region('probe', bbox(tips, 16, g));
   }
-  g.caption(['drag: turn the view · scroll to zoom · click the plane: add a ' + (p.newSign === 'neg' ? '−q' : '+q'), 'drag a charge or the probe to move it · tap a charge to remove it'], 'bl', { size: 12 });
   if (s.ended) g.caption([s.ended === 'box' ? 'Run ended: the test charge has left the box.' : 'Run ended: the test charge came within 0.1a of a charge.', 'Release starts again from the probe.'], 'tr', { size: 12 });
 }
 
@@ -4561,7 +4617,6 @@ function paintCube(g, s, p, q, kit) {
     g.region('cube', bbox(CUBE8.map((c) => pr(c.x, c.y, c.z)), 16, g));
     g.region('test charge', { x: T.x - 16, y: T.y - 16, w: 32, h: 32 });
   }
-  g.caption(['drag: turn the view · scroll to zoom'], 'bl', { size: 12 });
   if (s.ended) g.caption(['Run ended: the test charge has left the cube through the face.', 'Release starts again from the displacement.'], 'tr', { size: 12 });
 }
 
@@ -4639,7 +4694,7 @@ Kit.sim({
   paint: {
     scene(g, s, p, q, kit) {
       if (g.canvas && g.canvas.id === 'scene') {
-        wire(g.canvas, kit);
+        wire(g.canvas, kit); syncInteract(p);
         const hero = document.getElementById('kit-hero');                 // the corner inset's layout follows the mode (CSS)
         if (hero && hero.dataset.mode !== p.mode) hero.dataset.mode = p.mode;
       }
