@@ -1715,6 +1715,16 @@ html.no-voice #inq-voice, html.no-voice #inq-auto, html.no-voice .cg-row-voice, 
 }
 
 </style>
+<style id="gauss-view-hints">
+#box-arrows{display:none !important}   /* the Field arrows toggle is retired (owner 2026-11-19); the param stays so the kit wiring is untouched */
+#view-hints{position:absolute;left:10px;bottom:10px;display:flex;gap:6px;z-index:5;pointer-events:auto}
+#view-hints .vh{position:relative;display:inline-flex;align-items:center;justify-content:center;width:30px;height:30px;border-radius:8px;background:rgba(255,255,255,.86);border:1px solid rgba(15,23,42,.14);color:#475569;box-shadow:0 1px 2px rgba(15,23,42,.08);padding:0;cursor:default;outline:none}
+#view-hints .vh:hover,#view-hints .vh:focus-visible{z-index:20;color:#0f172a;border-color:rgba(15,23,42,.35)}
+#view-hints svg{width:17px;height:17px;fill:none;stroke:currentColor;stroke-width:1.9;stroke-linecap:round;stroke-linejoin:round}
+#view-hints .vh::after{content:attr(data-tip);position:absolute;left:0;bottom:calc(100% + 7px);z-index:20;white-space:nowrap;font:500 12px/1.3 var(--font-sans,system-ui);background:#0f172a;color:#fff;padding:5px 8px;border-radius:6px;opacity:0;transform:translateY(3px);transition:opacity .15s,transform .15s;pointer-events:none}
+#view-hints .vh:hover::after,#view-hints .vh:focus-visible::after{opacity:1;transform:none}
+html[data-theme="dark"] #view-hints .vh{background:rgba(15,23,42,.82);border-color:rgba(148,163,184,.28);color:#cbd5e1}
+</style>
 </head>
 <body class="light-theme">
 <div id="welcome-overlay" role="dialog" aria-labelledby="welcome-title" data-no-reset>
@@ -1768,8 +1778,8 @@ html.no-voice #inq-voice, html.no-voice #inq-auto, html.no-voice .cg-row-voice, 
       </div>
       <div class="shell-modal-body"><h3>About this simulation</h3>
 <dl class="shell-info-dl">
-  <dt>On screen</dt><dd>A closed surface, starting as a sphere of radius R, drawn as a shaded sheet about 60% opaque with a light mesh, half above and half below a faint grey disc of radius 3R with grid lines every 0.5R. The sheet is coloured by E·n̂ on a fixed scale: deep blue at −2E<sub>R</sub>, white at 0, deep red at +2E<sub>R</sub> (held beyond), red where the field leaves and blue where it enters, with E<sub>R</sub> = q/4πε<sub>0</sub>R<sup>2</sup>. The thin dark line is where the surface meets the disc. Charges are lit spheres, red +q and blue −q; a lifted charge has a line down to its shadow on the disc, and the selected charge has a small knob above it. Six white handles sit where the ±x, ±y and ±z axes meet the surface. Field arrows: about 30 arrows of E on the surface, 0.3R (|E|/E<sub>R</sub>)<sup>1/3</sup> long, between 0.12R and 0.5R. Field lines: eight from each +q and to each −q, with markers flowing along E at 0.3R per second.</dd>
-  <dt>Controls</dt><dd>Charge sign: the sign of the next charge. Click the disc (through the surface) to add a charge at that point; drag a charge to move it across the disc; drag the knob above the selected charge to lift or lower it, up to 1.5R; double-click a charge to remove it. Charges stay within 2.8R of the vertical axis through the centre, at most 1.5R above or below the disc, and never within 0.05R of the surface: they jump over that layer. Drag a white handle along its axis, from 0.6R to 2R from the centre, to raise a bulge or press a dent (the surface moves by e<sup>−θ<sup>2</sup>/2σ<sup>2</sup></sup>, σ = 25°, around it); Reset surface returns the sphere. Field arrows and Field lines show or hide the arrows and the lines. A horizontal scroll, or shift-scroll, turns the view about the vertical axis.</dd>
+  <dt>On screen</dt><dd>A closed surface, starting as a sphere of radius R, drawn as a shaded sheet about 60% opaque with a light mesh, half above and half below a faint grey disc of radius 3R with grid lines every 0.5R. The sheet is coloured by E·n̂ on a fixed scale: deep blue at −2E<sub>R</sub>, white at 0, deep red at +2E<sub>R</sub> (held beyond), red where the field leaves and blue where it enters, with E<sub>R</sub> = q/4πε<sub>0</sub>R<sup>2</sup>. The thin dark line is where the surface meets the disc. Charges are lit spheres, red +q and blue −q; a lifted charge has a line down to its shadow on the disc, and the selected charge has a small knob above it. Six white handles sit where the ±x, ±y and ±z axes meet the surface. Field lines: eight from each +q and to each −q, with markers flowing along E at 0.3R per second.</dd>
+  <dt>Controls</dt><dd>Charge sign: the sign of the next charge. Click the disc (through the surface) to add a charge at that point; drag a charge to move it across the disc; drag the knob above the selected charge to lift or lower it, up to 1.5R; double-click a charge to remove it. Charges stay within 2.8R of the vertical axis through the centre, at most 1.5R above or below the disc, and never within 0.05R of the surface: they jump over that layer. Drag a white handle along its axis, from 0.6R to 2R from the centre, to raise a bulge or press a dent (the surface moves by e<sup>−θ<sup>2</sup>/2σ<sup>2</sup></sup>, σ = 25°, around it); Reset surface returns the sphere. Field lines shows or hides the lines. Drag empty space to turn the view any way, and scroll (or pinch) to zoom; a horizontal or shift-scroll also turns it about the vertical axis.</dd>
   <dt>Measured</dt><dd>Φ adds E·n̂ times the area over the 5120 flat triangles of the surface, a triangle being split into four, again and again, wherever it is larger than 0.12 times its distance to a charge, so that Φ is accurate to 0.01 q/ε<sub>0</sub>. The charge enclosed is not shown.</dd>
 </dl></div>
     </div>
@@ -1835,7 +1845,7 @@ html.no-voice #inq-voice, html.no-voice #inq-auto, html.no-voice .cg-row-voice, 
   </ul>
   <p class="ps-note">E<sub>R</sub> = q/4πε₀R² is the field of one charge at distance R.</p>
   <div class="ps-try">
-    <div class="ps-try-txt"><span class="ps-try-tag">See it</span>One charge +q at the centre of the sphere, with the field arrows on. <span class="ps-watch">Watch for: the arrows standing straight out of the sphere, all the same length.</span></div>
+    <div class="ps-try-txt"><span class="ps-try-tag">See it</span>One charge +q at the centre of the sphere, with the field lines on. <span class="ps-watch">Watch for: the lines leaving the sphere straight out, evenly spaced.</span></div>
     <button class="shell-btn seesim" data-show="setup" data-live="Φ=#ro-flux">▶ Show me in the sim</button>
   </div>
 </section>
@@ -1851,14 +1861,13 @@ html.no-voice #inq-voice, html.no-voice #inq-auto, html.no-voice .cg-row-voice, 
       <tr><td><b>Drag a charge</b></td><td>Moves it across the disc. Double-click removes it. The knob above the selected charge lifts or lowers it.</td><td>lift up to 1.5R</td><td><button type="button" class="ps-loc" data-locate="#scene" title="Show it in the sim">⌖</button></td></tr>
       <tr><td><b>White handles</b></td><td>Drag one along its axis to raise a bulge or press a dent in the surface.</td><td>0.6R–2R from the centre</td><td><button type="button" class="ps-loc" data-locate="#scene" title="Show it in the sim">⌖</button></td></tr>
       <tr><td><b>Charge sign</b></td><td>The sign of the next charge a click adds.</td><td>+q / −q<br><small>opens on +q</small></td><td><button type="button" class="ps-loc" data-locate="#box-sign" title="Show it in the sim">⌖</button></td></tr>
-      <tr><td><b>Field arrows</b></td><td>About 30 arrows of E on the surface, 0.3R(|E|/E<sub>R</sub>)<sup>1/3</sup> long, from 0.12R to 0.5R.</td><td>on / off<br><small>opens off</small></td><td><button type="button" class="ps-loc" data-locate="#box-arrows" title="Show it in the sim">⌖</button></td></tr>
-      <tr><td><b>Field lines</b></td><td>Eight field lines from each +q and to each −q, with markers flowing along E at 0.3R per second.</td><td>on / off<br><small>opens off</small></td><td><button type="button" class="ps-loc" data-locate="#box-lines" title="Show it in the sim">⌖</button></td></tr>
-      <tr><td><b>Reset surface</b></td><td>Returns the surface to the sphere of radius R. The charges stay where they are.</td><td>button</td><td><button type="button" class="ps-loc" data-locate="#btn-resetSurface" title="Show it in the sim">⌖</button></td></tr>
+            <tr><td><b>Field lines</b></td><td>Eight field lines from each +q and to each −q, with markers flowing along E at 0.3R per second.</td><td>on / off<br><small>opens off</small></td><td><button type="button" class="ps-loc" data-locate="#box-lines" title="Show it in the sim">⌖</button></td></tr>
+      <tr><td><b>Reset surface</b></td><td>Returns the surface to the sphere of radius R. The charges stay where they are. Greyed out while the surface is already the sphere.</td><td>button</td><td><button type="button" class="ps-loc" data-locate="#btn-resetSurface" title="Show it in the sim">⌖</button></td></tr>
       <tr><td><b>Readouts</b></td><td>Φ, the flux in units of q/ε₀, and the number of charges placed.</td><td>read only</td><td><button type="button" class="ps-loc" data-locate="#panel-readouts" title="Show it in the sim">⌖</button></td></tr>
       <tr><td><b>↻ Reset</b></td><td>Returns the scene to one +q at the centre of the sphere.</td><td>top bar</td><td><button type="button" class="ps-loc" data-locate="#shell-reset" title="Show it in the sim">⌖</button></td></tr>
     </tbody>
   </table>
-  <p class="ps-note">Fixed: every charge is +q or −q of the same size. No charge is ever left within 0.05R of the surface: it jumps over that thin layer. A horizontal scroll, or shift-scroll, turns the view.</p>
+  <p class="ps-note">Fixed: every charge is +q or −q of the same size. No charge is ever left within 0.05R of the surface: it jumps over that thin layer. Drag empty space to turn the view, and scroll to zoom.</p>
 </section>
 
 <!-- ============ 03 · GAUSS' LAW ============ -->
@@ -2047,8 +2056,16 @@ html.no-voice #inq-voice, html.no-voice #inq-auto, html.no-voice .cg-row-voice, 
 
   <main class="shell-hero"><div class="kit-hero" id="kit-hero">
 <div class="plot-box" id="panel-main" style="flex:1 1 0">
-  <div class="plot-title">Closed surface and charges<span class="plot-inline">coloured by E·n̂; shift-scroll turns</span></div>
-  <div class="kit-stage" id="stage-scene"><canvas id="scene"></canvas></div>
+  <div class="plot-title">Closed surface and charges<span class="plot-inline">coloured by E·n̂</span></div>
+  <div class="kit-stage" id="stage-scene"><canvas id="scene"></canvas>
+    <div class="view-hints" id="view-hints" role="toolbar" aria-label="How to use the stage">
+      <span class="vh" id="vh-add" tabindex="0" data-tip="Click the disc: add a +q" aria-label="Click the disc: add a +q"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="8"/><path d="M12 8.5v7M8.5 12h7"/></svg></span>
+      <span class="vh" tabindex="0" data-tip="Drag a charge to move it across the disc (the small knob above a selected charge lifts it)" aria-label="Drag a charge to move it across the disc (the small knob above a selected charge lifts it)"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3v18M3 12h18M9.5 5.5 12 3l2.5 2.5M9.5 18.5 12 21l2.5-2.5M5.5 9.5 3 12l2.5 2.5M18.5 9.5 21 12l-2.5 2.5"/></svg></span>
+      <span class="vh" tabindex="0" data-tip="Double-click a charge to remove it" aria-label="Double-click a charge to remove it"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="8"/><path d="M9.2 9.2l5.6 5.6M14.8 9.2l-5.6 5.6"/></svg></span>
+      <span class="vh" tabindex="0" data-tip="Reshape the surface: drag a white handle on the ±x, ±y or ±z axis to bulge or dent it" aria-label="Reshape the surface: drag a white handle on the ±x, ±y or ±z axis to bulge or dent it"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 9.2c-3.9 0-6.8 2.6-6.8 6.1s2.9 6.2 6.8 6.2 6.8-2.7 6.8-6.2-2.9-6.1-6.8-6.1z"/><circle cx="12" cy="9.2" r="2" fill="currentColor"/><path d="M12 6.6V1.8M9.7 4 12 1.7 14.3 4"/></svg></span>
+      <span class="vh" tabindex="0" data-tip="Drag empty space to turn the view" aria-label="Drag empty space to turn the view"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20 12a8 8 0 1 1-2.34-5.66"/><path d="M20 4v5h-5"/></svg></span>
+      <span class="vh" tabindex="0" data-tip="Scroll or pinch to zoom" aria-label="Scroll or pinch to zoom"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="10.5" cy="10.5" r="6.5"/><path d="M15.5 15.5 21 21M10.5 7.5v6M7.5 10.5h6"/></svg></span>
+    </div></div>
 </div>
 
 
@@ -2177,10 +2194,9 @@ html.no-voice #inq-voice, html.no-voice #inq-auto, html.no-voice .cg-row-voice, 
 <div class="ctrl-box kit-actions" id="box-actions" data-no-reset>
   <div class="kit-actions-row"><button type="button" class="shell-btn kit-btn" id="btn-resetSurface">Reset surface</button></div>
 </div>
-<div class="kit-note" id="note-1">E<sub>R</sub> = q/4πε<sub>0</sub>R<sup>2</sup>, the field of one charge at distance R</div>
 </div>
 </div>
-<div class="shell-panel" id="panel-readouts">
+<div class="shell-panel collapsed" id="panel-readouts">
 <div class="shell-panel-head"><h3>Readouts</h3><span class="shell-caret">▾</span></div>
 <div class="shell-panel-body"><div class="ctrl-box">
 <div class="stat-row" id="row-flux"><span class="stat-label"><span>Φ</span></span><span class="stat-value" id="ro-flux">—</span></div>
@@ -4322,11 +4338,15 @@ function fieldLines(s) {
   return lines;
 }
 
-// ── the camera: perspective, at 6R from the centre, from the −y side and 25° up; YAW turns it about the vertical; no zoom
+// ── the camera: perspective, at 6R from the centre, opening from the −y side and 25° up. Drag empty space to orbit (YAW about the vertical,
+//    PITCH up and down to ±85°), scroll to zoom (2026-11-19)
+const PITCH0 = CAM_EL / RAD;
+let PITCH = PITCH0, ZOOM = 1;
+const homeView = (yaw = 0) => { YAW = yaw; PITCH = PITCH0; ZOOM = 1; };
 let YAW = 0, CAM = null, KIT = null, SEL = null, DRAG = null, SID = 0, REDRAW = 0;
 const FRAME = {};
-function basis(yawDeg) {
-  const yaw = yawDeg * RAD, ce = Math.cos(CAM_EL), se = Math.sin(CAM_EL);
+function basis(yawDeg, elDeg = PITCH) {
+  const yaw = yawDeg * RAD, ce = Math.cos(elDeg * RAD), se = Math.sin(elDeg * RAD);
   const C = [CAM_D * ce * Math.sin(yaw), -CAM_D * ce * Math.cos(yaw), CAM_D * se];
   const f = unit([-C[0], -C[1], -C[2]]), r = unit([f[1], -f[0], 0]), u = cross(r, f);
   return { C, f, r, u };
@@ -4334,7 +4354,7 @@ function basis(yawDeg) {
 function makeCam(W, H) {
   const key = W + 'x' + H;
   if (!FRAME[key]) {          // framed once: the sphere about half the height, the whole disc (and a handle at 2R) inside with a margin
-    const B = basis(0), pts = [[0, 0, H_MAX], [0, 0, -H_MAX]];
+    const B = basis(0, PITCH0), pts = [[0, 0, H_MAX], [0, 0, -H_MAX]];   // framed for the opening view
     for (let k = 0; k < 96; k++) { const a = 2 * Math.PI * k / 96; pts.push([DISC * Math.cos(a), DISC * Math.sin(a), 0]); }
     let x0 = Infinity, x1 = -Infinity, y0 = Infinity, y1 = -Infinity;
     for (const P of pts) {
@@ -4344,7 +4364,7 @@ function makeCam(W, H) {
     const F = Math.min(0.25 * H * Math.sqrt(CAM_D * CAM_D - 1), 0.9 * W / (x1 - x0), 0.86 * H / (y1 - y0));
     FRAME[key] = { F, cx: W / 2 - F * (x0 + x1) / 2, cy: H / 2 - F * (y0 + y1) / 2 };
   }
-  const { F, cx, cy } = FRAME[key], { C, f, r, u } = basis(YAW);
+  const { cx, cy } = FRAME[key], F = FRAME[key].F * ZOOM, { C, f, r, u } = basis(YAW);
   const project = (x, y, z) => {
     const dx = x - C[0], dy = y - C[1], dz = z - C[2], zc = Math.max(1e-3, dx * f[0] + dy * f[1] + dz * f[2]);
     return { x: cx + F * (dx * r[0] + dy * r[1] + dz * r[2]) / zc, y: cy - F * (dx * u[0] + dy * u[1] + dz * u[2]) / zc, z: zc, k: F / zc };
@@ -4393,7 +4413,7 @@ function flags(s) { for (const c of s.q) { const d = Math.hypot(c.x, c.y, c.z); 
 function bump(s, charges) { s.ver++; if (charges) s.qver++; }
 function moveCharge(s, c, P) { const o = place(s.h, P); c.x = o.P[0]; c.y = o.P[1]; c.z = o.P[2]; c.inside = o.inside; bump(s, true); }
 
-// ── the student's hands: click the disc to add, drag a charge or a handle, drag the knob to lift, double-click to remove, scroll to turn
+// ── the student's hands: click the disc to add, drag a charge or a handle, drag the knob to lift, double-click to remove, drag empty space to orbit, scroll to zoom
 function pickCharge(s, X, Y) {
   let best = -1, bd = Infinity;
   s.q.forEach((c, i) => { const p = CAM.project(c.x, c.y, c.z), d = Math.hypot(p.x - X, p.y - Y); if (d < Math.max(10, Q_RAD * p.k + 5) && d < bd) { bd = d; best = i; } });
@@ -4410,6 +4430,16 @@ function pickHandle(s, X, Y) {
 function pickKnob(s, X, Y) {
   if (!SEL || s.q.indexOf(SEL) < 0) return false;
   const p = CAM.project(SEL.x, SEL.y, SEL.z + KNOB); return Math.hypot(p.x - X, p.y - Y) < 11;
+}
+// Reset surface is greyed out while the surface is already the sphere (it would do nothing; owner 2026-11-19)
+function syncResetSurface(s) {
+  const b = document.getElementById('btn-resetSurface'); if (!b || !s.h) return;
+  const sphere = s.h.every((v) => Math.abs(v - 1) < 1e-6);
+  if (b.disabled === sphere && b.dataset.rs === String(sphere)) return;
+  b.disabled = sphere; b.dataset.rs = String(sphere);
+  b.title = sphere ? 'The surface is already the sphere: drag a white handle first' : 'Bring back the sphere; the charges stay';
+  // inline, because the shared stylesheet styles buttons from cascade layers
+  b.style.setProperty('opacity', sphere ? '0.45' : '1', 'important'); b.style.setProperty('cursor', sphere ? 'not-allowed' : 'pointer', 'important');
 }
 function attach(el) {
   if (!el || el.__fluxHands) return;
@@ -4439,6 +4469,11 @@ function attach(el) {
       if (DRAG.mode === 'charge') { const h = hitZ(c.z, X, Y); if (!h) return; moveCharge(s, c, [h[0] + DRAG.off[0], h[1] + DRAG.off[1], c.z]); }
       else { const h = hitV(c, X, Y); if (!h) return; moveCharge(s, c, [c.x, c.y, h[2] + DRAG.off]); }
       KIT.render();
+    } else if (DRAG.mode === 'empty') {             // empty space: orbit the view (a short click still adds a charge)
+      el.style.cursor = 'grabbing';
+      const lx = DRAG.LX ?? DRAG.X0, ly = DRAG.LY ?? DRAG.Y0;
+      YAW = (YAW - (X - lx) * 0.4) % 360; PITCH = clamp(PITCH + (Y - ly) * 0.4, -85, 85);
+      DRAG.LX = X; DRAG.LY = Y; KIT.render();
     } else if (DRAG.mode === 'handle') {
       el.style.cursor = 'grabbing';
       const t = axisParam(DRAG.k, X, Y); if (t === null || DRAG.t0 === null) return;
@@ -4466,9 +4501,12 @@ function attach(el) {
     if (i >= 0) { if (s.q[i] === SEL) SEL = null; s.q.splice(i, 1); bump(s, true); KIT.render(); }
   });
   el.addEventListener('wheel', (e) => {
-    const d = Math.abs(e.deltaX) > Math.abs(e.deltaY) ? e.deltaX : (e.shiftKey ? e.deltaY : 0);
-    if (!d || !KIT) return;                       // a plain vertical scroll is left to the page: there is no zoom
-    e.preventDefault(); YAW = (YAW + d * 0.25) % 360; KIT.render();
+    if (!KIT) return;
+    const side = Math.abs(e.deltaX) > Math.abs(e.deltaY) ? e.deltaX : (e.shiftKey ? e.deltaY : 0);
+    e.preventDefault();
+    if (side) YAW = (YAW + side * 0.25) % 360;     // a horizontal (or shift) scroll still turns the view
+    else ZOOM = clamp(ZOOM * Math.exp(-e.deltaY * 0.0015), 0.5, 3);   // a plain scroll or a pinch zooms
+    KIT.render();
   }, { passive: false });
 }
 
@@ -4495,7 +4533,7 @@ function scaleRGB(kit, v) {
 const SHEETS = new WeakMap();
 function sheetLayers(ctx, s, G, cam, kit, W, H) {
   const el = ctx.canvas; if (!el || !(el.width > 0) || typeof document === 'undefined') return null;
-  const key = [s.id, s.ver, YAW, W, H, el.width, el.height, kit.isLight()].join('|');
+  const key = [s.id, s.ver, YAW, PITCH, ZOOM, W, H, el.width, el.height, kit.isLight()].join('|');
   let L = SHEETS.get(el);
   if (L && L.key === key) return L;
   if (!L) { L = { back: document.createElement('canvas'), front: document.createElement('canvas'), key: '' }; SHEETS.set(el, L); }
@@ -4583,12 +4621,12 @@ if (typeof window !== 'undefined') window.__fluxStage = (cfg) => {
   (cfg.handles || []).forEach((r, i) => { if (Number.isFinite(r)) setHandle(s.h, i, clamp(r, H_MIN, H_MAX)); });
   s.q = (cfg.charges || []).map(([x, y, z, sg, tag]) => mk(x, y, z, sg, tag));
   for (const c of s.q) { const o = place(s.h, [c.x, c.y, c.z]); c.x = o.P[0]; c.y = o.P[1]; c.z = o.P[2]; }
-  flags(s); YAW = cfg.yaw || 0; SEL = null; DRAG = null; bump(s, true); k.render();
+  flags(s); homeView(cfg.yaw || 0); SEL = null; DRAG = null; bump(s, true); k.render();
 };
 
 Kit.sim({
   state(p, kit, reason) {
-    if (reason === 'reset' || reason === 'free') { YAW = 0; SEL = null; DRAG = null; }
+    if (reason === 'reset' || reason === 'free') { homeView(0); SEL = null; DRAG = null; }
     return fresh('centre');
   },
 
@@ -4596,7 +4634,7 @@ Kit.sim({
 
   onStep(i, s) {
     const c = CARDS[i]; if (!c) return;
-    s.h = [1, 1, 1, 1, 1, 1]; s.q = SETUP[c[0]](); flags(s); YAW = c[1]; SEL = null; DRAG = null; bump(s, true);
+    s.h = [1, 1, 1, 1, 1, 1]; s.q = SETUP[c[0]](); flags(s); homeView(c[1]); SEL = null; DRAG = null; bump(s, true);
   },
 
   actions: {
@@ -4617,7 +4655,7 @@ Kit.sim({
     scene(g, s, p, q, kit) {
       const ctx = g.ctx; if (!ctx || !s || !s.q) return;
       const W = g.w, H = g.h, cam = makeCam(W, H), el = ctx.canvas;
-      if (el && el.id === 'scene') { CAM = cam; KIT = kit; attach(el); }
+      if (el && el.id === 'scene') { CAM = cam; KIT = kit; attach(el); syncResetSurface(s); }
       if (SEL && s.q.indexOf(SEL) < 0) SEL = null;
       const G = geom(s), C = cam.C, faces = (X, N) => N[0] * (C[0] - X[0]) + N[1] * (C[1] - X[1]) + N[2] * (C[2] - X[2]) > 0;
 
@@ -4641,7 +4679,7 @@ Kit.sim({
 
       // the arrows of E on the surface (display toggle), their feet moving with it
       const arrows = [];
-      if (p.arrows) for (const u of FIB) {
+      if (false) for (const u of FIB) {     // field arrows removed (owner 2026-11-19): they read as pointing inward; the field lines show E
         const S = surf(s.h, u), X = [u[0] * S.r, u[1] * S.r, u[2] * S.r], E = field(X[0], X[1], X[2], s.q), m = len3(E);
         if (!(m > 1e-9)) continue;
         arrows.push({ foot: X, dir: [E[0] / m, E[1] / m, E[2] / m], L: clamp(0.3 * Math.cbrt(m), 0.12, 0.5), front: faces(X, S.N) });
@@ -4667,6 +4705,29 @@ Kit.sim({
       drawCut(false);
       for (const A of arrows) if (!A.front) { ctx.save(); ctx.globalAlpha = 0.55; drawArrow(ctx, cam, A, inkCol); ctx.restore(); }
       for (let k = 0; k < 6; k++) if (!hpos[k].front) drawHandle(k);
+      // the axis tags (2026-11-19): out along each axis beyond its handle, joined by a short stub; drawn straight to the canvas
+      // (no label-avoidance, so nothing jumps while the view turns). Tags on axes pointing away sit behind the surface, faded.
+      const camDir = unit(cam.C), tagBack = (k) => dot(AXES[k], camDir) < -0.2;   // an axis pointing away from the viewer: its tag goes behind
+      const axisTag = (k) => {
+        const hp = hpos[k], a = AXES[k], back = tagBack(k), rr = Math.max(4, H_RAD * hp.p.k), Rt = handleR(s.h, k) + (back ? 0.85 : 0.42);   // tags behind go further out, clear of the charge labels
+        let T = cam.project(a[0] * Rt, a[1] * Rt, a[2] * Rt), dx = T.x - hp.p.x, dy = T.y - hp.p.y, L = Math.hypot(dx, dy);
+        if (L < rr + 26 || Math.sqrt(Math.max(0, 1 - dot(a, camDir) ** 2)) < 0.45) { dx = back ? -0.7071 : 0.7071; dy = back ? -0.7071 : 0.7071; L = 1; const off = rr + (back ? 30 : 20); T = { x: hp.p.x + off * dx, y: hp.p.y + off * dy }; }   // axis nearly end-on: the near tag down-right, the far one up-left (both clear of the charge's label)
+        const light = kit.isLight(), txt = AXIS_NAME[k];
+        ctx.save();
+        ctx.font = `700 ${back ? 12 : 13}px system-ui, -apple-system, 'Segoe UI', sans-serif`;
+        const w = ctx.measureText(txt).width + 14, h = back ? 19 : 21, ux = dx / L, uy = dy / L;
+        const reach = Math.max(0, Math.hypot(T.x - hp.p.x, T.y - hp.p.y) - Math.abs(ux) * w / 2 - Math.abs(uy) * h / 2 - 1);
+        if (reach > rr + 2) {                          // the stub along the axis, from the handle's rim to the tag
+          ctx.globalAlpha = back ? 0.35 : 0.7; ctx.strokeStyle = light ? '#334155' : '#cbd5e1'; ctx.lineWidth = 1.6; ctx.lineCap = 'round';
+          ctx.beginPath(); ctx.moveTo(hp.p.x + ux * (rr + 1), hp.p.y + uy * (rr + 1)); ctx.lineTo(hp.p.x + ux * reach, hp.p.y + uy * reach); ctx.stroke();
+        }
+        ctx.globalAlpha = back ? 0.62 : 1;
+        ctx.fillStyle = light ? (back ? '#64748b' : '#1e293b') : (back ? '#94a3b8' : '#e2e8f0');
+        ctx.beginPath(); if (ctx.roundRect) ctx.roundRect(T.x - w / 2, T.y - h / 2, w, h, h / 2); else ctx.rect(T.x - w / 2, T.y - h / 2, w, h); ctx.fill();
+        ctx.fillStyle = light ? '#ffffff' : '#0f172a'; ctx.textAlign = 'center'; ctx.textBaseline = 'middle'; ctx.fillText(txt, T.x, T.y + 0.5);
+        ctx.restore();
+      };
+      for (let k = 0; k < 6; k++) if (tagBack(k)) axisTag(k);
       if (p.lines && s.q.length) {                     // field lines, with markers flowing along E at 0.3R per second
         const lines = fieldLines(s), ph = now() * FLOW;
         if (el && el.id === 'scene' && !REDRAW && typeof requestAnimationFrame !== 'undefined')   // keep the markers flowing: one redraw per frame while the lines show
@@ -4725,7 +4786,7 @@ Kit.sim({
       if (pair.length) g.region('charge pair', boxOf(pair, W, H, 8));
       hpos.forEach((hp, k) => {
         const rr = Math.max(4, H_RAD * hp.p.k);
-        g.label(AXIS_NAME[k], hp.p.x + rr + 3, hp.p.y + rr + 1, { anchor: 'nw', size: 12, color: 'muted' });
+        if (!tagBack(k)) axisTag(k);                    // front tags on top of everything (the back ones went in before the surface)
         g.region(AXIS_NAME[k] + ' handle', { x: hp.p.x - rr - 6, y: hp.p.y - rr - 6, w: 2 * rr + 12, h: 2 * rr + 12 });
       });
       const sp = []; for (let i = 0; i < MESH.NV; i += 7) sp.push(cam.project(G.P[3 * i], G.P[3 * i + 1], G.P[3 * i + 2]));
@@ -4736,19 +4797,20 @@ Kit.sim({
         g.region('point 1.5R in front', { x: t.x - r0, y: t.y - 0.6 * r0, w: 2 * r0, h: 1.2 * r0 });
       }
 
-      // the fixed colour scale of E·n̂, top right
-      const bw = Math.min(170, 0.22 * W), bh = 10, bx = W - bw - 58, by = 26;
+      // the fixed colour scale of E·n̂, pinned in the top-right corner (2026-11-19): its right edge, "(E_R)" included, 14 px in
+      ctx.save(); ctx.font = '600 12px sans-serif'; const unitW = ctx.measureText('(ER)').width + 4; ctx.restore();
+      const bw = Math.min(170, 0.22 * W), bh = 10, bx = W - 14 - unitW - 6 - bw, by = 16;
       const gr = ctx.createLinearGradient(bx, 0, bx + bw, 0);
       gr.addColorStop(0, css(scaleRGB(kit, -2))); gr.addColorStop(0.5, css(scaleRGB(kit, 0))); gr.addColorStop(1, css(scaleRGB(kit, 2)));
       ctx.save(); ctx.fillStyle = gr; ctx.fillRect(bx, by, bw, bh); ctx.strokeStyle = kit.rgba('inkMid', 0.6); ctx.lineWidth = 1; ctx.strokeRect(bx, by, bw, bh); ctx.restore();
-      g.label('E·n̂', bx - 6, by + bh / 2, { anchor: 'e', size: 12, color: 'inkMid' });
+      g.label('E·n̂', bx - 6, by + bh / 2, { anchor: 'e', size: 12, color: 'inkMid', avoid: false });
       ctx.save(); ctx.fillStyle = kit.color('inkMid'); ctx.textBaseline = 'top'; ctx.textAlign = 'center'; ctx.font = '12px sans-serif';   // the ticks, pinned under the bar, in E_R
       for (const [t, x] of [['−2', bx], ['0', bx + bw / 2], ['+2', bx + bw]]) ctx.fillText(t, x, by + bh + 4);
       ctx.restore();
-      g.label('(E_R)', bx + bw + 6, by + bh / 2, { anchor: 'w', size: 12, color: 'inkMid' });
+      g.label('(E_R)', bx + bw + 6, by + bh / 2, { anchor: 'w', size: 12, color: 'inkMid', avoid: false });
       g.region('colour scale', { x: bx - 40, y: by - 4, w: bw + 84, h: bh + 26 });
-      g.caption([`click the disc: add ${p.sign === 'neg' ? '−q' : '+q'} · drag a charge or a white handle · double-click a charge: remove`,
-                 'drag the knob above the selected charge: lift · shift-scroll: turn'], 'bl', { size: 12 });
+      // the how-to lives in the corner icons now (#view-hints); only the add icon's tip follows the charge sign
+      if (el && el.id === 'scene') { const va = document.getElementById('vh-add'), t = `Click the disc: add a ${p.sign === 'neg' ? '−q' : '+q'}`; if (va && va.dataset.tip !== t) { va.dataset.tip = t; va.setAttribute('aria-label', t); } }
     },
   },
 });</script>
@@ -5031,12 +5093,6 @@ const cgSteps = [
     text: "Chooses the sign of the next charge a click on the disc adds."
   },
   {
-    sel: "#box-arrows",
-    mode: "hide",
-    title: "Field arrows",
-    text: "Shows about 30 arrows of E spread over the surface."
-  },
-  {
     sel: "#box-lines",
     mode: "hide",
     title: "Field lines",
@@ -5253,7 +5309,7 @@ const cgSteps = [
 
 <script id="phys-show">/* The Physics sheet: See-it staging (manifest.physics). scene = params the sim sets as a hand would; view = the hero panel to fill. */
 window.__psShow = {
-  "see1": { msg: "Shows the field arrows on the sphere round the charge at its centre.", scene: {"arrows":true}, run() { const sel = document.getElementById('kit-view'); if (sel) { sel.value = "all"; sel.dispatchEvent(new Event('change')); } } }
+  "see1": { msg: "Shows the field lines round the charge at the centre of the sphere.", scene: {"lines":true}, run() { const sel = document.getElementById('kit-view'); if (sel) { sel.value = "all"; sel.dispatchEvent(new Event('change')); } } }
 };
 window.__giSpots = [{"target":"scene","region":"closed surface","label":"the closed surface"},null,{"target":"scene","region":"charge","label":"drag this charge"},null,{"target":"scene","region":"−x handle","label":"pull this handle out"},null,{"target":"scene","region":"point 1.5R in front","label":"click the disc here"},null,{"target":"scene","region":"charge","label":"carry it across"},null,{"target":"scene","region":"charge pair","label":"the pair inside"},null,{"target":"scene","region":"+x handle","label":"pull this handle"},{"target":"scene","region":"closed surface","label":"any closed surface"}];</script>
 <script>
@@ -6280,11 +6336,11 @@ function drawHero(){ const c = document.getElementById('welcome-fringes'); if (c
         text: '<p>The white handles sit where the x, y and z axes meet the surface.</p><p>Drag one along its axis to raise a bulge or press a dent.</p><p><b>Reset surface</b> brings back the sphere.</p>',
         say: 'The white handles sit where the x, y and z axes meet the surface. Drag one along its axis to raise a bulge or press in a dent. Reset surface brings back the sphere.' },
       { chap: 'Controls', title: 'Sign and field displays',
-        targets: function(){ return [ { sel: '#box-sign' }, { sel: '#box-arrows' }, { sel: '#box-lines' }, { rect: part('closed surface'), sec: true } ]; },
-        text: '<p><b>Charge sign</b> picks the sign of the next charge you add.</p><p><b>Field arrows</b> adds arrows of E over the surface.</p><p><b>Field lines</b> adds lines of E with markers flowing along them.</p>',
-        say: 'Charge sign picks the sign of the next charge you add. Field arrows adds arrows of E over the surface. Field lines adds lines of E, with markers flowing along them.' },
+        targets: function(){ return [ { sel: '#box-sign' }, { sel: '#box-lines' }, { rect: part('closed surface'), sec: true } ]; },
+        text: '<p><b>Charge sign</b> picks the sign of the next charge you add.</p><p><b>Field lines</b> adds lines of E with markers flowing along them.</p>',
+        say: 'Charge sign picks the sign of the next charge you add. Field lines adds lines of E, with markers flowing along them.' },
       { chap: 'Controls', title: 'The readouts',
-        targets: function(){ return [ { sel: '#row-flux' }, { sel: '#row-count' } ]; },
+        targets: function(){ var rp=document.getElementById('panel-readouts'); if(rp&&rp.classList.contains('collapsed')){ var rh=rp.querySelector('.shell-panel-head'); if(rh) rh.click(); } return [ { sel: '#row-flux' }, { sel: '#row-count' } ]; },
         text: '<p><b>Φ</b> is the total flux of E through the closed surface, in units of q/ε₀.</p><p><b>charges placed</b> counts the charges in the scene.</p>',
         say: 'Phi is the total flux of E through the closed surface, in units of q over epsilon zero. Charges placed counts the charges in the scene.' }
     ],
@@ -7140,8 +7196,8 @@ html[data-theme="light"] .ps-chip.ps-c-ink, body.light-theme .ps-chip.ps-c-ink{b
   var OFF = { sign: 'pos', arrows: false, lines: false };
   var PAIR = [az(1.1, 35, 1, 'main'), az(0.6, -36.06, 1, 'pair'), az(0.6, -75, -1, 'pair')];
   window.__psShow = {
-    setup:   { msg: 'One charge <b>+q</b> at the centre of the sphere, with the field arrows on.',
-               scene: { sign: 'pos', arrows: true, lines: false }, run: stage({ charges: [[0, 0, 0, 1, 'main']] }) },
+    setup:   { msg: 'One charge <b>+q</b> at the centre of the sphere, with the field lines on.',
+               scene: { sign: 'pos', arrows: false, lines: true }, run: stage({ charges: [[0, 0, 0, 1, 'main']] }) },
     lumpy:   { msg: 'The charge at <b>R/2</b> on the +x axis; the −x handle out at <b>2R</b>, the +x handle in at <b>0.7R</b>.',
                scene: OFF, run: stage({ handles: [0.7, 2], charges: [[0.5, 0, 0, 1, 'main']] }) },
     outside: { msg: 'A <b>+q</b> at the centre and a second <b>+q</b> on the disc, <b>1.5R</b> in front.',

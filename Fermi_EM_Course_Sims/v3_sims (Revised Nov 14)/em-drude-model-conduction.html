@@ -1715,6 +1715,16 @@ html.no-voice #inq-voice, html.no-voice #inq-auto, html.no-voice .cg-row-voice, 
 }
 
 </style>
+<style id="drude-no-lattice">#box-lattice{display:none !important}</style>
+<style id="drude-view-hints">
+#view-hints{position:absolute;left:10px;bottom:10px;display:flex;gap:6px;z-index:5;pointer-events:auto}
+#view-hints .vh{position:relative;display:inline-flex;align-items:center;justify-content:center;width:30px;height:30px;border-radius:8px;background:rgba(255,255,255,.86);border:1px solid rgba(15,23,42,.14);color:#475569;box-shadow:0 1px 2px rgba(15,23,42,.08);padding:0;cursor:default;outline:none}
+#view-hints .vh:hover,#view-hints .vh:focus-visible{z-index:20;color:#0f172a;border-color:rgba(15,23,42,.35)}
+#view-hints svg{width:17px;height:17px;fill:none;stroke:currentColor;stroke-width:1.9;stroke-linecap:round;stroke-linejoin:round}
+#view-hints .vh::after{content:attr(data-tip);position:absolute;left:0;bottom:calc(100% + 7px);z-index:20;white-space:nowrap;font:500 12px/1.3 var(--font-sans,system-ui);background:#0f172a;color:#fff;padding:5px 8px;border-radius:6px;opacity:0;transform:translateY(3px);transition:opacity .15s,transform .15s;pointer-events:none}
+#view-hints .vh:hover::after,#view-hints .vh:focus-visible::after{opacity:1;transform:none}
+html[data-theme="dark"] #view-hints .vh{background:rgba(15,23,42,.82);border-color:rgba(148,163,184,.28);color:#cbd5e1}
+</style>
 </head>
 <body class="light-theme">
 <div id="welcome-overlay" role="dialog" aria-labelledby="welcome-title" data-no-reset>
@@ -1768,8 +1778,8 @@ html.no-voice #inq-voice, html.no-voice #inq-auto, html.no-voice .cg-row-voice, 
       </div>
       <div class="shell-modal-body"><h3>About this simulation</h3>
 <dl class="shell-info-dl">
-  <dt>On screen</dt><dd>A strip of metal 60ℓ<sub>0</sub> long and 24ℓ<sub>0</sub> high, seen from the side, with a 10ℓ<sub>0</sub> scale bar below it and the ions of the lattice as faint grey dots 4ℓ<sub>0</sub> apart. Release lets 300 conduction electrons (blue dots of radius 0.4ℓ<sub>0</sub>) go from the small ring on the centre line. One electron is drawn larger, in orange, with its path over the last 3 s and a small dot at each collision. The gold disc (radius 1.5ℓ<sub>0</sub>) is the average position of the electrons, with a thick gold trail of its path since release. The thick arrow above the strip is the field E: it starts at the middle of the strip and reaches an end at E<sub>0</sub>. Below the strip: the average displacement ⟨x⟩ from the point of release (positive to the right) against the time since release, with a shaded band from ⟨x⟩ − σ<sub>x</sub> to ⟨x⟩ + σ<sub>x</sub>, where σ<sub>x</sub> is the rms spread of the electrons along the strip; the previous run stays drawn faintly.</dd>
-  <dt>Controls</dt><dd>Drag the round handle at the tip of the field arrow left or right to set the field E from −E<sub>0</sub> to E<sub>0</sub>, where eE<sub>0</sub>τ<sub>0</sub>/m = 0.4v<sub>T</sub>; the ring at the point of release moves with it, from the middle of the strip with the field off to 12ℓ<sub>0</sub> from the end the arrow points towards at E<sub>0</sub>. The τ slider sets the mean time between collisions, 0.5τ<sub>0</sub> to τ<sub>0</sub>. Release lets a fresh puff of 300 electrons go from the ring and runs it for 12 s; the field and τ stay adjustable during the run, and at the end the electrons stop where they are until Release is pressed again. Two display toggles show or hide the faint trails of the other electrons and the lattice.</dd>
+  <dt>On screen</dt><dd>A strip of metal 60ℓ<sub>0</sub> long and 24ℓ<sub>0</sub> high, seen from the side. Release lets 300 conduction electrons (blue dots of radius 0.4ℓ<sub>0</sub>) go from the small ring on the centre line. One electron is drawn larger, in orange, with its path over the last 3 s and a small dot at each collision. The gold dot (radius 0.75ℓ<sub>0</sub>) is the average position of the electrons, with a thick gold trail of its path since release. The thick arrow above the strip is the field E: it starts at the middle of the strip and reaches an end at E<sub>0</sub>. Below the strip: the average displacement ⟨x⟩ from the point of release (positive to the right) against the time since release, with a shaded band from ⟨x⟩ − σ<sub>x</sub> to ⟨x⟩ + σ<sub>x</sub>, where σ<sub>x</sub> is the rms spread of the electrons along the strip; the previous run stays drawn faintly.</dd>
+  <dt>Controls</dt><dd>Drag the round handle at the tip of the field arrow left or right to set the field E from −E<sub>0</sub> to E<sub>0</sub>, where eE<sub>0</sub>τ<sub>0</sub>/m = 0.4v<sub>T</sub>; the ring at the point of release moves with it, from the middle of the strip with the field off to 12ℓ<sub>0</sub> from the end the arrow points towards at E<sub>0</sub>. The τ slider sets the mean time between collisions, 0.5τ<sub>0</sub> to τ<sub>0</sub>. Release lets a fresh puff of 300 electrons go from the ring and runs it for 12 s; the field and τ stay adjustable during the run, and at the end the electrons stop where they are until Release is pressed again. The Trails toggle shows or hides the faint trails of the other electrons; the lattice is implicit and not drawn.</dd>
   <dt>Measured</dt><dd>Each electron flies freely under the force of the field until a collision at a random time (mean τ) gives it a fresh thermal velocity (rms v<sub>T</sub>, no preferred direction in the plane). Lengths are in ℓ<sub>0</sub> = v<sub>T</sub> τ<sub>0</sub>, with τ<sub>0</sub> = 0.2 s on screen, so an electron moves about 5ℓ<sub>0</sub> each second. Drift speed: the average velocity of the electrons along the strip over the last second, in v<sub>T</sub>. v<sub>rms</sub>: the rms speed of the electrons now, in v<sub>T</sub>. J = −en⟨v⟩ from the same one-second average, and σE with σ = ne<sup>2</sup>τ/m, both in nev<sub>T</sub>.</dd>
 </dl></div>
     </div>
@@ -1814,7 +1824,7 @@ html.no-voice #inq-voice, html.no-voice #inq-auto, html.no-voice .cg-row-voice, 
 <text x="74" y="130" font-size="10" fill="currentColor" opacity=".8">10ℓ₀</text>
 <text x="196" y="130" font-size="10" fill="currentColor" opacity=".8">60ℓ₀ × 24ℓ₀</text>
 </svg>
-<div class="cap">The strip from the side: the lattice, the release ring and the field arrow with its handle.</div>
+<div class="cap">The strip from the side: the release ring and the field arrow with its handle.</div>
 </div>
 </div>
 <h4 class="ps-sub">What's on screen</h4>
@@ -1837,7 +1847,6 @@ html.no-voice #inq-voice, html.no-voice #inq-auto, html.no-voice .cg-row-voice, 
 <tr><td><b>Mean collision time τ</b></td><td>The mean time between collisions. It stays adjustable during a run.</td><td>0.50τ₀ to τ₀<br><small>opens at τ₀</small></td><td><button type="button" class="ps-loc" data-locate="#box-tau" title="Show it in the sim">⌖</button></td></tr>
 <tr><td><b>Release</b></td><td>Lets a fresh puff of 300 electrons go from the ring and runs it for 12 s.</td><td>button</td><td><button type="button" class="ps-loc" data-locate="#box-actions" title="Show it in the sim">⌖</button></td></tr>
 <tr><td><b>Trails of the other electrons</b></td><td>A faint trail over the last second behind every electron.</td><td>on / off<br><small>opens off</small></td><td><button type="button" class="ps-loc" data-locate="#box-trails" title="Show it in the sim">⌖</button></td></tr>
-<tr><td><b>Lattice</b></td><td>Shows or hides the ions, drawn 4ℓ₀ apart.</td><td>on / off<br><small>opens on</small></td><td><button type="button" class="ps-loc" data-locate="#box-lattice" title="Show it in the sim">⌖</button></td></tr>
 <tr><td><b>View</b></td><td>Both panels, or one at full size.</td><td>a drop-down</td><td><button type="button" class="ps-loc" data-locate="#box-view" title="Show it in the sim">⌖</button></td></tr>
 <tr><td><b>Readouts</b></td><td>E/E₀, τ/τ₀, drift speed, v<sub>rms</sub>, J and σE.</td><td>read only</td><td><button type="button" class="ps-loc" data-locate="#panel-readouts" title="Show it in the sim">⌖</button></td></tr>
 <tr><td><b>Play / Pause</b></td><td>Runs or freezes the run; Play on a waiting puff lets it go.</td><td>top bar</td><td><button type="button" class="ps-loc" data-locate="#shell-play" title="Show it in the sim">⌖</button></td></tr>
@@ -2000,7 +2009,10 @@ html.no-voice #inq-voice, html.no-voice #inq-auto, html.no-voice .cg-row-voice, 
   <main class="shell-hero"><div class="kit-hero" id="kit-hero">
 <div class="plot-box" id="panel-main">
   <div class="plot-title">Strip of metal<span class="plot-inline">electrons, field E and their average position</span></div>
-  <div class="kit-stage" id="stage-scene"><canvas id="scene"></canvas></div>
+  <div class="kit-stage" id="stage-scene"><canvas id="scene"></canvas>
+    <div class="view-hints" id="view-hints" role="toolbar" aria-label="How to use the stage">
+      <span class="vh" tabindex="0" data-tip="Drag the dot at the tip of the E arrow to change the field" aria-label="Drag the dot at the tip of the E arrow to change the field"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2.3" fill="currentColor"/><path d="M4.4 9.4 1.8 12l2.6 2.6M19.6 9.4 22.2 12l-2.6 2.6"/></svg></span>
+    </div></div>
 </div>
 
 <div class="kit-band" id="kit-band" style="height:min(210px, 34%)"><div class="plot-box" id="panel-plot">
@@ -2016,7 +2028,7 @@ html.no-voice #inq-voice, html.no-voice #inq-auto, html.no-voice .cg-row-voice, 
       <div id="inq-dots" class="inq-dots"></div>
       <div id="inq-cards" class="aside-zone-body"><div class="inq-step" data-card="1" data-kind="orient">
   <h4>1 · A puff in a strip of metal</h4>
-  <p>A metal strip from the side; the grey dots are the lattice. Release lets 300 electrons (blue) go from the ring; the gold disc marks their average position. Drag the handle above the strip to set the field E.</p>
+  <p>A metal strip from the side. Release lets 300 electrons (blue) go from the ring; the gold disc marks their average position. Drag the handle above the strip to set the field E.</p>
 </div>
 <div class="inq-step" data-gate data-lock-play data-card="2" data-kind="predict">
   <h4>2 · No field: the gold marker</h4>
@@ -2141,16 +2153,9 @@ html.no-voice #inq-voice, html.no-voice #inq-auto, html.no-voice .cg-row-voice, 
 <div class="ctrl-box kit-actions" id="box-actions" data-no-reset>
   <div class="kit-actions-row"><button type="button" class="shell-btn kit-btn" id="btn-release">Release</button></div>
 </div>
-<div class="kit-note" id="note-1">Lengths in ℓ<sub>0</sub> = v<sub>T</sub> τ<sub>0</sub>; τ<sub>0</sub> = 0.2 s on screen</div>
-<div class="kit-note" id="note-2">Motion in the plane, as in a thin sheet; the faces reflect</div>
-<div class="kit-note" id="note-3">Puff = picked-out electrons; its spread is not a spread of charge</div>
-<div class="kit-note" id="note-4">The metal goes on past the ends: electrons there still count</div>
-<div class="kit-note" id="note-5">Lattice drawn 4ℓ<sub>0</sub> apart; collisions at random times, not at ions</div>
-<div class="kit-note" id="note-6">Field exaggerated: 1 A in 1 mm² copper drifts ≈ 6 × 10⁻¹⁰ v<sub>T</sub></div>
-<div class="kit-note" id="note-7">At E<sub>0</sub> the cloud is stretched along the field by about a sixth</div>
 </div>
 </div>
-<div class="shell-panel" id="panel-readouts">
+<div class="shell-panel collapsed" id="panel-readouts">
 <div class="shell-panel-head"><h3>Readouts</h3><span class="shell-caret">▾</span></div>
 <div class="shell-panel-body"><div class="ctrl-box">
 <div class="stat-row" id="row-eratio"><span class="stat-label"><span>E/E<sub>0</sub></span></span><span class="stat-value" id="ro-eratio">—</span></div>
@@ -4158,7 +4163,7 @@ const RING_E0 = HX - 12;                 // at E0 the ring sits 12ℓ0 from the 
 const T_RUN = 12, DT = 0.02, PATH_S = 3; // run length; sampling step; the orange path's memory (s)
 const TRAIL_N = Math.round(1 / DT) + 1;  // the other electrons' trails: the last second
 const WIN = Math.round(1 / DT);          // drift readouts: the average velocity over the last second
-const R_E = 0.4, R_O = 0.7, R_GOLD = 1.5, R_RING = 2;
+const R_E = 0.4, R_O = 0.7, R_GOLD = 0.75, R_RING = 2;   // the gold marker halved 2026-11-20 (it read as a big disc inside the ring)
 const SEED0 = 20261115;
 const PAL = { gold: { dark: '#facc15', light: '#a16207' } };
 
@@ -4364,7 +4369,7 @@ Kit.sim({
       g.region('metal strip', strip);
 
       // the lattice: faint grey dots 4ℓ0 apart
-      if (p.lattice && ctx) {
+      if (false && ctx) {     // the lattice is implicit: not drawn (owner 2026-11-20); the toggle is hidden
         const r = Math.max(1.5, 0.22 * k);
         ctx.save(); ctx.fillStyle = g.rgba('neutral', 0.5); ctx.beginPath();
         for (let x = -HX + SPACING / 2; x < HX; x += SPACING) for (let y = -HY + SPACING / 2; y < HY; y += SPACING) { ctx.moveTo(X(x) + r, Y(y)); ctx.arc(X(x), Y(y), r, 0, 2 * Math.PI); }
@@ -4402,7 +4407,7 @@ Kit.sim({
         if (Math.abs(s.x[0]) <= HX) g.circle(X(s.x[0]), Y(fold(s.yu[0])), Math.max(3, R_O * k), { fill: 'warm', color: 'ink', width: 1 });
         // the gold trail of the average position since release
         const Hh = s.hist;
-        if (Hh.t.length > 1) g.path(Hh.t.map((_, j) => [X(s.xr + Hh.x[j]), Y(Hh.y[j])]).concat([[X(q.mx), Y(q.my)]]), { color: PAL.gold, width: 4.5, alpha: 0.9 });
+        if (Hh.t.length > 1) g.path(Hh.t.map((_, j) => [X(s.xr + Hh.x[j]), Y(Hh.y[j])]).concat([[X(q.mx), Y(q.my)]]), { color: PAL.gold, width: 3, alpha: 0.9 });
       });
 
       // the puff, the gold disc at the average position, and the ring at the point of release on top
@@ -4410,7 +4415,7 @@ Kit.sim({
       for (let i = 0; i < N; i++) if (Math.abs(s.x[i]) <= HX) shown.push([X(s.x[i]), Y(fold(s.yu[i]))]);
       g.region('electron puff', boxOf(shown.length ? shown : [[X(q.mx), Y(q.my)]], 8, W, H));
       const gx = X(q.mx), gy = Y(q.my), gr = R_GOLD * k;
-      g.circle(gx, gy, gr, { fill: PAL.gold, color: 'ink', width: 1.2 });
+      g.circle(gx, gy, gr, { fill: PAL.gold, color: 'ink', width: 1.6 });
       g.region('gold marker', { x: gx - gr - 6, y: gy - gr - 6, w: 2 * gr + 12, h: 2 * gr + 12 });
       const rx = X(s.released ? s.xr : ringX(p.E)), rr = R_RING * k;    // follows E while the puff waits; marks the point of release once it is let go
       g.circle(rx, Y(0), rr, { color: 'ink', width: 1.6 });
@@ -4427,11 +4432,6 @@ Kit.sim({
       UI.cx = cx; UI.k = k; UI.hx = tip; UI.hy = ay;
       g.region('field arrow', { x: Math.min(x0, tip) - hr - 4, y: ay - hr - 22, w: Math.abs(tip - x0) + 2 * hr + 8, h: 2 * hr + 26 });
 
-      // scale bar of 10ℓ0 below the strip
-      const sy = top + 2 * HY * k + 14, s0 = X(-HX), s1 = X(-HX + 10);
-      g.line(s0, sy, s1, sy, { color: 'inkMid', width: 2 });
-      g.line(s0, sy - 5, s0, sy + 5, { color: 'inkMid', width: 2 }); g.line(s1, sy - 5, s1, sy + 5, { color: 'inkMid', width: 2 });
-      g.label('10ℓ_0', s1 + 8, sy, { size: 12, color: 'inkMid', anchor: 'w' });
     },
 
     inset(g, s, p, q) {
@@ -4743,12 +4743,6 @@ const cgSteps = [
     mode: "hide",
     title: "Trails of the other electrons",
     text: "Shows or hides a faint trail over the last second for each electron."
-  },
-  {
-    sel: "#box-lattice",
-    mode: "hide",
-    title: "Lattice",
-    text: "Shows or hides the ions of the lattice, drawn 4ℓ0 apart."
   },
   {
     sel: "#box-view",
@@ -5983,12 +5977,16 @@ function drawHero(){ const c = document.getElementById('welcome-fringes'); if (c
     steps: [
       { chap: 'The simulation', title: 'The strip of metal',
         targets: function(){ return [ { rect: part('scene', 'metal strip') }, { ellipse: part('scene', 'release ring'), sec: true } ]; },
-        text: '<p>You see a strip of metal from the side. The grey dots are the ions of the lattice.</p><p>Release lets 300 electrons go from the small ring.</p>',
-        say: 'You’re looking at a strip of metal from the side, and the grey dots are the ions of the lattice. Release lets 300 electrons go from the small ring.' },
+        text: '<p>You see a strip of metal from the side, as a thin sheet: the top and bottom faces reflect the electrons, and the metal goes on past the ends.</p><p>Lengths are in ℓ<sub>0</sub> = v<sub>T</sub>τ<sub>0</sub>, the distance an electron covers between collisions. Release lets 300 electrons go from the small ring.</p>',
+        say: 'You’re looking at a strip of metal from the side, as a thin sheet. The top and bottom faces reflect the electrons, and the metal goes on past the ends. Lengths are in ell zero, the distance an electron covers between collisions. Release lets 300 electrons go from the small ring.' },
       { chap: 'The simulation', title: 'One electron and the average',
         targets: function(){ return [ { ellipse: part('scene', 'orange electron') }, { ellipse: part('scene', 'gold marker') } ]; },
-        text: '<p>One electron is drawn in orange. Its path over the last 3 s has a dot at each collision.</p><p>The gold disc marks the average position of all the electrons.</p>',
-        say: 'One electron is drawn in orange, and its path over the last three seconds has a dot at each collision. The gold disc marks the average position of all the electrons.' },
+        text: '<p>The blue dots are a sample of electrons picked out to follow, not a cloud of charge. Collisions come at random times; the lattice is not drawn.</p><p>One electron is drawn in orange, with a dot at each collision over the last 3 s. The gold dot marks the average position of all of them.</p>',
+        say: 'The blue dots are a sample of electrons picked out to follow, not a cloud of charge, and their collisions come at random times. One electron is drawn in orange, with a dot at each collision over the last three seconds. The gold dot marks the average position of all of them.' },
+      { chap: 'The simulation', title: 'What the model exaggerates',
+        targets: function(){ return [ { rect: part('scene', 'field arrow') }, { rect: part('scene', 'electron puff'), sec: true } ]; },
+        text: '<p>The field is hugely exaggerated so the drift shows: 1 A through 1 mm² of copper drifts only about 6 × 10<sup>−10</sup> v<sub>T</sub>.</p><p>At E<sub>0</sub> the puff is also stretched along the field by about a sixth.</p>',
+        say: 'The field is hugely exaggerated so that the drift shows. One amp through a square millimetre of copper drifts only about six times ten to the minus ten of the thermal speed. At the largest field the puff is also stretched along the field by about a sixth.' },
       { chap: 'The simulation', title: 'The displacement plot',
         targets: function(){ return [ { rect: part('inset', 'displacement plot') } ]; },
         text: '<p>The plot below the strip shows the average displacement ⟨x⟩ against time.</p><p>The shaded band shows the spread of the electrons along the strip. The previous run stays faint.</p>',
@@ -5998,11 +5996,11 @@ function drawHero(){ const c = document.getElementById('welcome-fringes'); if (c
         text: '<p>Drag the round handle above the strip to set the field <b>E</b>. The ring moves with it.</p><p><b>Mean collision time τ</b> sets the average time between collisions.</p>',
         say: 'Drag the round handle above the strip to set the field E, and the ring moves with it. The mean collision time, tau, sets the average time between collisions.' },
       { chap: 'Controls', title: 'Release and the display',
-        targets: function(){ return [ { sel: '#btn-release' }, { sel: '#box-trails' }, { sel: '#box-lattice' } ]; },
-        text: '<p><b>Release</b> lets a fresh puff go and runs it for 12 s.</p><p><b>Trails</b> shows a faint trail behind every electron.</p><p><b>Lattice</b> shows or hides the ions.</p>',
-        say: 'Release lets a fresh puff go and runs it for twelve seconds. The trails switch shows a faint trail behind every electron, and the lattice switch shows or hides the ions.' },
+        targets: function(){ return [ { sel: '#btn-release' }, { sel: '#box-trails' } ]; },
+        text: '<p><b>Release</b> lets a fresh puff go and runs it for 12 s.</p><p><b>Trails</b> shows a faint trail behind every electron.</p>',
+        say: 'Release lets a fresh puff go and runs it for twelve seconds. The trails switch shows a faint trail behind every electron.' },
       { chap: 'Controls', title: 'The readouts',
-        targets: function(){ return [ { sel: '#panel-readouts' } ]; },
+        targets: function(){ var rp=document.getElementById('panel-readouts'); if(rp&&rp.classList.contains('collapsed')){ var rh=rp.querySelector('.shell-panel-head'); if(rh) rh.click(); } return [ { sel: '#panel-readouts' } ]; },
         text: '<p>The readouts give the field and τ, the drift speed over the last second and the rms speed.</p><p><b>J</b> is the current density and <b>σE</b> the conductivity times the field.</p>',
         say: 'The readouts give the field and tau, the drift speed over the last second, and the rms speed. J is the current density, and sigma E is the conductivity times the field.' }
     ],

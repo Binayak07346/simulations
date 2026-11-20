@@ -205,13 +205,13 @@
 
   <script>
     const versions = [
-      { href: "./v1_sims/", tag: "V1 · Nov 11", title: "EM course sims · V1", desc: "The first build of the 10 simulations, reviewed against the specs and fixed.", cta: "Open V1 sims →" },
-      { href: "./v2_sims%20(Revised%20Nov%2012)/", tag: "V2 · revised Nov 12", title: "EM course sims · V2", desc: "The same 10 topics, regenerated with the senior SME’s ideas.", cta: "Open V2 sims →" },
+      { hidden: true, href: "./v1_sims/", tag: "V1 · Nov 11", title: "EM course sims · V1", desc: "The first build of the 10 simulations, reviewed against the specs and fixed.", cta: "Open V1 sims →" },
+      { hidden: true, href: "./v2_sims%20(Revised%20Nov%2012)/", tag: "V2 · revised Nov 12", title: "EM course sims · V2", desc: "The same 10 topics, regenerated with the senior SME’s ideas.", cta: "Open V2 sims →" },
       { href: "./v3_sims%20(Revised%20Nov%2014)/", tag: "V3 · revised Nov 14", title: "EM course sims · V3", desc: "The same 10 topics, revised again on Nov 14.", cta: "Open V3 sims →" },
     ];
 
     const grid = document.getElementById('grid');
-    versions.forEach(v => {
+    versions.filter(v => !v.hidden).forEach(v => {     // V1 and V2 are hidden (owner 2026-11-20); their folders stay
       const card = document.createElement('article');
       card.className = 'card';
       card.innerHTML = `
