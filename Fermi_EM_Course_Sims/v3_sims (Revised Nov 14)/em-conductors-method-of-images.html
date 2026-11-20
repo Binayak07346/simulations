@@ -1768,7 +1768,7 @@ html.no-voice #inq-voice, html.no-voice #inq-auto, html.no-voice .cg-row-voice, 
       </div>
       <div class="shell-modal-body"><h3>About this simulation</h3>
 <dl class="shell-info-dl">
-  <dt>On screen</dt><dd>A slice through the conductor, 9R across, centred on it. Sphere mode: a metal disc of radius R on an earthing wire with a switch and an earth symbol. Plate mode: a metal bar 0.2R thick, seen edge on, its face at the centre. The surface charge is a band outside the rim, blue for negative and red for positive, with saturation |σ|/(|σ| + σ<sub>0</sub>), σ<sub>0</sub> = q/4πR<sup>2</sup>, and small + and − dots along the edge, 0.15R σ<sub>0</sub>/|σ| apart. Real charges are discs of radius 0.12R, red for +q and blue for −q. Sixteen field lines touch each charge, with markers moving along E at 0.5R per second; their spacing is not a measure of the field strength. The probe is a ring with an arrow for E of length 0.5R (E/E<sub>0</sub>)<sup>1/2</sup>, kept between 0.2R and 1.2R. With the image shown the metal turns almost clear and the image charges appear as hollow glowing discs with tags. Top right: the whole conductor in 3D, with the slice marked as a thin line.</dd>
+  <dt>On screen</dt><dd>A slice through the conductor, 9R across, centred on it. Sphere mode: a metal disc of radius R on an earthing wire with a switch and an earth symbol. Plate mode: a metal bar 0.2R thick, seen edge on, its face at the centre. The surface charge is a band outside the rim, blue for negative and red for positive, with saturation |σ|/(|σ| + σ<sub>0</sub>), σ<sub>0</sub> = q/4πR<sup>2</sup>, and small + and − dots along the edge, 0.15R σ<sub>0</sub>/|σ| apart. Real charges are discs of radius 0.12R, red for +q and blue for −q. Sixteen field lines touch each charge, with markers moving along E at 0.5R per second; their spacing is not a measure of the field strength. The probe is a ring with an arrow for E of length 0.5R (E/E<sub>0</sub>)<sup>1/2</sup>, kept between 0.2R and 1.2R. With the image shown the metal turns almost clear and the image charges appear as hollow glowing discs with tags.</dd>
   <dt>Controls</dt><dd>Click on the plane outside the metal to drop a charge q (up to three); the metal then relaxes over about three seconds. Drag a charge to move it (sphere: 1.3R to 3.5R from the centre; plate: 0.5R to 2.5R from the face), click it to switch it between +q and −q, and drag it out of the view to remove it. Drag the probe anywhere, inside the metal or out. Click the switch on the earthing wire, or use its toggle, to ground or isolate the sphere (the plate is always grounded). Show image shows or hides the image charges.</dd>
   <dt>Measured</dt><dd>d is the distance of the charge last moved from the centre of the sphere, or from the face of the plate, in units of R. Q<sub>metal</sub> is the total charge on the conductor in units of q. |E| is the field at the probe in units of E<sub>0</sub> = q/4πε<sub>0</sub>R<sup>2</sup>.</dd>
 </dl></div>
@@ -1831,10 +1831,9 @@ html.no-voice #inq-voice, html.no-voice #inq-auto, html.no-voice .cg-row-voice, 
 <li><i class="ps-chip ps-c-neg"></i><b>Blue</b>: a −q charge, or negative surface charge on the rim (a band and − dots).</li>
 <li><i class="ps-chip ps-c-line"></i><b>Field lines</b>: 16 touch each charge, with markers moving along E. Their spacing on the slice is not a measure of the field strength.</li>
 <li><i class="ps-chip ps-c-prb"></i><b>Probe</b>: a ring with an arrow for E, of length 0.5R (E/E<sub>0</sub>)<sup>1/2</sup>, kept between 0.2R and 1.2R.</li>
-<li><i class="ps-chip ps-box"></i><b>The whole sphere</b> (top right): the conductor in 3D with the same colours; the thin line marks the slice.</li>
 </ul>
 <div class="ps-try">
-<div class="ps-try-txt"><span class="ps-try-tag">See it</span>The grounded sphere, with no charge yet. <span class="ps-watch">Watch for: the whole sphere turning slowly in the top right corner, with the slice marked on it.</span></div>
+<div class="ps-try-txt"><span class="ps-try-tag">See it</span>The grounded sphere, with no charge yet. <span class="ps-watch">Watch for: no field anywhere until a charge is dropped outside the metal.</span></div>
 <button class="shell-btn seesim" data-show="setup">▶ Show me in the sim</button>
 </div>
 </section>
@@ -2039,7 +2038,7 @@ html.no-voice #inq-voice, html.no-voice #inq-auto, html.no-voice .cg-row-voice, 
 
   <main class="shell-hero"><div class="kit-hero" id="kit-hero">
 <div class="plot-box" id="panel-main" style="flex:1 1 0">
-  <div class="plot-title">Slice through the conductor<span class="plot-inline">a plane through the centre, with the whole conductor in 3D</span></div>
+  <div class="plot-title">Slice through the conductor<span class="plot-inline">a plane through the centre</span></div>
   <div class="kit-stage" id="stage-scene"><canvas id="scene"></canvas></div>
 </div>
 
@@ -2053,7 +2052,7 @@ html.no-voice #inq-voice, html.no-voice #inq-auto, html.no-voice .cg-row-voice, 
       <div id="inq-dots" class="inq-dots"></div>
       <div id="inq-cards" class="aside-zone-body"><div class="inq-step" data-card="1" data-kind="orient">
   <h4>1 · A metal sphere and a probe</h4>
-  <p>This is a slice through a metal sphere of radius R, grounded through the closed switch on its wire. The ring inside is a probe whose arrow will show the field E there. Top right: the whole sphere in 3D.</p>
+  <p>This is a slice through a metal sphere of radius R, grounded through the closed switch on its wire. The ring inside is a probe whose arrow will show the field E there.</p>
 </div>
 <div class="inq-step" data-gate data-card="2" data-kind="predict">
   <h4>2 · The field inside</h4>
@@ -2167,10 +2166,9 @@ html.no-voice #inq-voice, html.no-voice #inq-auto, html.no-voice .cg-row-voice, 
 </div>
 
 
-<div class="kit-note" id="note-1">Relaxation slowed to about 3 s; a real metal takes under a nanosecond</div>
 </div>
 </div>
-<div class="shell-panel" id="panel-readouts">
+<div class="shell-panel collapsed" id="panel-readouts">
 <div class="shell-panel-head"><h3>Readouts</h3><span class="shell-caret">▾</span></div>
 <div class="shell-panel-body"><div class="ctrl-box">
 <div class="stat-row" id="row-d"><span class="stat-label"><span>d</span></span><span class="stat-value" id="ro-d">—</span></div>
@@ -4555,7 +4553,7 @@ Kit.sim({
   paint: {
     scene(g, s, p, q, kit) {
       const W = g.w, H = g.h, ctx = g.ctx, el = ctx && ctx.canvas, live = !!(el && el.id === 'scene');
-      const L = layout(W, H, live);
+      const L = layout(W, H, false);     // the 3D inset is retired (owner 2026-11-20): the slice has the whole canvas
       if (live) { LAY = L; KIT = kit; attach(el); }
       const mode = p.conductor, F = phys(s, p), img = !!p.image, S = L.s;
       const v = g.view({ x0: L.x0, x1: L.x1, y0: L.y0, y1: L.y1 }, { x: 0, y: 0, w: W, h: H });
@@ -6254,16 +6252,16 @@ function drawHero(){ const c = document.getElementById('welcome-fringes'); if (c
         targets: function(){ return [ { ellipse: part('charge q'), pad: 4 }, { rect: part('surface charge') } ]; },
         text: '<p>Click the plane outside the metal to drop a charge q. Drag it to move it, click it to flip its sign, or drag it out of the view to remove it.</p><p>Lines with moving markers show the field E. The band on the rim shows surface charge: blue negative, red positive.</p>',
         say: 'Click anywhere outside the metal to drop a charge q. Drag it to move it, click it to flip its sign, or drag it right out of the view to remove it. The lines with moving markers show the field E. The coloured band on the rim shows the surface charge, blue for negative and red for positive.' },
-      { chap: 'The simulation', title: 'The probe and the 3D view',
-        targets: function(){ return [ { ellipse: part('probe'), pad: 4 }, { rect: part('3D inset') } ]; },
-        text: '<p>Drag the probe ring anywhere, inside the metal or out. Its arrow shows the field E at that point.</p><p>Top right, the whole conductor turns in 3D. The thin line marks the slice.</p>',
-        say: 'You can drag the probe ring anywhere, inside the metal or outside it, and its arrow shows the field E at that point. In the top right corner the whole conductor turns slowly in 3D, and the thin line marks the slice you see.' },
+      { chap: 'The simulation', title: 'The probe',
+        targets: function(){ return [ { ellipse: part('probe'), pad: 4 } ]; },
+        text: '<p>Drag the probe ring anywhere, inside the metal or out. Its arrow shows the field E at that point.</p>',
+        say: 'You can drag the probe ring anywhere, inside the metal or outside it, and its arrow shows the field E at that point.' },
       { chap: 'Controls', title: 'The metal and the image',
         targets: function(){ return [ { sel: '#box-conductor' }, { sel: '#box-earth' }, { sel: '#box-image' }, { rect: part('metal sphere'), sec: true } ]; },
         text: '<p><b>Conductor</b> swaps the sphere for a flat metal plate.</p><p><b>Earthing switch closed</b> connects the sphere to earth, like clicking the switch.</p><p><b>Show image</b> shows the image charges inside the metal.</p>',
         say: 'Conductor swaps the sphere for a flat metal plate. Earthing switch closed connects the sphere to earth, the same as clicking the switch in the picture. Show image shows the image charges inside the metal.' },
       { chap: 'Controls', title: 'The readouts',
-        targets: function(){ return [ { sel: '#row-d' }, { sel: '#row-qm' }, { sel: '#row-eprobe' } ]; },
+        targets: function(){ var rp=document.getElementById('panel-readouts'); if(rp&&rp.classList.contains('collapsed')){ var rh=rp.querySelector('.shell-panel-head'); if(rh) rh.click(); } return [ { sel: '#row-d' }, { sel: '#row-qm' }, { sel: '#row-eprobe' } ]; },
         text: '<p><b>d</b> is the distance of the charge you moved last, from the centre of the sphere or the face of the plate.</p><p><b>Q<sub>metal</sub></b> is the total charge on the conductor.</p><p><b>|E| at probe</b> is the field strength at the probe.</p>',
         say: 'd is the distance of the charge you moved last, measured from the centre of the sphere or from the face of the plate. Q metal is the total charge on the conductor. And E at probe is the strength of the field at the probe.' }
     ],

@@ -1768,8 +1768,8 @@ html.no-voice #inq-voice, html.no-voice #inq-auto, html.no-voice .cg-row-voice, 
       </div>
       <div class="shell-modal-body"><h3>About this simulation</h3>
 <dl class="shell-info-dl">
-  <dt>On screen</dt><dd>First mode: the plane z = 0 from −4a to 4a and −3a to 3a, red discs for positive and blue for negative charges, field lines (16 per unit q) with markers flowing along E, contours of φ at ±0.25, ±0.5, ±1, ±2 and ±4 q/4πε<sub>0</sub> a (pale red positive, pale blue negative, grey φ = 0), and the white probe with one thin arrow per charge and the thick yellow sum, all to one scale. After Release: the white test charge, its yellow trail and the field line through its start; off the plane it shows as a hollow ring. Lower right: the plane edge-on, x against height z. Second mode: the circle of radius R round the middle of the arrangement with the polar plot of φ on it (red φ &gt; 0, blue φ &lt; 0), a scale bar of length a, and the arrangement at a fixed scale in the upper right.</dd>
-  <dt>Controls</dt><dd>Mode switches between the two views. In the first mode: click empty space to place the charge chosen in the palette (up to twelve, on a 0.5a lattice), drag a charge to move it, double-click it to remove it; drag the probe (kept 0.3a from every charge); drag the test charge up or down in the edge-on inset to set the release height, −0.5a to 0.5a in steps of 0.05a; Release lets the test charge go from rest at the probe, a second press stops it; Field lines and Equipotentials switch each layer. In the second mode: choose the arrangement and drag the circle's dark edge to set R, from 0.2a beyond the farthest charge to 50a.</dd>
+  <dt>On screen</dt><dd>First mode: the plane z = 0 filling the stage (at least −4a to 4a and −3a to 3a, no axes or grid), red discs for positive and blue for negative charges, field lines (16 per unit q) with markers flowing along E, contours of φ at ±0.25, ±0.5, ±1, ±2 and ±4 q/4πε<sub>0</sub> a (pale red positive, pale blue negative, grey φ = 0), and the white probe with one thin arrow per charge and the thick yellow sum, all to one scale. After Release: the gold test charge leaves the probe (a dashed ring marks the start) with its yellow trail, beside the dashed field line through its start; off the plane it shows as a hollow gold ring. When the run ends it holds for a moment, then returns to the probe. Its height z is in Readouts during a run. Second mode: the circle of radius R round the middle of the arrangement with the polar plot of φ on it (red φ &gt; 0, blue φ &lt; 0), a scale bar of length a, and the arrangement at a fixed scale in the upper right.</dd>
+  <dt>Controls</dt><dd>Mode switches between the two views. In the first mode: click empty space to place the charge chosen in the palette (up to twelve, anywhere at least 0.4a from another charge), drag a charge to move it smoothly, double-click it to remove it; drag the probe (kept 0.3a from every charge); set the release height with its slider, −0.5a to 0.5a in steps of 0.05a; Release lets the test charge go from rest at the probe, a second press stops it; Field lines and Equipotentials switch each layer. In the second mode: choose the arrangement and drag the circle's dark edge to set R, from 0.2a beyond the farthest charge to 50a.</dd>
   <dt>Measured</dt><dd>φ in units of q/4πε<sub>0</sub> a and |E| in E<sub>0</sub> = q/4πε<sub>0</sub> a², from the exact sum over the charges in 3D. K, q<sub>tφ</sub> and their sum are in units of q<sub>t</sub> q/4πε<sub>0</sub> a, where q<sub>t</sub> is the small positive test charge. Time is scaled so that a test charge released at a from a lone +q reaches 3a after 2.5 s. n = −d ln|φ|<sub>max</sub>/d ln R by a centred difference.</dd>
 </dl></div>
     </div>
@@ -1824,7 +1824,7 @@ html.no-voice #inq-voice, html.no-voice #inq-auto, html.no-voice .cg-row-voice, 
 <li><i class="ps-chip psc-pos"></i><b>Red and blue discs</b>: positive and negative charges (larger for ±2q).</li>
 <li><i class="ps-chip ps-box"></i><b>Grey lines with dots</b>: field lines, the dots flowing along E. Pale red and blue rings: contours of φ; grey: φ = 0.</li>
 <li><i class="ps-chip psc-sum"></i><b>White probe</b>: a thin arrow per charge in its colour, and the thick yellow sum.</li>
-<li><i class="ps-chip ps-box"></i><b>Edge-on inset</b>: the plane seen side-on, with the test charge’s height z.</li>
+<li><i class="ps-chip ps-box"></i><b>Hollow ring</b>: the test charge off the plane; its height z is in Readouts.</li>
 </ul>
 <div class="ps-try"><div class="ps-try-txt"><span class="ps-try-tag">See it</span>Opens the dipole with its field lines and contours. <span class="ps-watch">Watch for: the dots flowing along the lines, and the arrows at the probe.</span></div><button type="button" class="shell-btn seesim" data-show="setup">▶ Show me in the sim</button></div>
 </section>
@@ -1836,14 +1836,14 @@ html.no-voice #inq-voice, html.no-voice #inq-auto, html.no-voice .cg-row-voice, 
 <table class="ps-ctl"><thead><tr><th>Control</th><th>What it changes</th><th>Range</th><th></th></tr></thead><tbody>
 <tr><td><b>Mode</b></td><td>Switches between the plane of charges and the view from far away.</td><td>Charges in a plane / Seen from far away<br><small>opens on Charges in a plane</small></td><td><button type="button" class="ps-loc" data-locate="#box-mode" title="Show it in the sim">⌖</button></td></tr>
 <tr><td><b>Charge to place</b></td><td>The charge a click on empty space adds.</td><td>+q / +2q / −q / −2q<br><small>opens on +q</small></td><td><button type="button" class="ps-loc" data-locate="#box-palette" title="Show it in the sim">⌖</button></td></tr>
-<tr><td><b>Charges</b> <small>(on the plane)</small></td><td>Click empty space to add one, drag one to move it, double-click to remove it. Positions snap to a 0.5a lattice.</td><td>up to 12<br><small>opens on +q at (−a, 0), −q at (a, 0)</small></td><td><button type="button" class="ps-loc" data-locate="#scene" title="Show it in the sim">⌖</button></td></tr>
+<tr><td><b>Charges</b> <small>(on the plane)</small></td><td>Click empty space to add one, drag one to move it, double-click to remove it. Charges keep at least 0.4a apart.</td><td>up to 12<br><small>opens on +q at (−a, 0), −q at (a, 0)</small></td><td><button type="button" class="ps-loc" data-locate="#scene" title="Show it in the sim">⌖</button></td></tr>
 <tr><td><b>Probe</b> <small>(on the plane)</small></td><td>Drag it to read φ and |E| there; the test charge starts from it.</td><td>at least 0.3a from every charge</td><td><button type="button" class="ps-loc" data-locate="#scene" title="Show it in the sim">⌖</button></td></tr>
 <tr><td><b>Field lines</b> / <b>Equipotentials</b></td><td>Show or hide the lines with their dots, and the contours.</td><td>on / off<br><small>both open on</small></td><td><button type="button" class="ps-loc" data-locate="#box-lines" title="Show it in the sim">⌖</button></td></tr>
-<tr><td><b>Release height</b> <small>(edge-on inset)</small></td><td>Drag the white dot up or down: the height the test charge starts from.</td><td>−0.5a to 0.5a, steps of 0.05a<br><small>opens at 0</small></td><td><button type="button" class="ps-loc" data-locate="#scene" title="Show it in the sim">⌖</button></td></tr>
+<tr><td><b>Release height z<sub>0</sub></b></td><td>The height above the plane the test charge starts from.</td><td>−0.5a to 0.5a, steps of 0.05a<br><small>opens at 0</small></td><td><button type="button" class="ps-loc" data-locate="#box-z0" title="Show it in the sim">⌖</button></td></tr>
 <tr><td><b>Release</b></td><td>Lets the test charge go from rest at the probe; a second press stops it.</td><td>button</td><td><button type="button" class="ps-loc" data-locate="#box-actions" title="Show it in the sim">⌖</button></td></tr>
 <tr><td><b>Arrangement</b> <small>(far away)</small></td><td>The charges inside the circle; each choice opens close in.</td><td>Single charge / Dipole / Square of four / Ring of six / Ring of eight / Built in the first mode<br><small>opens on Square of four</small></td><td><button type="button" class="ps-loc" data-locate="#box-arrangement" title="Show it in the sim">⌖</button></td></tr>
 <tr><td><b>Radius R</b> <small>(far away)</small></td><td>Drag the circle’s dark edge. Beyond 3.5a the circle keeps its size and the view widens.</td><td>0.2a beyond the farthest charge to 50a<br><small>opens at 1.2a</small></td><td><button type="button" class="ps-loc" data-locate="#scene" title="Show it in the sim">⌖</button></td></tr>
-<tr><td><b>Readouts</b></td><td>φ and |E| at the probe; during a run K, q<sub>t</sub>φ, their sum and the height z; far away R/a, the largest |φ| and n.</td><td>read only</td><td><button type="button" class="ps-loc" data-locate="#panel-readouts" title="Show it in the sim">⌖</button></td></tr>
+<tr><td><b>Readouts</b></td><td>Only the rows that apply: φ and |E| at the probe when no run is on; during a run K, q<sub>t</sub>φ and their sum, and the height z when it starts off the plane; far away the largest |φ| on the circle and n (R is on the circle’s label).</td><td>read only</td><td><button type="button" class="ps-loc" data-locate="#panel-readouts" title="Show it in the sim">⌖</button></td></tr>
 <tr><td><b>Play / Pause</b>, <b>Speed</b>, <b>Reset</b></td><td>Run or freeze the clock, change its pace, return every control to its start.</td><td>top bar</td><td><button type="button" class="ps-loc" data-locate="#shell-play" title="Show it in the sim">⌖</button></td></tr>
 </tbody></table>
 <p class="ps-note">Fixed: φ in q/4πε<sub>0</sub>a, E in E<sub>0</sub> = q/4πε<sub>0</sub>a². Time is scaled so a test charge let go at a from a lone +q reaches 3a after 2.5 s.</p>
@@ -1920,7 +1920,7 @@ html.no-voice #inq-voice, html.no-voice #inq-auto, html.no-voice .cg-row-voice, 
 <div class="cap">At the centre of the square: a minimum of φ within the plane, a maximum across it.</div>
 </div>
 <p class="ps-p">Across the plane the centre is a maximum, so a small height grows: by a factor e every 0.83 s, reaching a after about 3 s. This is Earnshaw’s theorem at work. A charge held stably at x<sub>⋆</sub> would need E pointing inwards all over a small surface round it, a negative flux, while Gauss’ law says the flux is zero.</p>
-<div class="ps-try"><div class="ps-try-txt"><span class="ps-try-tag">See it</span>Releases the test charge 0.05a above the centre of the cage. <span class="ps-watch">Watch for: the dot in the edge-on inset rising slowly, then faster.</span></div><button type="button" class="shell-btn seesim" data-show="escape" data-live="z=#ro-z">▶ Show me in the sim</button></div>
+<div class="ps-try"><div class="ps-try-txt"><span class="ps-try-tag">See it</span>Releases the test charge 0.05a above the centre of the cage. <span class="ps-watch">Watch for: the height z in Readouts rising slowly, then faster.</span></div><button type="button" class="shell-btn seesim" data-show="escape" data-live="z=#ro-z">▶ Show me in the sim</button></div>
 </section>
 
 <!-- ============ 07 · FAR AWAY ============ -->
@@ -2070,7 +2070,7 @@ html.no-voice #inq-voice, html.no-voice #inq-auto, html.no-voice .cg-row-voice, 
 </div>
 <div class="inq-step" data-gate data-lock-play data-card="8" data-kind="predict">
   <h4>8 · Just above the plane</h4>
-  <p>Now drag the probe to the centre and, in the inset, set the release height to 0.05a. Before pressing release, predict what the test charge does.</p>
+  <p>Now drag the probe to the centre and set the release height z<sub>0</sub> to 0.05a. Before pressing release, predict what the test charge does.</p>
   <button class="choice" data-correct data-fb="Laplace's equation says the second derivatives of φ add to zero, so the rise of φ in both directions within the plane forces a fall twice as steep perpendicular to it. The height grows by a factor e every 0.83 s, reaching a after about 3 s.">After a slow start it leaves perpendicular to the plane, through the middle of the square</button>
   <button class="choice" data-fb="That would need φ to rise away from the plane too; Laplace's equation makes it fall there instead.">It is pushed back to the plane and bobs up and down through it, as it swung within the plane</button>
   <button class="choice" data-fb="The centre is an equilibrium, but across the plane an unstable one, so a small height grows.">It stays where it is put, since the centre is an equilibrium</button>
@@ -2079,7 +2079,7 @@ html.no-voice #inq-voice, html.no-voice #inq-auto, html.no-voice .cg-row-voice, 
 </div>
 <div class="inq-step" data-card="9" data-kind="observe">
   <h4>9 · Release off the plane</h4>
-  <p>The probe is at the centre and the release height is 0.05a. Press Release (it also starts ▶ Play) and watch the white dot in the edge-on inset and the height z.</p>
+  <p>The probe is at the centre and the release height is 0.05a. Press Release (it also starts ▶ Play) and watch the height z in Readouts.</p>
 </div>
 <div class="inq-step" data-gate data-card="10" data-kind="predict">
   <h4>10 · Net charge, far away</h4>
@@ -2149,14 +2149,18 @@ html.no-voice #inq-voice, html.no-voice #inq-auto, html.no-voice .cg-row-voice, 
 </div>
 
 <div class="ctrl-box kit-actions" id="box-actions" data-no-reset>
-  <div class="kit-actions-row"><button type="button" class="shell-btn kit-btn" id="btn-release">Release</button></div>
+  <div class="kit-actions-row"><button type="button" class="shell-btn kit-btn" id="btn-release" aria-pressed="false">▶ Release</button></div>
 </div>
-<div class="kit-note" id="note-1">Click to place a charge, drag to move it, double-click to remove</div>
-<div class="kit-note" id="note-2">Drag the probe; set the release height in the edge-on inset</div>
-<div class="kit-note" id="note-3">Second mode: drag the circle's dark edge to change R</div>
+<div class="ctrl-box ctrl-box--slider" id="box-z0" data-no-reset>
+  <div class="ctrl-box-head"><span class="ctrl-box-label">Release height z<sub>0</sub></span><span class="slider-val" id="in-z0-val">0.00a</span></div>
+  <div class="ctrl-slider-row"><input type="range" id="in-z0" min="-0.5" max="0.5" step="0.05" value="0" aria-label="Release height z0"></div>
+  <div class="control-range"><span>−0.5a</span><span>0.5a</span></div>
+</div>
+<style>#box-z0.z0-off{display:none !important}#panel-main > .plot-title{display:none}
+#panel-readouts .stat-row.ro-na,.fapp-chip-b .stat-row.ro-na,.fapp-chip .stat-row.ro-na{display:none !important}</style>
 </div>
 </div>
-<div class="shell-panel" id="panel-readouts">
+<div class="shell-panel collapsed" id="panel-readouts">
 <div class="shell-panel-head"><h3>Readouts</h3><span class="shell-caret">▾</span></div>
 <div class="shell-panel-body"><div class="ctrl-box">
 <div class="stat-row" id="row-phi"><span class="stat-label"><span>φ at probe</span></span><span class="stat-value" id="ro-phi">—</span></div>
@@ -4158,8 +4162,10 @@ window.Kit = (function () {
 <script>/* v2 sim sim — manifest compiled by pipeline/v2/compile.mjs; physics + painters by the build model. */
 window.__SIM_MANIFEST = {"title":"Point Charges Near and Far","time":{"mode":"continuous","timeless":false,"autoplay":true,"onParamChange":"keep"},"params":[{"id":"mode","type":"segmented","label":"Mode","default":"plane","options":[{"value":"plane","label":"Charges in a plane"},{"value":"far","label":"Seen from far away"}],"help":"Switches between the plane of charges and the view from far away.","domId":"p-mode"},{"id":"palette","type":"segmented","label":"Charge to place","default":"p1","view":true,"showWhen":{"mode":"plane"},"options":[{"value":"p1","label":"+q"},{"value":"p2","label":"+2q"},{"value":"m1","label":"−q"},{"value":"m2","label":"−2q"}],"help":"The charge that a click on empty space places.","domId":"p-palette"},{"id":"lines","type":"toggle","label":"Field lines","default":true,"view":true,"showWhen":{"mode":"plane"},"help":"Shows the field lines with their flowing markers.","domId":"p-lines"},{"id":"equip","type":"toggle","label":"Equipotentials","default":true,"view":true,"showWhen":{"mode":"plane"},"help":"Shows the contours of constant φ.","domId":"p-equip"},{"id":"arrangement","type":"select","label":"Arrangement","default":"square","showWhen":{"mode":"far"},"options":[{"value":"single","label":"Single charge"},{"value":"dipole","label":"Dipole"},{"value":"square","label":"Square of four"},{"value":"ring6","label":"Ring of six"},{"value":"ring8","label":"Ring of eight"},{"value":"built","label":"Built in the first mode"}],"help":"The charges inside the circle; the circle starts close in.","domId":"p-arrangement"}],"readouts":[{"id":"phi","label":"φ at probe","key":"phiP","decimals":2,"unit":"q/4πε_0 a","signed":true,"showWhen":{"mode":"plane"},"domId":"ro-phi","rowId":"row-phi"},{"id":"E","label":"|E| at probe","key":"EP","decimals":2,"unit":"E_0","showWhen":{"mode":"plane"},"domId":"ro-E","rowId":"row-E"},{"id":"K","label":"Kinetic energy K","key":"K","decimals":3,"unit":"q_t q/4πε_0 a","showWhen":{"mode":"plane"},"domId":"ro-K","rowId":"row-K"},{"id":"U","label":"q_tφ","key":"U","decimals":3,"unit":"q_t q/4πε_0 a","signed":true,"showWhen":{"mode":"plane"},"domId":"ro-U","rowId":"row-U"},{"id":"H","label":"K + q_tφ","key":"H","decimals":3,"unit":"q_t q/4πε_0 a","signed":true,"showWhen":{"mode":"plane"},"domId":"ro-H","rowId":"row-H"},{"id":"z","label":"Height above the plane z","key":"z","decimals":2,"unit":"a","signed":true,"showWhen":{"mode":"plane"},"domId":"ro-z","rowId":"row-z"},{"id":"Ra","label":"R/a","key":"Ra","decimals":2,"unit":"","showWhen":{"mode":"far"},"domId":"ro-Ra","rowId":"row-Ra"},{"id":"pmax","label":"Largest |φ| on the circle","key":"pmax","decimals":3,"unit":"q/4πε_0 a","showWhen":{"mode":"far"},"domId":"ro-pmax","rowId":"row-pmax"},{"id":"n","label":"n = −d ln|φ|_max/d ln R","key":"n","decimals":2,"unit":"","showWhen":{"mode":"far"},"domId":"ro-n","rowId":"row-n"}],"buttons":[{"id":"release","label":"Release","action":"release","when":"always","showWhen":{"mode":"plane"},"help":"Lets the test charge go from rest at the probe; press again to stop.","where":"sidebar","domId":"btn-release"}],"keys":{},"canvases":[{"id":"scene","aspect":null}],"stage":[],"steps":[{"set":{"mode":"plane","lines":true,"equip":true},"pause":false},{"set":{"mode":"plane","lines":false,"equip":false}},{"set":{"mode":"plane","lines":true,"equip":true},"play":true},{"set":{"mode":"plane","lines":true,"equip":true}},{"set":{"mode":"plane","lines":true,"equip":true},"play":true,"try":["release"]},{"set":{"mode":"plane","lines":true,"equip":true}},{"set":{"mode":"plane","lines":true,"equip":true},"play":true,"try":["release"]},{"set":{"mode":"plane","lines":true,"equip":true}},{"set":{"mode":"plane","lines":true,"equip":true},"play":true,"try":["release"]},{"set":{"mode":"far","arrangement":"built"}},{"set":{"mode":"far","arrangement":"built"}},{"set":{"mode":"far","arrangement":"square"}},{"set":{"mode":"far","arrangement":"ring8"}},{"set":{"mode":"far","arrangement":"ring6"}}],"audit":null};
 // Point charges in the plane z = 0. Units: lengths in a, φ in q/4πε0 a, E in E0 = q/4πε0 a², time in screen seconds.
+const RUN_HOLD_MS = 2200;        // how long the end of a run stays on screen before the test charge returns to the probe
 const C_T = 1.03433;            // q q_t/(4πε0 m a³) in 1/s²: from rest at a from a lone +q the test charge reaches 3a after 2.5 s
 const REG = { x0: -4, x1: 4, y0: -3, y1: 3 };          // the first mode's region of the plane (8a × 6a)
+const VIS = { hx: 4, hy: 3 };   // what the stage shows (2026-11-19: the plane fills the stage, at least REG); runs, probe and charges use it
 const LEVELS = [-4, -2, -1, -0.5, -0.25, 0, 0.25, 0.5, 1, 2, 4];   // contour values of φ
 const PAL = {
   pos: { dark: '#f87171', light: '#dc2626' },     // positive charge: red
@@ -4240,11 +4246,11 @@ function fieldLines(Q) {
 
 // Contours of φ by marching squares on a ~5 px grid over the region (pixel segments, cached per arrangement and size)
 const CONT = new Map();
-function contours(Q, R) {
-  const key = JSON.stringify(Q) + '|' + Math.round(R.x) + ',' + Math.round(R.y) + ',' + Math.round(R.w) + ',' + Math.round(R.h);
+function contours(Q, R, B = REG) {
+  const key = JSON.stringify(Q) + '|' + Math.round(R.x) + ',' + Math.round(R.y) + ',' + Math.round(R.w) + ',' + Math.round(R.h) + '|' + [B.x0, B.x1, B.y0, B.y1].map(v => v.toFixed(3)).join(',');
   if (CONT.has(key)) return CONT.get(key);
   const nx = Math.max(8, Math.round(R.w / 5)), ny = Math.max(6, Math.round(R.h / 5)), W = nx + 1, F = new Float64Array(W * (ny + 1));
-  for (let j = 0; j <= ny; j++) for (let i = 0; i <= nx; i++) F[j * W + i] = clamp(field(Q, REG.x0 + 8 * i / nx, REG.y1 - 6 * j / ny, 0).phi, -1e3, 1e3);
+  for (let j = 0; j <= ny; j++) for (let i = 0; i <= nx; i++) F[j * W + i] = clamp(field(Q, B.x0 + (B.x1 - B.x0) * i / nx, B.y1 - (B.y1 - B.y0) * j / ny, 0).phi, -1e3, 1e3);
   const X = (i) => R.x + R.w * i / nx, Y = (j) => R.y + R.h * j / ny, segs = {};
   for (const L of LEVELS) {
     const out = [];
@@ -4259,6 +4265,7 @@ function contours(Q, R) {
     segs[L] = out;
   }
   if (CONT.size > 6) CONT.delete(CONT.keys().next().value);
+  if (CONT.size > 32) CONT.clear();
   CONT.set(key, segs); return segs;
 }
 
@@ -4297,7 +4304,7 @@ function stepTC(Q, tc, h) {
   const k1 = f(u), k2 = f(u.map((v, i) => v + h / 2 * k1[i])), k3 = f(u.map((v, i) => v + h / 2 * k2[i])), k4 = f(u.map((v, i) => v + h * k3[i]));
   const n = u.map((v, i) => v + h / 6 * (k1[i] + 2 * k2[i] + 2 * k3[i] + k4[i]));
   [tc.x, tc.y, tc.z, tc.vx, tc.vy, tc.vz] = n; tc.t += h;
-  if (Math.abs(tc.x) > 4 || Math.abs(tc.y) > 3 || Math.abs(tc.z) > 3) tc.done = 'left';
+  if (Math.abs(tc.x) > VIS.hx || Math.abs(tc.y) > VIS.hy || Math.abs(tc.z) > 3) tc.done = 'left';
   else if (Q.some((c) => Math.hypot(tc.x - c.x, tc.y - c.y, tc.z) < 0.15)) tc.done = 'hit';
 }
 
@@ -4308,7 +4315,7 @@ function pushProbe(s) {            // keep the probe at least 0.3a from every ch
       const dx = s.probe[0] - c.x, dy = s.probe[1] - c.y, d = Math.hypot(dx, dy);
       if (d < 0.3) { const ux = d > 1e-9 ? dx / d : 0, uy = d > 1e-9 ? dy / d : 1; s.probe = [c.x + 0.31 * ux, c.y + 0.31 * uy]; moved = true; }
     }
-    s.probe = [clamp(s.probe[0], REG.x0, REG.x1), clamp(s.probe[1], REG.y0, REG.y1)];
+    s.probe = [clamp(s.probe[0], -VIS.hx + 0.1, VIS.hx - 0.1), clamp(s.probe[1], -VIS.hy + 0.1, VIS.hy - 0.1)];
     if (!moved) break;
   }
 }
@@ -4324,7 +4331,34 @@ const CARD = [
 ];
 
 // Pointer: place, move and remove charges, drag the probe and the release height (first mode), drag the circle's edge (second)
-const UI = { kit: null, v: null, inset: null, iv: null, far: null, placed: null };
+const UI = { kit: null, v: null, far: null, placed: null };
+// charges move freely (2026-11-19: no more snapping to half-a steps); centres stay at least QMIN apart and inside the stage, to 0.01a
+const QMIN = 0.4, r2 = (v) => Math.round(v * 100) / 100;
+function freeSpot(Q, x, y, skip, from) {    // the nearest allowed point to (x, y), or null if the charges crowd it out; `from` = where a dragged charge is now
+  const bx = VIS.hx - 0.25, by = VIS.hy - 0.25;
+  x = clamp(x, -bx, bx); y = clamp(y, -by, by);
+  for (let it = 0; it < 8; it++) {
+    let moved = false;
+    for (let j = 0; j < Q.length; j++) {
+      if (j === skip) continue;
+      const o = Q[j], dx = x - o.x, dy = y - o.y, d = Math.hypot(dx, dy);
+      if (d < QMIN) {
+        let vx = dx, vy = dy;
+        if (from) {                               // stay on the side it came from: slide round the charge, never jump through it
+          const fx = from[0] - o.x, fy = from[1] - o.y, fl = Math.hypot(fx, fy) || 1, ex = fx / fl, ey = fy / fl, k = vx * ex + vy * ey;
+          if (k < 0) { vx -= 2 * k * ex; vy -= 2 * k * ey; }
+          if (Math.hypot(vx, vy) < 1e-9) { vx = ex; vy = ey; }
+        }
+        const vl = Math.hypot(vx, vy), ux = vl > 1e-9 ? vx / vl : 1, uy = vl > 1e-9 ? vy / vl : 0;
+        x = o.x + 1.02 * QMIN * ux; y = o.y + 1.02 * QMIN * uy; moved = true;
+      }
+    }
+    x = clamp(x, -bx, bx); y = clamp(y, -by, by);
+    if (!moved) break;
+  }
+  x = r2(x); y = r2(y);
+  return Q.every((o, j) => j === skip || Math.hypot(x - o.x, y - o.y) >= QMIN - 0.01) ? [x, y] : null;
+}
 function attach(el, kit) {
   if (!el || el.__pc) return; el.__pc = true; el.style.touchAction = 'none';
   let drag = null, down = null;
@@ -4338,7 +4372,6 @@ function attach(el, kit) {
       return Math.abs(Math.hypot(X - F.cx, Y - F.cy) - F.rpx) < 14 ? { kind: 'ring' } : { kind: 'none' };
     }
     const v = UI.v; if (!v) return { kind: 'none' };
-    if (inR(X, Y, UI.inset)) return { kind: 'z' };
     const [px, py] = v.px(s.probe[0], s.probe[1]);
     if (Math.hypot(X - px, Y - py) < 12) return { kind: 'probe' };
     for (let i = s.Q.length - 1; i >= 0; i--) { const c = s.Q[i]; if (Math.hypot(X - v.x(c.x), Y - v.y(c.y)) < Math.max(10, discR(c) * v.sx + 4)) return { kind: 'charge', i }; }
@@ -4349,15 +4382,14 @@ function attach(el, kit) {
     if (drag.kind === 'ring') {
       const F = UI.far, d = Math.hypot(X - F.cx, Y - F.cy);
       s.R = clamp(Rof(drag.u0 + d - drag.d0, F.k0), F.Rmin, R_MAX);
-    } else if (drag.kind === 'z' && UI.iv) {
-      s.z0 = clamp(snapTo(UI.iv.fromPx(X, Y)[1], 0.05), -0.5, 0.5); s.tc = null;
     } else if (drag.kind === 'probe') {
       const [wx, wy] = v.fromPx(X, Y);
-      s.probe = [clamp(snapTo(wx, 0.05), REG.x0, REG.x1), clamp(snapTo(wy, 0.05), REG.y0, REG.y1)]; pushProbe(s); s.tc = null;
+      s.probe = [clamp(snapTo(wx, 0.05), -VIS.hx + 0.1, VIS.hx - 0.1), clamp(snapTo(wy, 0.05), -VIS.hy + 0.1, VIS.hy - 0.1)]; pushProbe(s); s.tc = null;
     } else if (drag.kind === 'charge') {
-      const [wx, wy] = v.fromPx(X, Y), nx = clamp(snapTo(wx, 0.5), -3.5, 3.5), ny = clamp(snapTo(wy, 0.5), -2.5, 2.5), c = s.Q[drag.i];
-      if (!c || (c.x === nx && c.y === ny) || s.Q.some((o, j) => j !== drag.i && o.x === nx && o.y === ny)) return;
-      s.Q = s.Q.map((o, j) => (j === drag.i ? { x: nx, y: ny, q: o.q } : o)); pushProbe(s); s.tc = null;
+      const [wx, wy] = v.fromPx(X, Y), c = s.Q[drag.i]; if (!c) return;
+      const P = freeSpot(s.Q, wx + (drag.ox || 0), wy + (drag.oy || 0), drag.i, [c.x, c.y]);     // follows the cursor, keeping the grab offset
+      if (!P || (P[0] === c.x && P[1] === c.y)) return;
+      s.Q = s.Q.map((o, j) => (j === drag.i ? { x: P[0], y: P[1], q: o.q } : o)); pushProbe(s); s.tc = null;
     }
     kit.render();
   }
@@ -4367,7 +4399,7 @@ function attach(el, kit) {
     if (h.kind === 'none' || h.kind === 'empty') return;
     drag = h; try { el.setPointerCapture(e.pointerId); } catch { } e.preventDefault();
     if (h.kind === 'ring') { drag.d0 = Math.hypot(X - UI.far.cx, Y - UI.far.cy); drag.u0 = uOf(UI.far.R, UI.far.k0); }
-    if (h.kind === 'z') apply(X, Y);
+    if (h.kind === 'charge') { const c = kit.s.Q[h.i], [wx, wy] = UI.v.fromPx(X, Y); drag.ox = c.x - wx; drag.oy = c.y - wy; }
     el.style.cursor = 'grabbing';
   });
   el.addEventListener('pointermove', (e) => {
@@ -4379,8 +4411,8 @@ function attach(el, kit) {
   const up = () => {
     const s = kit.s, p = kit.p;
     if (down && !down.moved && down.h.kind === 'empty' && s && p.mode === 'plane' && s.Q.length < MAXQ) {
-      const [wx, wy] = UI.v.fromPx(down.X, down.Y), nx = clamp(snapTo(wx, 0.5), -3.5, 3.5), ny = clamp(snapTo(wy, 0.5), -2.5, 2.5);
-      if (!s.Q.some((o) => o.x === nx && o.y === ny)) {
+      const [wx, wy] = UI.v.fromPx(down.X, down.Y), nx = r2(clamp(wx, -VIS.hx + 0.25, VIS.hx - 0.25)), ny = r2(clamp(wy, -VIS.hy + 0.25, VIS.hy - 0.25));
+      if (s.Q.every((o) => Math.hypot(o.x - nx, o.y - ny) >= QMIN)) {             // where clicked, unless it is too close to a charge
         s.Q = [...s.Q, { x: nx, y: ny, q: QOF[p.palette] || 1 }]; pushProbe(s); s.tc = null;
         UI.placed = { x: nx, y: ny, t: performance.now() }; kit.render();
       }
@@ -4398,6 +4430,44 @@ function attach(el, kit) {
   });
 }
 
+// the release height: a sidebar slider on s.z0 (it used to be dragged in a side-view panel, removed 2026-11-19)
+// readouts: only the rows that mean something right now, no copy of a control's value (owner 2026-11-19)
+function syncReadouts(s, p) {
+  const far = p.mode === 'far', run = !far && !!s.tc, off = run && Math.abs(s.tc.trail[0][2]) > 1e-9;
+  const NA = {
+    'row-phi': far || run, 'row-E': far || run,          // the probe's numbers, while the probe is in use
+    'row-K': !run, 'row-U': !run, 'row-H': !run,         // the energy, during a run only
+    'row-z': !off,                                       // the height: only for a run released off the plane (in the plane it stays 0)
+    'row-Ra': true,                                      // R is on the circle's own label (#ro-Ra keeps updating for the See-it cards)
+  };
+  for (const id in NA) { const r = document.getElementById(id); if (r && r.classList.contains('ro-na') !== NA[id]) r.classList.toggle('ro-na', NA[id]); }
+}
+function syncRelease(s) {          // the Release button shows the run's state, like Play / Pause
+  const b = document.getElementById('btn-release'); if (!b) return;
+  const on = !!s.tc, t = on ? '■ Stop' : '▶ Release';
+  if (b.classList.contains('rel-on') !== on) b.classList.toggle('rel-on', on);
+  if (b.textContent !== t) b.textContent = t;
+  b.setAttribute('aria-pressed', on ? 'true' : 'false');
+  // inline !important: the shared fermi-sim.css styles buttons from cascade layers, which beat any unlayered rule here
+  const col = on ? ['#f59e0b', '#d97706', '#1f2937'] : ['#2563eb', '#2563eb', '#ffffff'];
+  if (b.dataset.relState !== String(on)) {
+    b.dataset.relState = String(on);
+    b.style.setProperty('background', col[0], 'important'); b.style.setProperty('border-color', col[1], 'important');
+    b.style.setProperty('color', col[2], 'important'); b.style.setProperty('font-weight', '600', 'important');
+  }
+}
+function syncZ0(s, p) {
+  const box = document.getElementById('box-z0'), inp = document.getElementById('in-z0'), out = document.getElementById('in-z0-val');
+  if (box) box.classList.toggle('z0-off', !p || p.mode !== 'plane');
+  if (inp && document.activeElement !== inp && Number(inp.value) !== s.z0) inp.value = String(s.z0);
+  const t = (s.z0 > 0 ? '+' : s.z0 < 0 ? '−' : '') + Math.abs(s.z0).toFixed(2) + 'a';
+  if (out && out.textContent !== t) out.textContent = t;
+}
+(function () {
+  const inp = document.getElementById('in-z0'); if (!inp) return;
+  inp.addEventListener('input', () => { const k = UI.kit, s = k && k.s; if (!s) return; s.z0 = clamp(snapTo(Number(inp.value), 0.05), -0.5, 0.5); s.tc = null; k.render(); });
+})();
+
 function whiteDisc(g, kit, X, Y, r) {        // the probe and the test charge: white, with a dark rim on the light ground
   const light = kit.isLight();
   g.circle(X, Y, r, { fill: light ? 'bg' : 'ink', color: light ? 'ink' : 'bg', width: 1.6 });
@@ -4410,16 +4480,14 @@ function chargeDisc(g, X, Y, r, q) {
 }
 
 function paintPlane(g, s, p, q, kit) {
-  const v = g.view(REG, g.inset(null, 10, 12, 30, 36), { equal: true }), Rr = v.rect, ppa = v.sx, c = g.ctx;
+  const asp = g.w / Math.max(1, g.h), HX = Math.max(4, 3 * asp), HY = Math.max(3, 4 / asp), VB = { x0: -HX, x1: HX, y0: -HY, y1: HY };
+  const v = g.view(VB, { x: 0, y: 0, w: g.w, h: g.h }, { equal: true }), Rr = v.rect, ppa = v.sx, c = g.ctx;
   const main = g.canvas && g.canvas.id === 'scene';
+  if (main) { VIS.hx = HX; VIS.hy = HY; syncZ0(s, p); syncRelease(s); syncReadouts(s, p); }
   if (main) { UI.v = v; UI.kit = kit; attach(g.canvas, kit); }
-  g.axes(v, { x: { labels: [-3, -2, -1, 0, 1, 2, 3], format: (x) => (x === 0 ? '0' : `${x < 0 ? '−' : ''}${Math.abs(x) === 1 ? '' : Math.abs(x)}a`), grid: 1, title: 'x' },
-              y: { labels: [-2, -1, 0, 1, 2], format: (y) => (y === 0 ? '0' : `${y < 0 ? '−' : ''}${Math.abs(y) === 1 ? '' : Math.abs(y)}a`), grid: 1, title: 'y' }, frame: 'box' });
   g.region('plane', Rr);
-  // the 0.5a lattice the charges snap to
-  if (c) { c.save(); c.fillStyle = g.rgba('muted', 0.35); c.beginPath(); for (let x = -3.5; x <= 3.5; x += 0.5) for (let y = -2.5; y <= 2.5; y += 0.5) { c.moveTo(v.x(x) + 1.2, v.y(y)); c.arc(v.x(x), v.y(y), 1.2, 0, 2 * Math.PI); } c.fill(); c.restore(); }
   if (p.equip && c) {
-    const segs = contours(s.Q, Rr);
+    const segs = contours(s.Q, Rr, VB);
     for (const L of LEVELS) {
       const a = segs[L]; if (!a || !a.length) continue;
       c.save(); c.beginPath(); for (let k = 0; k + 3 < a.length; k += 4) { c.moveTo(a[k], a[k + 1]); c.lineTo(a[k + 2], a[k + 3]); }
@@ -4447,7 +4515,7 @@ function paintPlane(g, s, p, q, kit) {
   }
   const tc = s.tc;
   if (tc && c) g.clip(Rr, () => {
-    if (tc.line.length > 1) g.path(tc.line.map(([x, y]) => [v.x(x), v.y(y)]), { color: 'ink', width: 3.2, alpha: 0.9 });
+    if (tc.line.length > 1) g.path(tc.line.map(([x, y]) => [v.x(x), v.y(y)]), { color: 'ink', width: 2.2, alpha: 0.7, dash: [8, 6] });   // the field line through the start: a reference to compare the path with
     const tr = tc.trail.map(([x, y]) => [v.x(x), v.y(y)]);
     if (tr.length > 1) { g.path(tr, { color: g.rgba(PAL.sum, 0.28), width: 10, cap: 'round' }); g.path(tr, { color: PAL.sum, width: 2.8, cap: 'round' }); }
   });
@@ -4461,32 +4529,19 @@ function paintPlane(g, s, p, q, kit) {
   const [px, py] = s.probe, PX = v.x(px), PY = v.y(py), A = probeArrows(s.Q, px, py), k = A.scale * ppa;
   let bx0 = PX - 12, by0 = PY - 12, bx1 = PX + 12, by1 = PY + 12;
   const grow = (X, Y) => { bx0 = Math.min(bx0, X - 8); by0 = Math.min(by0, Y - 8); bx1 = Math.max(bx1, X + 8); by1 = Math.max(by1, Y + 8); };
-  for (const a of A.parts) { const X = PX + a.ex * k, Y = PY - a.ey * k; g.arrow(PX, PY, X, Y, { color: colOf(a.q), width: 1.8, head: 9 }); grow(X, Y); }
-  { const X = PX + A.sum.ex * k, Y = PY - A.sum.ey * k; g.arrow(PX, PY, X, Y, { color: PAL.sum, width: 4.6, head: 15 }); grow(X, Y); }
-  whiteDisc(g, kit, PX, PY, 6.5);
+  if (!tc) {
+    for (const a of A.parts) { const X = PX + a.ex * k, Y = PY - a.ey * k; g.arrow(PX, PY, X, Y, { color: colOf(a.q), width: 1.8, head: 9 }); grow(X, Y); }
+    { const X = PX + A.sum.ex * k, Y = PY - A.sum.ey * k; g.arrow(PX, PY, X, Y, { color: PAL.sum, width: 4.6, head: 15 }); grow(X, Y); }
+    whiteDisc(g, kit, PX, PY, 6.5);
+  } else g.circle(PX, PY, 7, { color: 'inkMid', width: 1.4, alpha: 0.75, dash: [3, 3] });   // where it started; it comes back here after the run
   g.region('probe', { x: bx0, y: by0, w: bx1 - bx0, h: by1 - by0 });
   if (tc) {
     const X = v.x(tc.x), Y = v.y(tc.y);
-    if (Math.abs(tc.z) < 1e-6) whiteDisc(g, kit, X, Y, 5.5);
-    else { g.circle(X, Y, 6.5, { color: kit.isLight() ? 'ink' : 'bg', width: 4 }); g.circle(X, Y, 6.5, { color: kit.isLight() ? 'bg' : 'ink', width: 1.8 }); }
+    g.glow(X, Y, 18, PAL.sum, 0.45);
+    if (Math.abs(tc.z) < 1e-6) g.ball(X, Y, 7.5, { color: PAL.sum });
+    else { g.circle(X, Y, 7.5, { color: kit.isLight() ? 'ink' : 'bg', width: 5 }); g.circle(X, Y, 7.5, { color: PAL.sum, width: 3 }); }
     g.region('test charge', { x: X - 12, y: Y - 12, w: 24, h: 24 });
   }
-  // edge-on inset, lower right: x along the plane against the height z, fixed axes −4a…4a by −3a…3a
-  const iw = Math.min(0.3 * Rr.w, 330), ih = iw * 0.75 + 12, ir = { x: Rr.x + Rr.w - iw - 4, y: Rr.y + Rr.h - ih - 4, w: iw, h: ih };
-  g.rect(ir.x, ir.y, ir.w, ir.h, { fill: 'panel', color: 'axis', width: 1, radius: 6 });
-  const iv = g.view({ x0: -4, x1: 4, y0: -3, y1: 3 }, g.inset(ir, 22, 8, 8, 8), { equal: true }), IR = iv.rect;
-  if (main) { UI.inset = ir; UI.iv = iv; }
-  g.rect(IR.x, IR.y, IR.w, IR.h, { color: 'grid', width: 1 });
-  g.label('Edge-on: height z', ir.x + 8, ir.y + 4, { size: 12, color: 'muted', anchor: 'nw' });
-  g.line(IR.x, iv.y(0), IR.x + IR.w, iv.y(0), { color: 'inkMid', width: 2 });
-  for (const z of [-3, 3]) g.label(`${z < 0 ? '−' : ''}3a`, IR.x + 3, iv.y(z) + (z > 0 ? 2 : -2), { size: 12, color: 'muted', anchor: z > 0 ? 'nw' : 'sw' });
-  for (const ch of s.Q) g.dot(iv.x(ch.x), iv.y(0), Math.abs(ch.q) > 1 ? 4.2 : 3.4, colOf(ch.q));
-  g.line(iv.x(px), iv.y(-0.5), iv.x(px), iv.y(0.5), { color: 'neutral', width: 1, dash: [3, 3] });
-  const tx = tc ? tc.x : px, tz = tc ? tc.z : s.z0;
-  if (tc) g.clip(IR, () => { const tr = tc.trail.map(([x, , z]) => [iv.x(x), iv.y(z)]); if (tr.length > 1) g.path(tr, { color: PAL.sum, width: 2 }); });
-  if (Math.abs(tz) <= 3) whiteDisc(g, kit, iv.x(tx), iv.y(tz), 4.5);
-  if (!tc) g.label(`z_0 = ${kit.fmt(s.z0, 2, 'a', { signed: true })}`, iv.x(px), iv.y(0.5) - 4, { size: 12, color: 'ink', anchor: 's', backing: true });
-  g.region('edge-on inset', ir);
   if (tc && tc.done) {
     const msg = tc.done === 'left' ? `Run over: the test charge left the region after ${kit.fmt(tc.t, 1, 's')}`
       : tc.done === 'hit' ? `Run over: the test charge reached a charge after ${kit.fmt(tc.t, 1, 's')}` : 'Run stopped';
@@ -4495,6 +4550,7 @@ function paintPlane(g, s, p, q, kit) {
 }
 
 function paintFar(g, s, p, q, kit) {
+  if (g.canvas && g.canvas.id === 'scene') { syncZ0(s, p); syncReadouts(s, p); }
   const F = farSet(s, p), R = farR(s, F), c = g.ctx;
   const k0 = Math.min(g.w / 12, 0.46 * g.h / R_FIX), ppa = k0 / Math.max(1, R / R_FIX);   // a fixed 12a-wide view up to R = 3.5a
   const cx = g.w * 0.42, cy = g.h * 0.5, rpx = R * ppa;
@@ -4540,13 +4596,15 @@ Kit.sim({
 
   advance(s, p, dt) {
     s.clock += dt;
-    const tc = s.tc; if (!tc || tc.done || p.mode !== 'plane') return;
+    const tc = s.tc; if (!tc || p.mode !== 'plane') return;
+    if (tc.done) { if (performance.now() - (tc.doneAt || (tc.doneAt = performance.now())) > RUN_HOLD_MS) s.tc = null; return; }   // back to the probe
     const n = Math.max(1, Math.ceil(Math.min(dt, 0.1) / 0.002)), h = Math.min(dt, 0.1) / n;
     for (let i = 0; i < n && !tc.done; i++) {
       stepTC(s.Q, tc, h);
       const [lx, ly, lz] = tc.trail[tc.trail.length - 1];
       if (Math.hypot(tc.x - lx, tc.y - ly, tc.z - lz) > 0.01 || tc.done) { tc.trail.push([tc.x, tc.y, tc.z]); tc.trailX.push(tc.x); }
     }
+    if (tc.done && !tc.doneAt) tc.doneAt = performance.now();
   },
 
   onParam(id, v, s, p) {
@@ -4568,7 +4626,7 @@ Kit.sim({
   actions: {
     release(s, p, kit) {
       if (p.mode !== 'plane') return;
-      if (s.tc && !s.tc.done) { s.tc.done = 'stopped'; kit.render(); return; }
+      if (s.tc) { s.tc = null; kit.render(); return; }          // Stop: the charge goes straight back to the probe
       const [x, y] = s.probe, z = s.z0;
       const fwd = trace(s.Q, x, y, 1, -1).pts, back = trace(s.Q, x, y, -1, -1).pts;
       s.tc = { x, y, z, vx: 0, vy: 0, vz: 0, t: 0, trail: [[x, y, z]], trailX: [x], done: null, line: back.reverse().concat(fwd.slice(1)) };
@@ -4910,10 +4968,16 @@ const cgSteps = [
     text: "Lets the test charge go from rest at the probe; press again to stop."
   },
   {
+    sel: "#box-z0",
+    mode: "hide",
+    title: "Release height",
+    text: "How far above the plane the test charge starts, from −0.5a to 0.5a."
+  },
+  {
     sel: "#panel-readouts",
     mode: "hide",
     title: "Readouts",
-    text: "Live values: φ at probe, |E| at probe, Kinetic energy K, qtφ, K + qtφ, Height above the"
+    text: "Only the numbers that apply now: φ and |E| at the probe; during a run K, qtφ and K + qtφ, and the height z when it starts off the plane."
   },
   {
     sel: null,
@@ -5116,7 +5180,7 @@ const cgSteps = [
 window.__psShow = {
   "see1": { msg: "Opens the dipole with its field lines and contours.", scene: {"mode":"plane","lines":true,"equip":true,"launch":true}, run() { const sel = document.getElementById('kit-view'); if (sel) { sel.value = "all"; sel.dispatchEvent(new Event('change')); } } }
 };
-window.__giSpots = [{"target":"scene","region":"probe","label":"Probe and its arrows"},null,{"target":"scene","region":"probe","label":"Probe at (0, a)"},null,{"target":"scene","region":"probe","label":"Release point"},null,{"target":"scene","region":"charges","label":"The cage of four +q"},null,{"target":"scene","region":"edge-on inset","label":"Height above the plane"},null,{"target":"scene","region":"circle","label":"Drag this edge outwards"},null,{"target":"scene","region":"circle","label":"Drag this edge outwards"},{"target":"scene","region":"circle","label":"The far-field shape"}];</script>
+window.__giSpots = [{"target":"scene","region":"probe","label":"Probe and its arrows"},null,{"target":"scene","region":"probe","label":"Probe at (0, a)"},null,{"target":"scene","region":"probe","label":"Release point"},null,{"target":"scene","region":"charges","label":"The cage of four +q"},null,{"target":"btn-release","label":"Release, then watch z in Readouts"},null,{"target":"scene","region":"circle","label":"Drag this edge outwards"},null,{"target":"scene","region":"circle","label":"Drag this edge outwards"},{"target":"scene","region":"circle","label":"The far-field shape"}];</script>
 <script>
 /* Guided Inquiry annotation: a card's manifest "spot" (window.__giSpots[i] = {target, region|box, label}) is outlined on the simulation once the
    card's set-up has landed (SimKit calls __giSpot(i); -1 clears it). `region` names a part the painter drew with g.region(): the outline follows it
@@ -6134,20 +6198,20 @@ function drawHero(){ const c = document.getElementById('welcome-fringes'); if (c
         targets: function(){ return [ { rect: part('probe') } ]; },
         text: '<p>Drag the white probe anywhere on the plane.</p><p>Each thin arrow is the field of one charge, in its colour.</p><p>The thick yellow arrow is their sum, drawn to the same scale.</p>',
         say: 'You can drag the white probe anywhere on the plane. Each thin arrow is the field of one charge, in that charge’s colour. The thick yellow arrow is their sum, drawn to the same scale.' },
-      { chap: 'The simulation', title: 'The edge-on view',
-        targets: function(){ return [ { rect: part('edge-on inset') } ]; },
-        text: '<p>This inset shows the plane edge-on, with height z going up.</p><p>Drag the white dot up or down to set the release height.</p>',
-        say: 'This inset in the lower right shows the plane edge-on, with the height z going up. Drag the white dot up or down to set the height the test charge starts from.' },
+      { chap: 'The simulation', title: 'The release height',
+        targets: function(){ return [ { sel: '#box-z0' } ]; },
+        text: '<p>This slider sets how far above the plane the test charge starts.</p><p>During a run its height z is in Readouts, and off the plane it shows as a hollow ring.</p>',
+        say: 'This slider sets how far above the plane the test charge starts. During a run its height z is in the Readouts, and off the plane it shows as a hollow ring.' },
       { chap: 'Controls', title: 'Building charges',
         targets: function(){ return [ { sel: '#box-mode' }, { sel: '#box-palette' }, { rect: part('plane'), sec: true } ]; },
         text: '<p><b>Mode</b> switches to the view from far away, with a circle drawn round the charges.</p><p><b>Charge to place</b> sets the charge a click on empty space adds.</p><p>Drag a charge to move it. Double-click it to remove it.</p>',
         say: 'Mode switches to the view from far away, where a circle is drawn round the charges. Charge to place sets the charge that a click on empty space adds. Drag a charge to move it, and double-click it to remove it.' },
       { chap: 'Controls', title: 'Layers and release',
         targets: function(){ return [ { sel: '#box-lines' }, { sel: '#box-equip' }, { sel: '#btn-release' }, { rect: part('probe'), sec: true } ]; },
-        text: '<p><b>Field lines</b> shows or hides the lines and their markers.</p><p><b>Equipotentials</b> shows or hides the contours.</p><p><b>Release</b> lets a small positive test charge go from the probe. Press it again to stop.</p>',
-        say: 'Field lines shows or hides the lines and their markers. Equipotentials shows or hides the contours. Release lets a small positive test charge go from rest at the probe, and a second press stops it.' },
+        text: '<p><b>Field lines</b> shows or hides the lines and their markers.</p><p><b>Equipotentials</b> shows or hides the contours.</p><p><b>Release</b> lets a small positive test charge go from the probe; it turns amber while the charge moves. Press it again to stop. After a run the charge returns to the probe.</p>',
+        say: 'Field lines shows or hides the lines and their markers. Equipotentials shows or hides the contours. Release lets a small positive test charge go from rest at the probe, and the button turns amber while it moves. A second press stops it, and after a run the charge returns to the probe.' },
       { chap: 'Controls', title: 'The readouts',
-        targets: function(){ return [ { sel: '#row-phi' }, { sel: '#row-E' } ]; },
+        targets: function(){ var rp=document.getElementById('panel-readouts'); if(rp&&rp.classList.contains('collapsed')){ var rh=rp.querySelector('.shell-panel-head'); if(rh) rh.click(); } return [ { sel: '#row-phi' }, { sel: '#row-E' } ]; },
         text: '<p><b>φ at probe</b> and <b>|E| at probe</b> give the potential and field strength where the probe sits.</p><p>During a run, more rows show the test charge’s energy and height.</p>',
         say: 'Phi at probe and the size of E at probe give the potential and the field strength where the probe sits. During a run, more rows show the test charge’s energy and its height.' }
     ],
