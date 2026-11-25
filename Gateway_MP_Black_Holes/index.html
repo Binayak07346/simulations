@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Black Holes Simulations</title>
+<meta name="description" content="Gateway to Modern Physics: Black Holes. Interactive simulations built around Prof. Brian Greene's seven demonstrations.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600;9..40,700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #070b14;
+  --bg-glow: rgba(70, 110, 200, .16);
+  --card: rgba(22, 28, 40, .72);
+  --card-hover: rgba(30, 38, 54, .86);
+  --border: rgba(150, 175, 230, .14);
+  --border-hover: rgba(120, 190, 255, .42);
+  --text: #eef2fa;
+  --muted: #9aa6bd;
+  --faint: #6c7890;
+  --accent: #5fc8ff;
+  --gold: #ffc46b;
+  --shadow: 0 18px 40px -18px rgba(0, 0, 0, .7);
+}
+@media (prefers-color-scheme: light) {
+  :root:not([data-theme="dark"]) {
+    --bg: #eef2f8; --bg-glow: rgba(90, 130, 220, .14);
+    --card: rgba(255, 255, 255, .85); --card-hover: #fff;
+    --border: rgba(40, 60, 110, .12); --border-hover: rgba(40, 120, 220, .45);
+    --text: #121826; --muted: #4c5870; --faint: #6c7890;
+    --accent: #1478c8; --gold: #b7741a; --shadow: 0 16px 36px -20px rgba(20, 30, 60, .35);
+  }
+}
+:root[data-theme="dark"] { color-scheme: dark; }
+* { box-sizing: border-box; }
+html, body { margin: 0; }
+body {
+  background: radial-gradient(1200px 600px at 20% -10%, var(--bg-glow), transparent 60%), var(--bg);
+  background-attachment: fixed;
+  color: var(--text);
+  font-family: "DM Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
+  line-height: 1.5;
+  min-height: 100vh;
+}
+.wrap { max-width: 1240px; margin: 0 auto; padding: 56px 24px 72px; }
+header { margin-bottom: 40px; }
+.kicker { display: inline-flex; align-items: center; gap: 8px; font-size: 13px; font-weight: 600; letter-spacing: .12em; text-transform: uppercase; color: var(--accent); }
+.kicker i { width: 8px; height: 8px; border-radius: 50%; background: var(--accent); box-shadow: 0 0 10px var(--accent); }
+h1 { font-size: clamp(30px, 4.2vw, 44px); line-height: 1.15; margin: 12px 0 12px; font-weight: 700; letter-spacing: -.01em; }
+.lede { max-width: 720px; color: var(--muted); font-size: 17px; margin: 0; }
+.grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(340px, 1fr)); gap: 22px; }
+.card {
+  display: flex; flex-direction: column; text-decoration: none; color: inherit;
+  background: var(--card); border: 1px solid var(--border); border-radius: 18px; overflow: hidden;
+  box-shadow: var(--shadow); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
+  transition: transform .18s ease, border-color .18s ease, background .18s ease;
+}
+.card:hover, .card:focus-visible { transform: translateY(-3px); border-color: var(--border-hover); background: var(--card-hover); outline: none; }
+.thumb { position: relative; aspect-ratio: 16 / 10; overflow: hidden; background: #05070d; border-bottom: 1px solid var(--border); }
+.thumb img { width: 100%; height: 100%; object-fit: cover; display: block; transition: transform .35s ease; }
+.card:hover .thumb img { transform: scale(1.03); }
+.badge {
+  position: absolute; left: 12px; top: 12px; padding: 4px 10px; border-radius: 999px;
+  font-size: 12px; font-weight: 600; letter-spacing: .02em; color: #eef2fa;
+  background: rgba(8, 12, 22, .78); border: 1px solid rgba(150, 175, 230, .25); backdrop-filter: blur(6px);
+}
+.badge b { color: var(--gold); font-weight: 700; }
+.body { padding: 18px 20px 20px; display: flex; flex-direction: column; gap: 8px; flex: 1; }
+.body h2 { margin: 0; font-size: 20px; font-weight: 650; letter-spacing: -.005em; }
+.body p { margin: 0; color: var(--muted); font-size: 15px; }
+.topic { font-size: 13px; color: var(--faint); }
+.open { margin-top: auto; padding-top: 8px; font-size: 14px; font-weight: 600; color: var(--accent); }
+.card:hover .open span { transform: translateX(3px); }
+.open span { display: inline-block; transition: transform .18s ease; }
+.back { display: inline-flex; align-items: center; gap: 6px; margin-bottom: 22px; font-size: 14px; font-weight: 600; color: var(--muted); text-decoration: none; }
+.back:hover, .back:focus-visible { color: var(--accent); }
+header .kicker { display: flex; }
+footer { margin-top: 44px; color: var(--faint); font-size: 13px; }
+@media (max-width: 520px) {
+  .wrap { padding: 32px 16px 48px; }
+  .grid { grid-template-columns: 1fr; gap: 16px; }
+  .lede { font-size: 16px; }
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <a class="back" href="../">← All simulations</a>
+    <span class="kicker"><i></i>Gateway to Modern Physics</span>
+    <h1>Black Holes: the simulations</h1>
+    <p class="lede">Eight interactive simulations built around Prof. Brian Greene's seven demonstrations. Each one opens with a Simulation guide, a Guided Inquiry and The Physics.</p>
+  </header>
+
+  <main class="grid">
+    <a class="card" href="escape-velocity.html">
+      <div class="thumb"><img src="thumbs/escape-velocity.jpg" alt="Escape Velocity: a rail-gun launch site on Earth with the launch controls" loading="lazy"><span class="badge">Simulation</span></div>
+      <div class="body"><span class="topic">Escape velocity</span><h2>Escape Velocity</h2>
+        <p>Launch a ball straight up from a planet and find the speed at which it never comes back. Discover that escape speed grows as the square root of the mass.</p>
+        <span class="open">Open simulation <span>→</span></span></div>
+    </a>
+    <a class="card" href="grow-the-black-hole.html">
+      <div class="thumb"><img src="thumbs/grow-the-black-hole.jpg" alt="Grow the Black Hole: a ray-traced black hole with its disk and the density ladder" loading="lazy"><span class="badge">Simulation</span></div>
+      <div class="body"><span class="topic">Density of a black hole</span><h2>Grow the Black Hole</h2>
+        <p>Set a black hole's mass and watch its average density fall as it grows, until a big enough black hole is thinner than air.</p>
+        <span class="open">Open simulation <span>→</span></span></div>
+    </a>
+    <a class="card" href="make-a-black-hole.html">
+      <div class="thumb"><img src="thumbs/make-a-black-hole.jpg" alt="Make a Black Hole: a ball of water with the material picker" loading="lazy"><span class="badge">Simulation</span></div>
+      <div class="body"><span class="topic">Density of a black hole</span><h2>Make a Black Hole From Anything</h2>
+        <p>Pile up any material until it collapses. The log reads each black hole's density against its size, from neutron-star matter down to hydrogen.</p>
+        <span class="open">Open simulation <span>→</span></span></div>
+    </a>
+    <a class="card" href="weigh-the-invisible.html">
+      <div class="thumb"><img src="thumbs/weigh-the-invisible.jpg" alt="Weigh the Invisible: a star's orbit around an unseen object with the candidates" loading="lazy"><span class="badge">Simulation</span></div>
+      <div class="body"><span class="topic">Stellar orbits as evidence</span><h2>Weigh the Invisible</h2>
+        <p>Weigh an unseen companion from a star's speed and orbit size, and find when only a black hole can explain it.</p>
+        <span class="open">Open simulation <span>→</span></span></div>
+    </a>
+    <a class="card" href="put-light-in-orbit.html">
+      <div class="thumb"><img src="thumbs/put-light-in-orbit.jpg" alt="Put Light in Orbit: a laser beside a black hole with Light's hill" loading="lazy"><span class="badge">Simulation</span></div>
+      <div class="body"><span class="topic">Light orbits of a black hole</span><h2>Put Light in Orbit</h2>
+        <p>Fire light sideways near a black hole. Inside 1.5 R<sub>s</sub> it spirals in, outside it spirals away: the photon orbit is unstable.</p>
+        <span class="open">Open simulation <span>→</span></span></div>
+    </a>
+    <a class="card" href="two-clocks.html">
+      <div class="thumb"><img src="thumbs/two-clocks.jpg" alt="Two Clocks: a ship hovering near a black hole and a clock on Earth" loading="lazy"><span class="badge">Simulation</span></div>
+      <div class="body"><span class="topic">Time dilation</span><h2>Two Clocks</h2>
+        <p>Lower a hovering clock toward the event horizon and compare it with a clock far away: time runs slower and slower.</p>
+        <span class="open">Open simulation <span>→</span></span></div>
+    </a>
+    <a class="card" href="warped-space.html">
+      <div class="thumb"><img src="thumbs/warped-space.jpg" alt="Warped Space: Einstein's portrait with a grid and the metric sliders" loading="lazy"><span class="badge">Simulation</span></div>
+      <div class="body"><span class="topic">Warped space</span><h2>Warped Space</h2>
+        <p>Pull Einstein's portrait out of shape and watch the metric change. Then set the metric yourself and watch the picture.</p>
+        <span class="open">Open simulation <span>→</span></span></div>
+    </a>
+    <a class="card" href="quantum-claustrophobia.html">
+      <div class="thumb"><img src="thumbs/quantum-claustrophobia.jpg" alt="Quantum Claustrophobia: an electron in a glass box with the box-size control" loading="lazy"><span class="badge">Simulation</span></div>
+      <div class="body"><span class="topic">Quantum claustrophobia</span><h2>Quantum Claustrophobia</h2>
+        <p>Squeeze an electron into a smaller and smaller box. Its motion grows until there is enough energy to make new particles.</p>
+        <span class="open">Open simulation <span>→</span></span></div>
+    </a>
+  </main>
+
+  <footer>Thumbnails are screenshots of each simulation's opening view.</footer>
+</div>
+</body>
+</html>
